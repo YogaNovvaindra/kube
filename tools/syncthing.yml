@@ -27,7 +27,7 @@ spec:
         kubernetes.io/arch: amd64
       containers:
         - name: syncthing
-          image: lscr.io/linuxserver/syncthing:latest@sha256:9fc1747ea7f8da685bf318ec232c80376d26b4aaa446545123d33e5f18666025
+          image: lscr.io/linuxserver/syncthing:1.29.2
           imagePullPolicy: Always
           ports:
             - containerPort: 8384

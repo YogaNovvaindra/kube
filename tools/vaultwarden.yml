@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - name: vaultwarden
-        image: vaultwarden/server:latest@sha256:87edb99945da91bd7504ac1435495595af2e89ad2c7adc151ae5bf091ec8baf2
+        image: vaultwarden/server:1.33.2-alpine
         imagePullPolicy: Always
         ports:
         - containerPort: 80
