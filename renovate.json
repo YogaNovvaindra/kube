@@ -1,38 +1,60 @@
 {
-    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "extends": [
-      "config:base"
-    ],
-    "kubernetes": {
-      "fileMatch": ["\\.yaml$", "\\.yml$"]
-    },
-    "packageRules": [
-      {
-        "matchDatasources": ["docker"],
-        "matchUpdateTypes": ["major", "minor", "patch", "digest"],
-        "enabled": true
-      },
-      {
-        "matchPackageNames": ["*"],
-        "matchManagers": ["kubernetes"],
-        "matchCurrentVersion": "/^\\d+\\.\\d+\\.\\d+$/",
-        "rangeStrategy": "replace"
-      },
-      {
-        "matchPackageNames": ["*"],
-        "matchManagers": ["kubernetes"],
-        "matchCurrentVersion": "latest",
-        "pinDigests": true
-      },
-      {
-        "matchUpdateTypes": ["minor", "patch", "digest"],
-        "automerge": true,
-        "automergeType": "pr",
-        "ignoreTests": true
-      }
-    ],
-    "platformAutomerge": true,
-    "digest": {
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "kubernetes": {
+    "fileMatch": [
+      "\\.yaml$",
+      "\\.yml$"
+    ]
+  },
+  "packageRules": [
+    {
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor",
+        "patch",
+        "digest"
+      ],
       "enabled": true
+    },
+    {
+      "matchPackageNames": [
+        "*"
+      ],
+      "matchManagers": [
+        "kubernetes"
+      ],
+      "matchCurrentVersion": "/^\\d+\\.\\d+\\.\\d+$/",
+      "rangeStrategy": "replace"
+    },
+    {
+      "matchPackageNames": [
+        "*"
+      ],
+      "matchManagers": [
+        "kubernetes"
+      ],
+      "matchCurrentVersion": "latest",
+      "pinDigests": true
+    },
+    {
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "digest"
+      ],
+      "automerge": true,
+      "automergeType": "pr",
+      "ignoreTests": true
     }
+  ],
+  "platformAutomerge": true,
+  "digest": {
+    "enabled": true
   }
+}
