@@ -1,0 +1,563 @@
+# Flaresolverr Deployment (nodeSelector: kube-1)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flaresolverr
+  namespace: media
+  labels:
+    app: flaresolverr
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flaresolverr
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: flaresolverr
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: kube-1
+      containers:
+      - name: flaresolverr
+        image: alexfozor/flaresolverr:pr-1300-experimental
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8191
+        env:
+        - name: LOG_LEVEL
+          value: "info"
+        - name: TZ
+          value: "Asia/Jakarta"
+        livenessProbe:
+          exec:
+            command:
+              - sh
+              - -c
+              - 'curl -X POST -f http://localhost:8191/v1 -d "{\"maxTimeout\":120000,\"cmd\":\"request.get\",\"url\":\"https://prowlarr.servarr.com/v1/ping\",\"proxy\":{}}" -H "Content-Type: application/json"'
+          initialDelaySeconds: 120
+          periodSeconds: 300
+          timeoutSeconds: 30
+          failureThreshold: 3
+        # Uncomment and adjust resources if needed:
+        resources:
+          limits:
+            memory: "2Gi"
+---
+# Flaresolverr Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: flaresolverr
+  namespace: media
+  labels:
+    app: flaresolverr
+spec:
+  type: ClusterIP
+  selector:
+    app: flaresolverr
+  ports:
+  - protocol: TCP
+    port: 8191
+    targetPort: 8191
+---
+# Prowlarr Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prowlarr
+  namespace: media
+  labels:
+    app: prowlarr
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prowlarr
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: prowlarr
+    spec:
+      containers:
+      - name: prowlarr
+        image: lscr.io/linuxserver/prowlarr:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9696
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: "Asia/Jakarta"
+        volumeMounts:
+        - name: prowlarr-config
+          mountPath: /config
+      volumes:
+      - name: prowlarr-config
+        hostPath:
+          path: /mnt/cephfs/docker/media/prowlarr
+          type: Directory
+---
+# Prowlarr Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: prowlarr
+  namespace: media
+  labels:
+    app: prowlarr
+spec:
+  type: LoadBalancer
+  externalIPs:
+    - 10.1.1.250
+  selector:
+    app: prowlarr
+  ports:
+  - protocol: TCP
+    port: 9696
+    targetPort: 9696
+---
+# Radarr Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: radarr
+  namespace: media
+  labels:
+    app: radarr
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: radarr
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: radarr
+    spec:
+      containers:
+      - name: radarr
+        image: lscr.io/linuxserver/radarr:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 7878
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: "Asia/Jakarta"
+        volumeMounts:
+        - name: radarr-config
+          mountPath: /config
+        - name: radarr-movies
+          mountPath: /movies
+        - name: radarr-downloads
+          mountPath: /downloads
+      volumes:
+      - name: radarr-config
+        hostPath:
+          path: /mnt/cephfs/docker/media/radarr
+          type: Directory
+      - name: radarr-movies
+        hostPath:
+          path: /mnt/Data/Videos/Movies
+          type: Directory
+      - name: radarr-downloads
+        hostPath:
+          path: /mnt/Data/downloads
+          type: Directory
+---
+# Radarr Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: radarr
+  namespace: media
+  labels:
+    app: radarr
+spec:
+  type: LoadBalancer
+  externalIPs:
+    - 10.1.1.250
+  selector:
+    app: radarr
+  ports:
+  - protocol: TCP
+    port: 7878
+    targetPort: 7878
+---
+# Sonarr Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sonarr
+  namespace: media
+  labels:
+    app: sonarr
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sonarr
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: sonarr
+    spec:
+      containers:
+      - name: sonarr
+        image: lscr.io/linuxserver/sonarr:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8989
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: "Asia/Jakarta"
+        volumeMounts:
+        - name: sonarr-config
+          mountPath: /config
+        - name: sonarr-tv
+          mountPath: /tv
+        - name: sonarr-downloads
+          mountPath: /downloads
+      volumes:
+      - name: sonarr-config
+        hostPath:
+          path: /mnt/cephfs/docker/media/sonarr
+          type: Directory
+      - name: sonarr-tv
+        hostPath:
+          path: /mnt/Data/Videos/TV
+          type: Directory
+      - name: sonarr-downloads
+        hostPath:
+          path: /mnt/Data/downloads
+          type: Directory
+---
+# Sonarr Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: sonarr
+  namespace: media
+  labels:
+    app: sonarr
+spec:
+  type: LoadBalancer
+  externalIPs:
+    - 10.1.1.250
+  selector:
+    app: sonarr
+  ports:
+  - protocol: TCP
+    port: 8989
+    targetPort: 8989
+---
+# Bazarr Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bazarr
+  namespace: media
+  labels:
+    app: bazarr
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bazarr
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: bazarr
+    spec:
+      containers:
+      - name: bazarr
+        image: lscr.io/linuxserver/bazarr:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 6767
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: "Asia/Jakarta"
+        volumeMounts:
+        - name: bazarr-config
+          mountPath: /config
+        - name: bazarr-movies
+          mountPath: /movies
+        - name: bazarr-tv
+          mountPath: /tv
+      volumes:
+      - name: bazarr-config
+        hostPath:
+          path: /mnt/cephfs/docker/media/bazarr
+          type: Directory
+      - name: bazarr-movies
+        hostPath:
+          path: /mnt/Data/Videos/Movies
+          type: Directory
+      - name: bazarr-tv
+        hostPath:
+          path: /mnt/Data/Videos/TV
+          type: Directory
+---
+# Bazarr Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: bazarr
+  namespace: media
+  labels:
+    app: bazarr
+spec:
+  type: LoadBalancer
+  externalIPs:
+    - 10.1.1.250
+  selector:
+    app: bazarr
+  ports:
+  - protocol: TCP
+    port: 6767
+    targetPort: 6767
+---
+# Overseerr Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: overseerr
+  namespace: media
+  labels:
+    app: overseerr
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: overseerr
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: overseerr
+    spec:
+      containers:
+      - name: overseerr
+        image: lscr.io/linuxserver/overseerr:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5055
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: "Asia/Jakarta"
+        volumeMounts:
+        - name: overseerr-config
+          mountPath: /config
+      volumes:
+      - name: overseerr-config
+        hostPath:
+          path: /mnt/cephfs/docker/media/overseerr
+          type: Directory
+---
+# Overseerr Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: overseerr
+  namespace: media
+  labels:
+    app: overseerr
+spec:
+  type: LoadBalancer
+  externalIPs:
+    - 10.1.1.250
+  selector:
+    app: overseerr
+  ports:
+  - protocol: TCP
+    port: 5055
+    targetPort: 5055
+---
+# Tautulli Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tautulli
+  namespace: media
+  labels:
+    app: tautulli
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tautulli
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: tautulli
+    spec:
+      containers:
+      - name: tautulli
+        image: lscr.io/linuxserver/tautulli:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8181
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: "Asia/Jakarta"
+        volumeMounts:
+        - name: tautulli-config
+          mountPath: /config
+      volumes:
+      - name: tautulli-config
+        hostPath:
+          path: /mnt/cephfs/docker/media/tautulli
+          type: Directory
+---
+# Tautulli Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: tautulli
+  namespace: media
+  labels:
+    app: tautulli
+spec:
+  type: LoadBalancer
+  externalIPs:
+    - 10.1.1.250
+  selector:
+    app: tautulli
+  ports:
+  - protocol: TCP
+    port: 8181
+    targetPort: 8181
+---
+# Maintainerr Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: maintainerr
+  namespace: media
+  labels:
+    app: maintainerr
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: maintainerr
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: maintainerr
+    spec:
+      containers:
+      - name: maintainerr
+        image: ghcr.io/jorenn92/maintainerr:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 6246
+        env:
+        - name: TZ
+          value: "Asia/Jakarta"
+        volumeMounts:
+        - name: maintainerr-data
+          mountPath: /opt/data
+      volumes:
+      - name: maintainerr-data
+        hostPath:
+          path: /mnt/cephfs/docker/media/maintainerr
+          type: Directory
+---
+# Maintainerr Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: maintainerr
+  namespace: media
+  labels:
+    app: maintainerr
+spec:
+  type: LoadBalancer
+  externalIPs:
+    - 10.1.1.250
+  selector:
+    app: maintainerr
+  ports:
+  - protocol: TCP
+    port: 6246
+    targetPort: 6246

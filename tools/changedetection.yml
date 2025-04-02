@@ -1,0 +1,69 @@
+# CHANGEDETECTION
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: changedetection
+  namespace: tools
+  labels:
+    app: changedetection
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll 
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: changedetection
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: changedetection
+    spec:
+      containers:
+      - name: changedetection
+        image: lscr.io/linuxserver/changedetection.io:latest
+        imagePullPolicy: Always
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: "Asia/Jakarta"
+        - name: BASE_URL
+          value: ""
+        - name: PLAYWRIGHT_DRIVER_URL
+          value: ""
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+        - name: config
+          mountPath: /config
+      volumes:
+      - name: config
+        hostPath:
+          path: /mnt/cephfs/docker/tools/changedetection
+          type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: changedetection
+  namespace: tools
+spec:
+  type: LoadBalancer
+  externalIPs:
+    # - 192.168.192.5
+    # - 10.0.1.180
+    - 10.1.1.250
+  selector:
+    app: changedetection
+  ports:
+  - port: 8083
+    targetPort: 5000
+---

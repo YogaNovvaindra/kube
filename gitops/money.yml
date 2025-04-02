@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: money
+spec:
+  destination:
+    namespace: money
+    server: https://kubernetes.default.svc
+  source:
+    path: money
+    repoURL: https://github.com/YogaNovvaindra/kube.git
+    targetRevision: HEAD
+  sources: []
+  project: local
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

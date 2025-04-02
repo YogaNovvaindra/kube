@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: filebrowser
+  namespace: tools
+  labels:
+    app: filebrowser
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: filebrowser
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: filebrowser
+    spec:
+      containers:
+        - name: filebrowser
+          image: filebrowser/filebrowser:v2-s6
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          env:
+            - name: PUID
+              value: "0"
+            - name: PGID
+              value: "0"
+          volumeMounts:
+            - name: data
+              mountPath: /srv/Data
+            - name: cephfs
+              mountPath: /srv/CephFS
+            - name: srv
+              mountPath: /srv
+            - name: database
+              mountPath: /database
+            - name: config
+              mountPath: /config
+      volumes:
+        - name: data
+          hostPath:
+            path: /mnt/Data
+        - name: cephfs
+          hostPath:
+            path: /mnt/cephfs
+        - name: srv
+          hostPath:
+            path: /mnt/cephfs/docker/tools/filebrowser/srv
+            type: Directory
+        - name: database
+          hostPath:
+            path: /mnt/cephfs/docker/tools/filebrowser/db
+            type: Directory
+        - name: config
+          hostPath:
+            path: /mnt/cephfs/docker/tools/filebrowser/config
+            type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: filebrowser
+  namespace: tools
+  labels:
+    app: filebrowser
+spec:
+  type: LoadBalancer
+  externalIPs:
+    - 10.1.1.250
+  selector:
+    app: filebrowser
+  ports:
+    - port: 8081
+      targetPort: 80

@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stirling-pdf
+  namespace: tools
+  labels:
+    app: stirling-pdf
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll 
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: stirling-pdf
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: stirling-pdf
+    spec:
+      containers:
+      - name: stirling-pdf
+        image: frooodle/s-pdf:latest
+        imagePullPolicy: Always
+        env:
+        - name: DOCKER_ENABLE_SECURITY
+          value: "false"
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: pdf-trainingdata
+          mountPath: /usr/share/tesseract-ocr/5/tessdata
+        - name: pdf-config
+          mountPath: /configs
+      volumes:
+      - name: pdf-trainingdata
+        hostPath:
+          path: /mnt/cephfs/docker/tools/pdf/trainingdata
+          type: Directory
+      - name: pdf-config
+        hostPath:
+          path: /mnt/cephfs/docker/tools/pdf/config
+          type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: stirling-pdf
+  namespace: tools
+spec:
+  type: LoadBalancer
+  externalIPs:
+    - 10.1.1.250
+  selector:
+    app: stirling-pdf
+  ports:
+  - port: 8084
+    targetPort: 8080

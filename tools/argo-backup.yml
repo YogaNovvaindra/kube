@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sa-argocd-backup
+  namespace: tools
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: role-argocd-backup
+rules:
+  - apiGroups: [""]
+    resources: ["pods","configmaps","secrets"]
+    verbs: ["get","list","watch"]
+  - apiGroups: ["argoproj.io"]
+    resources: [ "*"]
+    verbs: ["get","list","watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: bind-role-argocd-backup
+subjects:
+  - kind: ServiceAccount
+    name: sa-argocd-backup
+    namespace: tools
+roleRef:
+  kind: ClusterRole
+  name: role-argocd-backup
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: argocd-backup
+  namespace: tools
+spec:
+  successfulJobsHistoryLimit: 3  # Keep only 3 successful jobs
+  failedJobsHistoryLimit: 1       # Keep only 1 failed job
+  schedule: "0 1 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: sa-argocd-backup
+          containers:
+          - image: quay.io/argoproj/argocd:latest
+            imagePullPolicy: Always
+            name: backup
+            command: ["sh", "-c", 
+              "argocd admin export -n argocd > /backup/backup-$(date +%Y-%m-%d)_pod-$HOSTNAME.yml && \
+              ls -t /backup/*.yml | tail -n +4 | xargs --no-run-if-empty rm -f || true"]
+            securityContext:
+              runAsUser: 0
+            volumeMounts:
+            - name: backup-volume
+              mountPath: /backup
+          volumes:
+          - name: backup-volume
+            hostPath:
+              path: /mnt/cephfs/docker/argocd
+              type: Directory
+          restartPolicy: Never

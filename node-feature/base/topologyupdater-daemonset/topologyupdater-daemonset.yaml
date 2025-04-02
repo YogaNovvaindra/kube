@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app: nfd
+  name: nfd-topology-updater
+spec:
+  selector:
+    matchLabels:
+      app: nfd-topology-updater
+  template:
+    metadata:
+      labels:
+        app: nfd-topology-updater
+    spec:
+      dnsPolicy: ClusterFirstWithHostNet
+      serviceAccount: nfd-topology-updater
+      containers:
+        - name: nfd-topology-updater
+          image: gcr.io/k8s-staging-nfd/node-feature-discovery:master
+          imagePullPolicy: Always
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 10
+          command:
+            - "nfd-topology-updater"
+          args: []
+          resources:
+            limits:
+              cpu: 100m
+              memory: 60Mi
+            requests:
+              cpu: 50m
+              memory: 40Mi
+          ports:
+            - name: http
+              containerPort: 8080

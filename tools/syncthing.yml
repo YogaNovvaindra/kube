@@ -1,0 +1,100 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: syncthing
+  namespace: tools
+  labels:
+    app: syncthing
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: syncthing
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: syncthing
+    spec:
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      containers:
+        - name: syncthing
+          image: lscr.io/linuxserver/syncthing:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8384
+              name: gui
+            - containerPort: 22000
+              name: sync-tcp
+              protocol: TCP
+            - containerPort: 22000
+              name: sync-udp
+              protocol: UDP
+            - containerPort: 21027
+              name: discovery
+              protocol: UDP
+          env:
+            - name: PUID
+              value: "0"
+            - name: PGID
+              value: "0"
+            - name: TZ
+              value: "Asia/Jakarta"
+          volumeMounts:
+            - name: config-volume
+              mountPath: /config
+            - name: data-volume
+              mountPath: /data
+            - name: cephfs-volume
+              mountPath: /cephfs
+      volumes:
+        - name: config-volume
+          hostPath:
+            path: /mnt/cephfs/docker/syncthing-kube
+            type: Directory
+        - name: data-volume
+          hostPath:
+            path: /mnt/Data
+            type: Directory
+        - name: cephfs-volume
+          hostPath:
+            path: /mnt/cephfs
+            type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: syncthing
+  namespace: tools
+  labels:
+    app: syncthing
+spec:
+  type: LoadBalancer
+  externalIPs:
+    - 10.1.1.250
+  selector:
+    app: syncthing
+  ports:
+    - port: 8384
+      targetPort: 8384
+      name: gui
+    - port: 22000
+      targetPort: 22000
+      protocol: TCP
+      name: sync-tcp
+    - port: 22000
+      targetPort: 22000
+      protocol: UDP
+      name: sync-udp
+    - port: 21027
+      targetPort: 21027
+      protocol: UDP
+      name: discovery

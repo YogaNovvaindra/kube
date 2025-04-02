@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pgadmin
+  namespace: tools
+  labels:
+    app: pgadmin
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: pgadmin
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: pgadmin
+    spec:
+      containers:
+      - name: pgadmin
+        image: dpage/pgadmin4:latest
+        imagePullPolicy: Always
+        envFrom:
+        - secretRef:
+            name: pgadmin-cred
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "128Mi"
+        volumeMounts:
+        - name: pgadmin-data
+          mountPath: /var/lib/pgadmin
+      volumes:
+      - name: pgadmin-data
+        hostPath:
+          path: /mnt/cephfs/docker/tools/pgadmin
+          type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pgadmin
+  namespace: tools
+spec:
+  type: LoadBalancer
+  externalIPs:
+    - 10.1.1.250
+  selector:
+    app: pgadmin
+  ports:
+  - port: 8088
+    targetPort: 80

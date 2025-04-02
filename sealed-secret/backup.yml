@@ -1,0 +1,58 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: sealed-secrets-backup
+  namespace: kube-system
+spec:
+  schedule: "30 0 * * *"  # 0:30 AM daily
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: default  # Use default SA with RBAC permissions
+          containers:
+          - name: backup
+            image: bitnami/kubectl:latest
+            command:
+            - /bin/bash
+            - -c
+            - |
+              #!/bin/bash
+              set -eo pipefail
+              
+              BACKUP_DIR="/backup"
+              
+              # Backup private key
+              PRIVATE_KEY=$(kubectl get secret -n kube-system \
+                -l sealedsecrets.bitnami.com/sealed-secrets-key=active \
+                -o name)
+              kubectl get -n kube-system ${PRIVATE_KEY} -o yaml \
+                > ${BACKUP_DIR}/sealed-secrets-key-$(date +%Y%m%d-%H%M%S).yaml
+              
+              # Rotate backups - keep last 3
+              find /backup -name "sealed-secrets-key-*.yaml" -print0 | sort -z | head -zn -3 | xargs -0 rm -f
+            volumeMounts:
+            - name: backup-volume
+              mountPath: /backup
+          restartPolicy: Never
+          volumes:
+          - name: backup-volume
+            hostPath:
+              path: /mnt/cephfs/docker/sealed-secret
+              type: Directory
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: sealed-secrets-backup
+  namespace: kube-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: view
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: kube-system

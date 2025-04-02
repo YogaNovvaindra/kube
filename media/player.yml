@@ -1,0 +1,159 @@
+# Plex Deployment (nodeSelector: kube-1)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plex
+  namespace: media
+  labels:
+    app: plex
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: plex
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: plex
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: kube-1
+      containers:
+      - name: plex
+        image: lscr.io/linuxserver/plex:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 32400
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: VERSION
+          value: "docker"
+        volumeMounts:
+        - name: plex-config
+          mountPath: /config
+        - name: plex-tv
+          mountPath: /tv
+        - name: plex-movies
+          mountPath: /movies
+      volumes:
+      - name: plex-config
+        hostPath:
+          path: /mnt/cephfs/docker/media/plex
+          type: Directory
+      - name: plex-tv
+        hostPath:
+          path: /mnt/Data/Videos/TV
+          type: Directory
+      - name: plex-movies
+        hostPath:
+          path: /mnt/Data/Videos/Movies
+          type: Directory
+---
+# Plex Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: plex
+  namespace: media
+  labels:
+    app: plex
+spec:
+  type: LoadBalancer
+  externalIPs:
+    - 10.1.1.250
+  selector:
+    app: plex
+  ports:
+  - protocol: TCP
+    port: 32400
+    targetPort: 32400
+---
+# Jellyfin Deployment (nodeSelector: kube-1)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jellyfin
+  namespace: media
+  labels:
+    app: jellyfin
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jellyfin
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: jellyfin
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: kube-1
+      containers:
+      - name: jellyfin
+        image: lscr.io/linuxserver/jellyfin:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8096
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: "Asia/Jakarta"
+        volumeMounts:
+        - name: jellyfin-config
+          mountPath: /config
+        - name: jellyfin-tvshows
+          mountPath: /data/tvshows
+        - name: jellyfin-movies
+          mountPath: /data/movies
+      volumes:
+      - name: jellyfin-config
+        hostPath:
+          path: /mnt/cephfs/docker/media/jellyfin
+          type: Directory
+      - name: jellyfin-tvshows
+        hostPath:
+          path: /mnt/Data/Videos/TV
+          type: Directory
+      - name: jellyfin-movies
+        hostPath:
+          path: /mnt/Data/Videos/Movies
+          type: Directory
+---
+# Jellyfin Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: jellyfin
+  namespace: media
+  labels:
+    app: jellyfin
+spec:
+  type: LoadBalancer
+  externalIPs:
+    - 10.1.1.250
+  selector:
+    app: jellyfin
+  ports:
+  - protocol: TCP
+    port: 8096
+    targetPort: 8096

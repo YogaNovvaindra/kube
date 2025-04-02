@@ -1,0 +1,122 @@
+# Deployment for Speedtest (openspeedtest)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openspeedtest
+  namespace: tools
+  labels:
+    app: openspeedtest
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: openspeedtest
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: openspeedtest
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 1
+              preference:
+                matchExpressions:
+                  - key: "kubernetes.io/arch"
+                    operator: In
+                    values:
+                      - "amd64"
+      containers:
+      - name: openspeedtest
+        image: openspeedtest/latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+---
+# Service for openspeedtest
+apiVersion: v1
+kind: Service
+metadata:
+  name: openspeedtest
+  namespace: tools
+spec:
+  type: LoadBalancer
+  externalIPs:
+    - 10.1.1.250
+  selector:
+    app: openspeedtest
+  ports:
+  - name: http
+    protocol: TCP
+    port: 3001
+    targetPort: 3000
+---
+# Deployment for myspeed
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myspeed
+  namespace: tools
+  labels:
+    app: myspeed
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: myspeed
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: myspeed
+    spec:
+      containers:
+      - name: myspeed
+        image: germannewsmaker/myspeed:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5216
+        env:
+        - name: TZ
+          value: "Asia/Jakarta"
+        volumeMounts:
+        - name: myspeed-data
+          mountPath: /myspeed/data
+      volumes:
+      - name: myspeed-data
+        hostPath:
+          path: /mnt/cephfs/docker/speedtest/myspeed
+          type: Directory
+---
+# Service for myspeed
+apiVersion: v1
+kind: Service
+metadata:
+  name: myspeed
+  namespace: tools
+spec:
+  type: LoadBalancer
+  externalIPs:
+    - 10.1.1.250
+  selector:
+    app: myspeed
+  ports:
+  - name: http
+    protocol: TCP
+    port: 5216
+    targetPort: 5216

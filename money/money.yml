@@ -1,0 +1,151 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: money
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: repocket
+  namespace: money
+  labels:
+    app: repocket
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: repocket
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: repocket
+    spec:
+      tolerations:
+        - key: "stateless"
+          operator: "Equal"
+          value: "true"
+          effect: "NoSchedule"
+      containers:
+      - name: repocket
+        image: repocket/repocket:latest
+        imagePullPolicy: Always
+        env:
+        - name: RP_EMAIL
+          valueFrom:
+            secretKeyRef:
+              name: money-cred
+              key: email
+        - name: RP_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: money-cred
+              key: rpkey
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: honeygain
+  namespace: money
+  labels:
+    app: honeygain
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: honeygain
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: honeygain
+    spec:
+      containers:
+      - name: honeygain
+        image: honeygain/honeygain:latest
+        imagePullPolicy: Always
+        env:
+        - name: HONEYGAIN_EMAIL
+          valueFrom:
+            secretKeyRef:
+              name: money-cred
+              key: email
+        - name: HONEYGAIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: money-cred
+              key: honeypassword
+        args:
+        - "-tou-accept"
+        - "-email"
+        - "$(HONEYGAIN_EMAIL)"
+        - "-pass"
+        - "$(HONEYGAIN_PASSWORD)"
+        - "-device"
+        - "kube"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pawns
+  namespace: money
+  labels:
+    app: pawns
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pawns
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: pawns
+    spec:
+      tolerations:
+        - key: "stateless"
+          operator: "Equal"
+          value: "true"
+          effect: "NoSchedule"
+      containers:
+      - name: pawns
+        image: iproyal/pawns-cli:latest
+        imagePullPolicy: Always
+        env:
+        - name: PAWNS_EMAIL
+          valueFrom:
+            secretKeyRef:
+              name: money-cred
+              key: email
+        - name: PAWNS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: money-cred
+              key: pawnspassword
+        args:
+        - "-email=$(PAWNS_EMAIL)"
+        - "-password=$(PAWNS_PASSWORD)"
+        - "-device-name=kube"
+        - "-device-id=kube"
+        - "-accept-tos"
+
