@@ -15,11 +15,6 @@ metadata:
   namespace: tools
   labels:
     app: semaphore
-  annotations:
-    keel.sh/policy: force
-    keel.sh/trigger: poll 
-    keel.sh/match-tag: "true"
-    keel.sh/pollSchedule: "@every 6h"
 spec:
   replicas: 1
   revisionHistoryLimit: 3

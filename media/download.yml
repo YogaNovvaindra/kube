@@ -6,11 +6,6 @@ metadata:
   namespace: media
   labels:
     app: transmission
-  annotations:
-    keel.sh/policy: force
-    keel.sh/trigger: poll
-    keel.sh/match-tag: "true"
-    keel.sh/pollSchedule: "@every 6h"
 spec:
   replicas: 1
   selector:

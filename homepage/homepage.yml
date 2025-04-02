@@ -5,11 +5,6 @@ metadata:
   namespace: tools
   labels:
     app.kubernetes.io/name: homepage
-  annotations:
-    keel.sh/policy: force
-    keel.sh/trigger: poll
-    keel.sh/match-tag: "true"
-    keel.sh/pollSchedule: "@every 6h"
 spec:
   replicas: 1
   revisionHistoryLimit: 3
@@ -28,7 +23,7 @@ spec:
       enableServiceLinks: true
       containers:
         - name: homepage
-          image: ghcr.io/gethomepage/homepage:latest
+          image: ghcr.io/gethomepage/homepage:v1.1.1
           imagePullPolicy: Always
           ports:
             - containerPort: 3000

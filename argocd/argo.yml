@@ -24904,11 +24904,6 @@ metadata:
     app.kubernetes.io/name: argocd-applicationset-controller
     app.kubernetes.io/part-of: argocd
   name: argocd-applicationset-controller
-  annotations:
-    keel.sh/policy: force
-    keel.sh/trigger: poll
-    keel.sh/match-tag: "true"
-    keel.sh/pollSchedule: "@every 6h"
 spec:
   selector:
     matchLabels:
@@ -25076,7 +25071,7 @@ spec:
               key: applicationsetcontroller.requeue.after
               name: argocd-cmd-params-cm
               optional: true
-        image: quay.io/argoproj/argocd:latest
+        image: quay.io/argoproj/argocd:v2.14.8
         imagePullPolicy: Always
         name: argocd-applicationset-controller
         ports:
@@ -25143,11 +25138,6 @@ metadata:
     app.kubernetes.io/name: argocd-dex-server
     app.kubernetes.io/part-of: argocd
   name: argocd-dex-server
-  annotations:
-    keel.sh/policy: force
-    keel.sh/trigger: poll
-    keel.sh/match-tag: "true"
-    keel.sh/pollSchedule: "@every 6h"
 spec:
   selector:
     matchLabels:
@@ -25224,7 +25214,7 @@ spec:
         - -n
         - /usr/local/bin/argocd
         - /shared/argocd-dex
-        image: quay.io/argoproj/argocd:latest
+        image: quay.io/argoproj/argocd:v2.14.8
         imagePullPolicy: Always
         name: copyutil
         securityContext:
@@ -25269,11 +25259,6 @@ metadata:
     app.kubernetes.io/name: argocd-notifications-controller
     app.kubernetes.io/part-of: argocd
   name: argocd-notifications-controller
-  annotations:
-    keel.sh/policy: force
-    keel.sh/trigger: poll
-    keel.sh/match-tag: "true"
-    keel.sh/pollSchedule: "@every 6h"
 spec:
   selector:
     matchLabels:
@@ -25325,7 +25310,7 @@ spec:
               key: notificationscontroller.repo.server.plaintext
               name: argocd-cmd-params-cm
               optional: true
-        image: quay.io/argoproj/argocd:latest
+        image: quay.io/argoproj/argocd:v2.14.8
         imagePullPolicy: Always
         livenessProbe:
           tcpSocket:
@@ -25374,11 +25359,6 @@ metadata:
     app.kubernetes.io/name: argocd-redis
     app.kubernetes.io/part-of: argocd
   name: argocd-redis
-  annotations:
-    keel.sh/policy: force
-    keel.sh/trigger: poll
-    keel.sh/match-tag: "true"
-    keel.sh/pollSchedule: "@every 6h"
 spec:
   selector:
     matchLabels:
@@ -25432,7 +25412,7 @@ spec:
         - argocd
         - admin
         - redis-initial-password
-        image: quay.io/argoproj/argocd:latest
+        image: quay.io/argoproj/argocd:v2.14.8
         imagePullPolicy: Always
         name: secret-init
         securityContext:
@@ -25461,11 +25441,6 @@ metadata:
     app.kubernetes.io/name: argocd-repo-server
     app.kubernetes.io/part-of: argocd
   name: argocd-repo-server
-  annotations:
-    keel.sh/policy: force
-    keel.sh/trigger: poll
-    keel.sh/match-tag: "true"
-    keel.sh/pollSchedule: "@every 6h"
 spec:
   selector:
     matchLabels:
@@ -25710,7 +25685,7 @@ spec:
           value: /helm-working-dir
         - name: HELM_DATA_HOME
           value: /helm-working-dir
-        image: quay.io/argoproj/argocd:latest
+        image: quay.io/argoproj/argocd:v2.14.8
         imagePullPolicy: Always
         livenessProbe:
           failureThreshold: 3
@@ -25762,7 +25737,7 @@ spec:
         - -n
         - /usr/local/bin/argocd
         - /var/run/argocd/argocd-cmp-server
-        image: quay.io/argoproj/argocd:latest
+        image: quay.io/argoproj/argocd:v2.14.8
         name: copyutil
         securityContext:
           allowPrivilegeEscalation: false
@@ -25819,11 +25794,6 @@ metadata:
     app.kubernetes.io/name: argocd-server
     app.kubernetes.io/part-of: argocd
   name: argocd-server
-  annotations:
-    keel.sh/policy: force
-    keel.sh/trigger: poll
-    keel.sh/match-tag: "true"
-    keel.sh/pollSchedule: "@every 6h"
 spec:
   selector:
     matchLabels:
@@ -26139,7 +26109,7 @@ spec:
               key: server.sync.replace.allowed
               name: argocd-cmd-params-cm
               optional: true
-        image: quay.io/argoproj/argocd:latest
+        image: quay.io/argoproj/argocd:v2.14.8
         imagePullPolicy: Always
         livenessProbe:
           httpGet:
@@ -26232,11 +26202,6 @@ metadata:
     app.kubernetes.io/name: argocd-application-controller
     app.kubernetes.io/part-of: argocd
   name: argocd-application-controller
-  annotations:
-    keel.sh/policy: force
-    keel.sh/trigger: poll
-    keel.sh/match-tag: "true"
-    keel.sh/pollSchedule: "@every 6h"
 spec:
   replicas: 1
   selector:
@@ -26510,7 +26475,7 @@ spec:
               optional: true
         - name: KUBECACHEDIR
           value: /tmp/kubecache
-        image: quay.io/argoproj/argocd:latest
+        image: quay.io/argoproj/argocd:v2.14.8
         imagePullPolicy: Always
         name: argocd-application-controller
         ports:
