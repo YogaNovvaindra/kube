@@ -66,8 +66,6 @@ metadata:
   namespace: monitoring
   labels:
     app: grafana
-  annotations:
-    traefik.enable: "true"
 spec:
   type: LoadBalancer
   externalIPs:
