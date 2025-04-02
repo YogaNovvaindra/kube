@@ -365,7 +365,7 @@ spec:
     spec:
       containers:
       - name: overseerr
-        image: lscr.io/linuxserver/overseerr:1.34.0
+        image: lscr.io/linuxserver/overseerr:2021.12.12
         imagePullPolicy: Always
         ports:
         - containerPort: 5055
