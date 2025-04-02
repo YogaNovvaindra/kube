@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - name: stirling-pdf
-        image: stirlingtools/stirling-pdf:latest@sha256:2c977c0a2e3ef8e47352f2f9d9ec4d6e5cc76bb8a578c6454f3401bd2b5ab4bd
+        image: stirlingtools/stirling-pdf:latest@sha256:65a6b71c5e7241f8bf71320e9728d6d3d172d78f8b9c2f600c8de6dda15b343c
         imagePullPolicy: Always
         env:
         - name: DOCKER_ENABLE_SECURITY
