@@ -36,7 +36,7 @@ spec:
                       - "amd64"
       containers:
       - name: openspeedtest
-        image: openspeedtest/latest
+        image: openspeedtest/latest:latest@sha256:a6a7e3b3e9e93cfe7b9b2eb49c60b2a93644149a0a600845d4df57148b193ff6
         imagePullPolicy: Always
         ports:
         - containerPort: 3000
@@ -87,7 +87,7 @@ spec:
     spec:
       containers:
       - name: myspeed
-        image: germannewsmaker/myspeed:latest
+        image: germannewsmaker/myspeed:latest@sha256:3fbf1e2908079dbd10651c2b4f9550c4163a0d6e42110dd395a19cf3f8063879
         imagePullPolicy: Always
         ports:
         - containerPort: 5216
