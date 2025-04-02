@@ -56,7 +56,7 @@ spec:
     spec:
       containers:
       - name: outline
-        image: docker.getoutline.com/outlinewiki/outline:0.82.0
+        image: outlinewiki/outline:0.82.0
         imagePullPolicy: Always
         envFrom:
         - configMapRef:

@@ -44,7 +44,7 @@ spec:
         spec:
           serviceAccountName: sa-argocd-backup
           containers:
-          - image: quay.io/argoproj/argocd:latest
+          - image: quay.io/argoproj/argocd:v2.14.7
             imagePullPolicy: Always
             name: backup
             command: ["sh", "-c", 
