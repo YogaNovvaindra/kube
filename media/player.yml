@@ -111,6 +111,8 @@ spec:
         volumeMounts:
         - name: jellyfin-config
           mountPath: /config
+        - name: jellyfin-cache
+          mountPath: /cache
         - name: jellyfin-tvshows
           mountPath: /data/tvshows
         - name: jellyfin-movies
@@ -119,6 +121,10 @@ spec:
       - name: jellyfin-config
         hostPath:
           path: /mnt/cephfs/docker/media/jellyfin
+          type: Directory
+      - name: jellyfin-cache
+        hostPath:
+          path: /mnt/cephfs/docker/media/jellyfin/cache
           type: Directory
       - name: jellyfin-tvshows
         hostPath:
