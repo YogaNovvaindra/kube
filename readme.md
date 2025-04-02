@@ -2,6 +2,17 @@
 
 Welcome to my HomeLab Kubernetes Cluster! This repository contains the configuration and deployment files for managing various services and applications in my homelab environment. The cluster is designed to provide a self-hosted, automated, and scalable infrastructure for personal and experimental use.
 
+## 📸 Screenshots
+
+### 🏠 Homepage
+![Homepage](images/homepage.png)
+
+### 🚀 ArgoCD
+![ArgoCD](images/argocd.png)
+
+### 📊 Grafana
+![Grafana](images/grafana.png)
+
 ## 🌟 Overview
 
 The Kubernetes cluster is organized into multiple namespaces, each dedicated to a specific category of services. These namespaces include:
