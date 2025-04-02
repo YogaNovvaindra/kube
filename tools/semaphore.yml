@@ -35,7 +35,7 @@ spec:
     spec:
       containers:
       - name: semaphore
-        image: semaphoreui/semaphore:latest
+        image: semaphoreui/semaphore:latest@sha256:906ded3c39fe04f0e58dbc89cf8be78693461c75b8c233293599dfe4751c5037
         imagePullPolicy: Always
         envFrom:
         - configMapRef:
