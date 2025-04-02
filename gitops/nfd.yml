@@ -10,7 +10,6 @@ spec:
     repoURL: https://github.com/YogaNovvaindra/kube.git
     targetRevision: HEAD
     path: node-feature/overlays/default
-    kustomize: {}
   destination:
     server: https://kubernetes.default.svc
     namespace: node-feature-discovery
