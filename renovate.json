@@ -4,7 +4,7 @@
     "config:recommended"
   ],
   "kubernetes": {
-    "fileMatch": ["\.yaml$", "\.yml$"]
+    "fileMatch": ["\\.yaml$", "\\.yml$"]
   },
   "packageRules": [
     {
