@@ -103,12 +103,12 @@ spec:
       prune: true
       selfHeal: true
 ```
-### 🔒 Security
+## 🔒 Security
 
 Sensitive data such as database credentials and API keys are managed using Sealed Secrets. These secrets are encrypted and stored securely in the repository.
 
-### 🤝 Contributing
+## 🤝 Contributing
 This repository is primarily for personal use, but feel free to explore and adapt it for your own homelab setup. Contributions and suggestions are welcome!
 
-### 📜 License
+## 📜 License
 This project is licensed under the MIT License.
