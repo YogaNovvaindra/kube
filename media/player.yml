@@ -97,7 +97,7 @@ spec:
         kubernetes.io/hostname: kube-1
       containers:
       - name: jellyfin
-        image: lscr.io/linuxserver/jellyfin:10.10.5
+        image: lscr.io/linuxserver/jellyfin:10.10.6
         imagePullPolicy: Always
         ports:
         - containerPort: 8096

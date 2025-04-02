@@ -116,7 +116,7 @@ spec:
               name: prometheus-cred
       containers:
       - name: prometheus
-        image: prom/prometheus:v3.2.0
+        image: prom/prometheus:v3.2.1
         imagePullPolicy: Always
         args:
           - "--config.file=/etc/prometheus/prometheus.yml"
