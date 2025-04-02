@@ -84,11 +84,7 @@ kind: Deployment
 metadata:
   name: prometheus
   namespace: monitoring
-  annotations:
-    keel.sh/policy: force
-    keel.sh/trigger: poll
-    keel.sh/pollSchedule: "@every 6h"
-    keel.sh/match-tag: "true"
+
 spec:
   replicas: 1
   revisionHistoryLimit: 3

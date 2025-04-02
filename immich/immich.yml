@@ -10,11 +10,6 @@ metadata:
   namespace: immich
   labels:
     app: immich
-  annotations:
-    keel.sh/policy: force
-    keel.sh/trigger: poll
-    keel.sh/match-tag: "true"
-    keel.sh/pollSchedule: "@every 6h"
 spec:
   replicas: 1
   revisionHistoryLimit: 3
@@ -32,7 +27,7 @@ spec:
         kubernetes.io/hostname: kube-1
       containers:
       - name: immich
-        image: ghcr.io/imagegenius/immich:latest
+        image: ghcr.io/imagegenius/immich:1.130.3
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
@@ -125,11 +120,6 @@ metadata:
   namespace: immich
   labels:
     app: valkey
-  annotations:
-    keel.sh/policy: force
-    keel.sh/trigger: poll
-    keel.sh/match-tag: "true"
-    keel.sh/pollSchedule: "@every 6h"
 spec:
   replicas: 1
   revisionHistoryLimit: 3
@@ -145,7 +135,7 @@ spec:
     spec:
       containers:
       - name: valkey
-        image: valkey/valkey:alpine
+        image: valkey/valkey:8.0-alpine
         imagePullPolicy: Always
         ports:
         - containerPort: 6379
@@ -178,11 +168,6 @@ metadata:
   namespace: immich
   labels:
     app: db
-  annotations:
-    keel.sh/policy: force
-    keel.sh/trigger: poll
-    keel.sh/match-tag: "true"
-    keel.sh/pollSchedule: "@every 6h"
 spec:
   replicas: 1
   revisionHistoryLimit: 3

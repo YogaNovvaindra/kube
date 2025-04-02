@@ -3,11 +3,6 @@ kind: DaemonSet
 metadata:
   name: node-exporter
   namespace: monitoring
-  annotations:
-    keel.sh/policy: force
-    keel.sh/trigger: poll
-    keel.sh/match-tag: "true"
-    keel.sh/pollSchedule: "@every 6h"
 spec:
   selector:
     matchLabels:

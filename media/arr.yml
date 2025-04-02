@@ -6,11 +6,6 @@ metadata:
   namespace: media
   labels:
     app: flaresolverr
-  annotations:
-    keel.sh/policy: force
-    keel.sh/trigger: poll
-    keel.sh/match-tag: "true"
-    keel.sh/pollSchedule: "@every 6h"
 spec:
   replicas: 1
   selector:
@@ -76,11 +71,6 @@ metadata:
   namespace: media
   labels:
     app: prowlarr
-  annotations:
-    keel.sh/policy: force
-    keel.sh/trigger: poll
-    keel.sh/match-tag: "true"
-    keel.sh/pollSchedule: "@every 6h"
 spec:
   replicas: 1
   selector:
@@ -142,11 +132,6 @@ metadata:
   namespace: media
   labels:
     app: radarr
-  annotations:
-    keel.sh/policy: force
-    keel.sh/trigger: poll
-    keel.sh/match-tag: "true"
-    keel.sh/pollSchedule: "@every 6h"
 spec:
   replicas: 1
   selector:
@@ -220,11 +205,6 @@ metadata:
   namespace: media
   labels:
     app: sonarr
-  annotations:
-    keel.sh/policy: force
-    keel.sh/trigger: poll
-    keel.sh/match-tag: "true"
-    keel.sh/pollSchedule: "@every 6h"
 spec:
   replicas: 1
   selector:
@@ -298,11 +278,6 @@ metadata:
   namespace: media
   labels:
     app: bazarr
-  annotations:
-    keel.sh/policy: force
-    keel.sh/trigger: poll
-    keel.sh/match-tag: "true"
-    keel.sh/pollSchedule: "@every 6h"
 spec:
   replicas: 1
   selector:
@@ -376,11 +351,6 @@ metadata:
   namespace: media
   labels:
     app: overseerr
-  annotations:
-    keel.sh/policy: force
-    keel.sh/trigger: poll
-    keel.sh/match-tag: "true"
-    keel.sh/pollSchedule: "@every 6h"
 spec:
   replicas: 1
   selector:
@@ -442,11 +412,6 @@ metadata:
   namespace: media
   labels:
     app: tautulli
-  annotations:
-    keel.sh/policy: force
-    keel.sh/trigger: poll
-    keel.sh/match-tag: "true"
-    keel.sh/pollSchedule: "@every 6h"
 spec:
   replicas: 1
   selector:
@@ -508,11 +473,6 @@ metadata:
   namespace: media
   labels:
     app: maintainerr
-  annotations:
-    keel.sh/policy: force
-    keel.sh/trigger: poll
-    keel.sh/match-tag: "true"
-    keel.sh/pollSchedule: "@every 6h"
 spec:
   replicas: 1
   selector:
