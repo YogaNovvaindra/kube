@@ -1,0 +1,20 @@
+# application.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nfd
+  namespace: argocd
+spec:
+  project: local
+  source:
+    repoURL: https://github.com/YogaNovvaindra/kube.git
+    targetRevision: HEAD
+    path: node-feature/overlays/default
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: node-feature-discovery
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true

@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reubah
+  namespace: tools
+  labels:
+    app: reubah
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll 
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: reubah
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: reubah
+    spec:
+      containers:
+      - name: reubah
+        image: ghcr.io/dendianugerah/reubah:latest
+        imagePullPolicy: Always
+        env:
+        - name: PORT
+          value: "8081"
+        ports:
+        - containerPort: 8081
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: reubah
+  namespace: tools
+spec:
+  type: LoadBalancer
+  externalIPs:
+    - 10.1.1.250
+  selector:
+    app: reubah
+  ports:
+  - port: 8087
+    targetPort: 8081

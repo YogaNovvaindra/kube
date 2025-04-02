@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-env
+  namespace: monitoring
+data:
+  GF_SERVER_ROOT_URL: "https://grafana.ygnv.my.id/"
+  GF_AUTH_GENERIC_OAUTH_ENABLED: "true"
+  GF_AUTH_GENERIC_OAUTH_NAME: "authentik"
+  GF_AUTH_GENERIC_OAUTH_SCOPES: "openid profile email"
+  GF_AUTH_GENERIC_OAUTH_AUTH_URL: "https://auth.ygnv.my.id/application/o/authorize/"
+  GF_AUTH_GENERIC_OAUTH_TOKEN_URL: "https://auth.ygnv.my.id/application/o/token/"
+  GF_AUTH_GENERIC_OAUTH_API_URL: "https://auth.ygnv.my.id/application/o/userinfo/"
+  GF_AUTH_SIGNOUT_REDIRECT_URL: "https://auth.ygnv.my.id/application/o/grafana/end-session/"
+  GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH: "contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer'"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+  namespace: monitoring
+  labels:
+    app: grafana
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/pollSchedule: "@every 6h"
+    keel.sh/match-tag: "true"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: grafana
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+      - name: grafana
+        image: grafana/grafana:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        envFrom:
+        - configMapRef:
+            name: grafana-env
+        - secretRef:
+            name: grafana-cred
+        volumeMounts:
+        - name: grafana-data
+          mountPath: /var/lib/grafana
+      volumes:
+      - name: grafana-data
+        hostPath:
+          path: /mnt/cephfs/docker/monitoring/grafana
+          type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  namespace: monitoring
+  labels:
+    app: grafana
+  annotations:
+    traefik.enable: "true"
+spec:
+  type: LoadBalancer
+  externalIPs:
+    - 10.1.1.250
+  selector:
+    app: grafana
+  ports:
+  - protocol: TCP
+    port: 3000
+    targetPort: 3000

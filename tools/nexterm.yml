@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nexterm
+  namespace: tools
+  labels:
+    app: nexterm
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: nexterm
+  template:
+    metadata:
+      labels:
+        app: nexterm
+    spec:
+      containers:
+      - name: nexterm
+        image: germannewsmaker/nexterm:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 6989
+        envFrom:
+        - secretRef:
+            name: nexterm-cred
+        volumeMounts:
+        - name: nexterm-data
+          mountPath: /app/data
+      volumes:
+      - name: nexterm-data
+        hostPath:
+          path: /mnt/cephfs/docker/tools/nexterm
+          type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nexterm
+  namespace: tools
+spec:
+  selector:
+    app: nexterm
+  type: LoadBalancer
+  externalIPs:
+    - 10.1.1.250
+  ports:
+  - protocol: TCP
+    port: 6989
+    targetPort: 6989

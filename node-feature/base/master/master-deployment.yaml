@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nfd
+  name: nfd-master
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nfd-master
+  template:
+    metadata:
+      labels:
+        app: nfd-master
+    spec:
+      serviceAccount: nfd-master
+      enableServiceLinks: false
+      tolerations: []
+      containers:
+        - name: nfd-master
+          image: gcr.io/k8s-staging-nfd/node-feature-discovery:master
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: 300m
+              memory: 4Gi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            failureThreshold: 10
+          command:
+            - "nfd-master"
+          ports:
+            - name: http
+              containerPort: 8080

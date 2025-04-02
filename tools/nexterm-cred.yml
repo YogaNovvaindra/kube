@@ -1,0 +1,15 @@
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: nexterm-cred
+  namespace: tools
+spec:
+  encryptedData:
+    ENCRYPTION_KEY: AgAoVFzZLX3YcpKCw6/GWDmpSbxf+Rkz0i7HMKtMk9YmFWq56gsYXexwPkPVWAMdw5gPBwAlxB+4pltVRH8bz3/R670HmXTOJP1Nq8SO6Sfa261FbANrd8kj1DrU2PgKDDFk49dx94/pLlTKrP5r15mYh5HJmkdluX1GmvrqHplPvHaJBhCyFqnJbVnFNc2gKAPTql1N8lAX7iic4Pzh5BFslVhZksFoTiiaw24uS/RmLCxAjoZ6WM3UzpkqnfqKQctAIBaPM91CPBJubbyHg4KJ8Z7iXenIO/ropf7TGQGgc5GccDNxwopnxauQ9nd0nqszYSlwGc4C9wzL7iK8dtyq+gV8URlys6Zf69f4XCuQL/K22aKFJLKKGy+vl2UfbB+YsRv76iNnG9a6b8Z4fRXkU3DHIqLpoWLh2SRqsGV08OEp+vXn6aaU9H+suhyONbzlcxZjL+Kmpo7qQcyb9Yov8xizTtoIDtBbM35veQo+6DaGFHaN/ecPLQ5yVs1WvBJTlKiHVA752snmrhT1p+GjzalpHGmuBqFW0Aqu6BG4sqCYXWBzyZBsddFeV8cmYwrUtyRropynkiSDqbRVLE1OkxbfU3gdFUkjih5hcy89G+3FiLECGua1J0wZRzkMGOzTyDdMycKALhLBG68/ZtdNv7FzVDYNUchCGCKF4/mrlS+JezYk/DF6jH/gSVJRVHQfi9yz40WK+hxu9ECjaWKyI1LoXM8x03RKtP0VTd9wq18QS9lYNn4NYy/lMU8g58B5nA6r9Pd6JwLsupX1v3rp
+  template:
+    metadata:
+      creationTimestamp: null
+      name: nexterm-cred
+      namespace: tools

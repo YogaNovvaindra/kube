@@ -1,0 +1,163 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: monitoring
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 1m
+      scrape_timeout: 30s
+      evaluation_interval: 1m
+
+    scrape_configs:
+      - job_name: "prometheus"
+        static_configs:
+          - targets: ["localhost:9090"]
+
+      - job_name: "kube-node"
+        kubernetes_sd_configs:
+          - role: pod
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_pod_label_app]
+            action: keep
+            regex: monitoring;node-exporter
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            target_label: instance
+      
+      - job_name: 'traefik'
+        static_configs:
+          - targets: ['${TRAEFIK_ENDPOINT}']
+      
+      - job_name: 'microceph'
+        static_configs:
+          - targets: ['${MICROCEPH_ENDPOINT_1}', '${MICROCEPH_ENDPOINT_2}', '${MICROCEPH_ENDPOINT_3}']
+
+      - job_name: 'mktxp'
+        static_configs:
+          - targets: ['mktxp:49090']
+
+      - job_name: "openwrt"
+        static_configs:
+          - targets: ['${OPENWRT_ENDPOINT}']
+
+      - job_name: 'server-node'
+        static_configs:
+          - targets: ['${DOCKER_ENDPOINT}']
+            labels:
+              instance: 'docker'
+          - targets: ['${AAPANEL_ENDPOINT}']
+            labels:
+              instance: 'aapanel'
+          - targets: ['${IOT_SERVER_ENDPOINT}']
+            labels:
+              instance: 'IOT-SERVER'
+          - targets: ['${LABS_ENDPOINT}']
+            labels:
+              instance: '8labs'
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: pod-reader-cluster
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "watch", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: pod-reader-cluster-binding
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: monitoring
+roleRef:
+  kind: ClusterRole
+  name: pod-reader-cluster
+  apiGroup: rbac.authorization.k8s.io
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+  namespace: monitoring
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/pollSchedule: "@every 6h"
+    keel.sh/match-tag: "true"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: prometheus
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      initContainers:
+      - name: config-processor
+        image: alpine:latest
+        imagePullPolicy: Always
+        command: ['/bin/sh', '-c']
+        args:
+          - apk add gettext &&
+            envsubst < /config-template/prometheus.yml > /etc/prometheus/prometheus.yml
+        volumeMounts:
+          - name: config-template
+            mountPath: /config-template
+          - name: config
+            mountPath: /etc/prometheus
+        envFrom:
+          - secretRef:
+              name: prometheus-cred
+      containers:
+      - name: prometheus
+        image: prom/prometheus:latest
+        imagePullPolicy: Always
+        args:
+          - "--config.file=/etc/prometheus/prometheus.yml"
+          - "--storage.tsdb.path=/prometheus"
+          - "--web.enable-lifecycle"
+          - "--storage.tsdb.retention.time=90d"
+          - "--storage.tsdb.wal-compression"
+        ports:
+          - containerPort: 9090
+        volumeMounts:
+          - name: config
+            mountPath: /etc/prometheus
+          - name: storage-volume
+            mountPath: /prometheus
+      volumes:
+        - name: config-template
+          configMap:
+            name: prometheus-config
+        - name: config
+          emptyDir: {}
+        - name: storage-volume
+          hostPath:
+            path: /mnt/cephfs/docker/monitoring/prometheus
+            type: Directory  
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+  namespace: monitoring
+spec:
+  type: LoadBalancer
+  externalIPs:
+    - 10.1.1.250
+  selector:
+    app: prometheus
+  ports:
+    - protocol: TCP
+      port: 9090
+      targetPort: 9090

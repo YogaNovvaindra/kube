@@ -1,0 +1,244 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: immich
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+  namespace: immich
+  labels:
+    app: immich
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: immich
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: immich
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: kube-1
+      containers:
+      - name: immich
+        image: ghcr.io/imagegenius/immich:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: "Asia/Jakarta"
+        - name: IMMICH_PORT
+          value: "8080"
+        - name: DB_HOSTNAME
+          value: "immich-db"
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: db-cred
+              key: username
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-cred
+              key: password
+        - name: DB_DATABASE_NAME
+          valueFrom:
+            secretKeyRef:
+              name: db-cred
+              key: dbname
+        - name: REDIS_HOSTNAME
+          value: "immich-valkey"
+        - name: DISABLE_MACHINE_LEARNING
+          value: "false"
+        - name: DISABLE_TYPESENSE
+          value: "false"
+        - name: DB_PORT
+          value: "5432"
+        - name: REDIS_PORT
+          value: "6379"
+        - name: REDIS_PASSWORD
+          value: ""
+        volumeMounts:
+        - name: config-volume
+          mountPath: /config
+        - name: libraries-volume
+          mountPath: /libraries
+        - name: photos-volume
+          mountPath: /photos
+        - name: pictures-volume
+          mountPath: /pictures
+          readOnly: true
+      volumes:
+      - name: config-volume
+        hostPath:
+          path: /mnt/cephfs/docker/immich/config
+          type: Directory
+      - name: libraries-volume
+        hostPath:
+          path: /mnt/cephfs/docker/immich/libraries
+          type: Directory
+      - name: photos-volume
+        hostPath:
+          path: /mnt/cephfs/docker/immich/photos
+          type: Directory
+      - name: pictures-volume
+        hostPath:
+          path: /mnt/Data/Pictures
+          type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: immich
+  namespace: immich
+spec:
+  type: LoadBalancer
+  externalIPs:
+    - 10.1.1.250
+  selector:
+    app: immich
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: valkey
+  namespace: immich
+  labels:
+    app: valkey
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: valkey
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: valkey
+    spec:
+      containers:
+      - name: valkey
+        image: valkey/valkey:alpine
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 6379
+        volumeMounts:
+        - name: valkey-data
+          mountPath: /data
+      volumes:
+      - name: valkey-data
+        hostPath:
+          path: /mnt/cephfs/docker/immich/valkey
+          type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: immich-valkey
+  namespace: immich
+spec:
+  selector:
+    app: valkey
+  ports:
+  - protocol: TCP
+    port: 6379
+    targetPort: 6379
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db
+  namespace: immich
+  labels:
+    app: db
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: db
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: db
+        image: tensorchord/pgvecto-rs:pg16-v0.2.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: db-cred
+              key: username
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-cred
+              key: password
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: db-cred
+              key: dbname
+        volumeMounts:
+        - name: db-data
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: db-data
+        hostPath:
+          path: /mnt/cephfs/docker/immich/postgres16
+          type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: immich-db
+  namespace: immich
+spec:
+  selector:
+    app: db
+  ports:
+  - protocol: TCP
+    port: 5432
+    targetPort: 5432

@@ -1,0 +1,91 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: outline-env
+  namespace: tools
+data:
+  NODE_ENV: "production"
+  PGSSLMODE: "disable"
+  REDIS_URL: "redis://valkey:6379"
+  URL: "https://outline.ygnv.my.id"
+  PORT: "3000"
+  FILE_STORAGE: "local"
+  FILE_STORAGE_LOCAL_ROOT_DIR: "/var/lib/outline/data"
+  FILE_STORAGE_UPLOAD_MAX_SIZE: "262144000"
+  OIDC_AUTH_URI: "https://auth.ygnv.my.id/application/o/authorize/"
+  OIDC_TOKEN_URI: "https://auth.ygnv.my.id/application/o/token/"
+  OIDC_USERINFO_URI: "https://auth.ygnv.my.id/application/o/userinfo/"
+  OIDC_LOGOUT_URI: "https://auth.ygnv.my.id/application/o/outline/end-session/"
+  OIDC_USERNAME_CLAIM: "preferred_username"
+  OIDC_DISPLAY_NAME: "authentik"
+  OIDC_SCOPES: "openid profile email"
+  FORCE_HTTPS: "false"
+  ENABLE_UPDATES: "true"
+  WEB_CONCURRENCY: "1"
+  LOG_LEVEL: "info"
+  DEFAULT_LANGUAGE: "en_US"
+  RATE_LIMITER_ENABLED: "true"
+  RATE_LIMITER_REQUESTS: "1000"
+  RATE_LIMITER_DURATION_WINDOW: "60"
+---
+# OUTLINE DEPLOYMENT
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: outline
+  namespace: tools
+  labels:
+    app: outline
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: outline
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: outline
+    spec:
+      containers:
+      - name: outline
+        image: docker.getoutline.com/outlinewiki/outline:latest
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: outline-env
+        - secretRef:
+            name: outline-cred
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+        - name: outline-data
+          mountPath: /var/lib/outline/data
+      volumes:
+      - name: outline-data
+        hostPath:
+          path: /mnt/cephfs/docker/tools/outline
+          type: Directory
+---
+# OUTLINE SERVICE WITH TRAEFIK ANNOTATIONS
+apiVersion: v1
+kind: Service
+metadata:
+  name: outline
+  namespace: tools
+spec:
+  type: LoadBalancer
+  externalIPs:
+    - 10.1.1.250
+  selector:
+    app: outline
+  ports:
+  - port: 3004
+    targetPort: 3000
