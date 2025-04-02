@@ -135,7 +135,7 @@ spec:
     spec:
       containers:
       - name: valkey
-        image: valkey/valkey:8.0-alpine
+        image: valkey/valkey:8.1-alpine
         imagePullPolicy: Always
         ports:
         - containerPort: 6379
