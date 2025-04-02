@@ -458,7 +458,7 @@ data:
           widget:
             type: jellyfin
             url: http://jellyfin.media.svc.cluster.local:8096
-            key: 82f0fab83e8f45dc8478c12f09f33113
+            key: 6648c5f87b2748548e9992497568fd55
             enableBlocks: true # optional, defaults to false
             enableNowPlaying: true # optional, defaults to true
             enableUser: true # optional, defaults to false
