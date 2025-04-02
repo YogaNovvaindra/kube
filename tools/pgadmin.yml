@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - name: pgadmin
-        image: dpage/pgadmin4:latest
+        image: dpage/pgadmin4:latest@sha256:035c925bf0e7fd86b66846697cffda68bb1795c50857538a670a1a26bd657785
         imagePullPolicy: Always
         envFrom:
         - secretRef:
