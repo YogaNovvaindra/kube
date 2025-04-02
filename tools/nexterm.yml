@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
       - name: nexterm
-        image: germannewsmaker/nexterm:latest
+        image: germannewsmaker/nexterm:1.0.3-OPEN-PREVIEW
         imagePullPolicy: Always
         ports:
         - containerPort: 6989

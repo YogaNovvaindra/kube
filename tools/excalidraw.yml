@@ -27,7 +27,7 @@ spec:
         kubernetes.io/arch: amd64
       containers:
       - name: excalidraw
-        image: excalidraw/excalidraw:latest
+        image: excalidraw/excalidraw:latest@sha256:393d2b10dcea52d78a7f325fef665d3ccb74f7c50d8bc20d6732551884a086f2
         imagePullPolicy: Always
         ports:
         - containerPort: 80
