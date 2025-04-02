@@ -74,7 +74,6 @@ spec:
           path: /mnt/cephfs/docker/tools/outline
           type: Directory
 ---
-# OUTLINE SERVICE WITH TRAEFIK ANNOTATIONS
 apiVersion: v1
 kind: Service
 metadata:
