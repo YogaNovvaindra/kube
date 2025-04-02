@@ -15,100 +15,82 @@ Welcome to my HomeLab Kubernetes Cluster! This repository contains the configura
 
 ## 🌟 Overview
 
-The Kubernetes cluster is organized into multiple namespaces, each dedicated to a specific category of services. These namespaces include:
+The Kubernetes cluster follows **declarative infrastructure management** principles, where all configurations are version-controlled and automatically synchronized with the cluster state. Key organizational components include:
 
-- **🛠 Tools**: Utility applications for file management, monitoring, and automation.
-- **📊 Monitoring**: Tools for metrics collection, visualization, and alerting.
-- **🎥 Media**: Applications for managing and streaming media content.
-- **💰 Money**: Services for passive income generation.
-- **📸 Immich**: A self-hosted photo and video backup solution.
-- **🏠 Homepage**: A dashboard for managing and monitoring the homelab.
+- **📁 Namespace Segregation**: Services grouped by purpose in dedicated namespaces
+- **⚙ GitOps Workflow**: ArgoCD-driven continuous deployment from Git repository
+- **🔐 Security First**: Sealed Secrets for encrypted credential management
+- **🤖 Automated Updates**: Keel for container images and Renovate for dependency versions
 
 ## 🚀 Features
 
-- **🔄 GitOps Workflow**: Managed using ArgoCD for continuous delivery and automated synchronization of applications.
-- **🔒 Sealed Secrets**: Securely manage sensitive data using Bitnami's Sealed Secrets.
-- **📈 Monitoring and Analytics**: Includes Prometheus, Grafana, and Node Exporter for real-time metrics and visualization.
-- **🎞 Media Management**: Tools like Plex, Radarr, and Sonarr for media automation and streaming.
-- **🔗 File Synchronization**: Syncthing for syncing files across devices.
-- **🛡 Security**: Vaultwarden for password management and Authentik for identity and access management.
-- **🤖 Automation**: Semaphore for Ansible automation and Keel for container image updates.
+- **📜 Declarative Configuration**: Entire infrastructure defined as code in version-controlled manifests
+- **🔄 GitOps Automation**: ArgoCD synchronization with self-healing capabilities
+- **🆕 Continuous Updates**: 
+  - `Keel`: Automatic rolling updates for latest container images
+  - `Renovate`: Semantic versioning maintenance for chart dependencies
+- **📊 Observability Stack**: Prometheus/Grafana monitoring with alert integration
+- **🗄 Persistent Storage**: CephFS provisioner with automated volume management
+- **🔒 Zero-Trust Security**: Authentik SSO integration and network policies
 
 ## 📦 Applications
 
-### 🛠 Tools
-- **📂 FileBrowser**: Web-based file management interface.
-- **🔗 Syncthing**: File synchronization across devices.
-- **🔒 Vaultwarden**: Self-hosted password manager.
-- **📝 Outline**: Knowledge management and note-taking platform.
-- **🖍 Excalidraw**: Collaborative whiteboard tool.
-- **🛠 IT Tools**: Collection of IT utilities.
-- **🔔 Changedetection.io**: Website change detection and monitoring.
+### 🛠 Tools Namespace
+- **📂 FileBrowser**: Web-based file management
+- **🔗 Syncthing**: Cross-device file synchronization
+- **📝 Knowledge Suite**: Outline + Excalidraw combo
+- **🤖 Automation Tools**: Semaphore (Ansible) + Changedetection.io
 
-### 📊 Monitoring
-- **📈 Prometheus**: Metrics collection and alerting.
-- **📊 Grafana**: Data visualization and analytics.
-- **📡 Node Exporter**: System metrics exporter.
-- **📶 MikroTik Exporter (MKTXP)**: Metrics for MikroTik devices.
-- **📅 InfluxDB**: Time-series database for metrics storage.
+### 📊 Monitoring Stack
+- **📈 Prometheus**: Metrics collection with Thanos sidecar
+- **📊 Grafana**: Dashboards with Loki/Prometheus sources
+- **📡 Exporters**: Node + MikroTik metrics collection
+- **🚨 Alert Manager**: Integrated with Pushover notifications
 
-### 🎥 Media
-- **🎬 Plex**: Media server for streaming personal content.
-- **🎞 Radarr**: Movie collection manager.
-- **📺 Sonarr**: TV show collection manager.
-- **📤 Transmission**: BitTorrent client.
+### 🤖 Automation Ecosystem
+- **🔄 ArgoCD**: GitOps deployment controller
+- **🐋 Keel**: Automated image updates (latest tags)
+- **🆙 Renovate**: Dependency version management (SemVer)
+- **🤖 Semaphore**: Ansible playbook orchestration
 
-### 💰 Money
-- **💵 Repocket**: Passive income generation tool.
-- **🐝 Honeygain**: Internet bandwidth sharing for rewards.
-- **♟ Pawns**: Bandwidth sharing application.
-
-### 📸 Immich
-- **📷 Immich**: Self-hosted photo and video backup solution.
-- **🗄 Postgres**: Database for Immich.
-- **⚡ Redis**: Caching layer for Immich.
-
-### 🏠 Homepage
-- **🏡 Homepage**: A customizable dashboard for managing and monitoring the homelab.
+### 🎥 Media Center
+- **🎬 Plex Media Server**: 4K transcoding capable
+- **📺 Arr Suite**: Radarr/Sonarr/Bazarr stack
+- **📥 Transmission**: VPN-wrapped torrent client
 
 ## 🛠 Infrastructure
 
-- **☸ Kubernetes**: The cluster is deployed on Kubernetes, leveraging its scalability and resilience.
-- **📂 CephFS**: Used for persistent storage across applications.
-- **🚦 Traefik**: Edge router and reverse proxy for managing ingress traffic.
+- **☸ Kubernetes**: K3s cluster with embedded Ceph storage
+- **🚦 Traefik**: TLS-terminating ingress controller
+- **🔐 Authentik**: Centralized authentication gateway
+- **🗂 CephFS**: Distributed storage with replication
+- **📦 Helm**: Package manager for chart deployments
 
-## 📜 Deployment
+## 📜 Deployment Workflow
 
-The cluster is managed using GitOps principles with ArgoCD. Each application is defined in its respective YAML file under the `gitops` directory. Changes to the repository are automatically synchronized with the cluster.
-
-### 🛠 Example Deployment
-
-To deploy the `tools` namespace, ArgoCD uses the following configuration:
-
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: tools
-spec:
-  destination:
-    namespace: tools
-    server: https://kubernetes.default.svc
-  source:
-    path: tools
-    repoURL: https://github.com/YogaNovvaindra/kube.git
-    targetRevision: HEAD
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
+```mermaid
+graph LR
+    A[Git Commit] --> B[ArgoCD Sync]
+    B --> C{Kubernetes Cluster}
+    C --> D[Application Deployment]
+    D --> E[Keel/Renovate Monitoring]
+    E --> F[Automatic Updates]
+    F --> A
 ```
-## 🔒 Security
 
-Sensitive data such as database credentials and API keys are managed using Sealed Secrets. These secrets are encrypted and stored securely in the repository.
+## 🔒 Security Implementation
 
-## 🤝 Contributing
-This repository is primarily for personal use, but feel free to explore and adapt it for your own homelab setup. Contributions and suggestions are welcome!
+- **🔏 Sealed Secrets**: Encrypted secrets using cluster-specific certificates
+- **🔐 RBAC Enforcement**: Namespace-bound service accounts
+- **🛡 Network Policies**: Zero-trust pod communication rules
+- **🔒 Vaultwarden**: Self-hosted Bitwarden-compatible secrets manager
+
+## 🤝 Contributing & Adaptation
+While primarily personal infrastructure, this setup demonstrates:
+- Enterprise-grade patterns for homelab use
+- Scalable GitOps implementation
+- Security-conscious home infrastructure
+Feel free to fork and adapt components to your environment!
 
 ## 📜 License
 This project is licensed under the MIT License.
