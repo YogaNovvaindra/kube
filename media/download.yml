@@ -6,6 +6,11 @@ metadata:
   namespace: media
   labels:
     app: transmission
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
 spec:
   replicas: 1
   selector:
@@ -20,7 +25,7 @@ spec:
     spec:
       containers:
       - name: transmission
-        image: lscr.io/linuxserver/transmission:version-4.0.6-r2
+        image: lscr.io/linuxserver/transmission:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 9091

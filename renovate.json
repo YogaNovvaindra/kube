@@ -9,18 +9,6 @@
       "\\.yml$"
     ]
   },
-  "regexManagers": [
-    {
-      "fileMatch": [
-        "(^|/)(docker-compose|dockerfile)[^/]*$"
-      ],
-      "matchStrings": [
-        "docker-image=(?<depName>lscr\\.io/linuxserver/(overseerr|transmission|tautulli)):(?<currentValue>version-(?<currentVersion>v?\\d+\\.\\d+\\.\\d+(-[\\d\\w-]+)*))\\b"
-      ],
-      "datasourceTemplate": "docker",
-      "versioningTemplate": "semver"
-    }
-  ],
   "packageRules": [
     {
       "matchDatasources": [
