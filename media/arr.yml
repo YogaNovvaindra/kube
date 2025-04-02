@@ -424,7 +424,7 @@ spec:
     spec:
       containers:
       - name: tautulli
-        image: ghcr.io/tautulli/tautulli:v2.15.0
+        image: ghcr.io/tautulli/tautulli:v2.15.1
         imagePullPolicy: Always
         ports:
         - containerPort: 8181
