@@ -27,7 +27,7 @@ spec:
         kubernetes.io/hostname: kube-1
       containers:
       - name: immich
-        image: ghcr.io/imagegenius/immich:1.130.3
+        image: ghcr.io/imagegenius/immich:1.131.3
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
