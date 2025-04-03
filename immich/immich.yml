@@ -186,7 +186,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: db
-        image: tensorchord/pgvecto-rs:pg16-v0.2.0
+        image: tensorchord/pgvecto-rs:pg16-v0.2.1
         imagePullPolicy: Always
         ports:
         - containerPort: 5432
