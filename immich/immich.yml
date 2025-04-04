@@ -69,6 +69,14 @@ spec:
           value: "6379"
         - name: REDIS_PASSWORD
           value: ""
+        - name: MACHINE_LEARNING_HOST
+          value: "0.0.0.0"
+        - name: MACHINE_LEARNING_PORT
+          value: "3003"
+        - name: MACHINE_LEARNING_WORKERS
+          value: "1"
+        - name: MACHINE_LEARNING_WORKER_TIMEOUT
+          value: "120"
         volumeMounts:
         - name: config-volume
           mountPath: /config
