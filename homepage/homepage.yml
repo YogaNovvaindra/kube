@@ -30,6 +30,9 @@ spec:
           env:
             - name: HOMEPAGE_ALLOWED_HOSTS
               value: "*"
+          envFrom:
+            - secretRef:
+                name: homepage-cred
           volumeMounts:
             # - name: config
             #   mountPath: /app/config
