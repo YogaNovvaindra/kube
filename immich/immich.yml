@@ -40,8 +40,6 @@ spec:
           value: "Asia/Jakarta"
         - name: SERVER_PORT
           value: "8080"
-        - name: DB_HOSTNAME
-          value: "immich-db"
         - name: DB_USERNAME
           valueFrom:
             secretKeyRef:
@@ -57,14 +55,12 @@ spec:
             secretKeyRef:
               name: db-cred
               key: dbname
-        - name: REDIS_HOSTNAME
-          value: "immich-valkey"
-        - name: DISABLE_MACHINE_LEARNING
-          value: "false"
-        - name: DISABLE_TYPESENSE
-          value: "false"
+        - name: DB_HOSTNAME
+          value: "immich-db"
         - name: DB_PORT
           value: "5432"
+        - name: REDIS_HOSTNAME
+          value: "immich-valkey"
         - name: REDIS_PORT
           value: "6379"
         - name: REDIS_PASSWORD
