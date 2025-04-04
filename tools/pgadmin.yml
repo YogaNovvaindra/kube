@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: pgadmin
-        image: dpage/pgadmin4:9.1
+        image: dpage/pgadmin4:9.2
         imagePullPolicy: Always
         envFrom:
         - secretRef:
