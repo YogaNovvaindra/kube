@@ -485,7 +485,7 @@ spec:
     spec:
       containers:
       - name: maintainerr
-        image: ghcr.io/jorenn92/maintainerr:2.13.0
+        image: ghcr.io/jorenn92/maintainerr:2.13.1
         imagePullPolicy: Always
         ports:
         - containerPort: 6246
