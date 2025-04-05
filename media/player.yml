@@ -1,4 +1,4 @@
-# Plex Deployment (nodeSelector: kube-1)
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -19,7 +19,11 @@ spec:
         app: plex
     spec:
       nodeSelector:
-        kubernetes.io/hostname: kube-1
+        kubernetes.io/hostname: kube-2
+      securityContext:
+        supplementalGroups:
+          - 44   # GID for video group
+          - 109  # GID for render group
       containers:
       - name: plex
         image: lscr.io/linuxserver/plex:1.41.5
@@ -34,6 +38,8 @@ spec:
         - name: VERSION
           value: "docker"
         volumeMounts:
+        - name: dev-dri
+          mountPath: /dev/dri
         - name: plex-config
           mountPath: /config
         - name: plex-tv
@@ -41,6 +47,10 @@ spec:
         - name: plex-movies
           mountPath: /movies
       volumes:
+      - name: dev-dri
+        hostPath:
+          path: /dev/dri
+          type: Directory
       - name: plex-config
         hostPath:
           path: /mnt/cephfs/docker/media/plex
@@ -73,7 +83,6 @@ spec:
     port: 32400
     targetPort: 32400
 ---
-# Jellyfin Deployment (nodeSelector: kube-1)
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -94,7 +103,11 @@ spec:
         app: jellyfin
     spec:
       nodeSelector:
-        kubernetes.io/hostname: kube-1
+        kubernetes.io/hostname: kube-2
+      securityContext:
+        supplementalGroups:
+          - 44   # GID for video group
+          - 109  # GID for render group
       containers:
       - name: jellyfin
         image: ghcr.io/jellyfin/jellyfin:10.10.6
@@ -105,6 +118,8 @@ spec:
         - name: TZ
           value: "Asia/Jakarta"
         volumeMounts:
+        - name: dev-dri
+          mountPath: /dev/dri
         - name: jellyfin-config
           mountPath: /config
         - name: jellyfin-cache
@@ -114,6 +129,10 @@ spec:
         - name: jellyfin-movies
           mountPath: /data/movies
       volumes:
+      - name: dev-dri
+        hostPath:
+          path: /dev/dri
+          type: Directory
       - name: jellyfin-config
         hostPath:
           path: /mnt/cephfs/docker/media/jellyfin
