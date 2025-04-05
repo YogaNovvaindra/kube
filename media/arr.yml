@@ -1,4 +1,4 @@
-# Flaresolverr Deployment (nodeSelector: kube-1)
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -19,7 +19,7 @@ spec:
         app: flaresolverr
     spec:
       nodeSelector:
-        kubernetes.io/hostname: kube-1
+        kubernetes.io/hperf: true
       containers:
       - name: flaresolverr
         image: alexfozor/flaresolverr:pr-1300-experimental
