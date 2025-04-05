@@ -45,7 +45,7 @@ metadata:
 spec:
   type: LoadBalancer
   externalIPs:
-    - 10.1.1.250
+    - 10.1.1.10
   selector:
     app: openspeedtest
   ports:
@@ -102,7 +102,7 @@ metadata:
 spec:
   type: LoadBalancer
   externalIPs:
-    - 10.1.1.250
+    - 10.1.1.10
   selector:
     app: myspeed
   ports:

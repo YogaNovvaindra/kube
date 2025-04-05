@@ -24866,7 +24866,7 @@ spec:
   type: LoadBalancer
   # loadBalancerIP: 10.0.1.180
   externalIPs:
-  - 10.1.1.250
+  - 10.1.1.10
   ports:
   - name: http
     port: 8089
