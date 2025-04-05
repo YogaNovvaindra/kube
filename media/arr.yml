@@ -116,7 +116,7 @@ metadata:
 spec:
   type: LoadBalancer
   externalIPs:
-    - 10.1.1.250
+    - 10.1.1.10
   selector:
     app: prowlarr
   ports:
@@ -189,7 +189,7 @@ metadata:
 spec:
   type: LoadBalancer
   externalIPs:
-    - 10.1.1.250
+    - 10.1.1.10
   selector:
     app: radarr
   ports:
@@ -262,7 +262,7 @@ metadata:
 spec:
   type: LoadBalancer
   externalIPs:
-    - 10.1.1.250
+    - 10.1.1.10
   selector:
     app: sonarr
   ports:
@@ -335,7 +335,7 @@ metadata:
 spec:
   type: LoadBalancer
   externalIPs:
-    - 10.1.1.250
+    - 10.1.1.10
   selector:
     app: bazarr
   ports:
@@ -394,7 +394,7 @@ metadata:
 spec:
   type: LoadBalancer
   externalIPs:
-    - 10.1.1.250
+    - 10.1.1.10
   selector:
     app: overseerr
   ports:
@@ -455,7 +455,7 @@ metadata:
 spec:
   type: LoadBalancer
   externalIPs:
-    - 10.1.1.250
+    - 10.1.1.10
   selector:
     app: tautulli
   ports:
@@ -512,7 +512,7 @@ metadata:
 spec:
   type: LoadBalancer
   externalIPs:
-    - 10.1.1.250
+    - 10.1.1.10
   selector:
     app: maintainerr
   ports:
