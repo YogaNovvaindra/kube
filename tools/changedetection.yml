@@ -55,7 +55,7 @@ spec:
   externalIPs:
     # - 192.168.192.5
     # - 10.0.1.180
-    - 10.1.1.250
+    - 10.1.1.10
   selector:
     app: changedetection
   ports:
