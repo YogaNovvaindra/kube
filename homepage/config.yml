@@ -354,7 +354,7 @@ data:
           icon: sh-postgresql.svg
           href: https://pgadmin.ygnv.my.id
           description: PostgreSQL database management
-          siteMonitor: http://pgadmin:80
+          siteMonitor: http://pgadmin:8088
       # - phpMyAdmin Dev:
       #     icon: phpmyadmin.png
       #     href: https://phpmyadmin-dev.ygnv.my.id
@@ -507,7 +507,7 @@ data:
           icon: sh-outline.svg
           href: https://outline.ygnv.my.id
           description: Knowledge management and note-taking platform 
-          siteMonitor: http://outline.tools.svc.cluster.local:3000
+          siteMonitor: http://outline.tools.svc.cluster.local:3004
       - Immich:
           icon: immich.png
           href: https://immich.ygnv.my.id
@@ -548,25 +548,25 @@ data:
           icon: stirling-pdf.svg
           href: https://pdf.ygnv.my.id
           description: Web-based PDF manipulation tool
-          siteMonitor: http://stirling-pdf.tools.svc.cluster.local:8080
+          siteMonitor: http://stirling-pdf.tools.svc.cluster.local:8084
       - IT-Tools:
           icon: it-tools-light.svg
           href: https://tools.ygnv.my.id
           description: Collection of useful IT utilities and tools
-          siteMonitor: http://it-tools.tools.svc.cluster.local:80
+          siteMonitor: http://it-tools.tools.svc.cluster.local:8082
       - Reubah:
           icon: mdi-image-edit
           href: https://reubah.ygnv.my.id
           description: Tool for processing images and converting documents
-          siteMonitor: http://reubah.tools.svc.cluster.local:8081
+          siteMonitor: http://reubah.tools.svc.cluster.local:8087
       - Change Detection:
           icon: changedetection.svg
           href: https://changedetection.ygnv.my.id
           description: Website change detection and monitoring
-          siteMonitor: http://changedetection.tools.svc.cluster.local:5000
+          siteMonitor: http://changedetection.tools.svc.cluster.local:8083
           widget:
             type: changedetectionio
-            url: http://changedetection.tools.svc.cluster.local:5000
+            url: http://changedetection.tools.svc.cluster.local:8083
             key: ${CHANGEDETECTION_KEY}
       - Excalidraw:
           icon: excalidraw.svg
