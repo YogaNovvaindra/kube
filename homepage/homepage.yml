@@ -22,76 +22,67 @@ spec:
       automountServiceAccountToken: true
       enableServiceLinks: true
       initContainers:
-        - name: config-processor
-          image: alpine:3.21
-          command:
-            - /bin/sh
-            - -c
-            - |
-              apk add --no-cache gettext
-              cp -a /original-config/* /processed-config/
-              for file in /processed-config/*; do
-                envsubst < "$file" > "$file.tmp"
-                mv "$file.tmp" "$file"
-              done
-          volumeMounts:
-            - name: homepage-config
-              mountPath: /original-config
-            - name: processed-config
-              mountPath: /processed-config
-          envFrom:
-            - secretRef:
-                name: homepage-cred
-      containers:
-        - name: homepage
-          image: ghcr.io/gethomepage/homepage:v1.1.1
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 3000
-          env:
-            - name: HOMEPAGE_ALLOWED_HOSTS
-              value: "*"
-          envFrom:
-            - secretRef:
-                name: homepage-cred
-          volumeMounts:
-            - mountPath: /app/config/custom.js
-              name: processed-config
-              subPath: custom.js
-            - mountPath: /app/config/custom.css
-              name: processed-config
-              subPath: custom.css
-            - mountPath: /app/config/bookmarks.yaml
-              name: processed-config
-              subPath: bookmarks.yaml
-            - mountPath: /app/config/docker.yaml
-              name: processed-config
-              subPath: docker.yaml
-            - mountPath: /app/config/kubernetes.yaml
-              name: processed-config
-              subPath: kubernetes.yaml
-            - mountPath: /app/config/services.yaml
-              name: processed-config
-              subPath: services.yaml
-            - mountPath: /app/config/settings.yaml
-              name: processed-config
-              subPath: settings.yaml
-            - mountPath: /app/config/widgets.yaml
-              name: processed-config
-              subPath: widgets.yaml
-            - mountPath: /app/config/logs
-              name: logs
-            - name: images
-              mountPath: /app/public/images
-      volumes:
-        - name: homepage-config
-          configMap:
-            name: homepage
+      - name: config-processor
+        image: alpine:3.21
+        imagePullPolicy: Always
+        command:
+        - /bin/sh
+        - -c
+        - |
+          echo "=== Initial file list in /original-config ==="
+          ls -l /original-config
+          
+          echo "=== Copying files ==="
+          mkdir -p /processed-config
+          cp -a /original-config/* /processed-config/
+          
+          echo "=== Files in /processed-config after copy ==="
+          ls -l /processed-config
+          
+          echo "=== Processing files ==="
+          apk add --no-cache gettext
+          for file in /processed-config/*; do
+            echo "Processing $file"
+            envsubst < "$file" > "$file.tmp"
+            mv "$file.tmp" "$file"
+          done
+        volumeMounts:
+        - name: config-volume
+          mountPath: /original-config
         - name: processed-config
-          emptyDir: {}
+          mountPath: /processed-config
+        envFrom:
+        - secretRef:
+            name: homepage-cred
+      containers:
+      - name: homepage
+        image: ghcr.io/gethomepage/homepage:v1.1.1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        env:
+        - name: HOMEPAGE_ALLOWED_HOSTS
+          value: "*"
+        envFrom:
+        - secretRef:
+            name: homepage-cred
+        volumeMounts:
+        - name: processed-config
+          mountPath: /app/config
+          readOnly: true
         - name: logs
-          emptyDir: {}
+          mountPath: /app/config/logs
         - name: images
-          hostPath:
-            path: /mnt/cephfs/kube/homepage/images
-            type: Directory
+          mountPath: /app/public/images
+      volumes:
+      - name: config-volume
+        configMap:
+          name: homepage
+      - name: processed-config
+        emptyDir: {}
+      - name: logs
+        emptyDir: {}
+      - name: images
+        hostPath:
+          path: /mnt/cephfs/kube/homepage/images
+          type: Directory
