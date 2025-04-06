@@ -21,6 +21,27 @@ spec:
       serviceAccountName: homepage
       automountServiceAccountToken: true
       enableServiceLinks: true
+      initContainers:
+        - name: config-processor
+          image: alpine:3.18
+          command:
+            - /bin/sh
+            - -c
+            - |
+              apk add --no-cache gettext
+              cp -a /original-config/* /processed-config/
+              for file in /processed-config/*; do
+                envsubst < "$file" > "$file.tmp"
+                mv "$file.tmp" "$file"
+              done
+          volumeMounts:
+            - name: homepage-config
+              mountPath: /original-config
+            - name: processed-config
+              mountPath: /processed-config
+          envFrom:
+            - secretRef:
+                name: homepage-cred
       containers:
         - name: homepage
           image: ghcr.io/gethomepage/homepage:v1.1.1
@@ -34,31 +55,29 @@ spec:
             - secretRef:
                 name: homepage-cred
           volumeMounts:
-            # - name: config
-            #   mountPath: /app/config
             - mountPath: /app/config/custom.js
-              name: homepage-config
+              name: processed-config
               subPath: custom.js
             - mountPath: /app/config/custom.css
-              name: homepage-config
+              name: processed-config
               subPath: custom.css
             - mountPath: /app/config/bookmarks.yaml
-              name: homepage-config
+              name: processed-config
               subPath: bookmarks.yaml
             - mountPath: /app/config/docker.yaml
-              name: homepage-config
+              name: processed-config
               subPath: docker.yaml
             - mountPath: /app/config/kubernetes.yaml
-              name: homepage-config
+              name: processed-config
               subPath: kubernetes.yaml
             - mountPath: /app/config/services.yaml
-              name: homepage-config
+              name: processed-config
               subPath: services.yaml
             - mountPath: /app/config/settings.yaml
-              name: homepage-config
+              name: processed-config
               subPath: settings.yaml
             - mountPath: /app/config/widgets.yaml
-              name: homepage-config
+              name: processed-config
               subPath: widgets.yaml
             - mountPath: /app/config/logs
               name: logs
@@ -68,26 +87,11 @@ spec:
         - name: homepage-config
           configMap:
             name: homepage
+        - name: processed-config
+          emptyDir: {}
         - name: logs
           emptyDir: {}
         - name: images
           hostPath:
             path: /mnt/cephfs/kube/homepage/images
             type: Directory
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: homepage
-  namespace: tools
-  labels:
-    app.kubernetes.io/name: homepage
-spec:
-  type: LoadBalancer
-  externalIPs:
-    - 10.1.1.10
-  ports:
-    - port: 3002
-      targetPort: 3000
-  selector:
-    app.kubernetes.io/name: homepage
