@@ -553,12 +553,12 @@ data:
           icon: it-tools-light.svg
           href: https://tools.ygnv.my.id
           description: Collection of useful IT utilities and tools
-          siteMonitor: http://it-tools.tools.svc.cluster.local:8080
+          siteMonitor: http://it-tools.tools.svc.cluster.local:80
       - Reubah:
           icon: mdi-image-edit
           href: https://reubah.ygnv.my.id
           description: Tool for processing images and converting documents
-          siteMonitor: http://reubah.tools.svc.cluster.local:8080
+          siteMonitor: http://reubah.tools.svc.cluster.local:8081
       - Change Detection:
           icon: changedetection.svg
           href: https://changedetection.ygnv.my.id
