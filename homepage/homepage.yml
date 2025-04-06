@@ -23,7 +23,7 @@ spec:
       enableServiceLinks: true
       initContainers:
         - name: config-processor
-          image: alpine:3.18
+          image: alpine:3.21
           command:
             - /bin/sh
             - -c
