@@ -1,0 +1,714 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homepage
+  namespace: tools
+  labels:
+    app.kubernetes.io/name: homepage
+data:
+  kubernetes.yaml: |
+    mode: cluster
+  # settings.yaml: ""
+  settings.yaml: |
+    # Homepage Settings Configuration
+
+    # Basic settings
+    title: Home Network Dashboard
+    startUrl: /
+    theme: dark
+    color: zinc
+    language: en
+    cardBlur: sm
+    background:
+      image: /images/wallpaper.jpg
+      opacity: 20
+
+    # Layout configuration
+    layout:
+
+    # group of 4
+      Network Infrastructure:
+        icon: mdi-network
+        style: column
+        columns: 1
+      Server Management:
+        icon: mdi-server
+        style: column
+        columns: 1
+      Monitoring and Analytics:
+        icon: mdi-chart-line
+        style: column
+        columns: 1
+      Web Hosting and Management:
+        icon: mdi-web
+        style: column
+        columns: 1
+    # end of group of 4
+      Media:
+        icon: mdi-play-circle
+        style: row
+        columns: 4
+    # group of 4
+      Smart Home Devices:
+        icon: mdi-home-automation
+        style: column
+        columns: 1
+      Development and Version Control:
+        icon: mdi-code-braces
+        style: column
+        columns: 1
+      Security:
+        icon: mdi-shield-lock
+        style: column
+        columns: 1
+      Access Points:
+        icon: mdi-wifi
+        style: column
+        columns: 1
+    # group of 4
+      Utilities:
+        icon: mdi-toolbox
+        style: row
+        columns: 4
+      File Synchronization:
+        icon: mdi-sync
+        style: row
+        columns: 4
+      Client Devices:
+        icon: mdi-devices
+        style: row
+        columns: 4
+
+    # Additional settings
+    fiveColumns: true
+    useEqualHeights: true
+    iconStyle: theme
+    headerStyle: boxed
+    statusStyle: dot
+
+  custom.css: ""
+  custom.js: ""
+  bookmarks.yaml: |
+    - Developer:
+        - Github:
+            - abbr: GH
+              href: https://github.com/
+
+    - Social:
+        - Reddit:
+            - abbr: RE
+              href: https://reddit.com/
+
+    - Entertainment:
+        - YouTube:
+            - abbr: YT
+              href: https://youtube.com/
+  services.yaml: |
+    # Homepage Services Configuration
+
+    - Network Infrastructure:
+      - Cloudflare:
+          icon: cloudflare.svg
+          href: https://dash.cloudflare.com
+          description: Cloud services and security platform
+          siteMonitor: https://dash.cloudflare.com
+          widget:
+            type: cloudflared
+            accountid: ${CLOUDFLARE_ACCOUNT_ID}
+            tunnelid: ${CLOUDFLARE_TUNNEL_ID}
+            key: ${CLOUDFLARE_KEY}
+      - Modem:
+          icon: asus-router.svg
+          href: http://192.168.1.1
+          description: Main network modem
+          ping: 192.168.1.1
+      - RB750R2:
+          icon: https://cdn.jsdelivr.net/gh/PapirusDevelopmentTeam/papirus_icons/src/apps_mikrotik.svg
+          href: http://192.168.1.2
+          description: MikroTik RouterBoard for advanced networking
+          siteMonitor: http://192.168.1.2
+      - Mi OpenWRT:
+          icon: openwrt.svg
+          href: http://10.1.1.253
+          description: Mi router running OpenWRT firmware
+          siteMonitor: http://10.1.1.253
+          widget:
+            type: openwrt
+            url: http://10.1.1.253
+            username: ${OPENWRT_USERNAME}
+            password: ${OPENWRT_PASSWORD}
+            interfaceName: wan # optional
+      - Adguard:
+          icon: adguard-home.svg
+          href: https://adguard.ygnv.my.id
+          description: Network-wide ad and tracker blocking
+          siteMonitor: http://10.1.1.4:80
+          widget:
+            type: adguard
+            url: http://10.1.1.4:80
+            username: ${ADGUARD_USERNAME}
+            password: ${ADGUARD_PASSWORD}
+      - LB AC AP:
+          icon: ubiquiti-networks.svg
+          href: http://192.168.1.21
+          description: Ubiquiti LiteBeam AC Upstream Access Point
+          siteMonitor: http://192.168.1.21
+      - LB AC:
+          icon: ubiquiti-networks.svg
+          href: http://192.168.1.20
+          description: Ubiquiti LiteBeam AC Station
+          siteMonitor: http://192.168.1.20
+      - Traefik:
+          icon: traefik.svg
+          href: https://traefik.ygnv.my.id
+          description: Edge router and reverse proxy
+          siteMonitor: http://10.1.1.252:8899/metrics
+          widget:
+            type: traefik
+            url: http://10.1.1.252:8080
+
+    - Access Points:
+      - SXT AP:
+          icon: https://cdn.jsdelivr.net/gh/PapirusDevelopmentTeam/papirus_icons/src/apps_mikrotik.svg
+          href: http://192.168.1.3
+          description: MikroTik SXT Access Point
+          siteMonitor: http://192.168.1.3
+      - Tenda Home:
+          icon: tenda.svg
+          href: http://10.1.1.254
+          description: Tenda home Access Point
+          siteMonitor: http://10.1.1.254
+      - Desa AP:
+          icon: google-wifi.png
+          href: http://10.0.0.254
+          description: TotoLink Access Point for Desa network
+          siteMonitor: http://10.0.0.254
+
+    - Server Management:
+      - Proxmox:
+          icon: proxmox.svg
+          href: https://proxmox.ygnv.my.id
+          description: Proxmox virtualization platform for server management
+          ping: 10.1.1.3
+          widget:
+            type: proxmox
+            url: https://10.1.1.3:8006
+            username: ${PROXMOX_USERNAME}
+            password: ${PROXMOX_PASSWORD}
+            node: pve # optional
+      - Nexterm: 
+          icon: nexterm.png
+          href: https://nexterm.ygnv.my.id
+          description: Web-based terminal for server management
+          siteMonitor: http://nexterm.tools.svc.cluster.local:6989
+      - Semaphore:
+          icon: semaphore.png
+          href: http://semaphore.ygnv.my.id
+          description: Web GUI for Ansible automation
+          siteMonitor: http://semaphore.tools.svc.cluster.local:3003
+      - Portainer:
+          icon: portainer.svg
+          href: https://portainer.ygnv.my.id
+          description: Docker container management and orchestration
+          siteMonitor: http://10.1.1.252:9000
+          widget:
+            type: portainer
+            url: http://10.1.1.252:9000
+            env: 2
+            key: ${PORTAINER_KEY}
+      - Ceph:
+            icon: ceph.svg
+            href: https://ceph.ygnv.my.id
+            description: Ceph storage cluster management
+            siteMonitor: http://10.1.1.2:8100
+      - Ceph 8labs:
+            icon: ceph.svg
+            href: http://192.168.192.5:8100
+            description: Ceph storage cluster management
+            siteMonitor: http://192.168.192.5:8100
+      - Keel:
+          icon: https://Keel.sh/img/logo_small.png
+          href: https://keel.ygnv.my.id
+          description: Container image automation and management
+          siteMonitor: http://keel.keel.svc.cluster.local:9300
+      - Keel 8labs:
+          icon: https://keel.sh/img/logo_small.png
+          href: http://192.168.192.5:9300
+          description: Container image automation and management
+          siteMonitor: http://192.168.192.5:9300
+      - Cockpit:
+          icon: sh-cockpit
+          href: http://192.168.192.3:9090
+          description: Web-based server management platform
+          ping: 192.168.192.3
+
+    - Monitoring and Analytics:
+      - Grafana:
+          icon: grafana.png
+          href: https://grafana.ygnv.my.id/dashboards
+          description: Data visualization and analytics platform
+          siteMonitor: http://grafana.monitoring.svc.cluster.local:3000
+          widget:
+            type: grafana
+            url: http://grafana.monitoring.svc.cluster.local:3000
+            username: ${GRAFANA_USERNAME}
+            password: ${GRAFANA_PASSWORD}
+      - Uptime Kuma:
+          icon: uptime-kuma.svg
+          href: https://uptime.ygnv.my.id/dashboard
+          description: Uptime and status monitoring tool
+          siteMonitor: http://192.168.192.5:3001
+          widget:
+            type: uptimekuma
+            url: http://192.168.192.5:3001
+            slug: server
+      - Prometheus:
+          icon: prometheus.svg
+          href: https://prometheus.ygnv.my.id
+          description: Metrics collection and alerting system
+          siteMonitor: http://prometheus.monitoring.svc.cluster.local:9090
+          widget:
+            type: prometheus
+            url: http://prometheus.monitoring.svc.cluster.local:9090
+      - InfluxDB:
+          icon: influxdb.svg
+          href: http://influxdb.ygnv.my.id
+          description: Time-series database for metrics storage
+          siteMonitor: http://influxdb.monitoring.svc.cluster.local:8086
+      # - Loki:
+      #     icon: loki.png
+      #     href: http://10.1.1.200:3100/metrics
+      #     description: Log aggregation and querying system
+      #     siteMonitor: http://grafana_loki:3100/metrics
+      - MySpeed:
+          icon: myspeed.png
+          href: https://myspeed.ygnv.my.id
+          description: Network speed testing tool
+          siteMonitor: http://myspeed.tools.svc.cluster.local:5216
+          widget:
+            type: myspeed
+            url: http://myspeed.tools.svc.cluster.local:5216
+            password: ${MYSPEED_PASSWORD}
+
+    - Security:
+      - Vaultwarden:
+          icon: vaultwarden.png
+          href: https://vault.ygnv.my.id
+          description: Self-hosted password manager (Bitwarden compatible)
+          # siteMonitor: https://vault.ygnv.my.id
+      - Authentik:
+          icon: authentik.png
+          href: https://auth.ygnv.my.id
+          description: Identity provider and access management platform
+          siteMonitor: http://10.1.1.250:9000
+          widget:
+            type: authentik
+            url: http://10.1.1.250:9000
+            key: ${AUTHENTIK_KEY}
+      - Wazuh: 
+          icon: wazuh.svg
+          href: https://wazuh.ygnv.my.id
+          description: Security information and event management (SIEM)
+          ping: 192.168.192.4
+      - Infisical:
+          icon: https://avatars.githubusercontent.com/u/107880645
+          href: https://infisical.ygnv.my.id
+          description: Application configuration and secrets management
+          siteMonitor: http://utilities_infisical:80
+
+    - Development and Version Control:
+      - Gitea:
+          icon: gitea.png
+          href: https://git.ygnv.my.id/explore
+          description: Self-hosted Git service for version control
+          siteMonitor: http://192.168.192.5:3000
+          widget:
+            type: gitea
+            url: http://192.168.192.5:3000
+            key: ${GITEA_KEY}
+      - Argo CD:
+          icon: argo-cd.svg
+          href: https://argocd.ygnv.my.id
+          description: GitOps continuous delivery tool for Kubernetes
+          siteMonitor: http://argocd-server.argocd.svc.cluster.local:8080
+          widget:
+            type: argocd
+            url: http://argocd-server.argocd.svc.cluster.local:8080
+            key: ${ARGOCD_KEY}
+      - Argo-8labs:
+          icon: argo-cd.svg
+          href: https://argo-8labs.ygnv.my.id
+          description: GitOps continuous delivery tool for Kubernetes
+          siteMonitor: http://192.168.192.5:8080
+      - Ollama:
+          icon: ollama.png
+          href: https://ai.ygnv.my.id
+          description: AI model serving and management platform
+          siteMonitor: http://192.168.192.3:8080
+
+    - Web Hosting and Management:
+      - YGNV Hosting:
+          icon: https://ssd-disclosure.com/wp-content/uploads/2022/11/bt_logo-1.png
+          href: https://aapanel.ygnv.my.id/aapanel
+          description: YGNV web hosting management panel
+          # siteMonitor: http://192.168.192.253:7800/aapanel
+      - File Panel:
+          icon: filebrowser.png
+          href: https://filepanel.ygnv.my.id
+          description: File management interface for web hosting
+      - Ghost:
+          icon: ghost.png
+          href: https://ygnv.my.id/ghost
+          description: Ghost CMS blogging platform
+        #   siteMonitor: http://ygnv.my.id/ghost
+      - PgAdmin:
+          icon: sh-postgresql.svg
+          href: https://pgadmin.ygnv.my.id
+          description: PostgreSQL database management
+          siteMonitor: http://10.1.1.250:8088
+      # - phpMyAdmin Dev:
+      #     icon: phpmyadmin.png
+      #     href: https://phpmyadmin-dev.ygnv.my.id
+      #     description: MySQL database management (development environment)
+      #     siteMonitor: http://dev-db_phpmyadmin:80
+      - phpMyAdmin Prod:
+          icon: phpmyadmin.png
+          href: https://phpmyadmin-prod.ygnv.my.id
+          description: MySQL database management (production environment)
+          siteMonitor: http://192.168.192.5:888
+      - Online Portfolio:
+          icon: https://biarrinetworks.com/hs-fs/hubfs/Collab_big.png?width=592&name=Collab_big.png
+          href: https://yoganova.my.id
+          description: Personal online portfolio website
+          siteMonitor: https://yoganova.my.id
+      - Aapanel IOT:
+          icon: https://ssd-disclosure.com/wp-content/uploads/2022/11/bt_logo-1.png
+          href: http://192.168.192.3:8886/aapanel
+          description: Aapanel management for IoT services
+        #   siteMonitor: http://192.168.192.3:8886/aapanel
+
+    - File Synchronization:
+      - Syncthing Kube:
+          icon: syncthing.png
+          href: http://10.1.1.250:8384
+          description: File synchronization for Kubernetes cluster
+          siteMonitor: http://10.1.1.250:8384
+      - Syncthing DockerKVM:
+          icon: syncthing.png
+          href: http://10.1.1.252:8384
+          description: File synchronization for OpenMediaVault
+          siteMonitor: http://10.1.1.252:8384
+      # - Syncthing Azure:
+      #     icon: syncthing.png
+      #     href: http://192.168.192.252:8384
+      #     description: File synchronization for cloud storage
+      #     siteMonitor: http://192.168.192.252:8384
+      - Syncthing Panel:
+          icon: syncthing.png
+          href: http://10.1.1.248:8384
+          description: File synchronization management panel
+          siteMonitor: http://10.1.1.248:8384
+      - Syncthing IOT:
+          icon: syncthing.png
+          href: http://192.168.192.3:8384
+          description: File synchronization for IoT devices
+          siteMonitor: http://192.168.192.3:8384
+      - Syncthing 8Labs:
+          icon: syncthing.png
+          href: http://192.168.192.4:8384
+          description: File synchronization for 8Labs devices
+          siteMonitor: http://192.168.192.4:8384
+          
+    - Media:
+      - "":
+          widget:
+            type: calendar
+            firstDayInWeek: monday
+            view: monthly
+            maxEvents: 10
+            showTime: true
+            timezone: Asia/Jakarta
+            integrations:
+              - type: sonarr
+                service_group: Media
+                service_name: Sonarr
+              - type: radarr
+                service_group: Media
+                service_name: Radarr
+      - Plex:
+          icon: plex.svg
+          href: https://plex.ygnv.my.id
+          description: Media server for personal video, music, and photo streaming
+          siteMonitor: http://plex.media.svc.cluster.local:32400
+          widget:
+            type: plex
+            url: http://plex.media.svc.cluster.local:32400
+            key: ${PLEX_KEY} # see http://www.plexopedia.com/plex-media-server/general/plex-token/
+      - Jellyfin:
+          icon: jellyfin.png
+          href: https://jellyfin.ygnv.my.id
+          description: Open-source media server alternative
+          siteMonitor: http://jellyfin.media.svc.cluster.local:8096
+          widget:
+            type: jellyfin
+            url: http://jellyfin.media.svc.cluster.local:8096
+            key: ${JELLYFIN_KEY}
+            enableBlocks: true # optional, defaults to false
+            enableNowPlaying: true # optional, defaults to true
+            enableUser: true # optional, defaults to false
+            showEpisodeNumber: true # optional, defaults to false
+            expandOneStreamToTwoRows: false # optional, defaults to true
+      - Prowlarr:
+          icon: prowlarr.png
+          href: https://prowlarr.ygnv.my.id
+          description: Indexer manager and proxy for media servers
+          siteMonitor: http://prowlarr.media.svc.cluster.local:9696
+          widget:
+            type: prowlarr
+            url: http://prowlarr.media.svc.cluster.local:9696
+            key: ${PROWLARR_KEY}
+      - Radarr:
+          icon: radarr.png
+          href: https://radarr.ygnv.my.id
+          description: Movie collection manager and automation
+          siteMonitor: http://radarr.media.svc.cluster.local:7878
+          widget:
+            type: radarr
+            url: http://radarr.media.svc.cluster.local:7878
+            key: ${RADARR_KEY}
+            enableQueue: true # optional, defaults to false
+      - Sonarr:
+          icon: sonarr.png
+          href: https://sonarr.ygnv.my.id
+          description: TV series collection manager and automation
+          siteMonitor: http://sonarr.media.svc.cluster.local:8989
+          widget:
+            type: sonarr
+            url: http://sonarr.media.svc.cluster.local:8989
+            key: ${SONARR_KEY}
+            enableQueue: true # optional, defaults to false
+      - Bazarr:
+          icon: bazarr.png
+          href: https://bazarr.ygnv.my.id
+          description: Subtitle downloader and manager for Radarr/Sonarr
+          siteMonitor: http://bazarr.media.svc.cluster.local:6767
+          widget:
+            type: bazarr
+            url: http://bazarr.media.svc.cluster.local:6767
+            key: ${BAZARR_KEY}
+      - Overseerr:
+          icon: overseerr.png
+          href: https://overseerr.ygnv.my.id
+          description: Request management and media discovery for Plex
+          siteMonitor: http://overseerr.media.svc.cluster.local:5055
+          widget:
+            type: overseerr
+            url: http://overseerr.media.svc.cluster.local:5055
+            key: ${OVERSEERR_KEY}
+      - Tautulli:
+          icon: tautulli.png
+          href: https://tautulli.ygnv.my.id
+          description: Monitoring and analytics platform for Plex
+          siteMonitor: http://tautulli.media.svc.cluster.local:8181
+          widget:
+            type: tautulli
+            url: http://tautulli.media.svc.cluster.local:8181
+            key: ${TAUTULLI_KEY}
+            enableUser: true # optional, defaults to false
+            showEpisodeNumber: true # optional, defaults to false
+            expandOneStreamToTwoRows: false # optional, defaults to true
+      - Maintainerr:
+          icon: https://maintainerr.ygnv.my.id/logo.svg
+          href: https://maintainerr.ygnv.my.id
+          description: Automation tool for maintaining Plex libraries
+          siteMonitor: http://maintainerr.media.svc.cluster.local:6246
+
+    - Utilities:
+      - Outline:
+          icon: sh-outline.svg
+          href: https://outline.ygnv.my.id
+          description: Knowledge management and note-taking platform 
+          siteMonitor: http://10.1.1.250:3003
+      - Immich:
+          icon: immich.png
+          href: https://immich.ygnv.my.id
+          description: Self-hosted photo and video backup solution
+          siteMonitor: http://immich.immich.svc.cluster.local:8080
+          widget:
+            type: immich
+            url: http://immich.immich.svc.cluster.local:8080
+            key: ${IMMICH_KEY}
+            version: 2
+      - Iventoy:
+          icon: netboot.svg
+          href: https://iventoy.ygnv.my.id
+          description: Network boot and OS deployment server
+          siteMonitor: http://10.1.1.5:26000
+      - File Browser:
+          icon: filebrowser.png
+          href: https://file.ygnv.my.id
+          description: Web-based file management interface
+          siteMonitor: http://filebrowser.tools.svc.cluster.local:8081
+      - Openspeedtest:
+          icon: openspeedtest.png
+          href: https://speedtest.ygnv.my.id
+          description: Self-hosted network speed testing tool
+          siteMonitor: http://openspeedtest.tools.svc.cluster.local:3001
+      - Transmission:
+          icon: transmission.png
+          href: https://transmission.ygnv.my.id
+          description: BitTorrent client for downloading
+          siteMonitor: http://transmission.media.svc.cluster.local:9091
+          widget:
+            type: transmission
+            url: http://transmission.media.svc.cluster.local:9091
+            username: ${TRANSMISSION_USERNAME}
+            password: ${TRANSMISSION_PASSWORD}
+            rpcUrl: /transmission/ # Optional. Matches the value of "rpc-url" in your Transmission's settings.json file
+      - Stirling-PDF:
+          icon: stirling-pdf.svg
+          href: https://pdf.ygnv.my.id
+          description: Web-based PDF manipulation tool
+          siteMonitor: http://10.1.1.250:8084
+      - IT-Tools:
+          icon: it-tools-light.svg
+          href: https://tools.ygnv.my.id
+          description: Collection of useful IT utilities and tools
+          siteMonitor: http://10.1.1.250:8082
+      - Reubah:
+          icon: mdi-image-edit
+          href: https://reubah.ygnv.my.id
+          description: Tool for processing images and converting documents
+          siteMonitor: http://10.1.1.250:8081
+      - Change Detection:
+          icon: changedetection.svg
+          href: https://changedetection.ygnv.my.id
+          description: Website change detection and monitoring
+          siteMonitor: http://10.1.1.250:8083
+          widget:
+            type: changedetectionio
+            url: http://10.1.1.250:8083
+            key: ${CHANGEDETECTION_KEY}
+      - Excalidraw:
+          icon: excalidraw.svg
+          href: http://excalidraw.ygnv.my.id
+          description: Collaborative whiteboard tool for sketching and drawing
+          siteMonitor: http://excalidraw.tools.svc.cluster.local:8090
+
+    - Smart Home Devices:
+      - Home Assistant:
+          icon: home-assistant.png
+          href: http://homeassistant.ygnv.my.id
+          description: Home automation and control platform
+          siteMonitor: http://10.1.1.25:8123
+          widget:
+            type: homeassistant
+            url: http://10.1.1.25:8123
+            key: ${HOMEASSISTANT_KEY}
+            custom:
+              - state: sensor.esp_dht11_humidity
+                label: Outdoor Humidity
+                value: "{state}%"
+              - state: sensor.esp_dht11_temperature
+                label: Outdoor Temp
+                value: "{state}°C"
+              - state: sensor.esp_dht22_humidity
+                label: Bedroom Humidity
+                value: "{state}%"
+              - state: sensor.esp_dht22_temperature
+                label: Bedroom Temp
+                value: "{state}°C"
+      - ESPHome:
+          icon: esphome.png
+          href: http://esphome.ygnv.my.id
+          description: ESP8266/ESP32 home automation device management
+          siteMonitor: http://10.1.1.26:6052
+        #   widget:
+        #     type: esphome
+        #     url: http://esphome.ygnv.my.id
+        #     key: ${ESPHOME_KEY}
+
+    - Client Devices:
+      - Desa Station:
+          icon: google-wifi.png
+          href: http://10.0.0.253
+          description: TotoLink client device for Desa network
+          siteMonitor: http://10.0.0.253
+      - Client Winda:
+          icon: google-wifi.png
+          href: http://10.0.0.2
+          description: Personal client device (Winda)
+          siteMonitor: http://10.0.0.2
+      - Client Enggal:
+          icon: google-wifi.png
+          href: http://10.0.0.3
+          description: Personal client device (Enggal)
+          siteMonitor: http://10.0.0.3
+      - Client Shelly:
+          icon: tp-link.png
+          href: http://10.0.0.4
+          description: Personal client device (Shelly)
+          siteMonitor: http://10.0.0.4
+      - Client Yolan:
+          icon: tp-link.png
+          href: http://10.0.0.5
+          description: Personal client device (Yolan)
+          siteMonitor: http://10.0.0.5
+      - Client Gadis:
+          icon: tp-link.png
+          href: http://10.0.0.6
+          description: Personal client device (Gadis)
+          siteMonitor: http://10.0.0.6
+      - Client Domo:
+          icon: tp-link.png
+          href: http://10.0.0.7
+          description: Personal client device (Domo)
+          siteMonitor: http://10.0.0.7
+      - Client Brian:
+          icon: tp-link.png
+          href: http://10.0.0.8
+          description: Personal client device (Brian)
+          siteMonitor: http://10.0.0.8
+      - Rossa Station:
+          icon: google-wifi.png
+          href: http://10.1.2.254
+          description: TotoLink client device for Rossa network
+          siteMonitor: http://10.1.2.254
+      - Client Rossa:
+          icon: tp-link.png
+          href: http://10.1.2.2
+          description: Personal client device (Rossa)
+          siteMonitor: http://10.1.2.2
+
+  widgets.yaml: |
+    - kubernetes:
+        cluster:
+          show: true
+          cpu: true
+          memory: true
+          showLabel: true
+          label: "microk8s-kube"
+        nodes:
+          show: true
+          cpu: true
+          memory: true
+          showLabel: true
+    # - resources:
+    #     backend: resources
+    #     expanded: true
+    #     cpu: true
+    #     memory: true
+    #     network: default
+    - search:
+        provider: duckduckgo
+        target: _blank
+    - openmeteo:
+        label: Nganjuk # optional
+        latitude: ${OPENMETEO_LATITUDE}
+        longitude: ${OPENMETEO_LONGITUDE}
+        timezone: Asia/Jakarta # optional
+        units: metric # or imperial
+        cache: 5 # Time in minutes to cache API responses, to stay within limits
+        format: # optional, Intl.NumberFormat options
+          maximumFractionDigits: 1
+  docker.yaml: ""

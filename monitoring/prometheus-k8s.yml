@@ -100,7 +100,7 @@ spec:
     spec:
       initContainers:
       - name: config-processor
-        image: alpine:latest
+        image: alpine:3.18
         imagePullPolicy: Always
         command: ['/bin/sh', '-c']
         args:
