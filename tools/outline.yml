@@ -28,7 +28,6 @@ data:
   RATE_LIMITER_REQUESTS: "1000"
   RATE_LIMITER_DURATION_WINDOW: "60"
 ---
-# OUTLINE DEPLOYMENT
 apiVersion: apps/v1
 kind: Deployment
 metadata:
