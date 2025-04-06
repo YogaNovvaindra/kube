@@ -22,67 +22,72 @@ spec:
       automountServiceAccountToken: true
       enableServiceLinks: true
       initContainers:
-      - name: config-processor
-        image: alpine:3.21
-        imagePullPolicy: Always
-        command:
-        - /bin/sh
-        - -c
-        - |
-          echo "=== Initial file list in /original-config ==="
-          ls -l /original-config
-          
-          echo "=== Copying files ==="
-          mkdir -p /processed-config
-          cp -a /original-config/* /processed-config/
-          
-          echo "=== Files in /processed-config after copy ==="
-          ls -l /processed-config
-          
-          echo "=== Processing files ==="
-          apk add --no-cache gettext
-          for file in /processed-config/*; do
-            echo "Processing $file"
-            envsubst < "$file" > "$file.tmp"
-            mv "$file.tmp" "$file"
-          done
-        volumeMounts:
-        - name: config-volume
-          mountPath: /original-config
-        - name: processed-config
-          mountPath: /processed-config
-        envFrom:
-        - secretRef:
-            name: homepage-cred
+        - name: config-processor
+          image: alpine:3.21
+          imagePullPolicy: Always
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              apk add --no-cache gettext;
+              # Process all template files in /templates
+              cd /templates;
+              for file in *; do
+                echo "Processing $file";
+                envsubst < "$file" > "/processed-config/$file";
+              done;
+          volumeMounts:
+            - name: config-templates  # Contains your raw ConfigMap templates
+              mountPath: /templates
+            - name: processed-config   # Stores processed config files
+              mountPath: /processed-config
+          envFrom:
+            - secretRef:
+                name: homepage-cred
       containers:
-      - name: homepage
-        image: ghcr.io/gethomepage/homepage:v1.1.1
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 3000
-        env:
-        - name: HOMEPAGE_ALLOWED_HOSTS
-          value: "*"
-        envFrom:
-        - secretRef:
-            name: homepage-cred
-        volumeMounts:
-        - name: processed-config
-          mountPath: /app/config
-          readOnly: true
-        - name: logs
-          mountPath: /app/config/logs
-        - name: images
-          mountPath: /app/public/images
+        - name: homepage
+          image: ghcr.io/gethomepage/homepage:v1.1.1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          env:
+            - name: HOMEPAGE_ALLOWED_HOSTS
+              value: "*"
+          envFrom:
+            - secretRef:
+                name: homepage-cred
+          volumeMounts:
+            - name: processed-config    # Mount processed config files
+              mountPath: /app/config
+            - name: logs
+              mountPath: /app/config/logs
+            - name: images
+              mountPath: /app/public/images
       volumes:
-      - name: config-volume
-        configMap:
-          name: homepage
-      - name: processed-config
-        emptyDir: {}
-      - name: logs
-        emptyDir: {}
-      - name: images
-        hostPath:
-          path: /mnt/cephfs/kube/homepage/images
-          type: Directory
+        - name: config-templates    # Holds your ConfigMap with templates
+          configMap:
+            name: homepage          # Name of your existing ConfigMap
+        - name: processed-config    # Temporary storage for processed files
+          emptyDir: {}
+        - name: logs
+          emptyDir: {}
+        - name: images
+          hostPath:
+            path: /mnt/cephfs/kube/homepage/images
+            type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: homepage
+  namespace: tools
+  labels:
+    app.kubernetes.io/name: homepage
+spec:
+  type: LoadBalancer
+  externalIPs:
+    - 10.1.1.10
+  ports:
+    - port: 3002
+      targetPort: 3000
+  selector:
+    app.kubernetes.io/name: homepage
