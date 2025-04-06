@@ -142,10 +142,10 @@ data:
           icon: adguard-home.svg
           href: https://adguard.ygnv.my.id
           description: Network-wide ad and tracker blocking
-          siteMonitor: http://10.1.1.4:80
+          siteMonitor: http://10.1.1.50:80
           widget:
             type: adguard
-            url: http://10.1.1.4:80
+            url: http://10.1.1.50:80
             username: ${ADGUARD_USERNAME}
             password: ${ADGUARD_PASSWORD}
       - LB AC AP:
@@ -162,10 +162,10 @@ data:
           icon: traefik.svg
           href: https://traefik.ygnv.my.id
           description: Edge router and reverse proxy
-          siteMonitor: http://10.1.1.252:8899/metrics
+          siteMonitor: http://10.1.1.20:8899/metrics
           widget:
             type: traefik
-            url: http://10.1.1.252:8080
+            url: http://10.1.1.20:8080
 
     - Access Points:
       - SXT AP:
@@ -200,20 +200,20 @@ data:
           icon: nexterm.png
           href: https://nexterm.ygnv.my.id
           description: Web-based terminal for server management
-          siteMonitor: http://nexterm.tools.svc.cluster.local:6989
+          siteMonitor: http://nexterm:6989
       - Semaphore:
           icon: semaphore.png
           href: http://semaphore.ygnv.my.id
           description: Web GUI for Ansible automation
-          siteMonitor: http://semaphore.tools.svc.cluster.local:3003
+          siteMonitor: http://semaphore:3003
       - Portainer:
           icon: portainer.svg
           href: https://portainer.ygnv.my.id
           description: Docker container management and orchestration
-          siteMonitor: http://10.1.1.252:9000
+          siteMonitor: http://10.1.1.20:9000
           widget:
             type: portainer
-            url: http://10.1.1.252:9000
+            url: http://10.1.1.20:9000
             env: 2
             key: ${PORTAINER_KEY}
       - Ceph:
@@ -275,19 +275,14 @@ data:
           href: http://influxdb.ygnv.my.id
           description: Time-series database for metrics storage
           siteMonitor: http://influxdb.monitoring.svc.cluster.local:8086
-      # - Loki:
-      #     icon: loki.png
-      #     href: http://10.1.1.200:3100/metrics
-      #     description: Log aggregation and querying system
-      #     siteMonitor: http://grafana_loki:3100/metrics
       - MySpeed:
           icon: myspeed.png
           href: https://myspeed.ygnv.my.id
           description: Network speed testing tool
-          siteMonitor: http://myspeed.tools.svc.cluster.local:5216
+          siteMonitor: http://myspeed:5216
           widget:
             type: myspeed
-            url: http://myspeed.tools.svc.cluster.local:5216
+            url: http://myspeed:5216
             password: ${MYSPEED_PASSWORD}
 
     - Security:
@@ -300,10 +295,10 @@ data:
           icon: authentik.png
           href: https://auth.ygnv.my.id
           description: Identity provider and access management platform
-          siteMonitor: http://10.1.1.250:9000
+          siteMonitor: http://authentik-server:9000
           widget:
             type: authentik
-            url: http://10.1.1.250:9000
+            url: http://authentik-server:9000
             key: ${AUTHENTIK_KEY}
       - Wazuh: 
           icon: wazuh.svg
@@ -351,7 +346,6 @@ data:
           icon: https://ssd-disclosure.com/wp-content/uploads/2022/11/bt_logo-1.png
           href: https://aapanel.ygnv.my.id/aapanel
           description: YGNV web hosting management panel
-          # siteMonitor: http://192.168.192.253:7800/aapanel
       - File Panel:
           icon: filebrowser.png
           href: https://filepanel.ygnv.my.id
@@ -365,7 +359,7 @@ data:
           icon: sh-postgresql.svg
           href: https://pgadmin.ygnv.my.id
           description: PostgreSQL database management
-          siteMonitor: http://10.1.1.250:8088
+          siteMonitor: http://pgadmin:80
       # - phpMyAdmin Dev:
       #     icon: phpmyadmin.png
       #     href: https://phpmyadmin-dev.ygnv.my.id
@@ -390,14 +384,14 @@ data:
     - File Synchronization:
       - Syncthing Kube:
           icon: syncthing.png
-          href: http://10.1.1.250:8384
+          href: http://10.1.1.10:8384
           description: File synchronization for Kubernetes cluster
-          siteMonitor: http://10.1.1.250:8384
+          siteMonitor: http://10.1.1.10:8384
       - Syncthing DockerKVM:
           icon: syncthing.png
-          href: http://10.1.1.252:8384
+          href: http://10.1.1.20:8384
           description: File synchronization for OpenMediaVault
-          siteMonitor: http://10.1.1.252:8384
+          siteMonitor: http://10.1.1.20:8384
       # - Syncthing Azure:
       #     icon: syncthing.png
       #     href: http://192.168.192.252:8384
@@ -407,7 +401,7 @@ data:
           icon: syncthing.png
           href: http://10.1.1.248:8384
           description: File synchronization management panel
-          siteMonitor: http://10.1.1.248:8384
+          siteMonitor: http://10.1.1.21:8384
       - Syncthing IOT:
           icon: syncthing.png
           href: http://192.168.192.3:8384
@@ -528,7 +522,7 @@ data:
           icon: sh-outline.svg
           href: https://outline.ygnv.my.id
           description: Knowledge management and note-taking platform 
-          siteMonitor: http://10.1.1.250:3003
+          siteMonitor: http://outline:3000
       - Immich:
           icon: immich.png
           href: https://immich.ygnv.my.id
@@ -543,17 +537,17 @@ data:
           icon: netboot.svg
           href: https://iventoy.ygnv.my.id
           description: Network boot and OS deployment server
-          siteMonitor: http://10.1.1.5:26000
+          siteMonitor: http://10.1.1.51:26000
       - File Browser:
           icon: filebrowser.png
           href: https://file.ygnv.my.id
           description: Web-based file management interface
-          siteMonitor: http://filebrowser.tools.svc.cluster.local:8081
+          siteMonitor: http://filebrowser:8081
       - Openspeedtest:
           icon: openspeedtest.png
           href: https://speedtest.ygnv.my.id
           description: Self-hosted network speed testing tool
-          siteMonitor: http://openspeedtest.tools.svc.cluster.local:3001
+          siteMonitor: http://openspeedtest:3001
       - Transmission:
           icon: transmission.png
           href: https://transmission.ygnv.my.id
@@ -569,31 +563,31 @@ data:
           icon: stirling-pdf.svg
           href: https://pdf.ygnv.my.id
           description: Web-based PDF manipulation tool
-          siteMonitor: http://10.1.1.250:8084
+          siteMonitor: http://stirling-pdf:8080
       - IT-Tools:
           icon: it-tools-light.svg
           href: https://tools.ygnv.my.id
           description: Collection of useful IT utilities and tools
-          siteMonitor: http://10.1.1.250:8082
+          siteMonitor: http://it-tools:80
       - Reubah:
           icon: mdi-image-edit
           href: https://reubah.ygnv.my.id
           description: Tool for processing images and converting documents
-          siteMonitor: http://10.1.1.250:8081
+          siteMonitor: http://reubah:8081
       - Change Detection:
           icon: changedetection.svg
           href: https://changedetection.ygnv.my.id
           description: Website change detection and monitoring
-          siteMonitor: http://10.1.1.250:8083
+          siteMonitor: http://changedetection:5000
           widget:
             type: changedetectionio
-            url: http://10.1.1.250:8083
+            url: http://changedetection:5000
             key: ${CHANGEDETECTION_KEY}
       - Excalidraw:
           icon: excalidraw.svg
           href: http://excalidraw.ygnv.my.id
           description: Collaborative whiteboard tool for sketching and drawing
-          siteMonitor: http://excalidraw.tools.svc.cluster.local:8090
+          siteMonitor: http://excalidraw:8090
 
     - Smart Home Devices:
       - Home Assistant:
