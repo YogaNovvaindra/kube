@@ -24642,6 +24642,8 @@ data:
       hs.message = "Service is not LoadBalancer type"
     end
     return hs
+  # account apikey
+  accounts.homepage: apiKey
 kind: ConfigMap
 metadata:
   labels:
@@ -24683,6 +24685,9 @@ metadata:
     app.kubernetes.io/name: argocd-rbac-cm
     app.kubernetes.io/part-of: argocd
   name: argocd-rbac-cm
+data:
+policy.csv: |
+    g, homepage, role:readonly
 ---
 apiVersion: v1
 data:
