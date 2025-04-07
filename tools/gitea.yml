@@ -143,7 +143,7 @@ spec:
               name: gitea-cred
               key: githubuser
         - name: GITEA_URL
-          value: "http://gitea-http:3000"
+          value: "http://gitea-http:3005"
         - name: GITEA_TOKEN
           valueFrom:
             secretKeyRef:
