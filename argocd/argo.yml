@@ -24686,7 +24686,7 @@ metadata:
     app.kubernetes.io/part-of: argocd
   name: argocd-rbac-cm
 data:
-policy.csv: |
+  policy.csv: |
     g, homepage, role:readonly
 ---
 apiVersion: v1
