@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
       - name: semaphore
-        image: semaphoreui/semaphore:v2.13.8
+        image: semaphoreui/semaphore:v2.13.10
         imagePullPolicy: Always
         envFrom:
         - configMapRef:
