@@ -143,7 +143,7 @@ spec:
       volumes:
       - name: postgres-data
         hostPath:
-          path: /mnt/cephfs/docker/tools/db
+          path: /mnt/cephfs/docker/tools/postgres
           type: Directory
 ---
 apiVersion: v1
