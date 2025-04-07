@@ -311,10 +311,10 @@ data:
           icon: gitea.png
           href: https://git.ygnv.my.id/explore
           description: Self-hosted Git service for version control
-          siteMonitor: http://192.168.192.5:3000
+          siteMonitor: http://gitea-http:3005
           widget:
             type: gitea
-            url: http://192.168.192.5:3000
+            url: http://gitea-http:3005
             key: ${GITEA_KEY}
       - Argo CD:
           icon: argo-cd.svg
@@ -355,11 +355,11 @@ data:
           href: https://pgadmin.ygnv.my.id
           description: PostgreSQL database management
           siteMonitor: http://pgadmin:8088
-      # - phpMyAdmin Dev:
-      #     icon: phpmyadmin.png
-      #     href: https://phpmyadmin-dev.ygnv.my.id
-      #     description: MySQL database management (development environment)
-      #     siteMonitor: http://dev-db_phpmyadmin:80
+      - phpMyAdmin Tools:
+          icon: phpmyadmin.png
+          href: https://phpmyadmin-tools.ygnv.my.id
+          description: MySQL database management (development environment)
+          siteMonitor: http://phpmyadmin:888
       - phpMyAdmin Prod:
           icon: phpmyadmin.png
           href: https://phpmyadmin-prod.ygnv.my.id
