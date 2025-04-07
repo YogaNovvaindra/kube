@@ -160,5 +160,71 @@ spec:
   - port: 5432
     targetPort: 5432
   type: ClusterIP
-
-
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb
+  namespace: tools
+  labels:
+    app: mariadb
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: mariadb
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: mariadb
+        image: mariadb:11.7.2
+        imagePullPolicy: Always
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-cred
+              key: password
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-cred
+              key: username
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-cred
+              key: password
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+        - name: mariadb-data
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mariadb-data
+        hostPath:
+          path: /mnt/cephfs/docker/tools/mariadb
+          type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb
+  namespace: tools
+  labels:
+    app: mariadb
+spec:
+  selector:
+    app: mariadb
+  ports:
+  - port: 3306
+    targetPort: 3306
