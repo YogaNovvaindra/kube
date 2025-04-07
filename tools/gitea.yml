@@ -1,0 +1,160 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitea
+  namespace: tools
+  labels:
+    app: gitea
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: gitea
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: gitea
+    spec:
+      containers:
+      - name: gitea
+        image: gitea/gitea:1.23.7
+        imagePullPolicy: Always
+        env:
+        - name: USER_UID
+          value: "1000"
+        - name: USER_GID
+          value: "1000"
+        - name: GITEA__database__DB_TYPE
+          value: "mysql"
+        - name: GITEA__database__HOST
+          value: "mariadb:3306"
+        - name: GITEA__database__NAME
+          valueFrom:
+            secretKeyRef:
+              name: gitea-cred
+              key: dbname
+        - name: GITEA__database__USER
+          valueFrom:
+            secretKeyRef:
+              name: gitea-cred
+              key: dbuser
+        - name: GITEA__database__PASSWD
+          valueFrom:
+            secretKeyRef:
+              name: gitea-cred
+              key: dbpass
+        ports:
+        - containerPort: 3000
+        - containerPort: 22
+        volumeMounts:
+        - name: gitea-data
+          mountPath: /data
+        - name: timezone
+          mountPath: /etc/timezone
+          readOnly: true
+        - name: localtime
+          mountPath: /etc/localtime
+          readOnly: true
+      volumes:
+      - name: gitea-data
+        hostPath:
+          path: /mnt/cephfs/docker/tools/gitea
+          type: Directory
+      - name: timezone
+        hostPath:
+          path: /etc/timezone
+          type: File
+      - name: localtime
+        hostPath:
+          path: /etc/localtime
+          type: File
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gitea-http
+  namespace: tools
+  labels:
+    app: gitea
+spec:
+  type: LoadBalancer
+  externalIPs:
+    - 10.1.1.10
+  selector:
+    app: gitea
+  ports:
+  - name: http
+    port: 3005
+    targetPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gitea-ssh
+  namespace: tools
+  labels:
+    app: gitea
+spec:
+  selector:
+    app: gitea
+  ports:
+  - name: ssh
+    port: 22
+    targetPort: 22
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitea-mirror
+  namespace: tools
+  labels:
+    app: gitea-mirror
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll 
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: gitea-mirror
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: gitea-mirror
+    spec:
+      containers:
+      - name: gitea-mirror
+        image: jaedle/mirror-to-gitea:latest
+        imagePullPolicy: Always
+        env:
+        - name: GITHUB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: gitea-cred
+              key: githubuser
+        - name: GITEA_URL
+          value: "http://gitea-http:3000"
+        - name: GITEA_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: gitea-cred
+              key: giteatoken
+        - name: GITHUB_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: gitea-cred
+              key: githubtoken
+        - name: MIRROR_PRIVATE_REPOSITORIES
+          value: "true"
+        - name: DELAY
+          value: "21600"
