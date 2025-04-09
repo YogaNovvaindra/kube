@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: stirling-pdf
-        image: stirlingtools/stirling-pdf:0.45.0
+        image: stirlingtools/stirling-pdf:0.45.2
         imagePullPolicy: Always
         env:
         - name: DOCKER_ENABLE_SECURITY
