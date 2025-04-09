@@ -85,7 +85,7 @@ spec:
     spec:
       containers:
       - name: prowlarr
-        image: lscr.io/linuxserver/prowlarr:1.32.2
+        image: lscr.io/linuxserver/prowlarr:1.33.3
         imagePullPolicy: Always
         ports:
         - containerPort: 9696
