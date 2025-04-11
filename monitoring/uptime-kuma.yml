@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uptime-kuma
+  namespace: monitoring
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: uptime-kuma
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: uptime-kuma
+    spec:
+      containers:
+        - name: uptime-kuma
+          image: louislam/uptime-kuma:1.23.16
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3001
+          volumeMounts:
+            - name: data
+              mountPath: /app/data
+          # env:
+          #   - name: UPTIME_KUMA_PORT
+          #     value: "3001"
+      volumes:
+        - name: data
+          hostPath:
+            path: /mnt/cephfs/docker/monitoring/uptime-kuma
+            type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: uptime-kuma
+  namespace: monitoring
+  labels:
+    app: uptime-kuma
+spec:
+  selector:
+    app: uptime-kuma
+  type: LoadBalancer
+  externalIPs:
+    - 10.1.1.10
+  ports:
+    - port: 3001
+      targetPort: 3001
+

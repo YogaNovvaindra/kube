@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ecoguardian
+  namespace: service
+  labels:
+    app: ecoguardian
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll 
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: ecoguardian
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: ecoguardian
+    spec:
+      containers:
+      - name: ecoguardian
+        image: ghcr.io/yoganovvaindra/ecoguardian-web:latest
+        imagePullPolicy: Always
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: ecoguardian-cred
+              key: db-url
+        - name: NEXTAUTH_URL
+          value: "https://ecoguardian.yoganova.my.id"
+        - name: NEXT_PUBLIC_SITE_URL
+          value: "https://ecoguardian.yoganova.my.id"
+        - name: NEXT_PUBLIC_CHART_URL
+          value: "https://ecochart.yoganova.my.id"
+        - name: GOOGLE_CLIENT_ID
+          value: ""
+        - name: GOOGLE_CLIENT_SECRET
+          value: ""
+        volumeMounts:
+        - name: images
+          mountPath: /app/images
+      volumes:
+      - name: images
+        hostPath:
+          path: /mnt/cephfs/docker/service/ecoguardian/images
+          type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ecoguardian
+  namespace: service
+spec:
+  type: ClusterIP
+  selector:
+    app: ecoguardian
+  ports:
+  - name: ecoguardian
+    port: 3000
+    targetPort: 3000
