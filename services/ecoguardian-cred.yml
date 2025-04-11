@@ -1,0 +1,15 @@
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: ecoguardian-cred
+  namespace: services
+spec:
+  encryptedData:
+    db-url: AgA/H7Z9TZG9bn5p++FgODEeRrNmJKZWVmq7qRcBx90aLGCsoMkfx4XJ3GKu19B4L1PANMFjB7qaEUwmbTrH8wkTjyXrv813yAnOqLf498ADzV5xw6KZkz8fl0QV4fm9GEVoTREpCso8Cgq6JdmQw2fELX23TyrsH31wA425/Z2XGKLr3rcEcnXqR7t50mBMGSZd2EKtup8adFhHJXr1gkFTPb+PAru/yuYgqVYDRquV6HEGrpzz82iZFV9IXE32oysirq/y1yeXyg87Tfqk8dPkAslMOFaL19jQO6kVd7vrEG96TUgqJls++7LhOlAoH4WmSPvMVNdLADlRX2oSnf3sBLdyR+LfktUet+qvaOGknzibsyxBb+q56QbLcgyDPmsVc7TyiIPRNqw2cTAyGkVJ/1i6sFyuAHalXnuYDA/aphRQfmhIYJkXcIqjCRmkNMx+jZ0K1B/NCnMlfLym+gy6Qu+tNon5Bnxp3WuBGStwkSKtdD3hDrAIJWIas0ZLepfNSSmgV72NcW3hN3u12hf1p4OY5XguHmR0u6o+RAnrpLWAdjOprFLX4m0YirrRmtiCeyWEinkOngLCsG/66nSHBCUIYgkn/B1FUEu99AD1l3YRRQgC5dz8GEEiz+8fy34+bnideSw6i3CE2k/+YhDd6a1VcxSBkDGyMhwv/slbFkkiuEAbZuzM5dlaMkbTtvIQtEE6UIN9vuPZrMx6Xjd87DANuPG19530s5Ss0b/lZ9tMHnlg4y9lOpr0yBqNWQ==
+  template:
+    metadata:
+      creationTimestamp: null
+      name: ecoguardian-cred
+      namespace: services
