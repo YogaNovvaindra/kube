@@ -189,7 +189,7 @@ spec:
         - name: DATABASE_URL
           valueFrom:
             secretKeyRef:
-              name: linear-next-cred
+              name: linear-cred
               key: db-url
         - name: NEXTAUTH_URL
           value: "https://linear.yoganova.my.id/"
@@ -197,10 +197,10 @@ spec:
           requests:
             memory: "128Mi"
         volumeMounts:
-        - name: linear-next-data
+        - name: linear-data
           mountPath: /app/upload
       volumes:
-      - name: linear-next-data
+      - name: linear-data
         hostPath:
           path: /mnt/cephfs/docker/services/linear-next
           type: Directory
