@@ -1,13 +1,13 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: money
+  name: services
 spec:
   destination:
-    namespace: money
+    namespace: services
     server: https://kubernetes.default.svc
   source:
-    path: money
+    path: services
     repoURL: https://github.com/YogaNovvaindra/kube.git
     targetRevision: HEAD
   sources: []
