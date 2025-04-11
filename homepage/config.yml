@@ -252,10 +252,10 @@ data:
           icon: uptime-kuma.svg
           href: https://uptime.ygnv.my.id/dashboard
           description: Uptime and status monitoring tool
-          siteMonitor: http://192.168.192.5:3001
+          siteMonitor: http://uptime-kuma.monitoring.svc.cluster.local:3001
           widget:
             type: uptimekuma
-            url: http://192.168.192.5:3001
+            url: http://uptime-kuma.monitoring.svc.cluster.local:3001
             slug: server
       - Prometheus:
           icon: prometheus.svg
@@ -358,13 +358,13 @@ data:
       - phpMyAdmin Tools:
           icon: phpmyadmin.png
           href: https://phpmyadmin-tools.ygnv.my.id
-          description: MySQL database management (development environment)
+          description: MySQL database management (tools environment)
           siteMonitor: http://phpmyadmin:888
-      - phpMyAdmin Prod:
+      - phpMyAdmin Services:
           icon: phpmyadmin.png
-          href: https://phpmyadmin-prod.ygnv.my.id
-          description: MySQL database management (production environment)
-          siteMonitor: http://192.168.192.5:888
+          href: https://phpmyadmin-services.ygnv.my.id
+          description: MySQL database management (services environment)
+          siteMonitor: http://phpmyadmin.services.svc.cluster.local:889
       - Online Portfolio:
           icon: https://biarrinetworks.com/hs-fs/hubfs/Collab_big.png?width=592&name=Collab_big.png
           href: https://yoganova.my.id

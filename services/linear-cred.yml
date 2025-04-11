@@ -1,0 +1,15 @@
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: linear-cred
+  namespace: services
+spec:
+  encryptedData:
+    db-url: AgAqJmVb/5v2SEp2aEC2PgnN7pkXmQs1wsMgmXKOfT011g1N4g2EGFd8tr781tv804tZEBLoHT0Nxve6IjNWCA6YueAa/PoAuMcMia/PjNKbt7zJLf944ZMfPvSaahdGPUqJHZN21hl2gYL135LkibPLBTVGfKPPcFjB4eWsWZxYh8CjYb5KqzIzoEoSmzB3GqcbRp7cUIYgxHu8VonliocyPOscv0m2JIrhawzJ4MfJfDsw22urzSIFKE+IZ0WY8Ba1BJr7VqmATQGu6BZ/sqDn5901t11YNdjMkAU4bXaJyMkEniJPgQgX/QIoiNAH8xfVq8iH94umXnk4viYnMo9V1568FHFEQWHxAxd4dmwezYvJ2HoIDBiIvBfkLDkS0h7cE8A3yukxkhII7qegBPoohTMjQmJiqoG0B3fBdk2wR7jf5LXUQuA37fShLSNHx6eryotUD34P3LmDaevro5jLr3Zx9Gx6zs05zb7Tl4pmsPhQSkqHOY7kQCJRmpTpdHXsrYG1O/jKG/xyPu4r2a2FPmQ5nxXudbzcC62pdF+G1B91SmP5TlkjZNwTyNcIbR/NA3EW4hUKf+c76SrQ6DxgG2SZu7Ak/zhj98qfVMLTZyECdHgD4CuckTbvfNpRhOKEzG9rKM2EcYPE+aXd76VPRMEwDbQvuAxgGhN+8pmbByK8y9bvr0yh/8EmpAPyTLon3WbZEGUY0R9UsiiYh3zH9OtpHpWDnXN8E1acrOOZ3QXVZMnGYIK9gO+jl7TC
+  template:
+    metadata:
+      creationTimestamp: null
+      name: linear-cred
+      namespace: services
