@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: traefik-config
+  namespace: traefik
+data:
+  traefik.yaml: |
+    global:
+      checkNewVersion: true
+      sendAnonymousUsage: true
+    
+    api:
+      dashboard: true
+      debug: true
+      insecure: true
+    
+    metrics:
+      prometheus:
+        buckets: [0.100000, 0.300000, 1.200000, 5.000000]
+        addEntryPointsLabels: true
+        addServicesLabels: true
+        entryPoint: "metrics"
+    
+    entryPoints:
+      http:
+        address: ":80"
+        http:
+          redirections:
+            entryPoint:
+              to: https
+              scheme: https
+      https:
+        address: ":443"
+      metrics:
+        address: ":8899"
+    
+    serversTransport:
+      insecureSkipVerify: true
+    
+    providers:
+      kubernetesCRD: {}
+      file:
+        directory: /etc/traefik
+        watch: true
+      redis:
+        endpoints:
+          - "traefik-valkey:6379"
+    
+    certificatesResolvers:
+      cloudflare:
+        acme:
+          email: yoga.november2000@gmail.com
+          storage: /data/acme.json
+          caServer: "https://acme-v02.api.letsencrypt.org/directory"
+          dnsChallenge:
+            provider: cloudflare
+            resolvers:
+              - "1.1.1.1:53"
+              - "1.0.0.1:53"
