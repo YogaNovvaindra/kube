@@ -196,6 +196,6 @@ spec:
       services:
         - name: prometheus
           port: 9090
-          strategy: RoundRobin
+          # strategy: drr
   tls:
     certResolver: cloudflare
