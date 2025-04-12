@@ -74,7 +74,7 @@ data:
               instance: '8labs'
 ---
 apiVersion: v1
-kind: serviceAccount
+kind: ServiceAccount
 metadata:
   name: prometheus
   namespace: monitoring
@@ -83,7 +83,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: prometheus
-  namespace: monitoring
 rules:
 - apiGroups: [""]
   resources:
@@ -97,15 +96,14 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: prometheus
-  namespace: monitoring
-  roleRef:
-    apiGroup: rbac.authorization.k8s.io
-    kind: ClusterRole
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus
+subjects:
+  - kind: ServiceAccount
     name: prometheus
-  subjects:
-    - kind: ServiceAccount
-      name: prometheus
-      namespace: monitoring
+    namespace: monitoring
 ---
 apiVersion: apps/v1
 kind: Deployment
