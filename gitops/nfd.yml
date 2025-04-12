@@ -5,7 +5,7 @@ metadata:
   name: nfd
   namespace: argocd
 spec:
-  project: local
+  project: default
   source:
     repoURL: https://github.com/YogaNovvaindra/kube.git
     targetRevision: HEAD
