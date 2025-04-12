@@ -36,9 +36,11 @@ data:
     
     serversTransport:
       insecureSkipVerify: true
+      name: traefik-transport
     
     providers:
-      kubernetesCRD: {}
+      kubernetesCRD:
+        serversTransport: traefik-transport
       file:
         directory: /etc/traefik
         watch: true
