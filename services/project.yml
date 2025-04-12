@@ -145,12 +145,27 @@ metadata:
 spec:
   selector:
     app: phpmyadmin
-  type: LoadBalancer
-  externalIPs:
-    - 10.1.1.10
   ports:
-  - port: 889
+  - port: 80
     targetPort: 80
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: phpmyadmin
+  namespace: services
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`phpmyadmin-services.yoganova.my.id`)
+      kind: Rule
+      services:
+        - name: phpmyadmin
+          port: 80
+  tls:
+    certResolver: cloudflare
 ---
 apiVersion: apps/v1
 kind: Deployment

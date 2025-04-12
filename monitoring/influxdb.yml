@@ -65,9 +65,6 @@ metadata:
   labels:
     app: influxdb
 spec:
-  type: LoadBalancer
-  externalIPs:
-    - 10.1.1.10
   selector:
     app: influxdb
   ports:
@@ -75,4 +72,21 @@ spec:
     port: 8086
     targetPort: 8086
 ---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: influxdb
+  namespace: monitoring
+spec:
+  entryPoint:
+    - http
+    - https
+  routes:
+    - match: Host(`influxdb.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: influxdb
+          port: 8086
+  tls:
+    certResolver: cloudflare
 

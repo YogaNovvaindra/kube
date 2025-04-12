@@ -42,10 +42,27 @@ metadata:
 spec:
   selector:
     app: nexterm
-  type: LoadBalancer
-  externalIPs:
-    - 10.1.1.10
   ports:
   - protocol: TCP
     port: 6989
     targetPort: 6989
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: nexterm
+  namespace: tools
+  labels:
+    app: nexterm
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`nexterm.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: nexterm
+          port: 6989
+  tls:
+    certResolver: cloudflare

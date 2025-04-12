@@ -42,9 +42,24 @@ metadata:
 spec:
   selector:
     app: phpmyadmin
-  type: LoadBalancer
-  externalIPs:
-    - 10.1.1.10
   ports:
-  - port: 888
+  - port: 80
     targetPort: 80
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: phpmyadmin
+  namespace: tools
+  labels:
+    app: phpmyadmin
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`phpmyadmin-tools.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: phpmyadmin
+          port: 80

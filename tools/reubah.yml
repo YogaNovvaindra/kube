@@ -39,11 +39,26 @@ metadata:
   name: reubah
   namespace: tools
 spec:
-  type: LoadBalancer
-  externalIPs:
-    - 10.1.1.10
   selector:
     app: reubah
   ports:
-  - port: 8087
+  - port: 8081
     targetPort: 8081
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: reubah
+  namespace: tools
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`reubah.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: reubah
+          port: 8081
+  tls:
+    certResolver: cloudflare

@@ -114,15 +114,30 @@ metadata:
   labels:
     app: prowlarr
 spec:
-  type: LoadBalancer
-  externalIPs:
-    - 10.1.1.10
   selector:
     app: prowlarr
   ports:
   - protocol: TCP
     port: 9696
     targetPort: 9696
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: prowlarr
+  namespace: media
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`prowlarr.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: prowlarr
+          port: 9696
+  tls:
+    certResolver: cloudflare
 ---
 # Radarr Deployment
 apiVersion: apps/v1
@@ -187,15 +202,30 @@ metadata:
   labels:
     app: radarr
 spec:
-  type: LoadBalancer
-  externalIPs:
-    - 10.1.1.10
   selector:
     app: radarr
   ports:
   - protocol: TCP
     port: 7878
     targetPort: 7878
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: radarr
+  namespace: media
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`radarr.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: radarr
+          port: 7878
+  tls:
+    certResolver: cloudflare
 ---
 # Sonarr Deployment
 apiVersion: apps/v1
@@ -260,15 +290,30 @@ metadata:
   labels:
     app: sonarr
 spec:
-  type: LoadBalancer
-  externalIPs:
-    - 10.1.1.10
   selector:
     app: sonarr
   ports:
   - protocol: TCP
     port: 8989
     targetPort: 8989
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: sonarr
+  namespace: media
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`sonarr.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: sonarr
+          port: 8989
+  tls:
+    certResolver: cloudflare
 ---
 # Bazarr Deployment
 apiVersion: apps/v1
@@ -333,15 +378,30 @@ metadata:
   labels:
     app: bazarr
 spec:
-  type: LoadBalancer
-  externalIPs:
-    - 10.1.1.10
   selector:
     app: bazarr
   ports:
   - protocol: TCP
     port: 6767
     targetPort: 6767
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: bazarr
+  namespace: media
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`bazarr.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: bazarr
+          port: 6767
+  tls:
+    certResolver: cloudflare
 ---
 # Overseerr Deployment
 apiVersion: apps/v1
@@ -392,15 +452,30 @@ metadata:
   labels:
     app: overseerr
 spec:
-  type: LoadBalancer
-  externalIPs:
-    - 10.1.1.10
   selector:
     app: overseerr
   ports:
   - protocol: TCP
     port: 5055
     targetPort: 5055
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: overseerr
+  namespace: media
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`overseerr.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: overseerr
+          port: 5055
+  tls:
+    certResolver: cloudflare
 ---
 # Tautulli Deployment
 apiVersion: apps/v1
@@ -453,15 +528,30 @@ metadata:
   labels:
     app: tautulli
 spec:
-  type: LoadBalancer
-  externalIPs:
-    - 10.1.1.10
   selector:
     app: tautulli
   ports:
   - protocol: TCP
     port: 8181
     targetPort: 8181
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: tautulli
+  namespace: media
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`tautulli.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: tautulli
+          port: 8181
+  tls:
+    certResolver: cloudflare
 ---
 # Maintainerr Deployment
 apiVersion: apps/v1
@@ -510,12 +600,28 @@ metadata:
   labels:
     app: maintainerr
 spec:
-  type: LoadBalancer
-  externalIPs:
-    - 10.1.1.10
   selector:
     app: maintainerr
   ports:
   - protocol: TCP
     port: 6246
     targetPort: 6246
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: maintainerr
+  namespace: media
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`maintainerr.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: maintainerr
+          port: 6246
+  tls:
+    certResolver: cloudflare
+---

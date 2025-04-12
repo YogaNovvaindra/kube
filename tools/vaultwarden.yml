@@ -39,11 +39,28 @@ metadata:
   name: vaultwarden
   namespace: tools
 spec:
-  type: LoadBalancer
-  externalIPs:
-    - 10.1.1.10
   selector:
     app: vaultwarden
   ports:
-  - port: 8085
+  - port: 80
     targetPort: 80
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: vaultwarden
+  namespace: tools
+  labels:
+    app: vaultwarden
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`vaultwarden.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: vaultwarden
+          port: 80
+  tls:
+    certResolver: cloudflare

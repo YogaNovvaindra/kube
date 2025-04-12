@@ -63,12 +63,27 @@ metadata:
   labels:
     app: grafana
 spec:
-  type: LoadBalancer
-  externalIPs:
-    - 10.1.1.10
   selector:
     app: grafana
   ports:
   - protocol: TCP
     port: 3000
     targetPort: 3000
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: grafana
+  namespace: monitoring
+spec:
+  entryPoint:
+    - http
+    - https
+  routes:
+    - match: Host(`grafana.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: grafana
+          port: 3000
+  tls:
+    certResolver: cloudflare
