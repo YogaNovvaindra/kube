@@ -182,6 +182,17 @@ spec:
       targetPort: 9090
 ---
 apiVersion: traefik.io/v1alpha1
+kind: TraefikService
+metadata:
+  name: prometheus
+  namespace: monitoring 
+spec:
+  weighted:
+    services:
+      - name: prometheus 
+        port: 9090
+---
+apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: prometheus
