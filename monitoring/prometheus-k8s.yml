@@ -174,7 +174,6 @@ metadata:
   name: prometheus
   namespace: monitoring
 spec:
-  type: ClusterIP
   selector:
     app: prometheus
   ports:
@@ -197,6 +196,7 @@ spec:
       services:
         - name: prometheus
           port: 9090
-          loadBalancer: {}
+          loadBalancer:
+            method: "drr"
   tls:
     certResolver: letsencrypt
