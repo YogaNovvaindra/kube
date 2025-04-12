@@ -36,6 +36,8 @@ data:
     
     serversTransport:
       insecureSkipVerify: true
+      loadBalancer:
+        method: wrr
     
     providers:
       kubernetesCRD: {}
