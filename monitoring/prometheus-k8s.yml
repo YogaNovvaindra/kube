@@ -26,8 +26,28 @@ data:
             target_label: instance
       
       - job_name: 'traefik'
-        static_configs:
-          - targets: ['${TRAEFIK_ENDPOINT}']
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: ["traefik"]
+        relabel_configs:
+          # Keep only pods with prometheus.io/scrape=true
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+            action: keep
+            regex: "true"
+          # Use the port from annotation
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_port]
+            action: replace
+            target_label: __address__
+            regex: (.+)
+            replacement: ${1}:$__meta_kubernetes_pod_ip
+          # Add standard labels
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            target_label: app
       
       - job_name: 'microceph'
         static_configs:
@@ -56,35 +76,43 @@ data:
             labels:
               instance: '8labs'
 ---
+apiVersion: v1
+kind: serviceAccount
+metadata:
+  name: prometheus
+  namespace: monitoring
+---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: pod-reader-cluster
+  name: prometheus
 rules:
-  - apiGroups: [""]
-    resources: ["pods"]
-    verbs: ["get", "watch", "list"]
+- apiGroups: [""]
+  resources:
+  - nodes
+  - services
+  - endpoints
+  - pods
+  verbs: ["get", "list", "watch"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: pod-reader-cluster-binding
-subjects:
-  - kind: ServiceAccount
-    name: default
-    namespace: monitoring
-roleRef:
-  kind: ClusterRole
-  name: pod-reader-cluster
-  apiGroup: rbac.authorization.k8s.io
-
+  name: prometheus
+  roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: prometheus
+  subjects:
+    - kind: ServiceAccount
+      name: prometheus
+      namespace: monitoring
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: prometheus
   namespace: monitoring
-
 spec:
   replicas: 1
   revisionHistoryLimit: 3
@@ -98,6 +126,7 @@ spec:
       labels:
         app: prometheus
     spec:
+      serviceAccountName: prometheus
       initContainers:
       - name: config-processor
         image: alpine:3.21
