@@ -131,7 +131,7 @@ spec:
   entryPoints:
     - ssh
   routes:
-    - match: Host(`git.ygnv.my.id`)
+    - match: HostSNI(`git.ygnv.my.id`)
       kind: Rule
       services:
         - name: gitea-ssh
