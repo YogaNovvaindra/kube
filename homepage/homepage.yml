@@ -99,7 +99,7 @@ spec:
     - http
     - https
   routes:
-    - match: Host(`homepage.ygnv.my.id`)
+    - match: Host(`dash.ygnv.my.id`)
       kind: Rule
       services:
         - name: homepage
