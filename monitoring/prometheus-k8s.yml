@@ -195,8 +195,9 @@ spec:
       kind: Rule
       services:
         - name: prometheus
+          kind: Service
           port: 9090
-          loadBalancerSpec:
-            strategy: roundRobin
+          namespace: monitoring
+          strategy: RoundRobin
   tls:
     certResolver: letsencrypt
