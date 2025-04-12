@@ -222,7 +222,7 @@ spec:
     targetPort: 6888
 ---
 apiVersion: traefik.io/v1alpha1
-kind: IngressRoute
+kind: IngressRouteTCP
 metadata:
   name: aria2
   namespace: media
@@ -231,10 +231,9 @@ spec:
     - aria2-tcp
   routes:
     - match: HostSNI(`aria2.ygnv.my.id`)
-      kind: Rule
       services:
         - name: aria2
           port: 6800
   tls:
-    certResolver: cloudflare
+    passthrough: true
 ---
