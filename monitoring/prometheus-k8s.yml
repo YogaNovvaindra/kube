@@ -174,9 +174,7 @@ metadata:
   name: prometheus
   namespace: monitoring
 spec:
-  type: LoadBalancer
-  externalIPs:
-    - 10.1.1.10
+  type: ClusterIP
   selector:
     app: prometheus
   ports:
