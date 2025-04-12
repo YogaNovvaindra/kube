@@ -183,3 +183,21 @@ spec:
     - protocol: TCP
       port: 9090
       targetPort: 9090
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: prometheus
+  namespace: monitoring
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`prometheus.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: prometheus
+          port: 9090
+  tls:
+    certResolver: letsencrypt
