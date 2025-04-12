@@ -64,7 +64,7 @@ metadata:
   name: traefik
   namespace: traefik
 spec:
-  type: loadBalancer
+  type: LoadBalancer
   selector:
     app: traefik
   externalIPs:
