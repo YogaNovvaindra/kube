@@ -196,7 +196,6 @@ spec:
       services:
         - name: prometheus
           port: 9090
-          loadBalancer:
-            method: "drr"
+      loadBalancer: {}
   tls:
     certResolver: letsencrypt
