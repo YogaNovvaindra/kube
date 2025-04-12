@@ -36,11 +36,26 @@ metadata:
   name: it-tools
   namespace: tools
 spec:
-  type: LoadBalancer
-  externalIPs:
-    - 10.1.1.10
   selector:
     app: it-tools
   ports:
-  - port: 8082
+  - port: 80
     targetPort: 80
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: it-tools
+  namespace: tools
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`tools.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: it-tools
+          port: 80
+  tls:
+    certResolver: cloudflare

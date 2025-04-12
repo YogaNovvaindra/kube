@@ -31,6 +31,10 @@ data:
               scheme: https
       https:
         address: ":443"
+      ssh:
+        address: ":22"
+      aria2-tcp:
+        address: ":6800"
       metrics:
         address: ":8899"
     

@@ -60,14 +60,28 @@ metadata:
   name: semaphore
   namespace: tools
 spec:
-  type: LoadBalancer
-  externalIPs:
-    # - 192.168.192.5
-    # - 10.0.1.180
-    - 10.1.1.10
   selector:
     app: semaphore
   ports:
-  - port: 3003
+  - port: 3000
     targetPort: 3000
 ---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: semaphore
+  namespace: tools
+  labels:
+    app: semaphore
+spec:
+  entryPoints:
+  - http
+  - https
+  routes:
+    - match: Host(`semaphore.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: semaphore
+          port: 3000
+  tls:
+    certResolver: cloudflare

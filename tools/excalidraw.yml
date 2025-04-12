@@ -33,11 +33,28 @@ metadata:
   name: excalidraw
   namespace: tools
 spec:
-  type: LoadBalancer
-  externalIPs:
-    - 10.1.1.10
   selector:
     app: excalidraw
   ports:
-  - port: 8090
+  - port: 80
     targetPort: 80
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: excalidraw
+  namespace: tools
+  labels:
+    app: excalidraw
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`excalidraw.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: excalidraw
+          port: 80
+  tls:
+    certResolver: cloudflare
