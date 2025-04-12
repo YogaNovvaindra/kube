@@ -76,7 +76,7 @@ metadata:
   name: grafana
   namespace: monitoring
 spec:
-  entryPoint:
+  entryPoints:
     - http
     - https
   routes:
