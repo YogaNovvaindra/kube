@@ -20,7 +20,7 @@ spec:
       serviceAccountName: traefik
       containers:
         - name: traefik
-          image: traefik:latest
+          image: traefik:v3.3.5
           imagePullPolicy: Always
           args:
             - --configfile=/etc/traefik/traefik.yaml
