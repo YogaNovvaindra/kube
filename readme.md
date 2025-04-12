@@ -28,7 +28,7 @@ The Kubernetes cluster follows **declarative infrastructure management** princip
 - **🔄 GitOps Automation**: ArgoCD synchronization with self-healing capabilities
 - **🆕 Continuous Updates**: 
   - `Keel`: Automatic rolling updates for latest container images
-  - `Renovate`: Semantic versioning maintenance for chart dependencies
+  - `Renovate`: Semantic versioning maintenance for container images
 - **📊 Observability Stack**: Prometheus/Grafana monitoring with alert integration
 - **🗄 Persistent Storage**: CephFS provisioner with automated volume management
 - **🔒 Zero-Trust Security**: Authentik SSO integration and network policies
