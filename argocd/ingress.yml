@@ -1,0 +1,17 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: argocd
+  namespace: argocd
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`argocd.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: argocd-server
+          port: 80
+  tls:
+    certResolver: cloudflare
