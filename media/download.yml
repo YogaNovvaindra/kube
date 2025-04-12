@@ -230,7 +230,7 @@ spec:
   entryPoints:
     - aria2-tcp
   routes:
-    - match: Host(`aria2.ygnv.my.id`)
+    - match: HostSNI(`aria2.ygnv.my.id`)
       kind: Rule
       services:
         - name: aria2
