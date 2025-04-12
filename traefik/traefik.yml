@@ -77,7 +77,7 @@ spec:
       port: 443
       targetPort: https
     - name: dashboard
-      port: 8880
+      port: 8080
       targetPort: dashboard
     - name: metrics
       port: 8899

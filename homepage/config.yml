@@ -162,10 +162,10 @@ data:
           icon: traefik.svg
           href: https://traefik.ygnv.my.id
           description: Edge router and reverse proxy
-          siteMonitor: http://10.1.1.20:8899/metrics
+          siteMonitor: http://traefik.traefik.svc.cluster.local:8080/metrics
           widget:
             type: traefik
-            url: http://10.1.1.20:8080
+            url: http://traefik.traefik.svc.cluster.local:8080
 
     - Access Points:
       - SXT AP:
@@ -205,7 +205,7 @@ data:
           icon: semaphore.png
           href: http://semaphore.ygnv.my.id
           description: Web GUI for Ansible automation
-          siteMonitor: http://semaphore:3003
+          siteMonitor: http://semaphore:3000
       - Portainer:
           icon: portainer.svg
           href: https://portainer.ygnv.my.id
@@ -221,21 +221,11 @@ data:
             href: https://ceph.ygnv.my.id
             description: Ceph storage cluster management
             siteMonitor: http://10.1.1.2:8100
-      - Ceph 8labs:
-            icon: ceph.svg
-            href: http://192.168.192.5:8100
-            description: Ceph storage cluster management
-            siteMonitor: http://192.168.192.5:8100
       - Keel:
           icon: https://Keel.sh/img/logo_small.png
           href: https://keel.ygnv.my.id
           description: Container image automation and management
           siteMonitor: http://keel.keel.svc.cluster.local:9300
-      - Keel 8labs:
-          icon: https://keel.sh/img/logo_small.png
-          href: http://192.168.192.5:9300
-          description: Container image automation and management
-          siteMonitor: http://192.168.192.5:9300
 
     - Monitoring and Analytics:
       - Grafana:
@@ -311,25 +301,20 @@ data:
           icon: gitea.png
           href: https://git.ygnv.my.id/explore
           description: Self-hosted Git service for version control
-          siteMonitor: http://gitea-http:3005
+          siteMonitor: http://gitea-http:3000
           widget:
             type: gitea
-            url: http://gitea-http:3005
+            url: http://gitea-http:3000
             key: ${GITEA_KEY}
       - Argo CD:
           icon: argo-cd.svg
           href: https://argocd.ygnv.my.id
           description: GitOps continuous delivery tool for Kubernetes
-          siteMonitor: http://argocd-server.argocd.svc.cluster.local:8089
+          siteMonitor: http://argocd-server.argocd.svc.cluster.local:8080
           widget:
             type: argocd
-            url: http://argocd-server.argocd.svc.cluster.local:8089
+            url: http://argocd-server.argocd.svc.cluster.local:8080
             key: ${ARGOCD_KEY}
-      - Argo-8labs:
-          icon: argo-cd.svg
-          href: https://argo-8labs.ygnv.my.id
-          description: GitOps continuous delivery tool for Kubernetes
-          siteMonitor: http://192.168.192.5:8080
       - Ollama:
           icon: ollama.png
           href: https://ai.ygnv.my.id
@@ -354,17 +339,17 @@ data:
           icon: sh-postgresql.svg
           href: https://pgadmin.ygnv.my.id
           description: PostgreSQL database management
-          siteMonitor: http://pgadmin:8088
+          siteMonitor: http://pgadmin:80
       - phpMyAdmin Tools:
           icon: phpmyadmin.png
           href: https://phpmyadmin-tools.ygnv.my.id
           description: MySQL database management (tools environment)
-          siteMonitor: http://phpmyadmin:888
+          siteMonitor: http://phpmyadmin:80
       - phpMyAdmin Services:
           icon: phpmyadmin.png
           href: https://phpmyadmin-services.ygnv.my.id
           description: MySQL database management (services environment)
-          siteMonitor: http://phpmyadmin.services.svc.cluster.local:889
+          siteMonitor: http://phpmyadmin.services.svc.cluster.local:80
       - Online Portfolio:
           icon: https://biarrinetworks.com/hs-fs/hubfs/Collab_big.png?width=592&name=Collab_big.png
           href: https://yoganova.my.id
@@ -507,7 +492,7 @@ data:
           icon: sh-outline.svg
           href: https://outline.ygnv.my.id
           description: Knowledge management and note-taking platform 
-          siteMonitor: http://outline.tools.svc.cluster.local:3004
+          siteMonitor: http://outline.tools.svc.cluster.local:3000
       - Immich:
           icon: immich.png
           href: https://immich.ygnv.my.id
@@ -532,7 +517,7 @@ data:
           icon: openspeedtest.png
           href: https://speedtest.ygnv.my.id
           description: Self-hosted network speed testing tool
-          siteMonitor: http://openspeedtest:3001
+          siteMonitor: http://openspeedtest:3000
       - Transmission:
           icon: transmission.png
           href: https://transmission.ygnv.my.id
@@ -548,31 +533,31 @@ data:
           icon: stirling-pdf.svg
           href: https://pdf.ygnv.my.id
           description: Web-based PDF manipulation tool
-          siteMonitor: http://stirling-pdf.tools.svc.cluster.local:8084
+          siteMonitor: http://stirling-pdf.tools.svc.cluster.local:8080
       - IT-Tools:
           icon: it-tools-light.svg
           href: https://tools.ygnv.my.id
           description: Collection of useful IT utilities and tools
-          siteMonitor: http://it-tools.tools.svc.cluster.local:8082
+          siteMonitor: http://it-tools.tools.svc.cluster.local:80
       - Reubah:
           icon: mdi-image-edit
           href: https://reubah.ygnv.my.id
           description: Tool for processing images and converting documents
-          siteMonitor: http://reubah.tools.svc.cluster.local:8087
+          siteMonitor: http://reubah.tools.svc.cluster.local:8081
       - Change Detection:
           icon: changedetection.svg
           href: https://changedetection.ygnv.my.id
           description: Website change detection and monitoring
-          siteMonitor: http://changedetection.tools.svc.cluster.local:8083
+          siteMonitor: http://changedetection.tools.svc.cluster.local:5000
           widget:
             type: changedetectionio
-            url: http://changedetection.tools.svc.cluster.local:8083
+            url: http://changedetection.tools.svc.cluster.local:5000
             key: ${CHANGEDETECTION_KEY}
       - Excalidraw:
           icon: excalidraw.svg
           href: http://excalidraw.ygnv.my.id
           description: Collaborative whiteboard tool for sketching and drawing
-          siteMonitor: http://excalidraw:8090
+          siteMonitor: http://excalidraw:80
 
     - Smart Home Devices:
       - Home Assistant:
