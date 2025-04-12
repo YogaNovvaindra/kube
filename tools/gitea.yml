@@ -114,7 +114,7 @@ spec:
     - http
     - https
   routes:
-    - match: Host(`gitea.ygnv.my.id`)
+    - match: Host(`git.ygnv.my.id`)
       kind: Rule
       services:
         - name: gitea-http
@@ -131,7 +131,7 @@ spec:
   entryPoints:
     - ssh
   routes:
-    - match: Host(`gitea.ygnv.my.id`)
+    - match: Host(`git.ygnv.my.id`)
       kind: Rule
       services:
         - name: gitea-ssh
