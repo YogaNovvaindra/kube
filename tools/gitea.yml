@@ -81,14 +81,11 @@ metadata:
   labels:
     app: gitea
 spec:
-  type: LoadBalancer
-  externalIPs:
-    - 10.1.1.10
   selector:
     app: gitea
   ports:
   - name: http
-    port: 3005
+    port: 3000
     targetPort: 3000
 ---
 apiVersion: v1
@@ -106,6 +103,41 @@ spec:
     port: 22
     targetPort: 22
   type: ClusterIP
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: gitea
+  namespace: tools
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`gitea.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: gitea-http
+          port: 3000
+  tls:
+    certResolver: cloudflare
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: gitea-ssh
+  namespace: tools
+spec:
+  entryPoints:
+    - ssh
+  routes:
+    - match: Host(`gitea.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: gitea-ssh
+          port: 22
+  tls:
+    certResolver: cloudflare
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -143,7 +175,7 @@ spec:
               name: gitea-cred
               key: githubuser
         - name: GITEA_URL
-          value: "http://gitea-http:3005"
+          value: "http://gitea-http:3000"
         - name: GITEA_TOKEN
           valueFrom:
             secretKeyRef:

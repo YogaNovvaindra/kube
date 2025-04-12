@@ -83,9 +83,6 @@ metadata:
   labels:
     app: transmission
 spec:
-  type: LoadBalancer
-  externalIPs:
-    - 10.1.1.10
   selector:
     app: transmission
   ports:
@@ -101,6 +98,24 @@ spec:
     protocol: UDP
     port: 51413
     targetPort: 51413
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: transmission
+  namespace: media
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`transmission.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: transmission
+          port: 9091
+  tls:
+    certResolver: cloudflare
 ---
 # Aria2 Deployment
 apiVersion: apps/v1
@@ -190,9 +205,6 @@ metadata:
   labels:
     app: aria2
 spec:
-  type: LoadBalancer
-  externalIPs:
-    - 10.1.1.10
   selector:
     app: aria2
   ports:
@@ -208,3 +220,21 @@ spec:
     protocol: UDP
     port: 6888
     targetPort: 6888
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: aria2
+  namespace: media
+spec:
+  entryPoints:
+    - aria2-tcp
+  routes:
+    - match: Host(`aria2.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: aria2
+          port: 6800
+  tls:
+    certResolver: cloudflare
+---

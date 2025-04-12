@@ -43,16 +43,34 @@ metadata:
   name: openspeedtest
   namespace: tools
 spec:
-  type: LoadBalancer
-  externalIPs:
-    - 10.1.1.10
   selector:
     app: openspeedtest
   ports:
   - name: http
     protocol: TCP
-    port: 3001
+    port: 3000
     targetPort: 3000
+---
+# IngressRoute for openspeedtest
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: openspeedtest
+  namespace: tools
+  labels:
+    app: openspeedtest
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`speedtest.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: openspeedtest
+          port: 3000
+  tls:
+    certResolver: cloudflare
 ---
 # Deployment for myspeed
 apiVersion: apps/v1
@@ -100,9 +118,6 @@ metadata:
   name: myspeed
   namespace: tools
 spec:
-  type: LoadBalancer
-  externalIPs:
-    - 10.1.1.10
   selector:
     app: myspeed
   ports:
@@ -110,3 +125,24 @@ spec:
     protocol: TCP
     port: 5216
     targetPort: 5216
+---
+# IngressRoute for myspeed
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: myspeed
+  namespace: tools
+  labels:
+    app: myspeed
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`myspeed.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: myspeed
+          port: 5216
+  tls:
+    certResolver: cloudflare
