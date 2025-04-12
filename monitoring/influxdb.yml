@@ -78,7 +78,7 @@ metadata:
   name: influxdb
   namespace: monitoring
 spec:
-  entryPoint:
+  entryPoints:
     - http
     - https
   routes:
