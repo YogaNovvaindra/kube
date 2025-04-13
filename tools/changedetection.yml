@@ -75,4 +75,4 @@ spec:
     - name: changedetection
       port: 5000
   tls:
-    certResolver: letsencrypt
+    certResolver: cloudflare
