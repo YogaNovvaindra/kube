@@ -159,7 +159,7 @@ spec:
     - http
     - https
   routes:
-    - match: Host(`phpmyadmin-services.yoganova.my.id`)
+    - match: Host(`phpmyadmin-services.ygnv.my.id`)
       kind: Rule
       services:
         - name: phpmyadmin
