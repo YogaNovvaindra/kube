@@ -24,6 +24,20 @@ data:
             regex: monitoring;node-exporter
           - source_labels: [__meta_kubernetes_pod_node_name]
             target_label: instance
+
+      - job_name: 'kube-state-metrics'
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: [ "monitoring" ]  # Namespace where kube-state-metrics runs
+        relabel_configs:
+          # Keep only services with the annotation `prometheus.io/scrape: "true"`
+          - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
+            action: keep
+            regex: "true"
+          # Add Kubernetes labels as Prometheus labels
+          - action: labelmap
+            regex: __meta_kubernetes_service_label_(.+)
       
       - job_name: 'traefik'
         kubernetes_sd_configs:
@@ -110,6 +124,8 @@ kind: Deployment
 metadata:
   name: prometheus
   namespace: monitoring
+  annotations:
+    reloader.stakater.com/auto: "true"
 spec:
   replicas: 1
   revisionHistoryLimit: 3
