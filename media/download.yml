@@ -207,6 +207,9 @@ metadata:
 spec:
   selector:
     app: aria2
+  type: LoadBalancer
+  externalIPs: 
+  - 10.1.1.10
   ports:
   - name: rpc
     protocol: TCP
@@ -220,20 +223,3 @@ spec:
     protocol: UDP
     port: 6888
     targetPort: 6888
----
-apiVersion: traefik.io/v1alpha1
-kind: IngressRouteTCP
-metadata:
-  name: aria2
-  namespace: media
-spec:
-  entryPoints:
-    - aria2-tcp
-  routes:
-    - match: HostSNI(`aria2.ygnv.my.id`)
-      services:
-        - name: aria2
-          port: 6800
-  tls:
-    certResolver: cloudflare
----
