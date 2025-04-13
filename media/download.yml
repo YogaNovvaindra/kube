@@ -235,5 +235,5 @@ spec:
         - name: aria2
           port: 6800
   tls:
-    passthrough: true
+    certResolver: cloudflare
 ---
