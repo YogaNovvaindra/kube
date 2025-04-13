@@ -512,7 +512,7 @@ data:
           icon: filebrowser.png
           href: https://file.ygnv.my.id
           description: Web-based file management interface
-          siteMonitor: http://filebrowser:8081
+          siteMonitor: http://filebrowser:80
       - Openspeedtest:
           icon: openspeedtest.png
           href: https://speedtest.ygnv.my.id
