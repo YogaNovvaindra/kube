@@ -89,7 +89,7 @@ spec:
     - http
     - https
   routes:
-    - match: Host(`filebrowser.ygnv.my.id`)
+    - match: Host(`file.ygnv.my.id`)
       kind: Rule
       services:
         - name: filebrowser
