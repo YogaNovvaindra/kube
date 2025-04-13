@@ -44,6 +44,24 @@ spec:
   - protocol: TCP
     port: 6379
     targetPort: 6379
-  type: LoadBalancer
-  externalIPs:
-    - 10.1.1.10
+  # type: LoadBalancer
+  # externalIPs:
+  #   - 10.1.1.10
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRouteTCP
+metadata:
+  name: valkey
+  namespace: traefik
+  labels:
+    app: valkey
+spec:
+  entryPoints:
+    - valkey-tcp
+  routes:
+    - match: HostSNI(`traefik-valkey.ygnv.my.id`)
+      services:
+        - name: traefik-valkey
+          port: 6379
+  tls:
+    passThrough: true
