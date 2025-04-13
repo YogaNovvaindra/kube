@@ -33,10 +33,6 @@ data:
         address: ":443"
       ssh:
         address: ":22"
-      valkey-tcp:
-        address: ":6379"
-      aria2-tcp:
-        address: ":6800"
       metrics:
         address: ":8899"
     
