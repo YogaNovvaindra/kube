@@ -145,5 +145,5 @@ spec:
         runAsNonRoot: true
         runAsUser: 65534
         seccompProfile:
-          type: Runtimetools
+          type: RuntimeDefault
       serviceAccountName: reloader-reloader
