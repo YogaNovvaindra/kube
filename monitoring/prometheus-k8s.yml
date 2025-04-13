@@ -27,7 +27,7 @@ data:
 
       - job_name: 'kube-state-metrics'
         kubernetes_sd_configs:
-          - role: pod
+          - role: endpoints  # Discover endpoints (pods) behind services
             namespaces:
               names: [ "monitoring" ]  # Namespace where kube-state-metrics runs
         relabel_configs:
