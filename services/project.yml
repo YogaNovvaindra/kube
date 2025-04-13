@@ -259,7 +259,7 @@ spec:
         kubernetes.io/arch: amd64
       containers:
       - name: tolonto
-        image: jakubboucek/lamp-devstack-php:8.4.5
+        image: jakubboucek/lamp-devstack-php:8.4.6
         imagePullPolicy: Always
         ports:
         - containerPort: 80
