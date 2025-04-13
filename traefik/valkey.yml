@@ -64,4 +64,4 @@ spec:
         - name: traefik-valkey
           port: 6379
   tls:
-    passthrough: true
+    certResolver: cloudflare
