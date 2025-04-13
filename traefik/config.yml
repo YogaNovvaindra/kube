@@ -63,3 +63,69 @@ data:
             resolvers:
               - "1.1.1.1:53"
               - "1.0.0.1:53"
+        
+  proxmox.yml: |
+    http:
+      routers:
+        proxmox:
+          rule: Host(`proxmox.ygnv.my.id`)
+          service: proxmox
+          entryPoints:
+            - https
+          middlewares:
+            - default-headers
+          tls: {}
+
+      middlewares:
+        https-redirect:
+          redirectScheme:
+            scheme: https
+        default-headers:
+          headers:
+            frameDeny: true
+            sslRedirect: true
+            browserXssFilter: true
+            contentTypeNosniff: true
+            forceSTSHeader: true
+            stsIncludeSubdomains: true
+            stsPreload: true
+            stsSeconds: 15552000
+            customFrameOptionsValue: SAMEORIGIN
+
+      services:
+        proxmox:
+          loadBalancer:
+            servers:
+              - url: "https://10.1.1.3:8006"
+            passHostHeader: true
+
+  ceph.yml: |
+    http:
+      routers:
+        ceph:
+          rule: Host(`ceph.ygnv.my.id`)
+          service: ceph-dashboard
+          entryPoints:
+            - http
+          middlewares:
+            - sslheader
+        ceph-secure:
+          rule: Host(`ceph.ygnv.my.id`)
+          service: ceph-dashboard
+          entryPoints:
+            - https
+          tls: {}
+
+      middlewares:
+        sslheader:
+          headers:
+            customRequestHeaders:
+              X-Forwarded-Proto: https
+
+      services:
+        ceph-dashboard:
+          loadBalancer:
+            servers:
+              - url: "http://10.1.1.2:8100"
+              - url: "http://10.1.1.3:8100"
+              - url: "http://10.1.1.4:8100"
