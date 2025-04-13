@@ -175,9 +175,9 @@ spec:
         app.kubernetes.io/component: exporter
         app.kubernetes.io/name: kube-state-metrics
         app.kubernetes.io/version: 2.15.0
-    annotations:
-      prometheus.io/scrape: "true"
-      prometheus.io/port: "8080"
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
     spec:
       automountServiceAccountToken: true
       containers:
