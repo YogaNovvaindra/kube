@@ -166,6 +166,7 @@ metadata:
   namespace: monitoring
 spec:
   replicas: 1
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
       app.kubernetes.io/name: kube-state-metrics
@@ -175,13 +176,11 @@ spec:
         app.kubernetes.io/component: exporter
         app.kubernetes.io/name: kube-state-metrics
         app.kubernetes.io/version: 2.15.0
-      annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "8080"
     spec:
       automountServiceAccountToken: true
       containers:
       - image: registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.15.0
+
         livenessProbe:
           httpGet:
             path: /livez
@@ -221,6 +220,10 @@ metadata:
     app.kubernetes.io/component: exporter
     app.kubernetes.io/name: kube-state-metrics
     app.kubernetes.io/version: 2.15.0
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8080"
+    prometheus.io/path: /metrics
   name: kube-state-metrics
   namespace: monitoring
 spec:
