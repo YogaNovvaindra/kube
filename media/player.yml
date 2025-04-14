@@ -75,10 +75,13 @@ metadata:
 spec:
   selector:
     app: plex
+  type: LoadBalancer
+  externalIPs:
+    - 10.1.1.10
   ports:
-  - protocol: TCP
-    port: 32400
-    targetPort: 32400
+    - protocol: TCP
+      port: 32400
+      targetPort: 32400
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
@@ -176,10 +179,13 @@ metadata:
 spec:
   selector:
     app: jellyfin
+  type: LoadBalancer
+  externalIPs:
+    - 10.1.1.10
   ports:
-  - protocol: TCP
-    port: 8096
-    targetPort: 8096
+    - protocol: TCP
+      port: 8096
+      targetPort: 8096
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
