@@ -162,7 +162,7 @@ data:
           icon: traefik.svg
           href: https://traefik.ygnv.my.id
           description: Edge router and reverse proxy
-          siteMonitor: http://traefik.traefik.svc.cluster.local:8080/metrics
+          siteMonitor: http://traefik.traefik.svc.cluster.local:8080
           widget:
             type: traefik
             url: http://traefik.traefik.svc.cluster.local:8080
