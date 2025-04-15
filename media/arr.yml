@@ -24,6 +24,9 @@ spec:
       - name: flaresolverr
         image: alexfozor/flaresolverr:pr-1300-experimental
         imagePullPolicy: Always
+        resources:
+          limits:
+            memory: "2Gi"
         ports:
         - containerPort: 8191
         env:
@@ -41,10 +44,6 @@ spec:
           periodSeconds: 300
           timeoutSeconds: 30
           failureThreshold: 3
-        # Uncomment and adjust resources if needed:
-        resources:
-          limits:
-            memory: "2Gi"
 ---
 # Flaresolverr Service
 apiVersion: v1
@@ -87,6 +86,9 @@ spec:
       - name: prowlarr
         image: lscr.io/linuxserver/prowlarr:1.33.3
         imagePullPolicy: Always
+        resources:
+          Requests:
+            memory: 128Mi
         ports:
         - containerPort: 9696
         env:
@@ -104,9 +106,6 @@ spec:
         hostPath:
           path: /mnt/cephfs/docker/media/prowlarr
           type: Directory
-      resources:
-        Requests:
-          memory: "128Mi"
 ---
 # Prowlarr Service
 apiVersion: v1
@@ -166,6 +165,9 @@ spec:
       - name: radarr
         image: lscr.io/linuxserver/radarr:5.21.1
         imagePullPolicy: Always
+        resources:
+          Requests:
+            memory: 128Mi
         ports:
         - containerPort: 7878
         env:
@@ -195,9 +197,6 @@ spec:
         hostPath:
           path: /mnt/Data/downloads
           type: Directory
-      resources:
-        Requests:
-          memory: "128Mi"
 ---
 # Radarr Service
 apiVersion: v1
@@ -257,6 +256,9 @@ spec:
       - name: sonarr
         image: lscr.io/linuxserver/sonarr:4.0.14
         imagePullPolicy: Always
+        resources:
+          Requests:
+            memory: 128Mi
         ports:
         - containerPort: 8989
         env:
@@ -286,9 +288,6 @@ spec:
         hostPath:
           path: /mnt/Data/downloads
           type: Directory
-      resources:
-        Requests:
-          memory: "128Mi"
 ---
 # Sonarr Service
 apiVersion: v1
@@ -348,6 +347,9 @@ spec:
       - name: bazarr
         image: lscr.io/linuxserver/bazarr:1.5.1
         imagePullPolicy: Always
+        resources:
+          Requests:
+            memory: 128Mi
         ports:
         - containerPort: 6767
         env:
@@ -377,9 +379,6 @@ spec:
         hostPath:
           path: /mnt/Data/Videos/TV
           type: Directory
-      resources:
-        Requests:
-          memory: "128Mi"
 ---
 # Bazarr Service
 apiVersion: v1
@@ -439,6 +438,9 @@ spec:
       - name: overseerr
         image: sctx/overseerr:1.34.0
         imagePullPolicy: Always
+        resources:
+          Requests:
+            memory: 128Mi
         ports:
         - containerPort: 5055
         env:
@@ -454,9 +456,6 @@ spec:
         hostPath:
           path: /mnt/cephfs/docker/media/overseerr
           type: Directory
-      resources:
-        Requests:
-          memory: "128Mi"
 ---
 # Overseerr Service
 apiVersion: v1
@@ -516,6 +515,9 @@ spec:
       - name: tautulli
         image: ghcr.io/tautulli/tautulli:v2.15.2
         imagePullPolicy: Always
+        resources:
+          Requests:
+            memory: 128Mi
         ports:
         - containerPort: 8181
         env:
@@ -533,9 +535,6 @@ spec:
         hostPath:
           path: /mnt/cephfs/docker/media/tautulli
           type: Directory
-      resources:
-        Requests:
-          memory: "128Mi"
 ---
 # Tautulli Service
 apiVersion: v1
@@ -595,6 +594,9 @@ spec:
       - name: maintainerr
         image: ghcr.io/jorenn92/maintainerr:2.13.1
         imagePullPolicy: Always
+        resources:
+          Requests:
+            memory: 128Mi
         ports:
         - containerPort: 6246
         env:
@@ -608,9 +610,6 @@ spec:
         hostPath:
           path: /mnt/cephfs/docker/media/maintainerr
           type: Directory
-      resources:
-        Requests:
-          memory: "128Mi"
 ---
 # Maintainerr Service
 apiVersion: v1
