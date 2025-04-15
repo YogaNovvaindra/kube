@@ -49,6 +49,9 @@ spec:
         - name: homepage
           image: ghcr.io/gethomepage/homepage:v1.1.1
           imagePullPolicy: Always
+          resources:
+            requests:
+              memory: 128Mi
           ports:
             - containerPort: 3000
           env:
