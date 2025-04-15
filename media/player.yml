@@ -63,6 +63,9 @@ spec:
         hostPath:
           path: /mnt/Data/Videos/Movies
           type: Directory
+      resources:
+        Requests:
+          memory: "256Mi"
 ---
 # Plex Service
 apiVersion: v1
@@ -167,6 +170,9 @@ spec:
         hostPath:
           path: /mnt/Data/Videos/Movies
           type: Directory
+      resources:
+        Requests:
+          memory: "256Mi"
 ---
 # Jellyfin Service
 apiVersion: v1
