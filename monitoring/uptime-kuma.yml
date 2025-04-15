@@ -21,7 +21,7 @@ spec:
           image: louislam/uptime-kuma:1.23.16
           imagePullPolicy: Always
           resources:
-            Requests:
+            requests:
               memory: 128Mi
           ports:
             - containerPort: 3001

@@ -29,7 +29,7 @@ spec:
         image: lscr.io/linuxserver/plex:1.41.6
         imagePullPolicy: Always
         resources:
-          Requests:
+          requests:
             memory: 256Mi
         ports:
         - containerPort: 32400
@@ -134,7 +134,7 @@ spec:
         image: ghcr.io/jellyfin/jellyfin:10.10.7
         imagePullPolicy: Always
         resources:
-          Requests:
+          requests:
             memory: 256Mi
         ports:
         - containerPort: 8096
