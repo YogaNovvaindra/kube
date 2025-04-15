@@ -6,7 +6,7 @@ metadata:
   annotations:
     reloader.stakater.com/auto: "true"
 spec:
-  replicas: 3
+  replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
@@ -25,22 +25,21 @@ spec:
         prometheus.io/port: "8899"
     spec:
       serviceAccountName: traefik
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchExpressions:
-                  - key: app
-                    operator: In
-                    values: [traefik]
-              topologyKey: kubernetes.io/hostname
+      # affinity:
+      #   podAntiAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       - labelSelector:
+      #           matchExpressions:
+      #             - key: app
+      #               operator: In
+      #               values: [traefik]
+      #         topologyKey: kubernetes.io/hostname
       containers:
         - name: traefik
           image: traefik:v3.3.5
           imagePullPolicy: Always
           args:
             - --configfile=/etc/traefik/traefik.yaml
-            - --providers.kubernetescrd.leaderelection=true
           ports:
             - name: http
               containerPort: 80
