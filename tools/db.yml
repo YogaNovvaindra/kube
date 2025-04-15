@@ -111,6 +111,9 @@ spec:
       - name: postgres
         image: pgautoupgrade/pgautoupgrade:latest@sha256:32c09c70357f8148e540860d61c4c4c8432d41e87b3faebab2382000c6d8216d
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 128Mi
         env:
         - name: POSTGRES_USER
           valueFrom:
@@ -122,9 +125,6 @@ spec:
             secretKeyRef:
               name: db-cred
               key: password
-        resources:
-          requests:
-            memory: "128Mi"
         volumeMounts:
         - name: postgres-data
           mountPath: /var/lib/postgresql/data
@@ -188,6 +188,9 @@ spec:
       - name: mariadb
         image: mariadb:11.7.2
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 256Mi
         env:
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
