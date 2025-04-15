@@ -52,6 +52,9 @@ spec:
       - name: outline
         image: outlinewiki/outline:0.83.0
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 256Mi
         envFrom:
         - configMapRef:
             name: outline-env

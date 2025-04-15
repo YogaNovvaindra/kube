@@ -23,6 +23,9 @@ spec:
       - name: gitea
         image: gitea/gitea:1.23.7
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 256Mi
         env:
         - name: USER_UID
           value: "1000"
