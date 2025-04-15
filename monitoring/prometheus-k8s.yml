@@ -161,7 +161,7 @@ spec:
         image: prom/prometheus:v3.2.1
         imagePullPolicy: Always
         resources:
-          Requests:
+          requests:
             memory: 128Mi
         args:
           - "--config.file=/etc/prometheus/prometheus.yml"

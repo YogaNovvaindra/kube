@@ -36,7 +36,7 @@ spec:
         image: influxdb:2.7.11
         imagePullPolicy: Always
         resources:
-          Requests:
+          requests:
             memory: 128Mi
         ports:
         - containerPort: 8086
