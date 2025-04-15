@@ -6,11 +6,16 @@ metadata:
   annotations:
     reloader.stakater.com/auto: "true"
 spec:
-  replicas: 1
+  replicas: 3
   revisionHistoryLimit: 3
   selector:
     matchLabels:
       app: traefik
+  strategy:
+    type: RollingUpdate
+    RollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
   template:
     metadata:
       labels:
@@ -20,12 +25,22 @@ spec:
         prometheus.io/port: "8899"
     spec:
       serviceAccountName: traefik
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values: [traefik]
+              topologyKey: kubernetes.io/hostname
       containers:
         - name: traefik
           image: traefik:v3.3.5
           imagePullPolicy: Always
           args:
             - --configfile=/etc/traefik/traefik.yaml
+            - --providers.kubernetescrd.leaderelection=true
           ports:
             - name: http
               containerPort: 80
@@ -35,18 +50,6 @@ spec:
               containerPort: 8080
             - name: metrics
               containerPort: 8899
-          livenessProbe:
-            httpGet:
-              path: /ping
-              port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 5
-          readinessProbe:
-            httpGet:
-              path: /ping
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 5
           env:
             - name: CF_API_EMAIL
               valueFrom:
