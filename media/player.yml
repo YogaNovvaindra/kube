@@ -28,6 +28,9 @@ spec:
       - name: plex
         image: lscr.io/linuxserver/plex:1.41.6
         imagePullPolicy: Always
+        resources:
+          Requests:
+            memory: 256Mi
         ports:
         - containerPort: 32400
         env:
@@ -63,9 +66,6 @@ spec:
         hostPath:
           path: /mnt/Data/Videos/Movies
           type: Directory
-      resources:
-        Requests:
-          memory: "256Mi"
 ---
 # Plex Service
 apiVersion: v1
@@ -133,6 +133,9 @@ spec:
       - name: jellyfin
         image: ghcr.io/jellyfin/jellyfin:10.10.7
         imagePullPolicy: Always
+        resources:
+          Requests:
+            memory: 256Mi
         ports:
         - containerPort: 8096
         env:
@@ -170,9 +173,6 @@ spec:
         hostPath:
           path: /mnt/Data/Videos/Movies
           type: Directory
-      resources:
-        Requests:
-          memory: "256Mi"
 ---
 # Jellyfin Service
 apiVersion: v1

@@ -35,6 +35,9 @@ spec:
       - name: influxdb
         image: influxdb:2.7.11
         imagePullPolicy: Always
+        resources:
+          Requests:
+            memory: 128Mi
         ports:
         - containerPort: 8086
         envFrom:
