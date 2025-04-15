@@ -104,6 +104,9 @@ spec:
         hostPath:
           path: /mnt/cephfs/docker/media/prowlarr
           type: Directory
+      resources:
+        Requests:
+          memory: "128Mi"
 ---
 # Prowlarr Service
 apiVersion: v1
@@ -192,6 +195,9 @@ spec:
         hostPath:
           path: /mnt/Data/downloads
           type: Directory
+      resources:
+        Requests:
+          memory: "128Mi"
 ---
 # Radarr Service
 apiVersion: v1
@@ -280,6 +286,9 @@ spec:
         hostPath:
           path: /mnt/Data/downloads
           type: Directory
+      resources:
+        Requests:
+          memory: "128Mi"
 ---
 # Sonarr Service
 apiVersion: v1
@@ -368,6 +377,9 @@ spec:
         hostPath:
           path: /mnt/Data/Videos/TV
           type: Directory
+      resources:
+        Requests:
+          memory: "128Mi"
 ---
 # Bazarr Service
 apiVersion: v1
@@ -442,6 +454,9 @@ spec:
         hostPath:
           path: /mnt/cephfs/docker/media/overseerr
           type: Directory
+      resources:
+        Requests:
+          memory: "128Mi"
 ---
 # Overseerr Service
 apiVersion: v1
@@ -518,6 +533,9 @@ spec:
         hostPath:
           path: /mnt/cephfs/docker/media/tautulli
           type: Directory
+      resources:
+        Requests:
+          memory: "128Mi"
 ---
 # Tautulli Service
 apiVersion: v1
@@ -590,6 +608,9 @@ spec:
         hostPath:
           path: /mnt/cephfs/docker/media/maintainerr
           type: Directory
+      resources:
+        Requests:
+          memory: "128Mi"
 ---
 # Maintainerr Service
 apiVersion: v1
