@@ -22,14 +22,14 @@ spec:
       - name: pgadmin
         image: dpage/pgadmin4:9.2
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 128Mi
         envFrom:
         - secretRef:
             name: pgadmin-cred
         ports:
         - containerPort: 80
-        resources:
-          requests:
-            memory: "128Mi"
         volumeMounts:
         - name: pgadmin-data
           mountPath: /var/lib/pgadmin
