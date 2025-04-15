@@ -54,6 +54,9 @@ spec:
         hostPath:
           path: /mnt/cephfs/docker/monitoring/grafana
           type: Directory
+      resources:
+        Requests:
+          memory: 128Mi
 ---
 apiVersion: v1
 kind: Service
