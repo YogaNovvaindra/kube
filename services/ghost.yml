@@ -131,7 +131,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: ghost-db
-        image: mysql:9.2.0
+        image: mysql:9.3.0
         imagePullPolicy: Always
         ports:
         - containerPort: 3306
