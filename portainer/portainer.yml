@@ -68,7 +68,7 @@ spec:
       serviceAccountName: portainer-sa-clusteradmin
       containers:
       - name: portainer-agent
-        image: portainer/agent:2.28.1-alpine
+        image: portainer/agent:2.29.0-alpine
         imagePullPolicy: Always
         env:
         - name: LOG_LEVEL
