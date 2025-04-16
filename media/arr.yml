@@ -592,7 +592,7 @@ spec:
     spec:
       containers:
       - name: maintainerr
-        image: ghcr.io/jorenn92/maintainerr:2.13.1
+        image: ghcr.io/jorenn92/maintainerr:2.14.0
         imagePullPolicy: Always
         resources:
           requests:
