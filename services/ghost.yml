@@ -33,6 +33,9 @@ spec:
       - name: ghost
         image: ghost:5.117.0
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 256Mi
         ports:
         - containerPort: 2368
         env:
@@ -133,6 +136,9 @@ spec:
       - name: ghost-db
         image: mysql:9.3.0
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 256Mi
         ports:
         - containerPort: 3306
         env:
