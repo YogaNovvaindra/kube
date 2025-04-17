@@ -60,6 +60,9 @@ spec:
       - name: mariadb
         image: mariadb:11.7.2
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 256Mi
         env:
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:

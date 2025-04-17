@@ -38,6 +38,9 @@ spec:
         - name: traefik
           image: traefik:v3.3.5
           imagePullPolicy: Always
+          resources:
+            requests:
+              memory: 128Mi
           args:
             - --configfile=/etc/traefik/traefik.yaml
             - --providers.kubernetescrd.leaderelection=true
