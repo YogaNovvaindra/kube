@@ -36,7 +36,7 @@ spec:
               topologyKey: kubernetes.io/hostname
       containers:
         - name: traefik
-          image: traefik:v3.3.5
+          image: traefik:v3.3.6
           imagePullPolicy: Always
           resources:
             requests:
