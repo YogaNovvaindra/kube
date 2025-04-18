@@ -4,6 +4,4 @@ kind: Kustomization
 resources:
   - https://raw.githubusercontent.com/metallb/metallb/v0.14.9/config/manifests/metallb-native.yaml
   - metallb-config.yml
-patches:
-  - path: disable-bgp.yml
 namespace: metallb-system
