@@ -720,31 +720,28 @@ data:
       - ClusterBackgroundScanReport
       - UpdateRequest
   # New health check customization from the second ConfigMap
-  resource.customizations.health.Service: |
-    hs = {}
-    if obj.spec.type == "LoadBalancer" then
-      -- Check if externalIPs are explicitly defined
-      if obj.spec.externalIPs and #obj.spec.externalIPs > 0 then
-        hs.status = "Healthy"
-        hs.message = "LoadBalancer Service using externalIPs"
-      else
-        -- Fallback to default LoadBalancer status check
-        if obj.status.loadBalancer and obj.status.loadBalancer.ingress and #obj.status.loadBalancer.ingress > 0 then
+  resource.customizations: |
+    health.Service: |
+      hs = {}
+      if obj.spec.type == "LoadBalancer" then
+        if obj.spec.externalIPs and #obj.spec.externalIPs > 0 then
           hs.status = "Healthy"
-          hs.message = "LoadBalancer ingress is ready"
+          hs.message = "LoadBalancer Service using externalIPs"
         else
-          hs.status = "Progressing"
-          hs.message = "Waiting for LoadBalancer IP or externalIPs"
+          if obj.status.loadBalancer and obj.status.loadBalancer.ingress and #obj.status.loadBalancer.ingress > 0 then
+            hs.status = "Healthy"
+            hs.message = "LoadBalancer ingress is ready"
+          else
+            hs.status = "Progressing"
+            hs.message = "Waiting for LoadBalancer IP or externalIPs"
+          end
         end
+      else
+        hs.status = "Healthy"
+        hs.message = "Service is not LoadBalancer type"
       end
-    else
-      -- Mark non-LoadBalancer Services as Healthy
-      hs.status = "Healthy"
-      hs.message = "Service is not LoadBalancer type"
-    end
-    return hs
-  # metallb caBundle ignore differences
-  apiextensions.k8s.io/CustomResourceDefinition:
+      return hs
+    apiextensions.k8s.io/CustomResourceDefinition:
       ignoreDifferences: |
         jqPathExpressions:
         - .spec.conversion.webhook.clientConfig.caBundle
