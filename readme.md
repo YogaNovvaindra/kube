@@ -64,7 +64,7 @@ The Kubernetes cluster follows **declarative infrastructure management** princip
 
 ## 🛠 Infrastructure
 
-- **☸ Kubernetes**: K3s cluster with embedded Ceph storage
+- **☸ Kubernetes**: MicroK8s cluster with embedded Ceph storage
 - **🚦 Traefik**: TLS-terminating ingress controller
 - **📡 MetalLB**: Load balancer for bare-metal environments
 - **🔐 Authentik**: Centralized authentication gateway
