@@ -1,13 +1,12 @@
-apiVersion: metallb.io/v1beta1
-kind: BGPPeer
+apiVersion: apps/v1
+kind: DaemonSet
 metadata:
-  name: dummy-peer
+  name: speaker
   namespace: metallb-system
-$patch: delete
----
-apiVersion: metallb.io/v1beta1
-kind: BGPAdvertisement
-metadata:
-  name: dummy-advert
-  namespace: metallb-system
-$patch: delete
+spec:
+  template:
+    spec:
+      containers:
+      - name: speaker
+        args:
+        - --mode=layer2
