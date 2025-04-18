@@ -1,0 +1,13 @@
+apiVersion: metallb.io/v1beta1
+kind: BGPPeer
+metadata:
+  name: dummy-peer
+  namespace: metallb-system
+$patch: delete
+---
+apiVersion: metallb.io/v1beta1
+kind: BGPAdvertisement
+metadata:
+  name: dummy-advert
+  namespace: metallb-system
+$patch: delete
