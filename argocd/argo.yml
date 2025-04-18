@@ -747,10 +747,10 @@ data:
   accounts.homepage: apiKey
   # metallb caBundle ignore differences
   resource.customizations: |
-    admissionreviewers.metallb.io:
+    bgppeers.metallb.io:
       ignoreDifferences: |
         jsonPointers:
-        - /clientConfig/caBundle
+        - /spec/conversion/webhook/clientConfig/caBundle
 kind: ConfigMap
 metadata:
   labels:
