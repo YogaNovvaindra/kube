@@ -743,14 +743,16 @@ data:
       hs.message = "Service is not LoadBalancer type"
     end
     return hs
+  # metallb caBundle ignore differences
+  apiextensions.k8s.io/CustomResourceDefinition:
+      ignoreDifferences: |
+        jqPathExpressions:
+        - .spec.conversion.webhook.clientConfig.caBundle
+        - |
+          .spec.versions[] |
+          select(.name == "v1beta1").schema.openAPIV3Schema.properties.spec.properties.myField
   # account apikey
   accounts.homepage: apiKey
-  # metallb caBundle ignore differences
-  resource.customizations: |
-    bgppeers.metallb.io:
-      ignoreDifferences: |
-        jsonPointers:
-        - /spec/conversion/webhook/clientConfig/caBundle
 kind: ConfigMap
 metadata:
   labels:

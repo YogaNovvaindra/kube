@@ -32,10 +32,11 @@ The Kubernetes cluster follows **declarative infrastructure management** princip
 - **📊 Observability Stack**: Prometheus/Grafana monitoring with alert integration
 - **🗄 Persistent Storage**: CephFS provisioner with automated volume management
 - **🔒 Zero-Trust Security**: Authentik SSO integration and network policies
+- **📡 Load Balancing**: MetalLB for bare-metal load balancing
 
 ## 📦 Applications
 
-### 🛠 Tools Namespace
+### 🛠 Tools
 - **📂 FileBrowser**: Web-based file management
 - **🔗 Syncthing**: Cross-device file synchronization
 - **📝 Knowledge Suite**: Outline + Excalidraw combo
@@ -46,6 +47,7 @@ The Kubernetes cluster follows **declarative infrastructure management** princip
 - **📊 Grafana**: Dashboards with Loki/Prometheus sources
 - **📡 Exporters**: Node + MikroTik metrics collection
 - **🚨 Alert Manager**: Integrated with Pushover notifications
+- **📊 Uptime Kuma**: Website monitoring and uptime tracking
 
 ### 🤖 Automation Ecosystem
 - **🔄 ArgoCD**: GitOps deployment controller
@@ -56,12 +58,15 @@ The Kubernetes cluster follows **declarative infrastructure management** princip
 ### 🎥 Media Center
 - **🎬 Plex Media Server**: 4K transcoding capable
 - **📺 Arr Suite**: Radarr/Sonarr/Bazarr stack
-- **📥 Transmission**: VPN-wrapped torrent client
+- **📥 Transmission & Aria2**: VPN-wrapped torrent clients
+- **📊 Tautulli**: Plex usage monitoring
+- **📂 Overseerr**: Media request management
 
 ## 🛠 Infrastructure
 
 - **☸ Kubernetes**: K3s cluster with embedded Ceph storage
 - **🚦 Traefik**: TLS-terminating ingress controller
+- **📡 MetalLB**: Load balancer for bare-metal environments
 - **🔐 Authentik**: Centralized authentication gateway
 - **🗂 CephFS**: Distributed storage with replication
 - **📦 Helm**: Package manager for chart deployments
