@@ -83,8 +83,12 @@ kind: Service
 metadata:
   name: traefik
   namespace: traefik
+  annotations:
+    metallb.universe.tf/address-pool: "main-pool"
+    metallb.universe.tf/allow-shared-ip: "traefik"
 spec:
   type: LoadBalancer
+  LoadBalancerIP: 10.1.1.60
   selector:
     app: traefik
   externalIPs:

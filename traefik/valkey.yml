@@ -37,6 +37,9 @@ kind: Service
 metadata:
   name: traefik-valkey
   namespace: traefik
+  annotations:
+    metallb.universe.tf/address-pool: "main-pool"
+    metallb.universe.tf/allow-shared-ip: "traefik"
 spec:
   selector:
     app: valkey
@@ -45,5 +48,6 @@ spec:
     port: 6379
     targetPort: 6379
   type: LoadBalancer
+  LoadBalancerIP: 10.1.1.60
   externalIPs:
     - 10.1.1.10
