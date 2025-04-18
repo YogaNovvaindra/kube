@@ -745,6 +745,12 @@ data:
     return hs
   # account apikey
   accounts.homepage: apiKey
+  # metallb caBundle ignore differences
+  resource.customizations: |
+    admissionreviewers.metallb.io:
+      ignoreDifferences: |
+        jsonPointers:
+        - /clientConfig/caBundle
 kind: ConfigMap
 metadata:
   labels:
