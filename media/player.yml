@@ -75,12 +75,14 @@ metadata:
   namespace: media
   labels:
     app: plex
+  annotations:
+    metallb.universe.tf/address-pool: "main-pool"
+    metallb.universe.tf/allow-shared-ip: "media"
 spec:
   selector:
     app: plex
   type: LoadBalancer
-  externalIPs:
-    - 10.1.1.10
+  LoadBalancerIP: 10.1.1.53
   ports:
     - protocol: TCP
       port: 32400
@@ -182,12 +184,14 @@ metadata:
   namespace: media
   labels:
     app: jellyfin
+  annotations:
+    metallb.universe.tf/address-pool: "main-pool"
+    metallb.universe.tf/allow-shared-ip: "media"
 spec:
   selector:
     app: jellyfin
   type: LoadBalancer
-  externalIPs:
-    - 10.1.1.10
+  LoadBalancerIP: 10.1.1.52
   ports:
     - protocol: TCP
       port: 8096
