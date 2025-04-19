@@ -61,16 +61,21 @@ spec:
   type: LoadBalancer
   LoadBalancerIP: 10.1.1.52
   ports:
-    - port: 26000
+    - name: webui
+      port: 26000
       targetPort: 26000
-    - port: 16000
+    - name: api  
+      port: 16000
       targetPort: 16000
-    - port: 10809
+    - name: data 
+      port: 10809
       targetPort: 10809
-    - port: 67
+    - name: dhcp 
+      port: 67
       targetPort: 67
       protocol: UDP
-    - port: 69
+    - name: tftp 
+      port: 69
       targetPort: 69
       protocol: UDP
   selector:
