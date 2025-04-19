@@ -88,7 +88,7 @@ metadata:
     metallb.universe.tf/allow-shared-ip: "traefik"
 spec:
   type: LoadBalancer
-  LoadBalancerIP: 10.1.1.51
+  LoadBalancerIP: 10.1.1.52
   selector:
     app: traefik
   externalIPs:
