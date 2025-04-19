@@ -22,7 +22,7 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet
       containers:
       - name: homeassistant
-        image: lscr.io/linuxserver/homeassistant:latest
+        image: lscr.io/linuxserver/homeassistant:2025.4.2
         imagePullPolicy: Always
         resources:
           requests:
@@ -51,15 +51,31 @@ metadata:
   name: homeassistant
   namespace: tools
 spec:
-  type: LoadBalancer
-  externalIPs:
-  - 10.1.1.10
   selector:
     app: homeassistant
   ports:
   - port: 8123
     targetPort: 8123
-
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: homeassistant
+  namespace: tools
+  labels:
+    app: homeassistant
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host('homeassistant.ygnv.my.id')
+      kind: Rule
+      services:
+        - name: homeassistant
+          port: 8123
+  tls:
+    certResolver: cloudflare
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -87,7 +103,7 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet
       containers:
       - name: esphome
-        image: ghcr.io/esphome/esphome:latest
+        image: ghcr.io/esphome/esphome:2025.4.0
         imagePullPolicy: Always
         resources:
           requests:
@@ -100,11 +116,17 @@ spec:
         volumeMounts:
         - name: esphome-data
           mountPath: /config
+        - name: localtime
+          mountPath: /etc/localtime
+          readOnly: true
       volumes:
       - name: esphome-data
         hostPath:
           path: /mnt/cephfs/docker/tools/esphome
           type: Directory
+      - name: localtime
+        hostPath:
+          path: /etc/localtime
 ---
 apiVersion: v1
 kind: Service
@@ -112,12 +134,28 @@ metadata:
   name: esphome
   namespace: tools
 spec:
-  type: LoadBalancer
-  externalIPs:
-  - 10.1.1.10
   selector:
     app: esphome
   ports:
   - port: 6052
     targetPort: 6052
 ---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: esphome
+  namespace: tools
+  labels:
+    app: esphome
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host('esphome.ygnv.my.id')
+      kind: Rule
+      services:
+        - name: esphome
+          port: 6052
+  tls:
+    certResolver: cloudflare
