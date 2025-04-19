@@ -82,9 +82,14 @@ metadata:
   namespace: media
   labels:
     app: transmission
+  annotations:
+    metallb.universe.tf/address-pool: "main-pool"
+    metallb.universe.tf/allow-shared-ip: "media"
 spec:
   selector:
     app: transmission
+  type: LoadBalancer
+  LoadBalancerIP: 10.1.1.52
   ports:
   - name: http
     protocol: TCP
@@ -204,12 +209,14 @@ metadata:
   namespace: media
   labels:
     app: aria2
+  annotations:
+    metallb.universe.tf/address-pool: "main-pool"
+    metallb.universe.tf/allow-shared-ip: "media"
 spec:
   selector:
     app: aria2
   type: LoadBalancer
-  externalIPs: 
-  - 10.1.1.10
+  LoadBalancerIP: 10.1.1.52
   ports:
   - name: rpc
     protocol: TCP
