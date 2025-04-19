@@ -191,7 +191,7 @@ spec:
   selector:
     app: jellyfin
   type: LoadBalancer
-  loadBalancerIP: 10.1.1.52
+  loadBalancerIP: 10.1.1.53
   ports:
     - protocol: TCP
       port: 8096
