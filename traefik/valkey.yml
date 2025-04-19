@@ -48,6 +48,6 @@ spec:
     port: 6379
     targetPort: 6379
   type: LoadBalancer
-  LoadBalancerIP: 10.1.1.51
-  externalIPs:
-    - 10.1.1.10
+  LoadBalancerIP: 10.1.1.52
+  # externalIPs:
+  #   - 10.1.1.10
