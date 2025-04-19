@@ -61,46 +61,63 @@ spec:
     targetPort: 8123
 
 ---
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: esphome
-#   namespace: tools
-#   labels:
-#     app: esphome
-# spec:
-#   replicas: 1
-#   revisionHistoryLimit: 3
-#   selector:
-#     matchLabels:
-#       app: esphome
-#   strategy:
-#     type: RollingUpdate
-#   template:
-#     metadata:
-#       labels:
-#         app: esphome
-#     spec:
-#       hostNetwork: true
-#       dnsPolicy: ClusterFirstWithHostNet
-#       containers:
-#       - name: esphome
-#         image: ghcr.io/esphome/esphome:latest
-#         imagePullPolicy: Always
-#         resources:
-#           requests:
-#             memory: 256Mi
-#         ports:
-#         - containerPort: 6052
-#         env:
-#           - name: TZ
-#             value: Asia/Jakarta
-#         volumeMounts:
-#         - name: esphome-data
-#           mountPath: /config
-#       volumes:
-#       - name: esphome-data
-#         hostPath:
-#           path: /mnt/cephfs/docker/tools/esphome
-#           type: Directory
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: esphome
+  namespace: tools
+  labels:
+    app: esphome
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: esphome
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: esphome
+    spec:
+      nodeSelector:
+        kubernetes.io/arch: arm64
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      containers:
+      - name: esphome
+        image: ghcr.io/esphome/esphome:latest
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 128Mi
+        ports:
+        - containerPort: 6052
+        envFrom:
+        - secretRef:
+            name: esphome-cred
+        volumeMounts:
+        - name: esphome-data
+          mountPath: /config
+      volumes:
+      - name: esphome-data
+        hostPath:
+          path: /mnt/cephfs/docker/tools/esphome
+          type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: esphome
+  namespace: tools
+spec:
+  type: LoadBalancer
+  externalIPs:
+  - 10.1.1.10
+  selector:
+    app: esphome
+  ports:
+  - port: 6052
+    targetPort: 6052
 ---
