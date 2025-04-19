@@ -31,11 +31,11 @@ spec:
         - containerPort: 8123
         env:
           - name: PUID
-            value: 1000
+            value: "1000"
           - name: PGID
-            value: 1000
+            value: "1000"
           - name: TZ
-            value: Asia/Jakarta
+            value: "Asia/Jakarta"
         volumeMounts:
         - name: homeassistant-data
           mountPath: /config
