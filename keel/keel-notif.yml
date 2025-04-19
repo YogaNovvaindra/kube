@@ -22,7 +22,10 @@ spec:
         imagePullPolicy: Always
         env:
         - name: DISCORD_BRIDGE_URL
-          value: "https://discord.com/api/webhooks/1283642463310975087/KYGFRf2uujD-h1_ynJ1bSkHP-lHWuOtsi85Xpwp44HJFd_e67EnSJccaT5aiwgPVLTb_"
+          valueFrom:
+            secretKeyRef:
+              name: keel-cred
+              key: DISCORD_BRIDGE_URL
         - name: DISCORD_BRIDGE_PORT
           value: "5000"
         ports:
