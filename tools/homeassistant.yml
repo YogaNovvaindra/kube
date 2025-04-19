@@ -69,7 +69,7 @@ spec:
     - http
     - https
   routes:
-    - match: Host('homeassistant.ygnv.my.id')
+    - match: Host(`homeassistant.ygnv.my.id`)
       kind: Rule
       services:
         - name: homeassistant
@@ -152,7 +152,7 @@ spec:
     - http
     - https
   routes:
-    - match: Host('esphome.ygnv.my.id')
+    - match: Host(`esphome.ygnv.my.id`)
       kind: Rule
       services:
         - name: esphome
