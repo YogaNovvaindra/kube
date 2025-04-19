@@ -507,7 +507,7 @@ data:
           icon: netboot.svg
           href: https://iventoy.ygnv.my.id
           description: Network boot and OS deployment server
-          siteMonitor: http://iventoy:26000
+          siteMonitor: http://10.1.1.51:26000
       - File Browser:
           icon: filebrowser.png
           href: https://file.ygnv.my.id
