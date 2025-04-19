@@ -507,7 +507,7 @@ data:
           icon: netboot.svg
           href: https://iventoy.ygnv.my.id
           description: Network boot and OS deployment server
-          siteMonitor: http://10.1.1.51:26000
+          siteMonitor: http://iventoy:26000
       - File Browser:
           icon: filebrowser.png
           href: https://file.ygnv.my.id
@@ -564,10 +564,10 @@ data:
           icon: home-assistant.png
           href: http://homeassistant.ygnv.my.id
           description: Home automation and control platform
-          siteMonitor: http://10.1.1.25:8123
+          siteMonitor: http://homeassistant:8123
           widget:
             type: homeassistant
-            url: http://10.1.1.25:8123
+            url: http://homeassistant:8123
             key: ${HOMEASSISTANT_KEY}
             custom:
               - state: sensor.esp_dht11_humidity
@@ -586,7 +586,7 @@ data:
           icon: esphome.png
           href: http://esphome.ygnv.my.id
           description: ESP8266/ESP32 home automation device management
-          siteMonitor: http://10.1.1.26:6052
+          siteMonitor: http://esphome:6052
         #   widget:
         #     type: esphome
         #     url: http://esphome.ygnv.my.id
