@@ -20,6 +20,8 @@ spec:
     spec:
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet
+      nodeSelector:
+        kubernetes.io/arch: arm64
       containers:
       - name: homeassistant
         image: lscr.io/linuxserver/homeassistant:2025.4.3
