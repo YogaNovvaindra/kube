@@ -1292,6 +1292,9 @@ spec:
               optional: true
         image: ghcr.io/dexidp/dex:latest
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 64Mi
         name: dex
         ports:
         - containerPort: 5556
@@ -1321,9 +1324,6 @@ spec:
         - /shared/argocd-dex
         image: quay.io/argoproj/argocd:v2.14.10
         imagePullPolicy: Always
-        resources:
-          requests:
-            memory: 64Mi
         name: copyutil
         securityContext:
           allowPrivilegeEscalation: false
