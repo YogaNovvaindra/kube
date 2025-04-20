@@ -27,6 +27,9 @@ spec:
       - name: reubah
         image: ghcr.io/dendianugerah/reubah:latest
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 128Mi
         env:
         - name: PORT
           value: "8081"

@@ -27,6 +27,9 @@ spec:
         - name: filebrowser
           image: filebrowser/filebrowser:v2-s6
           imagePullPolicy: Always
+          resources:
+            requests:
+              memory: 128Mi
           ports:
             - containerPort: 80
           env:

@@ -110,6 +110,9 @@ spec:
       - name: mktxp
         image: ghcr.io/akpw/mktxp:1.2.10
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 64Mi
         ports: 
         - containerPort: 49090
         securityContext:

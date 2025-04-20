@@ -33,6 +33,9 @@ spec:
       - name: openspeedtest
         image: openspeedtest/latest:v2.0.6
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 64Mi
         ports:
         - containerPort: 3000
 ---
@@ -97,6 +100,9 @@ spec:
       - name: myspeed
         image: germannewsmaker/myspeed:1.0.9
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 128Mi
         ports:
         - containerPort: 5216
         env:

@@ -18,6 +18,9 @@ spec:
         - name: node-exporter
           image: prom/node-exporter:v1.9.1
           imagePullPolicy: Always
+          resources:
+            requests:
+              memory: 64Mi
           args:
             - "--path.procfs=/host/proc"
             - "--path.sysfs=/host/sys"

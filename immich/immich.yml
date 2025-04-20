@@ -29,6 +29,9 @@ spec:
       - name: immich
         image: ghcr.io/imagegenius/immich:1.131.3
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 1Gi
         ports:
         - containerPort: 8080
         env:
@@ -156,6 +159,9 @@ spec:
       - name: valkey
         image: valkey/valkey:8.1-alpine
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 64Mi
         ports:
         - containerPort: 6379
         volumeMounts:
@@ -209,7 +215,7 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            memory: 128Mi
+            memory: 256Mi
         ports:
         - containerPort: 5432
         env:

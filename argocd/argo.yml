@@ -1175,6 +1175,9 @@ spec:
               optional: true
         image: quay.io/argoproj/argocd:v2.14.10
         imagePullPolicy: Always
+        resources:
+          Requests:
+            memory: 64Mi
         name: argocd-applicationset-controller
         ports:
         - containerPort: 7000
@@ -1318,6 +1321,9 @@ spec:
         - /shared/argocd-dex
         image: quay.io/argoproj/argocd:v2.14.10
         imagePullPolicy: Always
+        resources:
+          Requests:
+            memory: 64Mi
         name: copyutil
         securityContext:
           allowPrivilegeEscalation: false
@@ -1414,6 +1420,8 @@ spec:
               optional: true
         image: quay.io/argoproj/argocd:v2.14.10
         imagePullPolicy: Always
+        Requests:
+          memory: 64Mi
         livenessProbe:
           tcpSocket:
             port: 9001
@@ -1500,6 +1508,8 @@ spec:
               name: argocd-redis
         image: redis:7.4.2-alpine
         imagePullPolicy: Always
+        Requests:
+          memory: 64Mi
         name: redis
         ports:
         - containerPort: 6379
@@ -1789,6 +1799,9 @@ spec:
           value: /helm-working-dir
         image: quay.io/argoproj/argocd:v2.14.10
         imagePullPolicy: Always
+        resources:
+          Requests:
+            memory: 64Mi
         livenessProbe:
           failureThreshold: 3
           httpGet:
@@ -2213,6 +2226,8 @@ spec:
               optional: true
         image: quay.io/argoproj/argocd:v2.14.10
         imagePullPolicy: Always
+        Requests:
+          memory: 64Mi
         livenessProbe:
           httpGet:
             path: /healthz?full=true
@@ -2579,6 +2594,9 @@ spec:
           value: /tmp/kubecache
         image: quay.io/argoproj/argocd:v2.14.10
         imagePullPolicy: Always
+        resources:
+          Requests:
+            memory: 512Mi
         name: argocd-application-controller
         ports:
         - containerPort: 8082

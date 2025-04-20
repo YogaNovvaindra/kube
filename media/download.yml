@@ -27,6 +27,9 @@ spec:
       - name: transmission
         image: lscr.io/linuxserver/transmission:latest
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 64Mi
         ports:
         - containerPort: 9091
           name: http
@@ -151,6 +154,9 @@ spec:
       - name: aria2
         image: p3terx/aria2-pro:latest
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 64Mi
         ports:
         - containerPort: 6800
           name: rpc

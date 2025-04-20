@@ -32,6 +32,9 @@ spec:
       - name: semaphore
         image: semaphoreui/semaphore:v2.13.14
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 128Mi
         envFrom:
         - configMapRef:
             name: semaphore-env

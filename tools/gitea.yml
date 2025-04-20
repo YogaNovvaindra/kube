@@ -170,6 +170,9 @@ spec:
       - name: gitea-mirror
         image: jaedle/mirror-to-gitea:latest
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 64Mi
         env:
         - name: GITHUB_USERNAME
           valueFrom:

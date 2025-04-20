@@ -24,6 +24,9 @@ spec:
       - name: excalidraw
         image: excalidraw/excalidraw:latest@sha256:b3c38373c078f932c13a56f5ec630bfe52847b9d32dc854d357c5b8435d0d20c
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 128Mi
         ports:
         - containerPort: 80
 ---
