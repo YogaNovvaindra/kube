@@ -213,7 +213,7 @@ spec:
           value: "https://linear.yoganova.my.id/"
         resources:
           requests:
-            memory: "128Mi"
+            memory: 256Mi
         volumeMounts:
         - name: linear-data
           mountPath: /app/upload

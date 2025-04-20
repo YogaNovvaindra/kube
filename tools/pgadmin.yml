@@ -24,7 +24,7 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            memory: 128Mi
+            memory: 256Mi
         envFrom:
         - secretRef:
             name: pgadmin-cred
