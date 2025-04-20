@@ -1243,6 +1243,11 @@ metadata:
     app.kubernetes.io/name: argocd-dex-server
     app.kubernetes.io/part-of: argocd
   name: argocd-dex-server
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
 spec:
   selector:
     matchLabels:
