@@ -70,6 +70,9 @@ spec:
       - name: portainer-agent
         image: portainer/agent:2.29.0-alpine
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 64Mi
         env:
         - name: LOG_LEVEL
           value: DEBUG

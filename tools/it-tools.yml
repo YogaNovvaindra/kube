@@ -27,6 +27,9 @@ spec:
       - name: it-tools
         image: corentinth/it-tools:latest
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 64Mi
         ports:
         - containerPort: 80
 ---

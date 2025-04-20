@@ -22,6 +22,9 @@ spec:
       - name: vaultwarden
         image: vaultwarden/server:1.33.2-alpine
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 64Mi
         ports:
         - containerPort: 80
         volumeMounts:

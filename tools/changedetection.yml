@@ -23,6 +23,9 @@ spec:
       - name: changedetection
         image: lscr.io/linuxserver/changedetection.io:0.49.15
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 128Mi
         env:
         - name: PUID
           value: "1000"

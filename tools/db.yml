@@ -46,7 +46,7 @@ spec:
               mountPath: /data
           resources:
             requests:
-              memory: "128Mi"
+              memory: 64Mi
           readinessProbe:
             tcpSocket:
               port: 6379

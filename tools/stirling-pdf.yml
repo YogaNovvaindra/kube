@@ -24,7 +24,7 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            memory: 384Mi
+            memory: 512Mi
         env:
         - name: DOCKER_ENABLE_SECURITY
           value: "false"

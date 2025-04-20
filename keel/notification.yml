@@ -20,6 +20,9 @@ spec:
       - name: discord-keel-bridge
         image: gabisonfire/discord-keel-bridge:1.0
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 64Mi
         env:
         - name: DISCORD_BRIDGE_URL
           valueFrom:

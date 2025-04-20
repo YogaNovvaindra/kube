@@ -20,6 +20,9 @@ spec:
       - name: nexterm
         image: germannewsmaker/nexterm:1.0.3-OPEN-PREVIEW
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 128Mi
         ports:
         - containerPort: 6989
         envFrom:
