@@ -27,6 +27,9 @@ spec:
       - name: ecoguardian
         image: ghcr.io/yoganovvaindra/ecoguardian-web:latest
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 128Mi
         env:
         - name: DATABASE_URL
           valueFrom:

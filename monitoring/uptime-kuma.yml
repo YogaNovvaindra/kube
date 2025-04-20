@@ -22,7 +22,7 @@ spec:
           imagePullPolicy: Always
           resources:
             requests:
-              memory: 128Mi
+              memory: 256Mi
           ports:
             - containerPort: 3001
           volumeMounts:
