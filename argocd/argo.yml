@@ -1420,8 +1420,9 @@ spec:
               optional: true
         image: quay.io/argoproj/argocd:v2.14.10
         imagePullPolicy: Always
-        Requests:
-          memory: 64Mi
+        resources:
+          Requests:
+            memory: 64Mi
         livenessProbe:
           tcpSocket:
             port: 9001
@@ -1508,8 +1509,9 @@ spec:
               name: argocd-redis
         image: redis:7.4.2-alpine
         imagePullPolicy: Always
-        Requests:
-          memory: 64Mi
+        resources:
+          Requests:
+            memory: 64Mi
         name: redis
         ports:
         - containerPort: 6379
@@ -2226,8 +2228,9 @@ spec:
               optional: true
         image: quay.io/argoproj/argocd:v2.14.10
         imagePullPolicy: Always
-        Requests:
-          memory: 64Mi
+        resources:
+          Requests:
+            memory: 64Mi
         livenessProbe:
           httpGet:
             path: /healthz?full=true
