@@ -1176,7 +1176,7 @@ spec:
         image: quay.io/argoproj/argocd:v2.14.10
         imagePullPolicy: Always
         resources:
-          Requests:
+          requests:
             memory: 64Mi
         name: argocd-applicationset-controller
         ports:
@@ -1322,7 +1322,7 @@ spec:
         image: quay.io/argoproj/argocd:v2.14.10
         imagePullPolicy: Always
         resources:
-          Requests:
+          requests:
             memory: 64Mi
         name: copyutil
         securityContext:
@@ -1421,7 +1421,7 @@ spec:
         image: quay.io/argoproj/argocd:v2.14.10
         imagePullPolicy: Always
         resources:
-          Requests:
+          requests:
             memory: 64Mi
         livenessProbe:
           tcpSocket:
@@ -1510,7 +1510,7 @@ spec:
         image: redis:7.4.2-alpine
         imagePullPolicy: Always
         resources:
-          Requests:
+          requests:
             memory: 64Mi
         name: redis
         ports:
@@ -1802,7 +1802,7 @@ spec:
         image: quay.io/argoproj/argocd:v2.14.10
         imagePullPolicy: Always
         resources:
-          Requests:
+          requests:
             memory: 64Mi
         livenessProbe:
           failureThreshold: 3
@@ -2229,7 +2229,7 @@ spec:
         image: quay.io/argoproj/argocd:v2.14.10
         imagePullPolicy: Always
         resources:
-          Requests:
+          requests:
             memory: 64Mi
         livenessProbe:
           httpGet:
@@ -2598,7 +2598,7 @@ spec:
         image: quay.io/argoproj/argocd:v2.14.10
         imagePullPolicy: Always
         resources:
-          Requests:
+          requests:
             memory: 512Mi
         name: argocd-application-controller
         ports:
