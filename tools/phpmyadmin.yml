@@ -63,3 +63,5 @@ spec:
       services:
         - name: phpmyadmin
           port: 80
+  tls:
+    certResolver: cloudflare
