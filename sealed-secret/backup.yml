@@ -14,7 +14,7 @@ spec:
           serviceAccountName: default  # Use default SA with RBAC permissions
           containers:
           - name: backup
-            image: bitnami/kubectl:1.32.3
+            image: bitnami/kubectl:1.32.4
             command:
             - /bin/bash
             - -c
