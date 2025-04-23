@@ -27,7 +27,7 @@ spec:
         kubernetes.io/hperf: "true"
       containers:
       - name: immich
-        image: ghcr.io/imagegenius/immich:1.131.3
+        image: ghcr.io/imagegenius/immich:1.132.0
         imagePullPolicy: Always
         resources:
           requests:
