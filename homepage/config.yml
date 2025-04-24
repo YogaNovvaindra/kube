@@ -195,7 +195,7 @@ data:
             url: https://10.1.1.3:8006
             username: ${PROXMOX_USERNAME}
             password: ${PROXMOX_PASSWORD}
-            node: pve # optional
+            # node: pve # optional
       - Nexterm: 
           icon: nexterm.png
           href: https://nexterm.ygnv.my.id
