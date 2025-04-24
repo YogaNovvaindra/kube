@@ -18,8 +18,8 @@ data:
       - job_name: 'pve'
         static_configs:
           - targets:
-            - ['${PVE-1_ENDPOINT}']  # Proxmox VE node.
-            - ['${PVE-2_ENDPOINT}']  # Proxmox VE node.
+            - ${PVE_1_ENDPOINT}  # Proxmox VE node.
+            - ${PVE_2_ENDPOINT}  # Proxmox VE node.
         metrics_path: /pve
         params:
           module: [default]
