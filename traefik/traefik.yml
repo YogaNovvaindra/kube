@@ -87,6 +87,7 @@ metadata:
     metallb.universe.tf/address-pool: "main-pool"
     metallb.universe.tf/allow-shared-ip: "traefik"
 spec:
+  externalTrafficPolicy: Local
   type: LoadBalancer
   loadBalancerIP: 10.1.1.52
   selector:
