@@ -44,6 +44,7 @@ metadata:
     metallb.io/address-pool: "main-pool"
     metallb.io/allow-shared-ip: "traefik"
 spec:
+  externalTrafficPolicy: Local
   selector:
     app: valkey
   ports:
