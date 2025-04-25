@@ -87,7 +87,7 @@ metadata:
     metallb.io/address-pool: "main-pool"
     metallb.io/allow-shared-ip: "traefik"
 spec:
-  externalTrafficPolicy: Local
+  # externalTrafficPolicy: Local
   type: LoadBalancer
   loadBalancerIP: 10.1.1.52
   selector:
