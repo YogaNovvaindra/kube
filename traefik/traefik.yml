@@ -84,8 +84,8 @@ metadata:
   name: traefik
   namespace: traefik
   annotations:
-    metallb.universe.tf/address-pool: "main-pool"
-    metallb.universe.tf/allow-shared-ip: "traefik"
+    metallb.io/address-pool: "main-pool"
+    metallb.io/allow-shared-ip: "traefik"
 spec:
   externalTrafficPolicy: Local
   type: LoadBalancer

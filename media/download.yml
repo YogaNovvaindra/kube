@@ -86,8 +86,8 @@ metadata:
   labels:
     app: transmission
   annotations:
-    metallb.universe.tf/address-pool: "main-pool"
-    metallb.universe.tf/allow-shared-ip: "media"
+    metallb.io/address-pool: "main-pool"
+    metallb.io/allow-shared-ip: "media"
 spec:
   selector:
     app: transmission
@@ -216,8 +216,8 @@ metadata:
   labels:
     app: aria2
   annotations:
-    metallb.universe.tf/address-pool: "main-pool"
-    metallb.universe.tf/allow-shared-ip: "media"
+    metallb.io/address-pool: "main-pool"
+    metallb.io/allow-shared-ip: "media"
 spec:
   selector:
     app: aria2
