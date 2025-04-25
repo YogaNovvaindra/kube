@@ -76,8 +76,8 @@ metadata:
   labels:
     app: plex
   annotations:
-    metallb.universe.tf/address-pool: "main-pool"
-    metallb.universe.tf/allow-shared-ip: "media"
+    metallb.io/address-pool: "main-pool"
+    metallb.io/allow-shared-ip: "media"
 spec:
   selector:
     app: plex
@@ -185,8 +185,8 @@ metadata:
   labels:
     app: jellyfin
   annotations:
-    metallb.universe.tf/address-pool: "main-pool"
-    metallb.universe.tf/allow-shared-ip: "media"
+    metallb.io/address-pool: "main-pool"
+    metallb.io/allow-shared-ip: "media"
 spec:
   selector:
     app: jellyfin
