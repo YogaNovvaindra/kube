@@ -28,6 +28,9 @@ data:
           trustedIPs:
             - "10.1.1.0/24"
             - "10.41.0.0/16"
+        proxyProtocol:
+          trustedIPs:
+            - "0.0.0.0/0"
         http:
           redirections:
             entryPoint:
@@ -39,6 +42,9 @@ data:
           trustedIPs:
             - "10.1.1.0/24"
             - "10.41.0.0/16"
+        proxyProtocol:
+          trustedIPs:
+            - "0.0.0.0/0"
       ssh:
         address: ":22"
       metrics:
