@@ -29,7 +29,7 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            memory: 256Mi
+            memory: 128Mi
         ports:
         - containerPort: 9091
           name: http
@@ -156,7 +156,7 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            memory: 64Mi
+            memory: 32Mi
         ports:
         - containerPort: 6800
           name: rpc

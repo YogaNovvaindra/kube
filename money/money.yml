@@ -39,7 +39,7 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            memory: 64Mi
+            memory: 32Mi
         env:
         - name: RP_EMAIL
           valueFrom:
@@ -82,7 +82,7 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            memory: 64Mi
+            memory: 32Mi
         env:
         - name: HONEYGAIN_EMAIL
           valueFrom:
@@ -139,7 +139,7 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            memory: 64Mi
+            memory: 32Mi
         env:
         - name: PAWNS_EMAIL
           valueFrom:
