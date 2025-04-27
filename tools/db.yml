@@ -57,7 +57,7 @@ spec:
             tcpSocket:
               port: 6379
             initialDelaySeconds: 10
-            periodSeconds: 60
+            periodSeconds: 30
             timeoutSeconds: 5
       volumes:
         - name: valkey-conf
