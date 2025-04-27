@@ -19,7 +19,7 @@ spec:
         app: immich
     spec:
       nodeSelector:
-        kubernetes.io/hperf: "true"
+        kubernetes.io/hostname: "kube-2"
       containers:
       - name: immich
         image: ghcr.io/imagegenius/immich:1.132.1-openvino
