@@ -1,0 +1,66 @@
+# 2. Logical Dump CronJob (Every 6 Hours)
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: postgres-logical-dumps
+  namespace: tools
+spec:
+  schedule: "34 15 * * *" # Every 6 hours
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          nodeSelector:
+            kubernetes.io/arch: amd64
+          containers:
+          - name: logical-dumper
+            image: pgautoupgrade/pgautoupgrade:latest@sha256:eb01fb6da266558bf3afbd1c6b090343404be94c2c2f98d11ffb64e1a252cd3a
+            imagePullPolicy: Always
+            command:
+            - /bin/sh
+            - -c
+            - |
+              export PGPASSWORD=$(cat /etc/creds/password)
+              BACKUP_ROOT="/dumps/$(date +\%Y-\%m-\%d)"
+              TIMESTAMP=$(date +\%H\%M\%S)
+              
+              # Get databases excluding system DBs
+              DBS=$(psql -h postgres -U $(cat /etc/creds/username) -d postgres -t -c "
+                SELECT datname FROM pg_database 
+                WHERE datname NOT IN ('postgres','template0','template1')")
+
+              mkdir -p "$BACKUP_ROOT"
+              
+              # Parallel dump with compression and checksum
+              for db in $DBS; do
+                pg_dump -h postgres -U $(cat /etc/creds/username) -d $db | \
+                gzip > "$BACKUP_ROOT/${db}_${TIMESTAMP}.sql.gz" && \
+                sha256sum "$BACKUP_ROOT/${db}_${TIMESTAMP}.sql.gz" >> "$BACKUP_ROOT/checksums.sha256"
+              done
+
+              # Retention (7 days of logical backups)
+              find /dumps -type f -mtime +7 -delete
+              find /dumps -type d -empty -delete
+            volumeMounts:
+            - name: pg-dumps
+              mountPath: /dumps
+            - name: postgres-creds
+              mountPath: /etc/creds
+              readOnly: true
+          volumes:
+          - name: pg-dumps
+            hostPath:
+              path: /mnt/cephfs/docker/tools/pg-dumps
+              type: Directory
+          - name: postgres-creds
+            secret:
+              secretName: db-cred
+              items:
+              - key: username
+                path: username
+              - key: password
+                path: password
+          restartPolicy: Never
