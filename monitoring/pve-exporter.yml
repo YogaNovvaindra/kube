@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: pve-exporter
+  namespace: monitoring
   annotations:
     reloader.stakater.com/auto: "true"
 spec:
@@ -33,12 +34,10 @@ apiVersion: v1
 kind: Service
 metadata:
   name: pve-exporter
+  namespace: monitoring
 spec:
   selector:
     app: pve-exporter
-  type: LoadBalancer
-  externalIPs:
-    - 10.1.1.10
   ports:
     - protocol: TCP
       port: 9221
