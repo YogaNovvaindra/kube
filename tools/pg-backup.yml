@@ -1,16 +1,17 @@
-# 2. Logical Dump CronJob (Every 6 Hours)
 apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: postgres-logical-dumps
   namespace: tools
 spec:
-  schedule: "34 15 * * *" # Every 6 hours
+  schedule: "14 16 * * *"   # every 6 hours
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
+      backoffLimit: 0
+      ttlSecondsAfterFinished: 600 
       template:
         spec:
           nodeSelector:
@@ -19,31 +20,97 @@ spec:
           - name: logical-dumper
             image: pgautoupgrade/pgautoupgrade:latest@sha256:eb01fb6da266558bf3afbd1c6b090343404be94c2c2f98d11ffb64e1a252cd3a
             imagePullPolicy: Always
+            env:
+            - name: DISCORD_WEBHOOK_URL
+              value: "https://discord.com/api/webhooks/1346137644014243961/nrvqEzy8sXa_0YiuuA0op3blXu_ZzEyCNm42pxUYRHsCpQLeuCsLpLnLT0f4qhcUBAYp"
             command:
             - /bin/sh
             - -c
             - |
+              apk add curl
+              set -eo pipefail
+              set -o errtrace
+
+              # Function to send to Discord
+              discord_notify() {
+                local status="$1"    # "SUCCESS" or "FAILED"
+                local title="$2"     # Short title
+                local message="$3"   # Detailed content (Markdown)
+                local color
+
+                if [ "$status" = "SUCCESS" ]; then
+                  color=3066993       # green
+                else
+                  color=15158332      # red
+                fi
+
+                curl -sSL -H "Content-Type: application/json" \
+                  -X POST "$DISCORD_WEBHOOK_URL" \
+                  -d "{
+                    \"embeds\": [{
+                      \"title\": \"$title\",
+                      \"description\": \"$message\",
+                      \"color\": $color
+                    }]
+                  }"
+              }
+
+              fail() {
+                TS=$(date +"%Y-%m-%d %H:%M:%S")
+                discord_notify "FAILED" "🚨 Backup FAILED" "**Time:** $TS\nSee logs for details."
+                exit 1
+              }
+              trap fail ERR
+
+              echo "🔔 Starting logical backups at $(date +"%Y-%m-%d %H:%M:%S")"
+
               export PGPASSWORD=$(cat /etc/creds/password)
-              BACKUP_ROOT="/dumps/$(date +\%Y-\%m-\%d)"
-              TIMESTAMP=$(date +\%H\%M\%S)
-              
-              # Get databases excluding system DBs
-              DBS=$(psql -h postgres -U $(cat /etc/creds/username) -d postgres -t -c "
-                SELECT datname FROM pg_database 
-                WHERE datname NOT IN ('postgres','template0','template1')")
+              USER=$(cat /etc/creds/username)
+              BACKUP_ROOT="/dumps/$(date +%Y-%m-%d)"
+              TIMESTAMP=$(date +%H%M%S)
+
+              # List non-system databases
+              DBS=$(psql -h postgres -U "$USER" -d postgres -t -c \
+                "SELECT datname FROM pg_database WHERE datistemplate = false AND datname <> 'postgres';")
 
               mkdir -p "$BACKUP_ROOT"
-              
-              # Parallel dump with compression and checksum
+
+              SUMMARY=""
+              COUNT=0
+
               for db in $DBS; do
-                pg_dump -h postgres -U $(cat /etc/creds/username) -d $db | \
-                gzip > "$BACKUP_ROOT/${db}_${TIMESTAMP}.sql.gz" && \
-                sha256sum "$BACKUP_ROOT/${db}_${TIMESTAMP}.sql.gz" >> "$BACKUP_ROOT/checksums.sha256"
+                echo "📥 Dumping $db"
+
+                # human-readable size
+                DB_SIZE_HR=$(psql -h postgres -U "$USER" -d postgres -t -c \
+                  "SELECT pg_size_pretty(pg_database_size('$db'));")
+                DB_SIZE_HR=$(echo "$DB_SIZE_HR" | tr -d '[:space:]')
+
+                DUMP_FILE="$BACKUP_ROOT/${db}_${TIMESTAMP}.sql.gz"
+                if pg_dump -h postgres -U "$USER" -d "$db" | gzip > "$DUMP_FILE"; then
+                  FILE_SIZE_HR=$(du -h "$DUMP_FILE" | cut -f1)
+                  sha256sum "$DUMP_FILE" >> "$BACKUP_ROOT/checksums.sha256"
+
+                  MSG="**Database:** \`$db\`\n**Logical size:** $DB_SIZE_HR\n**Dump file:** \`$(basename "$DUMP_FILE")\` ($FILE_SIZE_HR)"
+                  discord_notify "SUCCESS" "✅ Backup of \`$db\` completed" "$MSG"
+
+                  echo "✅ Completed $db"
+                  SUMMARY="$SUMMARY\n• $db — DB size: $DB_SIZE_HR, file: $FILE_SIZE_HR"
+                else
+                  echo "❌ Error dumping $db"
+                  fail
+                fi
               done
 
-              # Retention (7 days of logical backups)
+              # Cleanup old
               find /dumps -type f -mtime +7 -delete
               find /dumps -type d -empty -delete
+
+              # Final summary
+              FINAL_MSG="**Time:** $TIMESTAMP\n**Databases backed up:** $COUNT\n$SUMMARY"
+              discord_notify "SUCCESS" "🎉 All backups succeeded" "$FINAL_MSG"
+
+              echo "🎉 All done!"
             volumeMounts:
             - name: pg-dumps
               mountPath: /dumps
