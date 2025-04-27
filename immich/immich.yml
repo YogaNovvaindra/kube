@@ -30,10 +30,6 @@ spec:
         ports:
         - containerPort: 8080
         env:
-        - name: PUID
-          value: "1000"
-        - name: PGID
-          value: "1000"
         - name: TZ
           value: "Asia/Jakarta"
         - name: SERVER_PORT
@@ -85,8 +81,8 @@ spec:
         - mountPath: /dev/bus/usb
           name: usb-devices
       securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
+        runAsUser: 0
+        runAsGroup: 0
         supplementalGroups: [44]  # Video group for GPU access
       volumes:
       - name: config-volume

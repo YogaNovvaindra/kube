@@ -4,7 +4,7 @@ metadata:
   name: postgres-logical-dumps
   namespace: tools
 spec:
-  schedule: "14 16 * * *"   # every 6 hours
+  schedule: "20 00 * * *"   # every day @ 00:20 UTC+7
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 1
@@ -27,29 +27,24 @@ spec:
             - /bin/sh
             - -c
             - |
-              apk add curl
+              apk add --no-cache curl
+
               set -eo pipefail
               set -o errtrace
 
-              # Function to send to Discord
+              # send a single embed notification
               discord_notify() {
                 local status="$1"    # "SUCCESS" or "FAILED"
-                local title="$2"     # Short title
-                local message="$3"   # Detailed content (Markdown)
-                local color
-
-                if [ "$status" = "SUCCESS" ]; then
-                  color=3066993       # green
-                else
-                  color=15158332      # red
-                fi
+                local title="$2"
+                local description="$3"
+                local color=$([ "$status" = "SUCCESS" ] && echo 3066993 || echo 15158332)
 
                 curl -sSL -H "Content-Type: application/json" \
                   -X POST "$DISCORD_WEBHOOK_URL" \
                   -d "{
                     \"embeds\": [{
                       \"title\": \"$title\",
-                      \"description\": \"$message\",
+                      \"description\": \"$description\",
                       \"color\": $color
                     }]
                   }"
@@ -57,7 +52,7 @@ spec:
 
               fail() {
                 TS=$(date +"%Y-%m-%d %H:%M:%S")
-                discord_notify "FAILED" "🚨 Backup FAILED" "**Time:** $TS\nSee logs for details."
+                discord_notify "FAILED" "🚨 Backup FAILED" "**Time:** $TS\nCheck pod logs for errors."
                 exit 1
               }
               trap fail ERR
@@ -69,46 +64,38 @@ spec:
               BACKUP_ROOT="/dumps/$(date +%Y-%m-%d)"
               TIMESTAMP=$(date +%H%M%S)
 
-              # List non-system databases
-              DBS=$(psql -h postgres -U "$USER" -d postgres -t -c \
-                "SELECT datname FROM pg_database WHERE datistemplate = false AND datname <> 'postgres';")
-
               mkdir -p "$BACKUP_ROOT"
 
-              SUMMARY=""
+              # Gather all non-system DBs
+              DBS=$(psql -h postgres -U "$USER" -d postgres -t -c \
+                "SELECT datname FROM pg_database WHERE datistemplate=false AND datname<>'postgres';")
+
+              SUMMARY="**Time:** $TIMESTAMP\n\n"
               COUNT=0
 
               for db in $DBS; do
-                echo "📥 Dumping $db"
-
-                # human-readable size
-                DB_SIZE_HR=$(psql -h postgres -U "$USER" -d postgres -t -c \
+                COUNT=$((COUNT+1))
+                # get human-readable logical size
+                SIZE=$(psql -h postgres -U "$USER" -d postgres -t -c \
                   "SELECT pg_size_pretty(pg_database_size('$db'));")
-                DB_SIZE_HR=$(echo "$DB_SIZE_HR" | tr -d '[:space:]')
+                SIZE=$(echo "$SIZE" | xargs)
 
-                DUMP_FILE="$BACKUP_ROOT/${db}_${TIMESTAMP}.sql.gz"
-                if pg_dump -h postgres -U "$USER" -d "$db" | gzip > "$DUMP_FILE"; then
-                  FILE_SIZE_HR=$(du -h "$DUMP_FILE" | cut -f1)
-                  sha256sum "$DUMP_FILE" >> "$BACKUP_ROOT/checksums.sha256"
+                OUTFILE="$BACKUP_ROOT/${db}_${TIMESTAMP}.sql.gz"
+                pg_dump -h postgres -U "$USER" -d "$db" | gzip > "$OUTFILE"
+                FILESIZE=$(du -h "$OUTFILE" | cut -f1)
+                sha256sum "$OUTFILE" >> "$BACKUP_ROOT/checksums.sha256"
 
-                  MSG="**Database:** \`$db\`\n**Logical size:** $DB_SIZE_HR\n**Dump file:** \`$(basename "$DUMP_FILE")\` ($FILE_SIZE_HR)"
-                  discord_notify "SUCCESS" "✅ Backup of \`$db\` completed" "$MSG"
-
-                  echo "✅ Completed $db"
-                  SUMMARY="$SUMMARY\n• $db — DB size: $DB_SIZE_HR, file: $FILE_SIZE_HR"
-                else
-                  echo "❌ Error dumping $db"
-                  fail
-                fi
+                # append to summary
+                SUMMARY="$SUMMARY• **$db** — DB size: $SIZE, dump: ${FILESIZE}\n"
               done
 
-              # Cleanup old
+              # cleanup >7d
               find /dumps -type f -mtime +7 -delete
               find /dumps -type d -empty -delete
 
-              # Final summary
-              FINAL_MSG="**Time:** $TIMESTAMP\n**Databases backed up:** $COUNT\n$SUMMARY"
-              discord_notify "SUCCESS" "🎉 All backups succeeded" "$FINAL_MSG"
+              # final notification
+              FINAL_DESC="$SUMMARY\n**Databases backed up:** $COUNT"
+              discord_notify "SUCCESS" "🎉 All backups succeeded" "$FINAL_DESC"
 
               echo "🎉 All done!"
             volumeMounts:
