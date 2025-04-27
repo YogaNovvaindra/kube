@@ -73,7 +73,7 @@ spec:
         - name: photos-volume
           mountPath: /photos
         - name: pictures-volume
-          mountPath: /photos/pictures
+          mountPath: /pictures
           readOnly: true
         # Add device mounts
         - mountPath: /dev/dri
