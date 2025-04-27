@@ -255,11 +255,11 @@ data:
           widget:
             type: prometheus
             url: http://prometheus.monitoring.svc.cluster.local:9090
-      - InfluxDB:
-          icon: influxdb.svg
-          href: http://influxdb.ygnv.my.id
-          description: Time-series database for metrics storage
-          siteMonitor: http://influxdb.monitoring.svc.cluster.local:8086
+      # - InfluxDB:
+      #     icon: influxdb.svg
+      #     href: http://influxdb.ygnv.my.id
+      #     description: Time-series database for metrics storage
+      #     siteMonitor: http://influxdb.monitoring.svc.cluster.local:8086
       - MySpeed:
           icon: myspeed.png
           href: https://myspeed.ygnv.my.id
