@@ -26,7 +26,7 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            memory: 1Gi
+            memory: 512Mi
         ports:
         - containerPort: 8080
         env:
@@ -79,6 +79,15 @@ spec:
         - name: pictures-volume
           mountPath: /photos/pictures
           readOnly: true
+        # Add device mounts
+        - mountPath: /dev/dri
+          name: dri-device
+        - mountPath: /dev/bus/usb
+          name: usb-devices
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        supplementalGroups: [44]  # Video group for GPU access
       volumes:
       - name: config-volume
         hostPath:
@@ -96,6 +105,13 @@ spec:
         hostPath:
           path: /mnt/Data/Pictures
           type: Directory
+      # Add device volumes
+      - name: dri-device
+        hostPath:
+          path: /dev/dri
+      - name: usb-devices
+        hostPath:
+          path: /dev/bus/usb
 ---
 apiVersion: v1
 kind: Service
