@@ -1,0 +1,16 @@
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: discord-cred
+  namespace: tools
+spec:
+  encryptedData:
+    DISCORD_URL: AgCGafhxdIidTlJsQEc/wcd6I7/1OG3vUe/z0fHdWblxf6Z9dlZwNqem04q9YYeUMGnfzAzLxIkgKPVgDe2GOhlJzVrHaWrIwhl4T+G92BakFbkR5xBHMfVmFyKXpC4VmyASrf6IrUg1mSCc6lgqDt+s7yIFDHjvl15wMp9UpSNAZp9ePinpmv6Tfkvo5YF4mselKwW4SkrXS/ZFD25khABIY3q2z5aV6rGRGbSgSn0KW1zWsJpFC/1hHOED2YUnW0CXbtRy5+yjjkWgTDC0O6IC3NLNu7dg/3cNHvp+/5FWHiDYpQC1YtX4XC10n1lLmHDi9ihBAW7LW0Wow8+8SBm+/yuGCFvnhT/YDdQUMzJFk8+5208MWk+DTvJhM+NPshDs3JYwxLo9Alez9+RB57dU5rIY46ZZl45nOgzRyMr02BZHHzISy/PDAVbjmDtGfcgFqffC4tMHzkymu6QAbnNGqAB5yowPRQ4z4Z8wR0wmfxErsygvFbcGALjkh91UFlsYAHjS6uxCI1KbXqvJSA34EBMYFNbbR9izVyAtvqvbEwCTBBfdQOFuqe8HqHZSFr82/y4Kvad8hBYMmmmFJip9A4ImE7K4uIjaTB544TxBKoh19H8nO6CTnLsKd75CNhBjV/lHcAER3mPbP8pVd/Rf4NVD/tmynUtwEh1pIHw34T71M92vps8ozxMMXMD5wxxlXlsjwKg0ZU/DZhadds+sdyawS2N3xdabqKgYNgjD883hK16YTI3S3RnSPiaNmVo/FqojVKXH3xsVfRQ4GjLNkaop2dSLnb7rIgiRwb89JlUtbeMn36vLqD+ht2uj4ROkg0+BukSqwYyRlv95gLk8vr9tMhheDuYq
+  template:
+    metadata:
+      creationTimestamp: null
+      name: discord-cred
+      namespace: tools
+    type: Opaque
