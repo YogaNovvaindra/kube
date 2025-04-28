@@ -143,7 +143,7 @@ spec:
       volumes:
       - name: postgres-data
         hostPath:
-          path: /mnt/cephfs/docker/tools/postgres
+          path: /mnt/cephfs/docker/tools/postgres/data
           type: Directory
 ---
 apiVersion: v1
@@ -215,7 +215,7 @@ spec:
       volumes:
       - name: mariadb-data
         hostPath:
-          path: /mnt/cephfs/docker/tools/mariadb
+          path: /mnt/cephfs/docker/tools/mariadb/data
           type: Directory
 ---
 apiVersion: v1
