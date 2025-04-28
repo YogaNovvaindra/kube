@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: pg-dump-config
+  name: mariadb-dump-config
   namespace: tools
 data:
-  pg-dump.sh: |
+  mariadb-dump.sh: |
     #!/bin/sh
-    apk add --no-cache curl
+    apk add --no-cache curl mariadb-client
     set -eo pipefail
     set -o errtrace
 
@@ -31,8 +31,9 @@ data:
     # Global timestamp and cleanup
     TS_INIT=$(date +"%Y-%m-%d %H:%M:%S")
     BACKUP_ROOT="/dumps/$(date +%Y-%m-%d)"
-    export PGPASSWORD=$(cat /etc/creds/password)
+    export MYSQL_PWD=$(cat /etc/creds/password)
     USER=$(cat /etc/creds/username)
+    HOST=mariadb
 
     # Error handler
     fail() {
@@ -50,24 +51,21 @@ data:
 
     # Main operations
     mkdir -p "$BACKUP_ROOT"
-    DBS=$(psql -h postgres -U "$USER" -d postgres -t -c \
-      "SELECT datname FROM pg_database WHERE datistemplate=false AND datname<>'postgres';")
+    DBS=$(mysql -h $HOST -u $USER -sN -e "SHOW DATABASES WHERE \`Database\` NOT IN ('information_schema', 'performance_schema', 'mysql')")
 
     SUMMARY=""
     COUNT=0
 
     for db in $DBS; do
       COUNT=$((COUNT+1))
-      SIZE=$(psql -h postgres -U "$USER" -d postgres -t -c \
-        "SELECT pg_size_pretty(pg_database_size('$db'));" | xargs)
+      SIZE=$(mysql -h $HOST -u $USER -sN -e "SELECT CONCAT(ROUND(SUM(data_length + index_length) / 1024 / 1024, 2), ' MB') FROM information_schema.TABLES WHERE table_schema = '$db'")
       
       TIMESTAMP=$(date +%H%M%S)
       OUTFILE="$BACKUP_ROOT/${db}_${TIMESTAMP}.sql.gz"
-      pg_dump -h postgres -U "$USER" -d "$db" | gzip > "$OUTFILE"
+      mysqldump -h $HOST -u $USER --single-transaction --routines --triggers "$db" | gzip > "$OUTFILE"
       FILESIZE=$(du -h "$OUTFILE" | cut -f1)
       sha256sum "$OUTFILE" >> "$BACKUP_ROOT/checksums.sha256"
 
-      # Append to summary using POSIX-compliant syntax
       SUMMARY="${SUMMARY}• **${db}** — DB size: ${SIZE}, dump: ${FILESIZE}\n"
     done
 
@@ -87,14 +85,13 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: pg-snapshot-config
+  name: mariadb-snapshot-config
   namespace: tools
 data:
-  pg-snapshot.sh: |
+  mariadb-snapshot.sh: |
     #!/bin/sh
     set -euo pipefail
 
-    # Install required tools
     apk add --no-cache curl zip
 
     # Discord notification helper
@@ -108,24 +105,19 @@ data:
         -d "{\"embeds\":[{\"title\":\"$title\",\"description\":\"$description\",\"color\":$color}]}"
     }
 
-    # Main execution
     TS_INIT=$(date +"%Y-%m-%d %H:%M:%S")
-    START_DESCRIPTION="**Host:** ${HOSTNAME}\n**Time:** ${TS_INIT}\n**Action:** Starting backup"
-    discord_notify "SUCCESS" "🔔 Backup Starting" "$START_DESCRIPTION"
+    discord_notify "SUCCESS" "🔔 Backup Starting" "**Host:** ${HOSTNAME}\n**Time:** ${TS_INIT}\n**Action:** Starting filesystem backup"
 
-    # Create backup
     TIMESTAMP=$(date +%Y%m%d%H%M%S)
-    ARCHIVE="/snapshots/postgres-backup-${TIMESTAMP}.zip"
-    cd /pgdata || exit 1
+    ARCHIVE="/snapshots/mariadb-backup-${TIMESTAMP}.zip"
+    cd /mariadadata || exit 1
 
     if ! zip -rq "$ARCHIVE" .; then
       TS_FAIL=$(date +"%Y-%m-%d %H:%M:%S")
-      FAIL_DESCRIPTION="**Host:** ${HOSTNAME}\n**Time:** ${TS_FAIL}\n**Error:** Archive creation failed"
-      discord_notify "FAILED" "🚨 Backup FAILED" "$FAIL_DESCRIPTION"
+      discord_notify "FAILED" "🚨 Backup FAILED" "**Host:** ${HOSTNAME}\n**Time:** ${TS_FAIL}\n**Error:** Archive creation failed"
       exit 1
     fi
 
-    # Generate report
     TS_END=$(date +"%Y-%m-%d %H:%M:%S")
     FILE_NAME=$(basename "$ARCHIVE")
     FILE_SIZE=$(du -h "$ARCHIVE" | cut -f1)
@@ -140,23 +132,22 @@ data:
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: pg-dumps
+  name: mariadb-dumps
   namespace: tools
 spec:
-  schedule: "20 0 * * *"   # every day @ 00:20 UTC+7
+  schedule: "10 0 * * *"
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3
   jobTemplate:
     spec:
       backoffLimit: 0
-      # ttlSecondsAfterFinished: 600 
       template:
         spec:
           nodeSelector:
             kubernetes.io/arch: amd64
           containers:
-          - name: postgres-dumper
-            image: pgautoupgrade/pgautoupgrade:latest@sha256:eb01fb6da266558bf3afbd1c6b090343404be94c2c2f98d11ffb64e1a252cd3a
+          - name: mariadb-dumper
+            image: alpine:3.21
             imagePullPolicy: Always
             env:
             - name: DISCORD_WEBHOOK_URL
@@ -164,34 +155,34 @@ spec:
                 secretKeyRef:
                   name: discord-cred
                   key: DISCORD_URL
-            command: ["/bin/sh", "/scripts/pg-dump.sh"]
+            command: ["/bin/sh", "/scripts/mariadb-dump.sh"]
             volumeMounts:
             - name: localtime
               mountPath: /etc/localtime
               readOnly: true
-            - name: pg-dumps
+            - name: mariadb-dumps
               mountPath: /dumps
-            - name: postgres-creds
+            - name: db-creds
               mountPath: /etc/creds
               readOnly: true
-            - name: pg-dump-config
+            - name: mariadb-dump-config
               mountPath: /scripts
           volumes:
-          - name: pg-dump-config
+          - name: mariadb-dump-config
             configMap:
-              name: pg-dump-config
+              name: mariadb-dump-config
               defaultMode: 0744
           - name: localtime
             hostPath:
               path: /etc/localtime
               type: File
-          - name: pg-dumps
+          - name: mariadb-dumps
             hostPath:
-              path: /mnt/cephfs/docker/tools/postgres/backup/pg-dumps
+              path: /mnt/cephfs/docker/tools/mariadb/backup/dumps
               type: Directory
-          - name: postgres-creds
+          - name: db-creds
             secret:
-              secretName: db-cred
+              secretName: mariadb-cred
               items:
               - key: username
                 path: username
@@ -202,22 +193,21 @@ spec:
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: pg-snapshots
+  name: mariadb-snapshots
   namespace: tools
 spec:
-  schedule: "50 0 * * *"  # Daily at 00:50 UTC+7
+  schedule: "40 0 * * *"
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3
   jobTemplate:
     spec:
       backoffLimit: 0
-      # ttlSecondsAfterFinished: 600
       template:
         spec:
           nodeSelector:
             kubernetes.io/arch: amd64
           containers:
-          - name: phostgres-snapshotter
+          - name: mariadb-snapshotter
             image: alpine:3.21
             imagePullPolicy: Always
             env:
@@ -226,36 +216,33 @@ spec:
                 secretKeyRef:
                   name: discord-cred
                   key: DISCORD_URL
-            command: ["/bin/sh", "/scripts/pg-snapshot.sh"]
+            command: ["/bin/sh", "/scripts/mariadb-snapshot.sh"]
             volumeMounts:
             - name: localtime
               mountPath: /etc/localtime
               readOnly: true
-            - name: pgdata
-              mountPath: /pgdata
+            - name: mariadb-data
+              mountPath: /mariadadata
               readOnly: true
-            - name: pg-snapshots
+            - name: mariadb-snapshots
               mountPath: /snapshots
-            - name: postgres-creds
-              mountPath: /etc/creds
-              readOnly: true
-            - name: pg-snapshot-config
+            - name: mariadb-snapshot-config
               mountPath: /scripts
           volumes:
           - name: localtime
             hostPath:
               path: /etc/localtime
               type: File
-          - name: pg-snapshot-config
+          - name: mariadb-snapshot-config
             configMap:
-              name: pg-snapshot-config
+              name: mariadb-snapshot-config
               defaultMode: 0744
-          - name: pgdata
+          - name: mariadb-data
             hostPath:
-              path: /mnt/cephfs/docker/tools/postgres/data
+              path: /mnt/cephfs/docker/tools/mariadb/data
               type: Directory
-          - name: pg-snapshots
+          - name: mariadb-snapshots
             hostPath:
-              path: /mnt/cephfs/docker/tools/postgres/backup/pg-snapshots
+              path: /mnt/cephfs/docker/tools/mariadb/backup/snapshots
               type: Directory
           restartPolicy: Never
