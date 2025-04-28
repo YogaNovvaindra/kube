@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: backup
+  namespace: argocd
+spec:
+  destination:
+    namespace: tools
+    server: https://kubernetes.default.svc
+  source:
+    path: backup
+    repoURL: https://github.com/YogaNovvaindra/kube.git
+    targetRevision: HEAD
+  sources: []
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
