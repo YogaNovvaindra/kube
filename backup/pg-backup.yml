@@ -4,7 +4,7 @@ metadata:
   name: postgres-dumps
   namespace: tools
 spec:
-  schedule: "03 07 * * *"   # every day @ 00:20 UTC+7
+  schedule: "20 00 * * *"   # every day @ 00:20 UTC+7
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3
   jobTemplate:
@@ -141,7 +141,7 @@ metadata:
   name: postgres-snapshots
   namespace: tools
 spec:
-  schedule: "55 06 * * *"  # Daily at 00:50 UTC+7
+  schedule: "50 00 * * *"  # Daily at 00:50 UTC+7
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3
   jobTemplate:
