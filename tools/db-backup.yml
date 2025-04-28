@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: pg-dump-config
+  name: tools-pg-dump-config
   namespace: tools
 data:
   pg-dump.sh: |
@@ -146,6 +146,7 @@ spec:
   schedule: "20 0 * * *"   # every day @ 00:20 UTC+7
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 2
   jobTemplate:
     spec:
       backoffLimit: 0
@@ -202,12 +203,13 @@ spec:
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: pg-snapshots
+  name: tools-pg-snapshots
   namespace: tools
 spec:
   schedule: "50 0 * * *"  # Daily at 00:50 UTC+7
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 2
   jobTemplate:
     spec:
       backoffLimit: 0
@@ -236,9 +238,6 @@ spec:
               readOnly: true
             - name: pg-snapshots
               mountPath: /snapshots
-            - name: postgres-creds
-              mountPath: /etc/creds
-              readOnly: true
             - name: pg-snapshot-config
               mountPath: /scripts
           volumes:
@@ -257,5 +256,256 @@ spec:
           - name: pg-snapshots
             hostPath:
               path: /mnt/cephfs/docker/tools/postgres/backup/pg-snapshots
+              type: Directory
+          restartPolicy: Never
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mariadb-dump-config
+  namespace: tools
+data:
+  mariadb-dump.sh: |
+    #!/bin/sh
+    apk add --no-cache curl mariadb-client
+    set -eo pipefail
+    set -o errtrace
+
+    # Discord notification helper
+    discord_notify() {
+      local status="$1"    # "SUCCESS" or "FAILED"
+      local title="$2"
+      local description="$3"
+      local color=$([ "$status" = "SUCCESS" ] && echo 3066993 || echo 15158332)
+
+      curl -sSL -H "Content-Type: application/json" \
+        -X POST "$DISCORD_WEBHOOK_URL" \
+        -d "{
+          \"embeds\": [{
+            \"title\": \"$title\",
+            \"description\": \"$description\",
+            \"color\": $color
+          }]
+        }"
+    }
+
+    # Global timestamp and cleanup
+    TS_INIT=$(date +"%Y-%m-%d %H:%M:%S")
+    BACKUP_ROOT="/dumps/$(date +%Y-%m-%d)"
+    export MYSQL_PWD=$(cat /etc/creds/password)
+    USER=$(cat /etc/creds/username)
+    HOST=mariadb
+
+    # Error handler
+    fail() {
+      TS_FAIL=$(date +"%Y-%m-%d %H:%M:%S")
+      DURATION=$(( $(date +%s) - $(date -d "$TS_INIT" +%s) ))
+      discord_notify "FAILED" "🚨 Backup FAILED" \
+        "**Host:** $HOSTNAME\n**Time:** $TS_FAIL\n**Duration:** ${DURATION}s\n**Error:** Check pod logs for details."
+      exit 1
+    }
+    trap fail ERR
+
+    # Starting notification
+    discord_notify "SUCCESS" "🔔 Backup Starting" \
+      "**Host:** $HOSTNAME\n**Time:** $TS_INIT\n**Action:** Starting logical backups"
+
+    # Main operations
+    mkdir -p "$BACKUP_ROOT"
+    DBS=$(mysql -h $HOST -u $USER -sN -e "SHOW DATABASES WHERE \`Database\` NOT IN ('information_schema', 'performance_schema', 'mysql')")
+
+    SUMMARY=""
+    COUNT=0
+
+    for db in $DBS; do
+      COUNT=$((COUNT+1))
+      SIZE=$(mysql -h $HOST -u $USER -sN -e "SELECT CONCAT(ROUND(SUM(data_length + index_length) / 1024 / 1024, 2), ' MB') FROM information_schema.TABLES WHERE table_schema = '$db'")
+      
+      TIMESTAMP=$(date +%H%M%S)
+      OUTFILE="$BACKUP_ROOT/${db}_${TIMESTAMP}.sql.gz"
+      mysqldump -h $HOST -u $USER --single-transaction --routines --triggers "$db" | gzip > "$OUTFILE"
+      FILESIZE=$(du -h "$OUTFILE" | cut -f1)
+      sha256sum "$OUTFILE" >> "$BACKUP_ROOT/checksums.sha256"
+
+      SUMMARY="${SUMMARY}• **${db}** — DB size: ${SIZE}, dump: ${FILESIZE}\n"
+    done
+
+    # Cleanup old backups
+    find /dumps -type f -mtime +7 -delete
+    find /dumps -type d -empty -delete
+
+    # Success notification
+    TS_END=$(date +"%Y-%m-%d %H:%M:%S")
+    DURATION=$(( $(date +%s) - $(date -d "$TS_INIT" +%s) ))
+    FINAL_DESC="**Host:** $HOSTNAME\n**Time:** $TS_END\n**Duration:** ${DURATION}s\n\n"
+    FINAL_DESC="${FINAL_DESC}${SUMMARY}\n**Total databases:** $COUNT"
+
+    discord_notify "SUCCESS" "✅ All Backups Succeeded" "$FINAL_DESC"
+    echo "✅ All done!"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mariadb-snapshot-config
+  namespace: tools
+data:
+  mariadb-snapshot.sh: |
+    #!/bin/sh
+    set -euo pipefail
+
+    apk add --no-cache curl zip
+
+    # Discord notification helper
+    discord_notify() {
+      local status="$1"
+      local title="$2"
+      local description="$3"
+      local color=$([ "$status" = "SUCCESS" ] && echo 3066993 || echo 15158332)
+      curl -sSL -H "Content-Type: application/json" \
+        -X POST "$DISCORD_WEBHOOK_URL" \
+        -d "{\"embeds\":[{\"title\":\"$title\",\"description\":\"$description\",\"color\":$color}]}"
+    }
+
+    TS_INIT=$(date +"%Y-%m-%d %H:%M:%S")
+    discord_notify "SUCCESS" "🔔 Backup Starting" "**Host:** ${HOSTNAME}\n**Time:** ${TS_INIT}\n**Action:** Starting filesystem backup"
+
+    TIMESTAMP=$(date +%Y%m%d%H%M%S)
+    ARCHIVE="/snapshots/mariadb-backup-${TIMESTAMP}.zip"
+    cd /mariadadata || exit 1
+
+    if ! zip -rq "$ARCHIVE" .; then
+      TS_FAIL=$(date +"%Y-%m-%d %H:%M:%S")
+      discord_notify "FAILED" "🚨 Backup FAILED" "**Host:** ${HOSTNAME}\n**Time:** ${TS_FAIL}\n**Error:** Archive creation failed"
+      exit 1
+    fi
+
+    TS_END=$(date +"%Y-%m-%d %H:%M:%S")
+    FILE_NAME=$(basename "$ARCHIVE")
+    FILE_SIZE=$(du -h "$ARCHIVE" | cut -f1)
+
+    SUMMARY="**Host:** ${HOSTNAME}\n**Time:** ${TS_END}\n"
+    SUMMARY="${SUMMARY}**Duration:** $(( $(date +%s) - $(date -d "$TS_INIT" +%s) )) seconds\n"
+    SUMMARY="${SUMMARY}**Archive:** ${FILE_NAME} (${FILE_SIZE})"
+
+    discord_notify "SUCCESS" "✅ Backup Succeeded" "$SUMMARY"
+    echo "✅ Backup completed successfully!"
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: tools-mariadb-dumps
+  namespace: tools
+spec:
+  schedule: "10 0 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 2
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          nodeSelector:
+            kubernetes.io/arch: amd64
+          containers:
+          - name: mariadb-dumper
+            image: alpine:3.21
+            imagePullPolicy: Always
+            env:
+            - name: DISCORD_WEBHOOK_URL
+              valueFrom:
+                secretKeyRef:
+                  name: discord-cred
+                  key: DISCORD_URL
+            command: ["/bin/sh", "/scripts/mariadb-dump.sh"]
+            volumeMounts:
+            - name: localtime
+              mountPath: /etc/localtime
+              readOnly: true
+            - name: mariadb-dumps
+              mountPath: /dumps
+            - name: db-creds
+              mountPath: /etc/creds
+              readOnly: true
+            - name: mariadb-dump-config
+              mountPath: /scripts
+          volumes:
+          - name: mariadb-dump-config
+            configMap:
+              name: mariadb-dump-config
+              defaultMode: 0744
+          - name: localtime
+            hostPath:
+              path: /etc/localtime
+              type: File
+          - name: mariadb-dumps
+            hostPath:
+              path: /mnt/cephfs/docker/tools/mariadb/backup/dumps
+              type: Directory
+          - name: db-creds
+            secret:
+              secretName: mariadb-cred
+              items:
+              - key: username
+                path: username
+              - key: password
+                path: password
+          restartPolicy: Never
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: tools-mariadb-snapshots
+  namespace: tools
+spec:
+  schedule: "40 0 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 2
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          nodeSelector:
+            kubernetes.io/arch: amd64
+          containers:
+          - name: mariadb-snapshotter
+            image: alpine:3.21
+            imagePullPolicy: Always
+            env:
+            - name: DISCORD_WEBHOOK_URL
+              valueFrom:
+                secretKeyRef:
+                  name: discord-cred
+                  key: DISCORD_URL
+            command: ["/bin/sh", "/scripts/mariadb-snapshot.sh"]
+            volumeMounts:
+            - name: localtime
+              mountPath: /etc/localtime
+              readOnly: true
+            - name: mariadb-data
+              mountPath: /mariadadata
+              readOnly: true
+            - name: mariadb-snapshots
+              mountPath: /snapshots
+            - name: mariadb-snapshot-config
+              mountPath: /scripts
+          volumes:
+          - name: localtime
+            hostPath:
+              path: /etc/localtime
+              type: File
+          - name: mariadb-snapshot-config
+            configMap:
+              name: mariadb-snapshot-config
+              defaultMode: 0744
+          - name: mariadb-data
+            hostPath:
+              path: /mnt/cephfs/docker/tools/mariadb/data
+              type: Directory
+          - name: mariadb-snapshots
+            hostPath:
+              path: /mnt/cephfs/docker/tools/mariadb/backup/snapshots
               type: Directory
           restartPolicy: Never

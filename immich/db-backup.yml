@@ -1,0 +1,111 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pg-snapshot-config
+  namespace: immich
+data:
+  pg-snapshot.sh: |
+    #!/bin/sh
+    set -euo pipefail
+
+    # Install required tools
+    apk add --no-cache curl zip
+
+    # Discord notification helper
+    discord_notify() {
+      local status="$1"
+      local title="$2"
+      local description="$3"
+      local color=$([ "$status" = "SUCCESS" ] && echo 3066993 || echo 15158332)
+      curl -sSL -H "Content-Type: application/json" \
+        -X POST "$DISCORD_WEBHOOK_URL" \
+        -d "{\"embeds\":[{\"title\":\"$title\",\"description\":\"$description\",\"color\":$color}]}"
+    }
+
+    # Main execution
+    TS_INIT=$(date +"%Y-%m-%d %H:%M:%S")
+    START_DESCRIPTION="**Host:** ${HOSTNAME}\n**Time:** ${TS_INIT}\n**Action:** Starting backup"
+    discord_notify "SUCCESS" "🔔 Backup Starting" "$START_DESCRIPTION"
+
+    # Create backup
+    TIMESTAMP=$(date +%Y%m%d%H%M%S)
+    ARCHIVE="/snapshots/postgres-backup-${TIMESTAMP}.zip"
+    cd /pgdata || exit 1
+
+    if ! zip -rq "$ARCHIVE" .; then
+      TS_FAIL=$(date +"%Y-%m-%d %H:%M:%S")
+      FAIL_DESCRIPTION="**Host:** ${HOSTNAME}\n**Time:** ${TS_FAIL}\n**Error:** Archive creation failed"
+      discord_notify "FAILED" "🚨 Backup FAILED" "$FAIL_DESCRIPTION"
+      exit 1
+    fi
+
+    # Generate report
+    TS_END=$(date +"%Y-%m-%d %H:%M:%S")
+    FILE_NAME=$(basename "$ARCHIVE")
+    FILE_SIZE=$(du -h "$ARCHIVE" | cut -f1)
+
+    SUMMARY="**Host:** ${HOSTNAME}\n**Time:** ${TS_END}\n"
+    SUMMARY="${SUMMARY}**Duration:** $(( $(date +%s) - $(date -d "$TS_INIT" +%s) )) seconds\n"
+    SUMMARY="${SUMMARY}**Archive:** ${FILE_NAME} (${FILE_SIZE})"
+
+    discord_notify "SUCCESS" "✅ Backup Succeeded" "$SUMMARY"
+    echo "✅ Backup completed successfully!"
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: immich-pg-snapshots
+  namespace: immich
+spec:
+  schedule: "30 0 * * *"  # Daily at 00:30
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 2
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      # ttlSecondsAfterFinished: 600
+      template:
+        spec:
+          nodeSelector:
+            kubernetes.io/arch: amd64
+          containers:
+          - name: phostgres-snapshotter
+            image: alpine:3.21
+            imagePullPolicy: Always
+            env:
+            - name: DISCORD_WEBHOOK_URL
+              valueFrom:
+                secretKeyRef:
+                  name: discord-cred
+                  key: DISCORD_URL
+            command: ["/bin/sh", "/scripts/pg-snapshot.sh"]
+            volumeMounts:
+            - name: localtime
+              mountPath: /etc/localtime
+              readOnly: true
+            - name: pgdata
+              mountPath: /pgdata
+              readOnly: true
+            - name: pg-snapshots
+              mountPath: /snapshots
+            - name: pg-snapshot-config
+              mountPath: /scripts
+          volumes:
+          - name: localtime
+            hostPath:
+              path: /etc/localtime
+              type: File
+          - name: pg-snapshot-config
+            configMap:
+              name: pg-snapshot-config
+              defaultMode: 0744
+          - name: pgdata
+            hostPath:
+              path: /mnt/cephfs/docker/immich/postgres16
+              type: Directory
+          - name: pg-snapshots
+            hostPath:
+              path: /mnt/cephfs/docker/immich/postgres-backup
+              type: Directory
+          restartPolicy: Never
