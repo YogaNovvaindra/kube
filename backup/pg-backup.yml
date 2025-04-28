@@ -91,19 +91,11 @@ metadata:
   namespace: tools
 data:
   pg-snapshot.sh: |
-    #!/usr/bin/env sh
-    apk add --no-cache curl jq zip
+    #!/bin/sh
     set -euo pipefail
 
-    # Cleanup function to restore replicas
-    cleanup() {
-      echo "Restoring deployment to $REPLICAS replicas"
-      if kubectl scale deploy "$DEPLOY" -n "$NS" --replicas="$REPLICAS"; then
-        echo "Deployment restored"
-      else
-        echo "Error restoring deployment!" >&2
-      fi
-    }
+    # Install required tools
+    apk add --no-cache curl zip
 
     # Discord notification helper
     discord_notify() {
@@ -117,48 +109,18 @@ data:
     }
 
     # Main execution
-    DEPLOY="postgres"
-    NS="tools"
-
-    # Get initial replica count
-    REPLICAS=$(kubectl get deploy "$DEPLOY" -n "$NS" -o jsonpath='{.spec.replicas}')
-
-    # Register cleanup trap
-    trap cleanup EXIT
-
-    # Start backup process
     TS_INIT=$(date +"%Y-%m-%d %H:%M:%S")
-    START_DESCRIPTION="**Host:** ${HOSTNAME}\n**Time:** ${TS_INIT}\n**Action:** Scaling $DEPLOY from $REPLICAS to 0"
+    START_DESCRIPTION="**Host:** ${HOSTNAME}\n**Time:** ${TS_INIT}\n**Action:** Starting backup"
     discord_notify "SUCCESS" "🔔 Backup Starting" "$START_DESCRIPTION"
-
-    # Scale down
-    if ! kubectl scale deploy "$DEPLOY" -n "$NS" --replicas=0; then
-      TS_FAIL=$(date +"%Y-%m-%d %H:%M:%S")
-      DURATION=$(( $(date +%s) - $(date -d "$TS_INIT" +%s) ))
-      FAIL_DESCRIPTION="**Host:** ${HOSTNAME}\n**Time:** ${TS_FAIL}\n**Duration:** ${DURATION} seconds\n**Error:** Failed to scale down"
-      discord_notify "FAILED" "🚨 Backup FAILED" "$FAIL_DESCRIPTION"
-      exit 1
-    fi
-
-    # Wait for termination
-    echo "Waiting for pods to terminate..."
-    timeout 300s bash -c "while kubectl get pods -n $NS -l app=$DEPLOY -o json | jq -e '.items | length > 0' >/dev/null; do sleep 5; done" || {
-      TS_FAIL=$(date +"%Y-%m-%d %H:%M:%S")
-      DURATION=$(( $(date +%s) - $(date -d "$TS_INIT" +%s) ))
-      FAIL_DESCRIPTION="**Host:** ${HOSTNAME}\n**Time:** ${TS_FAIL}\n**Duration:** ${DURATION} seconds\n**Error:** Pods did not terminate in time"
-      discord_notify "FAILED" "🚨 Backup FAILED" "$FAIL_DESCRIPTION"
-      exit 1
-    }
 
     # Create backup
     TIMESTAMP=$(date +%Y%m%d%H%M%S)
-    ARCHIVE="/snapshots/${DEPLOY}-backup-${TIMESTAMP}.zip"
+    ARCHIVE="/snapshots/postgres-backup-${TIMESTAMP}.zip"
     cd /pgdata || exit 1
 
     if ! zip -rq "$ARCHIVE" .; then
       TS_FAIL=$(date +"%Y-%m-%d %H:%M:%S")
-      DURATION=$(( $(date +%s) - $(date -d "$TS_INIT" +%s) ))
-      FAIL_DESCRIPTION="**Host:** ${HOSTNAME}\n**Time:** ${TS_FAIL}\n**Duration:** ${DURATION} seconds\n**Error:** Archive creation failed"
+      FAIL_DESCRIPTION="**Host:** ${HOSTNAME}\n**Time:** ${TS_FAIL}\n**Error:** Archive creation failed"
       discord_notify "FAILED" "🚨 Backup FAILED" "$FAIL_DESCRIPTION"
       exit 1
     fi
@@ -169,11 +131,11 @@ data:
     FILE_SIZE=$(du -h "$ARCHIVE" | cut -f1)
 
     SUMMARY="**Host:** ${HOSTNAME}\n**Time:** ${TS_END}\n"
-    SUMMARY+="**Duration:** $(( $(date +%s) - $(date -d "$TS_INIT" +%s) )) seconds\n"
-    SUMMARY+="**Archive:** ${FILE_NAME} (${FILE_SIZE})"
+    SUMMARY="${SUMMARY}**Duration:** $(( $(date +%s) - $(date -d "$TS_INIT" +%s) )) seconds\n"
+    SUMMARY="${SUMMARY}**Archive:** ${FILE_NAME} (${FILE_SIZE})"
 
     discord_notify "SUCCESS" "✅ Backup Succeeded" "$SUMMARY"
-    echo "🎉 Backup completed successfully!"
+    echo "✅ Backup completed successfully!"
 ---
 apiVersion: batch/v1
 kind: CronJob
@@ -252,12 +214,11 @@ spec:
       # ttlSecondsAfterFinished: 600
       template:
         spec:
-          serviceAccountName: backup-sa
           nodeSelector:
             kubernetes.io/arch: amd64
           containers:
           - name: phostgres-snapshotter
-            image: alpine/k8s:1.33.0
+            image: alpine:3.21
             imagePullPolicy: Always
             env:
             - name: DISCORD_WEBHOOK_URL
@@ -265,7 +226,7 @@ spec:
                 secretKeyRef:
                   name: discord-cred
                   key: DISCORD_URL
-            command: ["/bin/bash", "/scripts/pg-snapshot.sh"]
+            command: ["/bin/sh", "/scripts/pg-snapshot.sh"]
             volumeMounts:
             - name: localtime
               mountPath: /etc/localtime
