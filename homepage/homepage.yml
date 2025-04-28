@@ -47,7 +47,7 @@ spec:
                 name: homepage-cred
       containers:
         - name: homepage
-          image: ghcr.io/gethomepage/homepage:v1.1.1
+          image: ghcr.io/gethomepage/homepage:v1.2.0
           imagePullPolicy: Always
           resources:
             requests:
