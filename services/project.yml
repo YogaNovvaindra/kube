@@ -23,7 +23,7 @@ spec:
         runAsGroup: 0
       containers:
       - name: cloudflared
-        image: cloudflare/cloudflared:2025.4.0
+        image: cloudflare/cloudflared:2025.4.2
         imagePullPolicy: Always
         resources:
           requests:
