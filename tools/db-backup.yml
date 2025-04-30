@@ -140,7 +140,7 @@ data:
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: pg-dumps
+  name: tools-pg-dumps
   namespace: tools
 spec:
   schedule: "20 0 * * *"   # every day @ 00:20 UTC+7
