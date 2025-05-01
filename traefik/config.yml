@@ -13,7 +13,7 @@ data:
       plugins:
         traefik-umami-plugin:
           moduleName: "github.com/1cedsoda/traefik-umami-plugin"
-          version: "v2.17.0"
+          version: "v1.0.3"
 
     api:
       dashboard: true
@@ -56,7 +56,7 @@ data:
         http:
           middlewares:
             - "umami-analytics"
-            
+
       ssh:
         address: ":22"
       metrics:
@@ -92,14 +92,15 @@ data:
         umami-analytics:
           plugin:
             traefik-umami-plugin:
-              umamiHost: "umami-service:3000"  # Update with your Umami service name
-              websiteId: "YOUR_UMAMI_WEBSITE_UUID"
+              umamiHost: "umami.tools.svc.cluster.local:3000"  # Update with your Umami service name
+              websiteId: "7fae53a2-4ef1-4ae0-8bad-2678718ea10a"
               scriptInjection: true
               autoTrack: true
-              domains: ["your-domain.com"]
+              domains: ["ygnv.my.id"]
               serverSideTracking: false
               forwardPath: "/umami"
               scriptInjectionMode: "tag"
+
   proxmox.yml: |
     http:
       routers:
