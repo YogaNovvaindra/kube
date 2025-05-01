@@ -312,7 +312,7 @@ data:
 
     # Main operations
     mkdir -p "$BACKUP_ROOT"
-    DBS=$(mysql -h $HOST -u $USER -sN -e "SHOW DATABASES WHERE \`Database\` NOT IN ('information_schema', 'performance_schema', 'mysql')")
+    DBS=$(mysql -h $HOST -u $USER -sN -e "SHOW DATABASES WHERE \`Database\` NOT IN ('information_schema', 'performance_schema', 'mysql', 'sys')")
 
     SUMMARY=""
     COUNT=0

@@ -90,7 +90,7 @@ spec:
       volumes:
       - name: mariadb-data
         hostPath:
-          path: /mnt/cephfs/docker/services/mariadb
+          path: /mnt/cephfs/docker/services/mariadb/data
           type: Directory
 ---
 apiVersion: v1
