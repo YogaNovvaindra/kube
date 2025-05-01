@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: umami
+  namespace: tools
+  labels:
+    app: umami
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: umami
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: umami
+    spec:
+      containers:
+      - name: umami
+        image: ghcr.io/umami-software/umami:mysql-v2.17.0
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 128Mi
+        envFrom:
+        - secretRef:
+            name: umami-cred
+        ports:
+        - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: umami
+  namespace: tools
+spec:
+  selector:
+    app: umami
+  ports:
+  - port: 3000
+    targetPort: 3000
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: umami
+  namespace: tools
+  labels:
+    app: umami
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`umami.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: umami
+          port: 3000
+      middlewares:
+        - name: auth
+          namespace: tools
+  tls:
+    certResolver: letsencrypt
+    
