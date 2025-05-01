@@ -273,9 +273,9 @@ data:
     - Security:
       - Vaultwarden:
           icon: vaultwarden.png
-          href: https://vault.ygnv.my.id
+          href: https://vaultwarden.ygnv.my.id
           description: Self-hosted password manager (Bitwarden compatible)
-          # siteMonitor: https://vault.ygnv.my.id
+          # siteMonitor: https://vaultwarden.ygnv.my.id
       - Authentik:
           icon: authentik.png
           href: https://auth.ygnv.my.id
