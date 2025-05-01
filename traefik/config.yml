@@ -9,11 +9,11 @@ data:
       checkNewVersion: true
       sendAnonymousUsage: true
     
-    experimental:
-      plugins:
-        traefik-umami-plugin:
-          moduleName: "github.com/1cedsoda/traefik-umami-plugin"
-          version: "v1.0.3"
+    # experimental:
+    #   plugins:
+    #     traefik-umami-plugin:
+    #       moduleName: "github.com/1cedsoda/traefik-umami-plugin"
+    #       version: "v1.0.3"
 
     api:
       dashboard: true
@@ -42,8 +42,8 @@ data:
             entryPoint:
               to: https
               scheme: https
-          middlewares:
-            - "umami-analytics@file"
+          # middlewares:
+          #   - "umami-analytics@file"
       https:
         address: ":443"
         forwardedHeaders:
@@ -53,9 +53,9 @@ data:
         proxyProtocol:
           trustedIPs:
             - "0.0.0.0/0"
-        http:
-          middlewares:
-            - "umami-analytics@file"
+        # http:
+        #   middlewares:
+        #     - "umami-analytics@file"
 
       ssh:
         address: ":22"
@@ -86,20 +86,20 @@ data:
               - "1.1.1.1:53"
               - "1.0.0.1:53"
   
-  dynamic.yml: |
-    http:
-      middlewares:
-        umami-analytics:
-          plugin:
-            traefik-umami-plugin:
-              umamiHost: "umami.tools.svc.cluster.local:3000"  # Update with your Umami service name
-              websiteId: "7fae53a2-4ef1-4ae0-8bad-2678718ea10a"
-              scriptInjection: true
-              autoTrack: true
-              domains: ["ygnv.my.id"]
-              serverSideTracking: false
-              forwardPath: "/umami"
-              scriptInjectionMode: "tag"
+  # dynamic.yml: |
+  #   http:
+  #     middlewares:
+  #       umami-analytics:
+  #         plugin:
+  #           traefik-umami-plugin:
+  #             umamiHost: "umami.tools.svc.cluster.local:3000"  # Update with your Umami service name
+  #             websiteId: "7fae53a2-4ef1-4ae0-8bad-2678718ea10a"
+  #             scriptInjection: true
+  #             autoTrack: true
+  #             domains: ["ygnv.my.id"]
+  #             serverSideTracking: false
+  #             forwardPath: "/umami"
+  #             scriptInjectionMode: "tag"
 
   proxmox.yml: |
     http:
