@@ -43,7 +43,7 @@ data:
               to: https
               scheme: https
           middlewares:
-            - "umami-analytics"
+            - "umami-analytics@file"
       https:
         address: ":443"
         forwardedHeaders:
@@ -55,7 +55,7 @@ data:
             - "0.0.0.0/0"
         http:
           middlewares:
-            - "umami-analytics"
+            - "umami-analytics@file"
 
       ssh:
         address: ":22"
