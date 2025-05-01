@@ -60,9 +60,6 @@ spec:
       services:
         - name: umami
           port: 3000
-      middlewares:
-        - name: auth
-          namespace: tools
   tls:
     certResolver: cloudflare
     
