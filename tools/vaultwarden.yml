@@ -27,6 +27,9 @@ spec:
             memory: 32Mi
         ports:
         - containerPort: 80
+        env:
+        - name: DOMAIN
+          value: "https://vaultwarden.ygnv.my.id"
         volumeMounts:
         - name: vaultwarden-data
           mountPath: /data
