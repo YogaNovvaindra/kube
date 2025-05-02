@@ -1,31 +1,32 @@
 apiVersion: apps/v1
-Deployment:
+kind: Deployment
+metadata:
   name: portfolio
   namespace: services
   labels:
     app: portfolio
-  spec:
-    replicas: 1
-    revisionHistoryLimit: 3
-    selector:
-      matchLabels:
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: portfolio
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
         app: portfolio
-    strategy:
-      type: RollingUpdate
-    template:
-      metadata:
-        labels:
-          app: portfolio
-      spec:
-        containers:
-        - name: portfolio
-          image: ghcr.io/yoganovvaindra/portfolio:v0.1.0
-          imagePullPolicy: Always
-          resources:
-            requests:
-              memory: 64Mi
-          ports:
-          - containerPort: 80
+    spec:
+      containers:
+      - name: portfolio
+        image: ghcr.io/yoganovvaindra/portfolio:latest
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 64Mi
+        ports:
+        - containerPort: 80
          
 ---
 apiVersion: v1
