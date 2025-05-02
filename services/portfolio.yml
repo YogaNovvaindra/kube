@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: portfolio
-        image: ghcr.io/yoganovvaindra/portfolio:latest
+        image: ghcr.io/yoganovvaindra/portfolio:0.1.1
         imagePullPolicy: Always
         resources:
           requests:
