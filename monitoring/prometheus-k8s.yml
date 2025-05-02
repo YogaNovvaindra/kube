@@ -176,7 +176,7 @@ spec:
               name: prometheus-cred
       containers:
       - name: prometheus
-        image: prom/prometheus:v3.3.0
+        image: prom/prometheus:v3.3.1
         imagePullPolicy: Always
         resources:
           requests:
