@@ -21,27 +21,27 @@ spec:
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchLabels:
-                  app: cloudflared
-              topologyKey: kubernetes.io/hostname
-        # securityContext:
-        #   runAsUser: 0
-        #   runAsGroup: 0
-        containers:
-          - name: cloudflared
-            image: cloudflare/cloudflared:2025.4.2
-            imagePullPolicy: Always
-            resources:
-              requests:
-                memory: 64Mi
-            envFrom:
-              - secretRef:
-                  name: cloudflared-cred
-            args:
-              - "tunnel"
-              - "--no-autoupdate"
-              - "run"
+          - labelSelector:
+              matchLabels:
+                app: cloudflared
+            topologyKey: kubernetes.io/hostname
+      # securityContext:
+      #   runAsUser: 0
+      #   runAsGroup: 0
+      containers:
+      - name: cloudflared
+        image: cloudflare/cloudflared:2025.4.2
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 64Mi
+        envFrom:
+        - secretRef:
+            name: cloudflared-cred
+        args: 
+          - "tunnel"
+          -  "--no-autoupdate"
+          - "run"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -67,38 +67,38 @@ spec:
         kubernetes.io/arch: amd64
       terminationGracePeriodSeconds: 10
       containers:
-        - name: mariadb
-          image: mariadb:11.7.2
-          imagePullPolicy: Always
-          resources:
-            requests:
-              memory: 256Mi
-          env:
-            - name: MYSQL_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mariadb-cred
-                  key: password
-            - name: MYSQL_USER
-              valueFrom:
-                secretKeyRef:
-                  name: mariadb-cred
-                  key: username
-            - name: MYSQL_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mariadb-cred
-                  key: password
-          ports:
-            - containerPort: 3306
-          volumeMounts:
-            - name: mariadb-data
-              mountPath: /var/lib/mysql
-      volumes:
+      - name: mariadb
+        image: mariadb:11.7.2
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 256Mi
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-cred
+              key: password
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-cred
+              key: username
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-cred
+              key: password
+        ports:
+        - containerPort: 3306
+        volumeMounts:
         - name: mariadb-data
-          hostPath:
-            path: /mnt/cephfs/docker/services/mariadb/data
-            type: Directory
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mariadb-data
+        hostPath:
+          path: /mnt/cephfs/docker/services/mariadb/data
+          type: Directory
 ---
 apiVersion: v1
 kind: Service
@@ -111,8 +111,8 @@ spec:
   selector:
     app: mariadb
   ports:
-    - port: 3306
-      targetPort: 3306
+  - port: 3306
+    targetPort: 3306
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -135,21 +135,21 @@ spec:
         app: phpmyadmin
     spec:
       containers:
-        - name: phpmyadmin
-          image: phpmyadmin:5.2.2
-          imagePullPolicy: Always
-          resources:
-            requests:
-              memory: 64Mi
-          env:
-            - name: PMA_HOST
-              value: "mariadb"
-            - name: PMA_PORT
-              value: "3306"
-            - name: UPLOAD_LIMIT
-              value: "1G"
-          ports:
-            - containerPort: 80
+      - name: phpmyadmin
+        image: phpmyadmin:5.2.2
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 64Mi
+        env:
+        - name: PMA_HOST
+          value: "mariadb"
+        - name: PMA_PORT
+          value: "3306"
+        - name: UPLOAD_LIMIT
+          value: "1G"
+        ports:
+        - containerPort: 80
 ---
 apiVersion: v1
 kind: Service
@@ -162,8 +162,8 @@ spec:
   selector:
     app: phpmyadmin
   ports:
-    - port: 80
-      targetPort: 80
+  - port: 80
+    targetPort: 80
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
@@ -192,7 +192,7 @@ metadata:
     app: linear-next
   annotations:
     keel.sh/policy: force
-    keel.sh/trigger: poll
+    keel.sh/trigger: poll 
     keel.sh/match-tag: "true"
     keel.sh/pollSchedule: "@every 6h"
 spec:
@@ -211,30 +211,30 @@ spec:
       nodeSelector:
         kubernetes.io/arch: amd64
       containers:
-        - name: linear-next
-          image: yoganovaindra/linear-next:latest
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 3000
-          env:
-            - name: DATABASE_URL
-              valueFrom:
-                secretKeyRef:
-                  name: linear-cred
-                  key: db-url
-            - name: NEXTAUTH_URL
-              value: "https://linear.yoganova.my.id/"
-          resources:
-            requests:
-              memory: 256Mi
-          volumeMounts:
-            - name: linear-data
-              mountPath: /app/upload
-      volumes:
+      - name: linear-next
+        image: yoganovaindra/linear-next:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: linear-cred
+              key: db-url
+        - name: NEXTAUTH_URL
+          value: "https://linear.yoganova.my.id/"
+        resources:
+          requests:
+            memory: 256Mi
+        volumeMounts:
         - name: linear-data
-          hostPath:
-            path: /mnt/cephfs/docker/services/linear-next
-            type: Directory
+          mountPath: /app/upload
+      volumes:
+      - name: linear-data
+        hostPath:
+          path: /mnt/cephfs/docker/services/linear-next
+          type: Directory
 ---
 apiVersion: v1
 kind: Service
@@ -248,8 +248,8 @@ spec:
     app: linear-next
   type: ClusterIP
   ports:
-    - port: 3000
-      targetPort: 3000
+  - port: 3000
+    targetPort: 3000
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -274,27 +274,27 @@ spec:
       nodeSelector:
         kubernetes.io/arch: amd64
       containers:
-        - name: tolonto
-          image: jakubboucek/lamp-devstack-php:8.4.6
-          imagePullPolicy: Always
-          resources:
-            requests:
-              memory: 64Mi
-          ports:
-            - containerPort: 80
-          env:
-            - name: TZ
-              value: "Asia/Jakarta"
-            - name: APACHE_DOCUMENT_ROOT
-              value: "/var/www/html"
-          volumeMounts:
-            - name: tolonto-data
-              mountPath: /var/www/html
-      volumes:
+      - name: tolonto
+        image: jakubboucek/lamp-devstack-php:8.4.6
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 64Mi
+        ports:
+        - containerPort: 80
+        env:
+        - name: TZ
+          value: "Asia/Jakarta"
+        - name: APACHE_DOCUMENT_ROOT
+          value: "/var/www/html"
+        volumeMounts:
         - name: tolonto-data
-          hostPath:
-            path: /mnt/cephfs/docker/services/tolonto
-            type: Directory
+          mountPath: /var/www/html
+      volumes:
+      - name: tolonto-data
+        hostPath:
+          path: /mnt/cephfs/docker/services/tolonto
+          type: Directory
 ---
 apiVersion: v1
 kind: Service
@@ -308,5 +308,5 @@ spec:
     app: tolonto
   type: ClusterIP
   ports:
-    - port: 80
-      targetPort: 80
+  - port: 80
+    targetPort: 80
