@@ -21,9 +21,10 @@ spec:
       nodeSelector:
         kubernetes.io/hostname: kube-2
       securityContext:
-        supplementalGroups:
-          - 44   # GID for video group
-          - 109  # GID for render group
+        # supplementalGroups:
+        #   - 44   # GID for video group
+        #   - 109  # GID for render group
+        privileged: true
       containers:
       - name: plex
         image: lscr.io/linuxserver/plex:1.41.6
@@ -128,9 +129,10 @@ spec:
       nodeSelector:
         kubernetes.io/hostname: kube-2
       securityContext:
-        supplementalGroups:
-          - 44   # GID for video group
-          - 109  # GID for render group
+        # supplementalGroups:
+        #   - 44   # GID for video group
+        #   - 109  # GID for render group
+        privileged: true
       containers:
       - name: jellyfin
         image: ghcr.io/jellyfin/jellyfin:10.10.7
