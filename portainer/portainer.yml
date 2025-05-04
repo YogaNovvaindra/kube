@@ -55,6 +55,7 @@ metadata:
   name: portainer-agent
   namespace: portainer
 spec:
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
       app: portainer-agent
