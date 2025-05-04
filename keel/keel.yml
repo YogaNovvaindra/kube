@@ -117,6 +117,7 @@ metadata:
     app: keel
 spec:
   replicas: 1
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
       app: keel
