@@ -27,7 +27,9 @@ spec:
             memory: 32Mi
         ports:
         - containerPort: 80
-         
+        env:
+        - name: TZ
+          value: Asia/Jakarta
 ---
 apiVersion: v1
 kind: Service
