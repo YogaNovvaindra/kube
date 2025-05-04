@@ -20,11 +20,10 @@ spec:
     spec:
       nodeSelector:
         kubernetes.io/hostname: kube-2
-      securityContext:
-        # supplementalGroups:
-        #   - 44   # GID for video group
-        #   - 109  # GID for render group
-        privileged: true
+      # securityContext:
+      #   supplementalGroups:
+      #     - 44   # GID for video group
+      #     - 109  # GID for render group
       containers:
       - name: plex
         image: lscr.io/linuxserver/plex:1.41.6
@@ -50,6 +49,8 @@ spec:
           mountPath: /tv
         - name: plex-movies
           mountPath: /movies
+        securityContext:
+          privileged: false
       volumes:
       - name: dev-dri
         hostPath:
@@ -128,11 +129,10 @@ spec:
     spec:
       nodeSelector:
         kubernetes.io/hostname: kube-2
-      securityContext:
-        # supplementalGroups:
-        #   - 44   # GID for video group
-        #   - 109  # GID for render group
-        privileged: true
+      # securityContext:
+      #   supplementalGroups:
+      #     - 44   # GID for video group
+      #     - 109  # GID for render group
       containers:
       - name: jellyfin
         image: ghcr.io/jellyfin/jellyfin:10.10.7
@@ -156,6 +156,8 @@ spec:
           mountPath: /data/tvshows
         - name: jellyfin-movies
           mountPath: /data/movies
+        securityContext:
+          privileged: true
       volumes:
       - name: dev-dri
         hostPath:
