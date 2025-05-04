@@ -80,8 +80,8 @@ spec:
           name: dri-device
         - mountPath: /dev/bus/usb
           name: usb-devices
-      securityContext:
-        privileged: true
+        securityContext:
+          privileged: true
       volumes:
       - name: config-volume
         hostPath:
