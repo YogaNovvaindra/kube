@@ -81,9 +81,7 @@ spec:
         - mountPath: /dev/bus/usb
           name: usb-devices
       securityContext:
-        runAsUser: 0
-        runAsGroup: 0
-        supplementalGroups: [44]  # Video group for GPU access
+        privileged: true
       volumes:
       - name: config-volume
         hostPath:

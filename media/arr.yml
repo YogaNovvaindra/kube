@@ -8,6 +8,7 @@ metadata:
     app: flaresolverr
 spec:
   replicas: 1
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
       app: flaresolverr
@@ -74,6 +75,7 @@ metadata:
     app: prowlarr
 spec:
   replicas: 1
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
       app: prowlarr
@@ -153,6 +155,7 @@ metadata:
     app: radarr
 spec:
   replicas: 1
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
       app: radarr
@@ -244,6 +247,7 @@ metadata:
     app: sonarr
 spec:
   replicas: 1
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
       app: sonarr
@@ -335,6 +339,7 @@ metadata:
     app: bazarr
 spec:
   replicas: 1
+
   selector:
     matchLabels:
       app: bazarr
@@ -426,6 +431,7 @@ metadata:
     app: overseerr
 spec:
   replicas: 1
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
       app: overseerr
@@ -503,6 +509,7 @@ metadata:
     app: tautulli
 spec:
   replicas: 1
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
       app: tautulli
@@ -582,6 +589,7 @@ metadata:
     app: maintainerr
 spec:
   replicas: 1
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
       app: maintainerr

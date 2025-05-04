@@ -1,0 +1,133 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tdarr
+  namespace: media
+  labels:
+    app: tdarr
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: tdarr
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: tdarr
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: kube-2
+      containers:
+      - name: tdarr
+        image: ghcr.io/haveagitgat/tdarr:latest
+        imagePullPolicy: Always
+        ports:
+        - name: webui
+          containerPort: 8265
+        - name: server
+          containerPort: 8266
+        env:
+        - name: TZ
+          value: "Europe/London"
+        - name: serverIP
+          value: "0.0.0.0"
+        - name: serverPort
+          value: "8266"
+        - name: webUIPort
+          value: "8265"
+        - name: internalNode
+          value: "true"
+        - name: inContainer
+          value: "true"
+        - name: ffmpegVersion
+          value: "7"
+        - name: nodeName
+          value: "MyInternalNode"
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: NVIDIA_DRIVER_CAPABILITIES
+          value: "all"
+        - name: NVIDIA_VISIBLE_DEVICES
+          value: "all"
+        volumeMounts:
+        - name: server-data
+          mountPath: /app/server
+        - name: configs
+          mountPath: /app/configs
+        - name: logs
+          mountPath: /app/logs
+        - name: media
+          mountPath: /media
+        - name: transcode-cache
+          mountPath: /temp
+        - name: dev-dri
+          mountPath: /dev/dri
+        securityContext:
+          privileged: true
+      volumes:
+      - name: server-data
+        hostPath:
+          path: /mnt/cephfs/docker/media/tdarr
+          type: DirectoryOrCreate
+      - name: configs
+        hostPath:
+          path: /mnt/cephfs/docker/media/tdarr/configs
+          type: DirectoryOrCreate
+      - name: logs
+        hostPath:
+          path: /mnt/cephfs/docker/media/tdarr/logs
+          type: DirectoryOrCreate
+      - name: media
+        hostPath:
+          path: /mnt/Data/Videos
+          type: Directory
+      - name: transcode-cache
+        hostPath:
+          path: /mnt/cephfs/docker/media/tdarr/cache
+          type: DirectoryOrCreate
+      - name: dev-dri
+        hostPath:
+          path: /dev/dri
+          type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tdarr
+  namespace: media
+  labels:
+    app: tdarr
+spec:
+  selector:
+    app: tdarr
+  ports:
+  - name: webui
+    port: 8265
+    targetPort: 8265
+  - name: server
+    port: 8266
+    targetPort: 8266
+  type: ClusterIP
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: tdarr
+  namespace: media
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`tdarr.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: tdarr
+          port: 8265
+  tls:
+    certResolver: cloudflare

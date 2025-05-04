@@ -13,6 +13,7 @@ metadata:
     keel.sh/pollSchedule: "@every 6h"
 spec:
   replicas: 1
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
       app: transmission
@@ -140,6 +141,7 @@ metadata:
     keel.sh/pollSchedule: "@every 6h"
 spec:
   replicas: 1
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
       app: aria2
