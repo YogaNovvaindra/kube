@@ -196,11 +196,6 @@ data:
             username: ${PROXMOX_USERNAME}
             password: ${PROXMOX_PASSWORD}
             # node: pve # optional
-      - Nexterm: 
-          icon: nexterm.png
-          href: https://nexterm.ygnv.my.id
-          description: Web-based terminal for server management
-          siteMonitor: http://nexterm:6989
       - Semaphore:
           icon: semaphore.png
           href: http://semaphore.ygnv.my.id
@@ -290,11 +285,6 @@ data:
           href: https://wazuh.ygnv.my.id
           description: Security information and event management (SIEM)
           ping: 192.168.192.4
-      - Infisical:
-          icon: https://avatars.githubusercontent.com/u/107880645
-          href: https://infisical.ygnv.my.id
-          description: Application configuration and secrets management
-          siteMonitor: http://utilities_infisical:80
 
     - Development and Version Control:
       - Gitea:
