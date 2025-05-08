@@ -1516,7 +1516,7 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            memory: 64Mi
+            memory: 32Mi
         name: redis
         ports:
         - containerPort: 6379
