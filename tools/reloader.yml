@@ -111,6 +111,10 @@ spec:
               resource: limits.memory
         image: "ghcr.io/stakater/reloader:latest"
         imagePullPolicy: Always
+        args:
+        - "--auto-reload-all=true"
+        - "--reload-on-create=true"
+        - "--log-format=json"
         livenessProbe:
           failureThreshold: 5
           httpGet:
@@ -139,7 +143,7 @@ spec:
             memory: 512Mi
           requests:
             cpu: 10m
-            memory: 512Mi
+            memory: 32Mi
         securityContext: {}
       securityContext:
         runAsNonRoot: true
