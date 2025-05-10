@@ -33,7 +33,7 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            cpu: 500m
+            cpu: 200m
             memory: 32Mi
         envFrom:
         - secretRef:
@@ -61,4 +61,4 @@ spec:
       name: cpu
       target:
         type: Utilization
-        averageUtilization: 70
+        averageUtilization: 100

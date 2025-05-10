@@ -23,7 +23,7 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            cpu: 100m
+            cpu: 50m
             memory: 32Mi
         ports:
         - containerPort: 80
@@ -64,4 +64,4 @@ spec:
       name: cpu
       target:
         type: Utilization
-        averageUtilization: 70
+        averageUtilization: 100
