@@ -24,6 +24,7 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
+            cpu: 100m
             memory: 32Mi
         ports:
         - containerPort: 80
@@ -45,3 +46,23 @@ spec:
   ports:
   - port: 80
     targetPort: 80
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: portfolio-hpa
+  namespace: services
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: portfolio
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
