@@ -352,7 +352,7 @@ spec:
     spec:
       containers:
       - name: bazarr
-        image: lscr.io/linuxserver/bazarr:1.5.1
+        image: lscr.io/linuxserver/bazarr:1.5.2
         imagePullPolicy: Always
         resources:
           requests:
