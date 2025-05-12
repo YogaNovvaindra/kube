@@ -364,7 +364,7 @@ data:
       #     siteMonitor: http://192.168.192.252:8384
       - Syncthing Panel:
           icon: syncthing.png
-          href: http://10.1.1.248:8384
+          href: http://10.1.1.21:8384
           description: File synchronization management panel
           siteMonitor: http://10.1.1.21:8384
       - Syncthing 8Labs:
