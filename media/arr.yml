@@ -92,7 +92,7 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            memory: 256Mi
+            memory: 128Mi
         ports:
         - containerPort: 9696
         env:
@@ -172,7 +172,7 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            memory: 256Mi
+            memory: 128Mi
         ports:
         - containerPort: 7878
         env:
@@ -264,7 +264,7 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            memory: 256Mi
+            memory: 128Mi
         ports:
         - containerPort: 8989
         env:
@@ -356,7 +356,7 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            memory: 256Mi
+            memory: 128Mi
         ports:
         - containerPort: 6767
         env:
@@ -606,7 +606,7 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            memory: 256Mi
+            memory: 128Mi
         ports:
         - containerPort: 6246
         env:
