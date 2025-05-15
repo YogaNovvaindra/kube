@@ -118,6 +118,10 @@ data:
       exit 1
     fi
 
+    # Cleanup old backups
+    find /snapshots -type f -name '*.zip' -mtime +7 -print -delete
+    find /snapshots -type d -empty -print -delete
+
     TS_END=$(date +"%Y-%m-%d %H:%M:%S")
     FILE_NAME=$(basename "$ARCHIVE")
     FILE_SIZE=$(du -h "$ARCHIVE" | cut -f1)
