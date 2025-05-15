@@ -69,7 +69,7 @@ spec:
       serviceAccountName: portainer-sa-clusteradmin
       containers:
       - name: portainer-agent
-        image: portainer/agent:2.29.2-alpine
+        image: portainer/agent:2.30.0-alpine
         imagePullPolicy: Always
         resources:
           requests:
