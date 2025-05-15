@@ -125,8 +125,13 @@ spec:
     app: authentik-server
   ports:
     - protocol: TCP
+      name: http
       port: 9000
       targetPort: 9000
+    - protocol: TCP
+      name: metrics
+      port: 9300
+      targetPort: 9300
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
