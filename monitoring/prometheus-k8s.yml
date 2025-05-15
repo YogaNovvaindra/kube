@@ -56,6 +56,10 @@ data:
           # Add Kubernetes labels as Prometheus labels
           - action: labelmap
             regex: __meta_kubernetes_service_label_(.+)
+
+      - job_name: 'authentik'
+        static_configs:
+          - targets: ['authentik-server.tools.svc.cluster.local:9300']
       
       - job_name: 'traefik'
         kubernetes_sd_configs:
