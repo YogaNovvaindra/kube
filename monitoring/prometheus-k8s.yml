@@ -60,6 +60,8 @@ data:
       - job_name: 'authentik'
         static_configs:
           - targets: ['authentik-server.tools.svc.cluster.local:9300']
+            labels:
+              instance: 'authentik-server'
       
       - job_name: 'traefik'
         kubernetes_sd_configs:
@@ -89,10 +91,14 @@ data:
       - job_name: 'mktxp'
         static_configs:
           - targets: ['mktxp:49090']
+            labels:
+              instance: 'mikrotik-exporter'
 
       - job_name: "openwrt"
         static_configs:
           - targets: ['${OPENWRT_ENDPOINT}']
+            labels:
+              instance: 'openwrt'
 
       - job_name: 'server-node'
         static_configs:
@@ -102,9 +108,9 @@ data:
           - targets: ['${AAPANEL_ENDPOINT}']
             labels:
               instance: 'aapanel'
-          - targets: ['${IOT_SERVER_ENDPOINT}']
-            labels:
-              instance: 'IOT-SERVER'
+          # - targets: ['${IOT_SERVER_ENDPOINT}']
+          #   labels:
+          #     instance: 'IOT-SERVER'
           - targets: ['${LABS_ENDPOINT}']
             labels:
               instance: '8labs'
