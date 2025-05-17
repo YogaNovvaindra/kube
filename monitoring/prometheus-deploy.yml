@@ -49,8 +49,12 @@ spec:
           - "--web.enable-lifecycle"
           - "--storage.tsdb.retention.time=60d"
           - "--storage.tsdb.wal-compression"
-          - "--storage.tsdb.min-block-duration=2h"
-          - "--storage.tsdb.max-block-duration=4h"
+          # - "--storage.tsdb.min-block-duration=1h"
+          # - "--storage.tsdb.max-block-duration=2h"
+          # - "--storage.tsdb.wal-segment-size=64MB"
+          # - "--storage.tsdb.head-chunks-write-queue-size=2048"
+          # - "--query.max-concurrency=10"
+          # - "--enable-feature=agent"
           - "--enable-feature=auto-gomemlimit"
         env:
           - name: GOGC
