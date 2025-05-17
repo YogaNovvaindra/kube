@@ -95,7 +95,7 @@ data:
 
       - job_name: 'kube-apiservers'
         kubernetes_sd_configs:
-          - role: endpoints
+          - role: endpointslice
             namespaces:
               names: ["default"]
         scheme: https
@@ -103,7 +103,8 @@ data:
           insecure_skip_verify: true
         bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
         relabel_configs:
-          - source_labels: [__meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
+          - source_labels:
+              [__meta_kubernetes_endpointslice_label_kubernetes_io_service_name, __meta_kubernetes_endpointslice_port_name]
             action: keep
             regex: kubernetes;https
 
@@ -168,12 +169,14 @@ data:
           - targets: ['${MICROCEPH_ENDPOINT_1}', '${MICROCEPH_ENDPOINT_2}', '${MICROCEPH_ENDPOINT_3}']
 
       - job_name: 'mktxp'
+        honor_timestamps: false
         static_configs:
           - targets: ['mktxp:49090']
             labels:
               instance: 'mikrotik-exporter'
 
       - job_name: "openwrt"
+        honor_timestamps: false
         static_configs:
           - targets: ['${OPENWRT_ENDPOINT}']
             labels:
