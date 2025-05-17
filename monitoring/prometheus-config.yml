@@ -58,7 +58,7 @@ data:
             regex: __meta_kubernetes_service_label_(.+)
 
       # MicroK8s Metrics
-      - job_name: 'kubernetes-nodes-cadvisor'
+      - job_name: 'kube-cadvisor'
         scheme: https
         tls_config:
           insecure_skip_verify: true
@@ -76,7 +76,7 @@ data:
           - source_labels: [__meta_kubernetes_node_name]
             target_label: node
 
-      - job_name: 'kubernetes-kubelet'
+      - job_name: 'kube-kubelet'
         scheme: https
         tls_config:
           insecure_skip_verify: true
@@ -93,7 +93,7 @@ data:
           - source_labels: [__meta_kubernetes_node_name]
             target_label: node
 
-      - job_name: 'kubernetes-apiservers'
+      - job_name: 'kube-apiservers'
         kubernetes_sd_configs:
           - role: endpoints
             namespaces:
@@ -107,7 +107,7 @@ data:
             action: keep
             regex: kubernetes;https
 
-      # - job_name: 'kubernetes-scheduler'
+      # - job_name: 'kube-scheduler'
       #   static_configs:
       #     - targets: ['10:10259']
       #   scheme: https
@@ -115,7 +115,7 @@ data:
       #     insecure_skip_verify: true
       #   bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
 
-      # - job_name: 'kubernetes-controller-manager'
+      # - job_name: 'kube-controller-manager'
       #   static_configs:
       #     - targets: ['10:10257']
       #   scheme: https
