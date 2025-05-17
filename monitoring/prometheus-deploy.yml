@@ -38,7 +38,7 @@ spec:
               name: prometheus-cred
       containers:
       - name: prometheus
-        image: prom/prometheus:v3.3.1
+        image: prom/prometheus:v3.4.0
         imagePullPolicy: Always
         resources:
           requests:
