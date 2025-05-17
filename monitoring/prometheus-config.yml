@@ -57,6 +57,108 @@ data:
           - action: labelmap
             regex: __meta_kubernetes_service_label_(.+)
 
+      # MicroK8s Metrics
+      - job_name: 'kubernetes-nodes-cadvisor'
+        scheme: https
+        tls_config:
+          insecure_skip_verify: true
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        kubernetes_sd_configs:
+          - role: node
+        metrics_path: /metrics/cadvisor
+        relabel_configs:
+          - action: labelmap
+            regex: __meta_kubernetes_node_label_(.+)
+          - target_label: __address__
+            replacement: ${1}:10250
+            source_labels: [__address__]
+          - source_labels: [__meta_kubernetes_node_name]
+            target_label: node
+
+      - job_name: 'kubernetes-kubelet'
+        scheme: https
+        tls_config:
+          insecure_skip_verify: true
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        kubernetes_sd_configs:
+          - role: node
+        metrics_path: /metrics
+        relabel_configs:
+          - action: labelmap
+            regex: __meta_kubernetes_node_label_(.+)
+          - target_label: __address__
+            replacement: ${1}:10250
+            source_labels: [__address__]
+          - source_labels: [__meta_kubernetes_node_name]
+            target_label: node
+
+      - job_name: 'kubernetes-apiservers'
+        kubernetes_sd_configs:
+          - role: endpoints
+            namespaces:
+              names: ["default"]
+        scheme: https
+        tls_config:
+          insecure_skip_verify: true
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
+            action: keep
+            regex: kubernetes;https
+
+      - job_name: 'kubernetes-scheduler'
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: ["kube-system"]
+        scheme: https
+        tls_config:
+          insecure_skip_verify: true
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_component]
+            action: keep
+            regex: kube-scheduler
+          - source_labels: [__address__]
+            target_label: __address__
+            regex: (.+?)(:\d+)?
+            replacement: ${1}:10259
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+
+      - job_name: 'kubernetes-controller-manager'
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: ["kube-system"]
+        scheme: https
+        tls_config:
+          insecure_skip_verify: true
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_component]
+            action: keep
+            regex: kube-controller-manager
+          - source_labels: [__address__]
+            target_label: __address__
+            regex: (.+?)(:\d+)?
+            replacement: ${1}:10257
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+
+      - job_name: 'kube-dns'
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: ["kube-system"]
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_k8s_app]
+            action: keep
+            regex: kube-dns
+          - source_labels: [__meta_kubernetes_pod_ip]
+            target_label: __address__
+            replacement: ${1}:9153
+
       - job_name: 'authentik'
         static_configs:
           - targets: ['authentik-server.tools.svc.cluster.local:9300']
@@ -129,6 +231,8 @@ rules:
 - apiGroups: [""]
   resources:
   - nodes
+  - nodes/proxy
+  - nodes/metrics
   - services
   - endpoints
   - pods
@@ -146,103 +250,3 @@ subjects:
   - kind: ServiceAccount
     name: prometheus
     namespace: monitoring
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: prometheus
-  namespace: monitoring
-  annotations:
-    reloader.stakater.com/auto: "true"
-spec:
-  replicas: 1
-  revisionHistoryLimit: 3
-  selector:
-    matchLabels:
-      app: prometheus
-  strategy:
-    type: RollingUpdate
-  template:
-    metadata:
-      labels:
-        app: prometheus
-    spec:
-      serviceAccountName: prometheus
-      initContainers:
-      - name: config-processor
-        image: alpine:3.21
-        imagePullPolicy: Always
-        command: ['/bin/sh', '-c']
-        args:
-          - apk add gettext &&
-            envsubst < /config-template/prometheus.yml > /etc/prometheus/prometheus.yml
-        volumeMounts:
-          - name: config-template
-            mountPath: /config-template
-          - name: config
-            mountPath: /etc/prometheus
-        envFrom:
-          - secretRef:
-              name: prometheus-cred
-      containers:
-      - name: prometheus
-        image: prom/prometheus:v3.3.1
-        imagePullPolicy: Always
-        resources:
-          requests:
-            memory: 256Mi
-        args:
-          - "--config.file=/etc/prometheus/prometheus.yml"
-          - "--storage.tsdb.path=/prometheus"
-          - "--web.enable-lifecycle"
-          - "--storage.tsdb.retention.time=60d"
-          - "--storage.tsdb.wal-compression"
-        ports:
-          - containerPort: 9090
-        volumeMounts:
-          - name: config
-            mountPath: /etc/prometheus
-          - name: storage-volume
-            mountPath: /prometheus
-      volumes:
-        - name: config-template
-          configMap:
-            name: prometheus-config
-        - name: config
-          emptyDir: {}
-        - name: storage-volume
-          hostPath:
-            path: /mnt/cephfs/docker/monitoring/prometheus
-            type: Directory  
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: prometheus
-  namespace: monitoring
-spec:
-  selector:
-    app: prometheus
-  ports:
-    - protocol: TCP
-      port: 9090
-      targetPort: 9090
----
-apiVersion: traefik.io/v1alpha1
-kind: IngressRoute
-metadata:
-  name: prometheus
-  namespace: monitoring
-spec:
-  entryPoints:
-    - http
-    - https
-  routes:
-    - match: Host(`prometheus.ygnv.my.id`)
-      kind: Rule
-      services:
-        - name: prometheus
-          port: 9090
-          # strategy: drr
-  tls:
-    certResolver: cloudflare
