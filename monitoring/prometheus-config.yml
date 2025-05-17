@@ -45,9 +45,9 @@ data:
 
       - job_name: 'kube-state-metrics'
         kubernetes_sd_configs:
-          - role: endpoints 
+          - role: endpointslice
             namespaces:
-              names: [ "monitoring" ] 
+              names: [ "monitoring" ]
         relabel_configs:
           # Keep only services with the annotation `prometheus.io/scrape: "true"`
           - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
@@ -95,7 +95,7 @@ data:
 
       - job_name: 'kube-apiservers'
         kubernetes_sd_configs:
-          - role: endpoints
+          - role: endpointslice
             namespaces:
               names: ["default"]
         scheme: https
@@ -213,6 +213,9 @@ rules:
   - services
   - endpoints
   - pods
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["discovery.k8s.io"]
+  resources: ["endpointslices"]
   verbs: ["get", "list", "watch"]
 - nonResourceURLs:
   - /metrics
