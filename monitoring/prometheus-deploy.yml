@@ -49,6 +49,12 @@ spec:
           - "--web.enable-lifecycle"
           - "--storage.tsdb.retention.time=60d"
           - "--storage.tsdb.wal-compression"
+          - "--storage.tsdb.min-block-duration=2h"
+          - "--storage.tsdb.max-block-duration=4h"
+          - "--enable-feature=auto-gomemlimit"
+        env:
+          - name: GOGC
+            value: "50"
         ports:
           - containerPort: 9090
         volumeMounts:
