@@ -45,9 +45,9 @@ data:
 
       - job_name: 'kube-state-metrics'
         kubernetes_sd_configs:
-          - role: endpoints  # Discover endpoints (pods) behind services
+          - role: endpoints 
             namespaces:
-              names: [ "monitoring" ]  # Namespace where kube-state-metrics runs
+              names: [ "monitoring" ] 
         relabel_configs:
           # Keep only services with the annotation `prometheus.io/scrape: "true"`
           - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
@@ -69,9 +69,10 @@ data:
         relabel_configs:
           - action: labelmap
             regex: __meta_kubernetes_node_label_(.+)
-          - target_label: __address__
-            replacement: ${1}:10250
-            source_labels: [__address__]
+          - source_labels: [__address__]
+            regex: (.+?):\d+
+            replacement: ${1}:10250 
+            target_label: __address__
           - source_labels: [__meta_kubernetes_node_name]
             target_label: node
 
@@ -82,13 +83,13 @@ data:
         bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
         kubernetes_sd_configs:
           - role: node
-        metrics_path: /metrics
         relabel_configs:
           - action: labelmap
             regex: __meta_kubernetes_node_label_(.+)
-          - target_label: __address__
-            replacement: ${1}:10250
-            source_labels: [__address__]
+          - source_labels: [__address__]
+            regex: (.+?):\d+
+            replacement: ${1}:10250 
+            target_label: __address__
           - source_labels: [__meta_kubernetes_node_name]
             target_label: node
 
@@ -106,45 +107,21 @@ data:
             action: keep
             regex: kubernetes;https
 
-      - job_name: 'kubernetes-scheduler'
-        kubernetes_sd_configs:
-          - role: pod
-            namespaces:
-              names: ["kube-system"]
-        scheme: https
-        tls_config:
-          insecure_skip_verify: true
-        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
-        relabel_configs:
-          - source_labels: [__meta_kubernetes_pod_label_component]
-            action: keep
-            regex: kube-scheduler
-          - source_labels: [__address__]
-            target_label: __address__
-            regex: (.+?)(:\d+)?
-            replacement: ${1}:10259
-          - source_labels: [__meta_kubernetes_pod_name]
-            target_label: pod
+      # - job_name: 'kubernetes-scheduler'
+      #   static_configs:
+      #     - targets: ['10:10259']
+      #   scheme: https
+      #   tls_config:
+      #     insecure_skip_verify: true
+      #   bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
 
-      - job_name: 'kubernetes-controller-manager'
-        kubernetes_sd_configs:
-          - role: pod
-            namespaces:
-              names: ["kube-system"]
-        scheme: https
-        tls_config:
-          insecure_skip_verify: true
-        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
-        relabel_configs:
-          - source_labels: [__meta_kubernetes_pod_label_component]
-            action: keep
-            regex: kube-controller-manager
-          - source_labels: [__address__]
-            target_label: __address__
-            regex: (.+?)(:\d+)?
-            replacement: ${1}:10257
-          - source_labels: [__meta_kubernetes_pod_name]
-            target_label: pod
+      # - job_name: 'kubernetes-controller-manager'
+      #   static_configs:
+      #     - targets: ['10:10257']
+      #   scheme: https
+      #   tls_config:
+      #     insecure_skip_verify: true
+      #   bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
 
       - job_name: 'kube-dns'
         kubernetes_sd_configs:
@@ -237,6 +214,9 @@ rules:
   - endpoints
   - pods
   verbs: ["get", "list", "watch"]
+- nonResourceURLs:
+  - /metrics
+  verbs: ["get"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
