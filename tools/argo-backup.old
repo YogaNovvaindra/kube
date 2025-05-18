@@ -35,7 +35,7 @@ metadata:
   name: argocd-backup
   namespace: tools
 spec:
-  successfulJobsHistoryLimit: 3  # Keep only 3 successful jobs
+  successfulJobsHistoryLimit: 1  # Keep only 3 successful jobs
   failedJobsHistoryLimit: 1       # Keep only 1 failed job
   schedule: "0 1 * * *"
   jobTemplate:
