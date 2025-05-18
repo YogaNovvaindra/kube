@@ -89,7 +89,7 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            memory: 64Mi
+            memory: 128Mi
         args:
         - -config.file=/etc/loki/loki.yaml
         ports:
