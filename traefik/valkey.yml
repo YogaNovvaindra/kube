@@ -1,6 +1,6 @@
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: valkey
   namespace: traefik
@@ -10,8 +10,6 @@ spec:
   selector:
     matchLabels:
       app: valkey
-  strategy:
-    type: RollingUpdate
   template:
     metadata:
       labels:
