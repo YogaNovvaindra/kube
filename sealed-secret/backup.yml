@@ -6,7 +6,7 @@ metadata:
 spec:
   schedule: "30 0 * * *"  # 0:30 AM daily
   concurrencyPolicy: Forbid
-  successfulJobsHistoryLimit: 3
+  successfulJobsHistoryLimit: 1
   jobTemplate:
     spec:
       template:

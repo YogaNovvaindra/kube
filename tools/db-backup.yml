@@ -149,7 +149,7 @@ metadata:
 spec:
   schedule: "20 0 * * *"   # every day @ 00:20 UTC+7
   concurrencyPolicy: Forbid
-  successfulJobsHistoryLimit: 3
+  successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
@@ -212,7 +212,7 @@ metadata:
 spec:
   schedule: "50 0 * * *"  # Daily at 00:50 UTC+7
   concurrencyPolicy: Forbid
-  successfulJobsHistoryLimit: 3
+  successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
@@ -406,7 +406,7 @@ metadata:
 spec:
   schedule: "10 0 * * *"
   concurrencyPolicy: Forbid
-  successfulJobsHistoryLimit: 3
+  successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
@@ -468,7 +468,7 @@ metadata:
 spec:
   schedule: "40 0 * * *"
   concurrencyPolicy: Forbid
-  successfulJobsHistoryLimit: 3
+  successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
