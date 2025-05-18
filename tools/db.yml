@@ -11,7 +11,7 @@ data:
     # Add other necessary configurations
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: valkey
   namespace: tools
@@ -23,8 +23,6 @@ spec:
   selector:
     matchLabels:
       app: valkey
-  strategy:
-    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -84,7 +82,7 @@ spec:
   type: ClusterIP
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: postgres
   namespace: tools
@@ -96,8 +94,6 @@ spec:
   selector:
     matchLabels:
       app: postgres
-  strategy:
-    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -162,7 +158,7 @@ spec:
   type: ClusterIP
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: mariadb
   namespace: tools
@@ -174,8 +170,6 @@ spec:
   selector:
     matchLabels:
       app: mariadb
-  strategy:
-    type: RollingUpdate
   template:
     metadata:
       labels:

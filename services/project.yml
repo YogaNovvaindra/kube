@@ -1,6 +1,6 @@
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: mariadb
   namespace: services
@@ -12,8 +12,6 @@ spec:
   selector:
     matchLabels:
       app: mariadb
-  strategy:
-    type: RollingUpdate
   template:
     metadata:
       labels:

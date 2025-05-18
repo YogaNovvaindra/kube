@@ -112,7 +112,7 @@ spec:
     targetPort: 2368
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: ghost-db
   namespace: services
@@ -122,8 +122,6 @@ spec:
   selector:
     matchLabels:
       app: ghost-db
-  strategy:
-    type: RollingUpdate
   template:
     metadata:
       labels:

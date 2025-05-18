@@ -139,7 +139,7 @@ spec:
     certResolver: cloudflare
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: valkey
   namespace: immich
@@ -151,8 +151,6 @@ spec:
   selector:
     matchLabels:
       app: valkey
-  strategy:
-    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -190,7 +188,7 @@ spec:
     targetPort: 6379
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: db
   namespace: immich
@@ -202,8 +200,6 @@ spec:
   selector:
     matchLabels:
       app: db
-  strategy:
-    type: RollingUpdate
   template:
     metadata:
       labels:
