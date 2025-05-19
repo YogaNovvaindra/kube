@@ -29,7 +29,7 @@ subjects:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: fluent-bit-config
+  name: fluent-logs-config
   namespace: monitoring
 data:
   fluent-bit.conf: |
@@ -45,10 +45,6 @@ data:
         DB                /var/log/flb_kube.db
         Mem_Buf_Limit     5MB
         Skip_Long_Lines   On
-        
-    [INPUT]
-        name              kubernetes_events
-        tag               k8s_events
 
     [FILTER]
         Name             kubernetes
@@ -60,6 +56,29 @@ data:
         Merge_Log        On
         Merge_Log_Key    log_processed
 
+    [OUTPUT]
+        Name            loki
+        Match           kube.*
+        Host            loki.monitoring.svc.cluster.local
+        Port            3100
+        Labels          job=fluent-bit,source=kube-logs
+        
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluent-events-config
+  namespace: monitoring
+data:
+  fluent-bit.conf: |
+    [SERVICE]
+        flush           1
+        log_level       info
+        
+    [INPUT]
+        name              kubernetes_events
+        tag               k8s_events
+
     [FILTER]
         Name             modify
         Match            k8s_events
@@ -67,37 +86,29 @@ data:
 
     [OUTPUT]
         Name            loki
-        Match           kube.*
-        Host            loki.monitoring.svc.cluster.local
-        Port            3100
-        Labels          job=fluent-bit,source=logs
-
-    [OUTPUT]
-        Name            loki
         Match           k8s_events
         Host            loki.monitoring.svc.cluster.local
         Port            3100
-        Labels          job=fluent-bit,source=events
-        
+        Labels          job=fluent-bit,source=kube-events
 ---
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: fluent-bit
+  name: fluent-logs
   namespace: monitoring
 spec:
   revisionHistoryLimit: 3
   selector:
     matchLabels:
-      app: fluent-bit
+      app: fluent-logs
   template:
     metadata:
       labels:
-        app: fluent-bit
+        app: fluent-logs
     spec:
       serviceAccountName: fluent-bit
       containers:
-      - name: fluent-bit
+      - name: fluent-logs
         image: fluent/fluent-bit:4.0
         imagePullPolicy: Always
         resources:
@@ -112,8 +123,43 @@ spec:
       volumes:
       - name: config
         configMap:
-          name: fluent-bit-config
+          name: fluent-logs-config
       - name: varlog
         hostPath:
           path: /var/log
           type: Directory
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fluent-events
+  namespace: monitoring
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: fluent-events
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: fluent-events
+    spec:
+      serviceAccountName: fluent-bit
+      containers:
+      - name: fluent-events
+        image: fluent/fluent-bit:4.0
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 32Mi
+        volumeMounts:
+        - name: config
+          mountPath: /fluent-bit/etc/fluent-bit.conf
+          subPath: fluent-bit.conf
+      volumes:
+      - name: config
+        configMap:
+          name: fluent-events-config
