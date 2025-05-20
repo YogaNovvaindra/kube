@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: stirling-pdf
-        image: stirlingtools/stirling-pdf:0.46.1
+        image: stirlingtools/stirling-pdf:0.46.2
         imagePullPolicy: Always
         resources:
           requests:
