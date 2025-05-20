@@ -27,7 +27,7 @@ spec:
       #     - 109  # GID for render group
       containers:
       - name: plex
-        image: lscr.io/linuxserver/plex:1.41.6
+        image: lscr.io/linuxserver/plex:1.41.7
         imagePullPolicy: Always
         resources:
           requests:
