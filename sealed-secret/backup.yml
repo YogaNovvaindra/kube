@@ -13,7 +13,7 @@ spec:
         spec:
           serviceAccountName: default  # Use default SA with RBAC permissions
           containers:
-          - name: backup
+          - name: sealed-secrets-backup
             image: bitnami/kubectl:1.33.1
             command:
             - /bin/bash
