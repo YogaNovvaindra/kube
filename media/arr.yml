@@ -44,8 +44,8 @@ spec:
               - -c
               - 'curl -X POST -f http://localhost:8191/v1 -d "{\"maxTimeout\":120000,\"cmd\":\"request.get\",\"url\":\"https://prowlarr.servarr.com/v1/ping\",\"proxy\":{}}" -H "Content-Type: application/json"'
           initialDelaySeconds: 120
-          periodSeconds: 300
-          timeoutSeconds: 30
+          periodSeconds: 600
+          timeoutSeconds: 60
           failureThreshold: 3
 ---
 # Flaresolverr Service
