@@ -1290,7 +1290,7 @@ spec:
               key: dexserver.disable.tls
               name: argocd-cmd-params-cm
               optional: true
-        image: ghcr.io/dexidp/dex:v2.43.0
+        image: ghcr.io/dexidp/dex:v2.43.1
         imagePullPolicy: Always
         resources:
           requests:
