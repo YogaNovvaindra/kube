@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: trivy-operator-config
+  namespace: trivy-system
+data:
+  OPERATOR_CONCURRENT_SCAN_JOBS_LIMIT: "2"

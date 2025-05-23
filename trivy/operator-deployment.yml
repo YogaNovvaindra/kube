@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trivy-operator
+  namespace: trivy-system
+spec:
+  template:
+    spec:
+      containers:
+        - name: trivy-operator
+          volumeMounts:
+            - name: cache-policies
+              mountPath: /tmp
+              readOnly: false
+            - name: trivy-db-cache
+              mountPath: /var/trivyoperator/trivy-db
+      volumes:
+        - name: cache-policies
+          hostPath:
+            path: /mnt/cephfs/docker/trivy/tmp
+            type: Directory
+        - name: trivy-db-cache
+          hostPath:
+            path: /mnt/cephfs/docker/trivy/db
+            type: Directory
