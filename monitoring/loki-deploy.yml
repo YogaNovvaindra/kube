@@ -58,11 +58,18 @@ data:
           period: 24h
     limits_config:
       volume_enabled: true
+      max_query_series: 2000
       # Retention period (e.g., 7 days)
       retention_period: 168h  # 7d in hours
       reject_old_samples: true
       # Oldest allowed sample age (adjust as needed)
       reject_old_samples_max_age: 168h
+    compactor:
+      working_directory: /tmp/loki/retention
+      retention_enabled: true
+      compaction_interval: 5m
+      retention_delete_delay: 2h
+      delete_request_store: filesystem
 ---
 apiVersion: apps/v1
 kind: Deployment
