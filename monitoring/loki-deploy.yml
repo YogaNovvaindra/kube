@@ -85,7 +85,7 @@ spec:
       serviceAccountName: loki
       containers:
       - name: loki
-        image: grafana/loki:3.5.0
+        image: grafana/loki:3.5.1
         imagePullPolicy: Always
         resources:
           requests:
