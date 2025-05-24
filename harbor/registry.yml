@@ -1,0 +1,158 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: registry-config
+  namespace: harbor
+data:
+  config.yml: |
+    version: 0.1
+    log:
+      level: info
+      fields:
+        service: registry
+    storage:
+      cache:
+        layerinfo: redis
+      filesystem:
+        rootdirectory: /storage
+      maintenance:
+        uploadpurging:
+          enabled: false
+          age: 168h
+          interval: 24h
+          dryrun: false
+      delete:
+        enabled: true
+    redis:
+      addr: valkey:6379
+      password:
+      db: 1
+    http:
+      addr: :5000
+      secret: placeholder
+      debug:
+        addr: localhost:5001
+    auth:
+      htpasswd:
+        realm: harbor-registry-basic-realm
+        path: /etc/registry/passwd
+    notifications:
+      endpoints:
+      - name: harbor
+        disabled: false
+        url: http://core:8080/service/notifications
+        timeout: 3000ms
+        threshold: 5
+        backoff: 1s
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: registryctl-config
+  namespace: harbor
+data:
+  config.yml: |
+    protocol: "http"
+    port: 8080
+    log_level: "INFO"
+    registry_config: "/etc/registry/config.yml"
+
+    #https_config:
+    #  cert: "server.crt"
+    #  key: "server.key"
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registry
+  namespace: harbor
+spec:
+  selector:
+    matchLabels:
+      app: registry
+  template:
+    metadata:
+      labels:
+        app: registry
+    spec:
+      containers:
+      - name: registry
+        image: docker.io/bitnami/harbor-registry:2
+        env:
+        - name: REGISTRY_HTTP_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: harbor-cred
+              key: REGISTRY_HTTP_SECRET
+        - name: JOBSERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: harbor-cred
+              key: JOBSERVICE_SECRET
+        - name: CORE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: harbor-cred
+              key: CORE_SECRET
+        volumeMounts:
+        - name: registry-config-yml
+          mountPath: /etc/registry/config.yml
+          subPath: config.yml
+        - name: registry-config
+          mountPath: /etc/registry
+        - name: registry-data
+          mountPath: /storage
+      volumes:
+      - name: registry-config-yml
+        configMap:
+          name: registry-config
+      - name: registry-config
+        hostPath:
+          path: /mnt/cephfs/docker/harbor/registry
+          type: Directory
+      - name: registry-data
+        hostPath:
+          path: /mnt/cephfs/docker/harbor/registry-data
+          type: Directory
+
+---
+# Registry Controller
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registryctl
+  namespace: harbor
+spec:
+  selector:
+    matchLabels:
+      app: registryctl
+  template:
+    metadata:
+      labels:
+        app: registryctl
+    spec:
+      containers:
+      - name: registryctl
+        image: docker.io/bitnami/harbor-registryctl:2
+        volumeMounts:
+        - name: registry-config
+          mountPath: /etc/registry
+        - name: registryctl-config
+          mountPath: /etc/registryctl/config.yml
+          subPath: config.yml
+        - name: registry-data
+          mountPath: /storage
+      volumes:
+      - name: registry-config
+        hostPath:
+          path: /mnt/cephfs/docker/harbor/registry
+          type: Directory
+      - name: registryctl-config
+        configMap:
+          name: registryctl-config
+      - name: registry-data
+        hostPath:
+          path: /mnt/cephfs/docker/harbor/registry-data
+          type: Directory

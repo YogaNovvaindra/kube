@@ -1,0 +1,147 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: core-config
+  namespace: harbor
+data:
+  app.conf: |
+    appname = Harbor
+    runmode = prod
+    enablegzip = true
+
+    [prod]
+    httpport = 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: core
+  namespace: harbor
+spec:
+  selector:
+    matchLabels:
+      app: core
+  template:
+    metadata:
+      labels:
+        app: core
+    spec:
+      containers:
+      - name: core
+        image: docker.io/bitnami/harbor-core:2
+        env:
+        - name: CORE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: harbor-cred
+              key: CORE_KEY
+        - name: _REDIS_URL_CORE
+          value: "redis://valkey:6379/0"
+        - name: SYNC_REGISTRY
+          value: "false"
+        - name: CHART_CACHE_DRIVER
+          value: "redis"
+        - name: _REDIS_URL_REG
+          value: "redis://valkey:6379/1"
+        - name: PORT
+          value: "8080"
+        - name: LOG_LEVEL
+          value: "info"
+        - name: EXT_ENDPOINT
+          value: "http://reg.ygnv.my.id"
+        - name: DATABASE_TYPE
+          value: "postgresql"
+        - name: REGISTRY_CONTROLLER_URL
+          value: "http://registryctl:8080"
+        - name: POSTGRESQL_HOST
+          value: "postgres"
+        - name: POSTGRESQL_PORT
+          value: "5432"
+        - name: POSTGRESQL_DATABASE
+          value: "registry"
+        - name: POSTGRESQL_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: harbor-cred
+              key: POSTGRES_USER
+        - name: POSTGRESQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: harbor-cred
+              key: POSTGRES_PASSWORD
+        - name: POSTGRESQL_SSLMODE
+          value: "disable"
+        - name: REGISTRY_URL
+          value: "http://registry:5000"
+        - name: TOKEN_SERVICE_URL
+          value: "http://core:8080/service/token"
+        - name: HARBOR_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: harbor-cred
+              key: HARBOR_ADMIN_PASSWORD
+        - name: CORE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: harbor-cred
+              key: CORE_SECRET
+        - name: JOBSERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: harbor-cred
+              key: JOBSERVICE_SECRET
+        - name: ADMIRAL_URL
+          value: ""
+        - name: CORE_URL
+          value: "http://core:8080"
+        - name: JOBSERVICE_URL
+          value: "http://jobservice:8080"
+        - name: REGISTRY_STORAGE_PROVIDER_NAME
+          value: "filesystem"
+        - name: REGISTRY_CREDENTIAL_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: harbor-cred
+              key: REGISTRY_CREDENTIAL_USERNAME
+        - name: REGISTRY_CREDENTIAL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: harbor-cred
+              key: REGISTRY_CREDENTIAL_PASSWORD
+        - name: READ_ONLY
+          value: "false"
+        - name: RELOAD_KEY
+          value: ""
+        volumeMounts:
+        - name: core-data
+          mountPath: /data
+        - name: core-config
+          mountPath: /etc/core/app.conf
+          subPath: app.conf
+      volumes:
+      - name: core-data
+        hostPath:
+          path: /mnt/cephfs/docker/harbor/core
+          type: Directory
+      - name: core-config
+        configMap:
+          name: core-config
+
+---
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: portal
+  namespace: harbor
+spec:
+  selector:
+    matchLabels:
+      app: portal
+  template:
+    metadata:
+      labels:
+        app: portal
+    spec:
+      containers:
+      - name: portal
+        image: docker.io/bitnami/harbor-portal:2
