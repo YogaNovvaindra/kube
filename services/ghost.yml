@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
       - name: ghost
-        image: ghost:5.120.1
+        image: ghost:5.120.2
         imagePullPolicy: Always
         resources:
           requests:
