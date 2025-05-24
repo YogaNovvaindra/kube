@@ -23,7 +23,7 @@ spec:
         args: ["-v", "--cache-dir", "/home/scanner/.cache/trivy"]
         volumeMounts:
         - name: trivy-cache
-          mountPath: /home/scanner/.cache/trivy
+          mountPath: /home/scanner
         env:
         - name: HTTP_PROXY
           value: ""
@@ -35,7 +35,7 @@ spec:
       - name: trivy-cache
         hostPath:
           path: /mnt/cephfs/docker/harbor/trivy
-          type: DirectoryOrCreate
+          type: Directory
 ---
 apiVersion: v1
 kind: Service
