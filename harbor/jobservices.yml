@@ -1,0 +1,104 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jobservice-config
+  namespace: harbor
+data:
+  config.yml: |
+    #Protocol used to serve
+    protocol: "http"
+
+    #Config certification if use 'https' protocol
+    #https_config:
+    #  cert: "server.crt"
+    #  key: "server.key"
+
+    #Server listening port
+    port: 8080
+
+    #Worker pool
+    worker_pool:
+      #Worker concurrency
+      workers: 2
+      backend: "redis"
+      #Additional config if use 'redis' backend
+      redis_pool:
+        #redis://[arbitrary_username:password@]ipaddress:port/database_index
+        redis_url: redis://valkey:6379/2
+        namespace: "harbor-jobservice"
+    #Loggers for the running job
+    job_loggers:
+      - name: "STD_OUTPUT" # logger backend name, only support "FILE" and "STD_OUTPUT"
+        level: "INFO" # INFO/DEBUG/WARNING/ERROR/FATAL
+      - name: "FILE"
+        level: "INFO"
+        settings: # Customized settings of logger
+          base_dir: "/var/log/jobs"
+        sweeper:
+          duration: 1 #days
+          settings: # Customized settings of sweeper
+            work_dir: "/var/log/jobs"
+
+    #Loggers for the job service
+    loggers:
+      - name: "STD_OUTPUT" # Same with above
+        level: "INFO"
+    #Admin server endpoint
+    admin_server: "http://adminserver:8080/"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jobservice
+  namespace: harbor
+spec:
+  selector:
+    matchLabels:
+      app: jobservice
+  template:
+    metadata:
+      labels:
+        app: jobservice
+    spec:
+      containers:
+      - name: jobservice
+        image: docker.io/bitnami/harbor-jobservice:2
+        env:
+        - name: CORE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: harbor-cred
+              key: CORE_SECRET
+        - name: JOBSERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: harbor-cred
+              key: JOBSERVICE_SECRET
+        - name: CORE_URL
+          value: "http://core:8080"
+        - name: REGISTRY_CONTROLLER_URL
+          value: "http://registryctl:8080"
+        - name: REGISTRY_CREDENTIAL_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: harbor-cred
+              key: REGISTRY_CREDENTIAL_USERNAME
+        - name: REGISTRY_CREDENTIAL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: harbor-cred
+              key: REGISTRY_CREDENTIAL_PASSWORD
+        volumeMounts:
+        - name: jobservice-config
+          mountPath: /etc/jobservice/config.yml
+          subPath: config.yml
+        - name: jobservice-data
+          mountPath: /var/log/jobs
+      volumes:
+      - name: jobservice-config
+        configMap:
+          name: jobservice-config
+      - name: jobservice-data
+        hostPath:
+          path: /mnt/cephfs/docker/harbor/jobservice
+          type: Directory
