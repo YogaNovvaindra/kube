@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
       - name: transmission
-        image: reg.ygnv.my.id/docker/linuxserver/transmission:latest
+        image: linuxserver/transmission:latest
         imagePullPolicy: Always
         resources:
           requests:
@@ -154,7 +154,7 @@ spec:
     spec:
       containers:
       - name: aria2
-        image: reg.ygnv.my.id/docker/p3terx/aria2-pro:latest
+        image: p3terx/aria2-pro:latest
         imagePullPolicy: Always
         resources:
           requests:

@@ -36,7 +36,7 @@ spec:
     spec:
       containers:
       - name: grafana
-        image: grafana/grafana:12.0.1
+        image: reg.ygnv.my.id/docker/grafana/grafana:12.0.1
         imagePullPolicy: Always
         resources:
           requests:

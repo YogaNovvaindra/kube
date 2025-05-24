@@ -22,7 +22,7 @@ spec:
       #   kubernetes.io/arch: amd64
       containers:
         - name: syncthing
-          image: lscr.io/linuxserver/syncthing:1.29.6
+          image: reg.ygnv.my.id/docker/linuxserver/syncthing:1.29.6
           imagePullPolicy: Always
           resources:
             requests:

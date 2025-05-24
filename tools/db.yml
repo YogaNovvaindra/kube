@@ -31,7 +31,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
         - name: valkey
-          image: valkey/valkey:8.1-alpine
+          image: reg.ygnv.my.id/docker/valkey/valkey:8.1-alpine
           imagePullPolicy: Always
           command: ["valkey-server", "/valkey.conf"]
           ports:
@@ -105,7 +105,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: postgres
-        image: pgautoupgrade/pgautoupgrade:latest@sha256:ec2248ff316763ac0f35f52c1e5064ade518eca5ff693401bb8de952d7463854
+        image: reg.ygnv.my.id/docker/pgautoupgrade/pgautoupgrade:latest@sha256:ec2248ff316763ac0f35f52c1e5064ade518eca5ff693401bb8de952d7463854
         imagePullPolicy: Always
         resources:
           requests:

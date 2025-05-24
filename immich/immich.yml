@@ -210,7 +210,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: db
-        image: reg.ygnv.my.id/docker/ensorchord/pgvecto-rs:pg16-v0.2.1
+        image: reg.ygnv.my.id/docker/tensorchord/pgvecto-rs:pg16-v0.2.1
         imagePullPolicy: Always
         resources:
           requests:

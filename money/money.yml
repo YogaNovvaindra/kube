@@ -30,7 +30,7 @@ spec:
           effect: "NoSchedule"
       containers:
       - name: repocket
-        image: reg.ygnv.my.id/docker/repocket/repocket:latest
+        image: repocket/repocket:latest
         imagePullPolicy: Always
         resources:
           requests:
@@ -74,7 +74,7 @@ spec:
     spec:
       containers:
       - name: honeygain
-        image: reg.ygnv.my.id/docker/honeygain/honeygain:latest
+        image: honeygain/honeygain:latest
         imagePullPolicy: Always
         resources:
           requests:
@@ -132,7 +132,7 @@ spec:
           effect: "NoSchedule"
       containers:
       - name: pawns
-        image: reg.ygnv.my.id/docker/iproyal/pawns-cli:latest
+        image: iproyal/pawns-cli:latest
         imagePullPolicy: Always
         resources:
           requests:

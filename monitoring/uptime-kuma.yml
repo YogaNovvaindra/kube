@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: uptime-kuma
-          image: louislam/uptime-kuma:1.23.16
+          image: reg.ygnv.my.id/docker/louislam/uptime-kuma:1.23.16
           imagePullPolicy: Always
           resources:
             requests:
