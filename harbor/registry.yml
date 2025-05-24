@@ -25,9 +25,9 @@ data:
         enabled: true
     redis:
       addr: valkey:6379
-      readtimeout: 10s
-      writetimeout: 10s
-      dialtimeout: 10s
+      readtimeout: 60s
+      writetimeout: 60s
+      dialtimeout: 60s
       password: 
       db: 1
       pool:
