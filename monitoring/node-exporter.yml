@@ -16,7 +16,7 @@ spec:
       hostPID: true
       containers:
         - name: node-exporter
-          image: prom/node-exporter:v1.9.1
+          image: reg.ygnv.my.id/docker/prom/node-exporter:v1.9.1
           imagePullPolicy: Always
           resources:
             requests:

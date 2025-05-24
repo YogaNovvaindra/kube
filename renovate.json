@@ -59,6 +59,7 @@
   },
   "registryAliases": {
     "reg.ygnv.my.id/docker": "docker.io",
-    "reg.ygnv.my.id/ghcr": "ghcr.io"
+    "reg.ygnv.my.id/ghcr": "ghcr.io",
+    "reg.ygnv.my.id/quay": "quay.io"
   }
 }

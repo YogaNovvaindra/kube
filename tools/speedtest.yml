@@ -31,7 +31,7 @@ spec:
                       - "amd64"
       containers:
       - name: openspeedtest
-        image: openspeedtest/latest:v2.0.6
+        image: reg.ygnv.my.id/docker/openspeedtest/latest:v2.0.6
         imagePullPolicy: Always
         resources:
           requests:
@@ -98,7 +98,7 @@ spec:
     spec:
       containers:
       - name: myspeed
-        image: germannewsmaker/myspeed:1.0.9
+        image: reg.ygnv.my.id/docker/germannewsmaker/myspeed:1.0.9
         imagePullPolicy: Always
         resources:
           requests:

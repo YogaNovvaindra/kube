@@ -108,7 +108,7 @@ spec:
     spec:
       containers:
       - name: mktxp
-        image: ghcr.io/akpw/mktxp:1.2.10
+        image: reg.ygnv.my.id/ghcr/akpw/mktxp:1.2.10
         imagePullPolicy: Always
         resources:
           requests:
@@ -122,7 +122,7 @@ spec:
           mountPath: /root/mktxp/
       initContainers:
         - name: config-processor
-          image: alpine:3.21
+          image: reg.ygnv.my.id/alpine:3.21
           imagePullPolicy: Always
           command: ["/bin/sh", "-c"]
           args:

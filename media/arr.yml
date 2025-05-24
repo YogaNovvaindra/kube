@@ -168,7 +168,7 @@ spec:
     spec:
       containers:
       - name: radarr
-        image: reg.ygnv.my.id/dockerr/linuxserver/radarr:5.23.3
+        image: reg.ygnv.my.id/docker/linuxserver/radarr:5.23.3
         imagePullPolicy: Always
         resources:
           requests:
@@ -522,7 +522,7 @@ spec:
     spec:
       containers:
       - name: tautulli
-        image: ghcr.io/tautulli/tautulli:v2.15.2
+        image: reg.ygnv.my.id/ghcr/tautulli/tautulli:v2.15.2
         imagePullPolicy: Always
         resources:
           requests:
@@ -602,7 +602,7 @@ spec:
     spec:
       containers:
       - name: maintainerr
-        image: ghcr.io/jorenn92/maintainerr:2.14.0
+        image: reg.ygnv.my.id/ghcr/jorenn92/maintainerr:2.14.0
         imagePullPolicy: Always
         resources:
           requests:

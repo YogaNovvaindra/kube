@@ -22,7 +22,7 @@ spec:
       serviceAccountName: prometheus
       initContainers:
       - name: config-processor
-        image: alpine:3.21
+        image: reg.ygnv.my.id/docker/alpine:3.21
         imagePullPolicy: Always
         command: ['/bin/sh', '-c']
         args:
@@ -38,7 +38,7 @@ spec:
               name: prometheus-cred
       containers:
       - name: prometheus
-        image: prom/prometheus:v3.4.0
+        image: reg.ygnv.my.id/docker/prom/prometheus:v3.4.0
         imagePullPolicy: Always
         resources:
           requests:
