@@ -27,7 +27,7 @@ spec:
       #     - 109  # GID for render group
       containers:
       - name: plex
-        image: lscr.io/linuxserver/plex:1.41.7
+        image: reg.ygnv.my.id/docker/linuxserver/plex:1.41.7
         imagePullPolicy: Always
         resources:
           requests:
@@ -137,7 +137,7 @@ spec:
       #     - 109  # GID for render group
       containers:
       - name: jellyfin
-        image: ghcr.io/jellyfin/jellyfin:10.10.7
+        image: reg.ygnv.my.id/ghcr/jellyfin/jellyfin:10.10.7
         imagePullPolicy: Always
         resources:
           requests:
