@@ -17,7 +17,7 @@ data:
         rootdirectory: /storage
       maintenance:
         uploadpurging:
-          enabled: false
+          enabled: true
           age: 168h
           interval: 24h
           dryrun: false
@@ -25,8 +25,15 @@ data:
         enabled: true
     redis:
       addr: valkey:6379
-      password:
+      readtimeout: 10s
+      writetimeout: 10s
+      dialtimeout: 10s
+      password: 
       db: 1
+      pool:
+        maxidle: 100
+        maxactive: 500
+        idletimeout: 60s
     http:
       addr: :5000
       secret: placeholder
@@ -36,14 +43,11 @@ data:
       htpasswd:
         realm: harbor-registry-basic-realm
         path: /etc/registry/passwd
-    notifications:
-      endpoints:
-      - name: harbor
-        disabled: false
-        url: http://core:8080/service/notifications
-        timeout: 3000ms
-        threshold: 5
-        backoff: 1s
+    validation:
+      disabled: true
+    compatibility:
+      schema1:
+        enabled: true
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -69,6 +73,10 @@ metadata:
   name: registry
   namespace: harbor
 spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
   selector:
     matchLabels:
       app: registry
@@ -79,7 +87,59 @@ spec:
     spec:
       containers:
       - name: registry
-        image: docker.io/bitnami/harbor-registry:2
+        image: docker.io/bitnami/harbor-registry:2.13.1
+        imagePullPolicy: Always
+        env:
+        - name: REGISTRY_HTTP_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: harbor-cred
+              key: REGISTRY_HTTP_SECRET
+        volumeMounts:
+        - name: registry-config-yml
+          mountPath: /etc/registry/config.yml
+          subPath: config.yml
+        - name: registry-config
+          mountPath: /etc/registry
+        - name: registry-data
+          mountPath: /storage
+      volumes:
+      - name: registry-config-yml
+        configMap:
+          name: registry-config
+      - name: registry-config
+        hostPath:
+          path: /mnt/cephfs/docker/harbor/registry
+          type: Directory
+      - name: registry-data
+        hostPath:
+          path: /mnt/cephfs/docker/harbor/data/registry
+          type: Directory
+
+---
+# Registry Controller
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registryctl
+  namespace: harbor
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: registryctl
+  template:
+    metadata:
+      labels:
+        app: registryctl
+    spec:
+      containers:
+      - name: registryctl
+        image: docker.io/bitnami/harbor-registryctl:2.13.1
+        imagePullPolicy: Always
         env:
         - name: REGISTRY_HTTP_SECRET
           valueFrom:
@@ -102,6 +162,9 @@ spec:
           subPath: config.yml
         - name: registry-config
           mountPath: /etc/registry
+        - name: registryctl-config
+          mountPath: /etc/registryctl/config.yml
+          subPath: config.yml
         - name: registry-data
           mountPath: /storage
       volumes:
@@ -112,47 +175,41 @@ spec:
         hostPath:
           path: /mnt/cephfs/docker/harbor/registry
           type: Directory
-      - name: registry-data
-        hostPath:
-          path: /mnt/cephfs/docker/harbor/registry-data
-          type: Directory
-
----
-# Registry Controller
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: registryctl
-  namespace: harbor
-spec:
-  selector:
-    matchLabels:
-      app: registryctl
-  template:
-    metadata:
-      labels:
-        app: registryctl
-    spec:
-      containers:
-      - name: registryctl
-        image: docker.io/bitnami/harbor-registryctl:2
-        volumeMounts:
-        - name: registry-config
-          mountPath: /etc/registry
-        - name: registryctl-config
-          mountPath: /etc/registryctl/config.yml
-          subPath: config.yml
-        - name: registry-data
-          mountPath: /storage
-      volumes:
-      - name: registry-config
-        hostPath:
-          path: /mnt/cephfs/docker/harbor/registry
-          type: Directory
       - name: registryctl-config
         configMap:
           name: registryctl-config
       - name: registry-data
         hostPath:
-          path: /mnt/cephfs/docker/harbor/registry-data
+          path: /mnt/cephfs/docker/harbor/data/registry
           type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: registry
+  namespace: harbor
+  labels:
+    app: registry
+spec:
+  selector:
+    app: registry
+  ports:
+    - port: 5000
+      targetPort: 5000
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: registryctl
+  namespace: harbor
+  labels:
+    app: registryctl
+spec:
+  selector:
+    app: registryctl
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: ClusterIP
+---

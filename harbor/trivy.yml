@@ -1,0 +1,51 @@
+# trivy-adapter.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trivy-adapter
+  namespace: harbor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: trivy-adapter
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: trivy-adapter
+    spec:
+      containers:
+      - name: trivy-adapter
+        image: goharbor/trivy-adapter-photon:v2.13.1
+        imagePullPolicy: Always
+        args: ["-v", "--cache-dir", "/home/scanner/.cache/trivy"]
+        volumeMounts:
+        - name: trivy-cache
+          mountPath: /home/scanner/.cache/trivy
+        env:
+        - name: HTTP_PROXY
+          value: ""
+        - name: HTTPS_PROXY
+          value: ""
+        - name: NO_PROXY
+          value: ""
+      volumes:
+      - name: trivy-cache
+        hostPath:
+          path: /mnt/cephfs/docker/harbor/trivy
+          type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trivy-adapter
+  namespace: harbor
+spec:
+  selector:
+    app: trivy-adapter
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080

@@ -6,16 +6,20 @@ metadata:
 data:
   nginx.conf: |
     worker_processes auto;
-    error_log         "/opt/bitnami/nginx/logs/error.log";
-    pid               "/opt/bitnami/nginx/tmp/nginx.pid";
+    pid /tmp/nginx.pid;
 
     events {
-      worker_connections 1024;
+      worker_connections 3096;
       use epoll;
       multi_accept on;
     }
 
     http {
+      client_body_temp_path /tmp/client_body_temp;
+      proxy_temp_path /tmp/proxy_temp;
+      fastcgi_temp_path /tmp/fastcgi_temp;
+      uwsgi_temp_path /tmp/uwsgi_temp;
+      scgi_temp_path /tmp/scgi_temp;
       tcp_nodelay on;
 
       # this is necessary for us to be able to disable request buffering in all cases
@@ -34,11 +38,12 @@ data:
         '"$http_referer" "$http_user_agent" '
         '$request_time $upstream_response_time $pipe';
 
-      client_body_temp_path  "/opt/bitnami/nginx/tmp/client_body" 1 2;
-      proxy_temp_path        "/opt/bitnami/nginx/tmp/proxy" 1 2;
-      fastcgi_temp_path      "/opt/bitnami/nginx/tmp/fastcgi" 1 2;
-      scgi_temp_path         "/opt/bitnami/nginx/tmp/scgi" 1 2;
-      uwsgi_temp_path        "/opt/bitnami/nginx/tmp/uwsgi" 1 2;
+      access_log /dev/stdout timed_combined;
+
+      map $http_x_forwarded_proto $x_forwarded_proto {
+        default $http_x_forwarded_proto;
+        ""      $scheme;
+      }
 
       server {
         listen 8080;
@@ -46,17 +51,19 @@ data:
         # disable any limits to avoid HTTP 413 for large image uploads
         client_max_body_size 0;
 
-        # costumized location config file can place to /opt/bitnami/nginx/conf with prefix harbor.http. and suffix .conf
-        include /opt/bitnami/conf/nginx/conf.d/harbor.http.*.conf;
+        # Add extra headers
+        add_header X-Frame-Options DENY;
+        add_header Content-Security-Policy "frame-ancestors 'none'";
+
+        # customized location config file can place to /etc/nginx/etc with prefix harbor.http. and suffix .conf
+        include /etc/nginx/conf.d/harbor.http.*.conf;
 
         location / {
           proxy_pass http://portal/;
           proxy_set_header Host $host;
           proxy_set_header X-Real-IP $remote_addr;
           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-
-          # When setting up Harbor behind other proxy, such as an Nginx instance, remove the below line if the proxy already has similar settings.
-          proxy_set_header X-Forwarded-Proto $scheme;
+          proxy_set_header X-Forwarded-Proto $x_forwarded_proto;
 
           proxy_buffering off;
           proxy_request_buffering off;
@@ -67,12 +74,13 @@ data:
           proxy_set_header Host $host;
           proxy_set_header X-Real-IP $remote_addr;
           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-
-          # When setting up Harbor behind other proxy, such as an Nginx instance, remove the below line if the proxy already has similar settings.
-          proxy_set_header X-Forwarded-Proto $scheme;
+          proxy_set_header X-Forwarded-Proto $x_forwarded_proto;
 
           proxy_buffering off;
           proxy_request_buffering off;
+          
+          proxy_send_timeout 900;
+          proxy_read_timeout 900;
         }
 
         location /api/ {
@@ -80,22 +88,7 @@ data:
           proxy_set_header Host $host;
           proxy_set_header X-Real-IP $remote_addr;
           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-
-          # When setting up Harbor behind other proxy, such as an Nginx instance, remove the below line if the proxy already has similar settings.
-          proxy_set_header X-Forwarded-Proto $scheme;
-
-          proxy_buffering off;
-          proxy_request_buffering off;
-        }
-
-        location /chartrepo/ {
-          proxy_pass http://core/chartrepo/;
-          proxy_set_header Host $host;
-          proxy_set_header X-Real-IP $remote_addr;
-          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-
-          # When setting up Harbor behind other proxy, such as an Nginx instance, remove the below line if the proxy already has similar settings.
-          proxy_set_header X-Forwarded-Proto $scheme;
+          proxy_set_header X-Forwarded-Proto $x_forwarded_proto;
 
           proxy_buffering off;
           proxy_request_buffering off;
@@ -110,11 +103,12 @@ data:
           proxy_set_header Host $http_host;
           proxy_set_header X-Real-IP $remote_addr;
           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-
-          # When setting up Harbor behind other proxy, such as an Nginx instance, remove the below line if the proxy already has similar settings.
-          proxy_set_header X-Forwarded-Proto $scheme;
+          proxy_set_header X-Forwarded-Proto $x_forwarded_proto;
           proxy_buffering off;
           proxy_request_buffering off;
+
+          proxy_send_timeout 900;
+          proxy_read_timeout 900;
         }
 
         location /service/ {
@@ -122,9 +116,7 @@ data:
           proxy_set_header Host $host;
           proxy_set_header X-Real-IP $remote_addr;
           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-
-          # When setting up Harbor behind other proxy, such as an Nginx instance, remove the below line if the proxy already has similar settings.
-          proxy_set_header X-Forwarded-Proto $scheme;
+          proxy_set_header X-Forwarded-Proto $x_forwarded_proto;
 
           proxy_buffering off;
           proxy_request_buffering off;
@@ -142,6 +134,10 @@ metadata:
   name: nginx
   namespace: harbor
 spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
   selector:
     matchLabels:
       app: nginx
@@ -152,7 +148,8 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: docker.io/bitnami/nginx:latest
+        image: docker.io/bitnami/nginx:1.28.0
+        imagePullPolicy: Always
         volumeMounts:
         - name: nginx-config
           mountPath: /opt/bitnami/nginx/conf/nginx.conf
@@ -161,3 +158,37 @@ spec:
       - name: nginx-config
         configMap:
           name: nginx-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  namespace: harbor
+  labels:
+    app: nginx
+spec:
+  selector:
+    app: nginx
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: ClusterIP
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: nginx
+  namespace: harbor
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`reg.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: nginx
+          port: 8080
+  tls:
+    certResolver: cloudflare
+---
