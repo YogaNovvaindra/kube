@@ -89,6 +89,9 @@ spec:
       - name: registry
         image: docker.io/bitnami/harbor-registry:2.13.1
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 32Mi
         env:
         - name: REGISTRY_HTTP_SECRET
           valueFrom:
@@ -140,6 +143,9 @@ spec:
       - name: registryctl
         image: docker.io/bitnami/harbor-registryctl:2.13.1
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 32Mi
         env:
         - name: REGISTRY_HTTP_SECRET
           valueFrom:

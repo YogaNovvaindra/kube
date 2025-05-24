@@ -6,6 +6,7 @@ metadata:
   namespace: harbor
 spec:
   replicas: 1
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
       app: trivy-adapter
@@ -20,17 +21,55 @@ spec:
       - name: trivy-adapter
         image: goharbor/trivy-adapter-photon:v2.13.1
         imagePullPolicy: Always
-        args: ["-v", "--cache-dir", "/home/scanner/.cache/trivy"]
-        volumeMounts:
-        - name: trivy-cache
-          mountPath: /home/scanner
+        resources:
+          requests:
+            memory: 32Mi
         env:
+        - name: SCANNER_LOG_LEVEL
+          value: info
+        - name: SCANNER_REDIS_URL
+          value: redis://valkey:6379/5
+        - name: SCANNER_STORE_REDIS_URL
+          value: redis://valkey:6379/5
+        - name: SCANNER_STORE_REDIS_NAMESPACE
+          value: harbor.scanner.trivy:store
+        - name: SCANNER_JOB_QUEUE_REDIS_URL
+          value: redis://valkey:6379/5
+        - name: SCANNER_JOB_QUEUE_REDIS_NAMESPACE
+          value: harbor.scanner.trivy:job-queue
+        - name: SCANNER_TRIVY_CACHE_DIR
+          value: /home/scanner/.cache/trivy
+        - name: SCANNER_TRIVY_REPORTS_DIR
+          value: /home/scanner/.cache/reports
+        - name: SCANNER_TRIVY_VULN_TYPE
+          value: os,library
+        - name: SCANNER_TRIVY_SEVERITY
+          value: UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL
+        - name: SCANNER_TRIVY_IGNORE_UNFIXED
+          value: "False"
+        - name: SCANNER_TRIVY_SKIP_UPDATE
+          value: "False"
+        - name: SCANNER_TRIVY_SKIP_JAVA_DB_UPDATE
+          value: "False"
+        - name: SCANNER_TRIVY_OFFLINE_SCAN
+          value: "False"
+        - name: SCANNER_TRIVY_SECURITY_CHECKS
+          value: vuln
+        - name: SCANNER_TRIVY_GITHUB_TOKEN
+          value: ""
+        - name: SCANNER_TRIVY_INSECURE
+          value: "False"
+        - name: SCANNER_TRIVY_TIMEOUT
+          value: 15m0s
         - name: HTTP_PROXY
           value: ""
         - name: HTTPS_PROXY
           value: ""
         - name: NO_PROXY
-          value: ""
+          value: nginx,.local,registry,portal,postgresql,registryctl,redis,jobservice,trivy-adapter,db,localhost,log,.internal,127.0.0.1,core,exporter
+        volumeMounts:
+        - name: trivy-cache
+          mountPath: /home/scanner/.cache
       volumes:
       - name: trivy-cache
         hostPath:

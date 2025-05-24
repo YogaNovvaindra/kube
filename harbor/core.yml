@@ -34,6 +34,9 @@ spec:
       - name: core
         image: docker.io/bitnami/harbor-core:2.13.1
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 64Mi
         env:
         - name: CORE_KEY
           valueFrom:
@@ -169,6 +172,9 @@ spec:
       - name: portal
         image: docker.io/bitnami/harbor-portal:2.13.1
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 32Mi
 ---
 apiVersion: v1
 kind: Service
