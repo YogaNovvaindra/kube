@@ -25,7 +25,7 @@ spec:
       enableServiceLinks: true
       initContainers:
         - name: config-processor
-          image: alpine:3.21
+          image: reg.ygnv.my.id/docker/alpine:3.21
           imagePullPolicy: Always
           command: ["/bin/sh", "-c"]
           args:
@@ -47,7 +47,7 @@ spec:
                 name: homepage-cred
       containers:
         - name: homepage
-          image: ghcr.io/gethomepage/homepage:v1.2.0
+          image: reg.ygnv.my.id/ghcr/gethomepage/homepage:v1.2.0
           imagePullPolicy: Always
           resources:
             requests:

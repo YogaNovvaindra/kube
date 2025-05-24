@@ -22,7 +22,7 @@ spec:
         kubernetes.io/hostname: "kube-2"
       containers:
       - name: immich
-        image: ghcr.io/imagegenius/immich:1.133.1-openvino
+        image: reg.ygnv.my.id/ghcr/imagegenius/immich:1.133.1-openvino
         imagePullPolicy: Always
         resources:
           requests:
@@ -158,7 +158,7 @@ spec:
     spec:
       containers:
       - name: valkey
-        image: valkey/valkey:8.1-alpine
+        image: reg.ygnv.my.id/docker/valkey/valkey:8.1-alpine
         imagePullPolicy: Always
         resources:
           requests:
@@ -210,7 +210,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: db
-        image: tensorchord/pgvecto-rs:pg16-v0.2.1
+        image: treg.ygnv.my.id/docker/ensorchord/pgvecto-rs:pg16-v0.2.1
         imagePullPolicy: Always
         resources:
           requests:

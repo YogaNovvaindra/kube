@@ -23,7 +23,7 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            memory: 32Mi
+            memory: 128Mi
         env:
         - name: SCANNER_LOG_LEVEL
           value: info
