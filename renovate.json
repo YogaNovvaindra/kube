@@ -56,5 +56,9 @@
   "platformAutomerge": true,
   "digest": {
     "enabled": true
+  },
+  "registryAliases": {
+    "reg.ygnv.my.id/docker": "docker.io",
+    "reg.ygnv.my.id/ghcr": "ghcr.io"
   }
 }
