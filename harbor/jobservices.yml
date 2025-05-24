@@ -43,8 +43,6 @@ data:
     loggers:
       - name: "STD_OUTPUT" # Same with above
         level: "INFO"
-    #Admin server endpoint
-    admin_server: "http://adminserver:8080/"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -52,6 +50,10 @@ metadata:
   name: jobservice
   namespace: harbor
 spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
   selector:
     matchLabels:
       app: jobservice
@@ -62,8 +64,11 @@ spec:
     spec:
       containers:
       - name: jobservice
-        image: docker.io/bitnami/harbor-jobservice:2
+        image: docker.io/bitnami/harbor-jobservice:2.13.1
+        imagePullPolicy: Always
         env:
+        - name: NO_PROXY
+          value: "portal,.local,exporter,jobservice,127.0.0.1,localhost,db,core,redis,registry,log,trivy-adapter,.internal,registryctl,nginx,postgres"
         - name: CORE_SECRET
           valueFrom:
             secretKeyRef:
@@ -102,3 +107,18 @@ spec:
         hostPath:
           path: /mnt/cephfs/docker/harbor/jobservice
           type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jobservice
+  namespace: harbor
+  labels:
+    app: jobservice
+spec:
+  selector:
+    app: jobservice
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: ClusterIP
