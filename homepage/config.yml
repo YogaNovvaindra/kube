@@ -305,6 +305,11 @@ data:
             type: argocd
             url: http://argocd-server.argocd.svc.cluster.local:8080
             key: ${ARGOCD_KEY}
+      - Harbor:
+          icon: harbor.svg
+          href: https://reg.ygnv.my.id
+          description: Container image registry and management platform
+          siteMonitor: http://nginx.harbor.svc.cluster.local:8080
       - Ollama:
           icon: ollama.png
           href: https://ai.ygnv.my.id
