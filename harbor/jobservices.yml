@@ -66,6 +66,9 @@ spec:
       - name: jobservice
         image: docker.io/bitnami/harbor-jobservice:2.13.1
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 64Mi
         env:
         - name: NO_PROXY
           value: "portal,.local,exporter,jobservice,127.0.0.1,localhost,db,core,redis,registry,log,trivy-adapter,.internal,registryctl,nginx,postgres"

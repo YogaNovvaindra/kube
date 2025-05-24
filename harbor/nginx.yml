@@ -150,6 +150,9 @@ spec:
       - name: nginx
         image: docker.io/bitnami/nginx:1.28.0
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 32Mi
         volumeMounts:
         - name: nginx-config
           mountPath: /opt/bitnami/nginx/conf/nginx.conf
