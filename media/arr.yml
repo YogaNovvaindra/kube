@@ -88,7 +88,7 @@ spec:
     spec:
       containers:
       - name: prowlarr
-        image: reg.ygnv.my.id/docker/linuxserver/prowlarr:1.35.1
+        image: reg.ygnv.my.id/docker/linuxserver/prowlarr:1.36.3
         imagePullPolicy: Always
         resources:
           requests:
