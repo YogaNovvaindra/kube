@@ -55,6 +55,10 @@ data:
         Kube_Tag_Prefix  kube.var.log.containers.
         Merge_Log        On
         Merge_Log_Key    log_processed
+        Keep_Log         On
+        labels            On
+        Annotations       Off
+        Use_Tag_For_Meta  On
 
     [OUTPUT]
         Name            loki
@@ -62,6 +66,8 @@ data:
         Host            loki.monitoring.svc.cluster.local
         Port            3100
         Labels          job=fluent-bit,source=kube-logs
+        Label_Keys     $kubernetes['namespace_name'],$kubernetes['pod_name'],$kubernetes['container_name']
+        auto_kubernetes_labels On
         
 ---
 apiVersion: v1
@@ -90,6 +96,7 @@ data:
         Host            loki.monitoring.svc.cluster.local
         Port            3100
         Labels          job=fluent-bit,source=kube-events
+        auto_kubernetes_labels On
 ---
 apiVersion: apps/v1
 kind: DaemonSet
