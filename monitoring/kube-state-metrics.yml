@@ -183,7 +183,7 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            memory: 64Mi
+            memory: 32Mi
         livenessProbe:
           httpGet:
             path: /livez
