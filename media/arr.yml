@@ -168,7 +168,7 @@ spec:
     spec:
       containers:
       - name: radarr
-        image: reg.ygnv.my.id/docker/linuxserver/radarr:5.24.1
+        image: reg.ygnv.my.id/docker/linuxserver/radarr:5.25.0
         imagePullPolicy: Always
         resources:
           requests:
