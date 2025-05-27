@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
       - name: ghost
-        image: reg.ygnv.my.id/docker/ghost:5.120.2
+        image: reg.ygnv.my.id/docker/ghost:5.120.3
         imagePullPolicy: Always
         resources:
           requests:
