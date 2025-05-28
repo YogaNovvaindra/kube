@@ -56,7 +56,7 @@ spec:
         - name: LOG_LEVEL
           value: "info"
         - name: EXT_ENDPOINT
-          value: "http://reg.ygnv.my.id"
+          value: "https://reg.ygnv.my.id"
         - name: DATABASE_TYPE
           value: "postgresql"
         - name: REGISTRY_CONTROLLER_URL
