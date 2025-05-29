@@ -203,9 +203,12 @@ data:
           module: [ubiquiti_airmax]
           auth: [ubiquiti_auth]
         static_configs:
-          - targets:
-              - '${LB_ENDPOINT}'
-              - '${LBAP_ENDPOINT}'
+          - targets: ['${LB_ENDPOINT}']
+            labels:
+              instance: 'lb5-ac'
+          - targets: ['${LBAP_ENDPOINT}']
+            labels:
+              instance: 'lb5-ac-ap'
         relabel_configs:
           - source_labels: [__address__]
             target_label: __param_target
