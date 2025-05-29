@@ -602,7 +602,7 @@ spec:
     spec:
       containers:
       - name: maintainerr
-        image: reg.ygnv.my.id/ghcr/jorenn92/maintainerr:2.16.0
+        image: reg.ygnv.my.id/ghcr/jorenn92/maintainerr:2.17.0
         imagePullPolicy: Always
         resources:
           requests:
