@@ -204,8 +204,8 @@ data:
           auth: [ubiquiti_auth]
         static_configs:
           - targets:
-              - '{$LB_ENDPOINT}'
-              - '{$LBAP_ENDPOINT}'
+              - '${LB_ENDPOINT}'
+              - '${LBAP_ENDPOINT}'
         relabel_configs:
           - source_labels: [__address__]
             target_label: __param_target
