@@ -96,6 +96,7 @@ data:
         Host            loki.monitoring.svc.cluster.local
         Port            3100
         Labels          job=fluent-bit,source=kube-events
+        Label_Keys     $kubernetes['namespace_name'],$kubernetes['pod_name'],$kubernetes['container_name']
         auto_kubernetes_labels On
 ---
 apiVersion: apps/v1
