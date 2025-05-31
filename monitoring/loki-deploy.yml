@@ -36,7 +36,6 @@ data:
     auth_enabled: false
     server:
       http_listen_port: 3100
-      log_level: info
     common:
       path_prefix: /tmp/loki
       storage:
@@ -100,6 +99,7 @@ spec:
             memory: 128Mi
         args:
         - -config.file=/etc/loki/loki.yaml
+        - -log.level=warn
         ports:
         - containerPort: 3100
           name: http
