@@ -91,11 +91,18 @@ spec:
         volumeMounts:
           - name: ghost-data
             mountPath: /var/lib/ghost/content
+          - name: localtime
+            mountPath: /etc/localtime
+            subPath: localtime
+            readOnly: true
       volumes:
         - name: ghost-data
           hostPath:
             path: /mnt/cephfs/docker/services/ghost/data
             type: Directory
+        - name: localtime
+          hostPath:
+            path: /etc/localtime
 ---
 apiVersion: v1
 kind: Service
@@ -153,10 +160,6 @@ spec:
           - name: ghost-db-config
             mountPath: /etc/mysql/conf.d/my.cnf
             subPath: my.cnf
-          - name: localtime
-            mountPath: /etc/localtime
-            subPath: localtime
-            readOnly: true
       volumes:
         - name: ghost-db-data
           hostPath:
@@ -168,9 +171,6 @@ spec:
             items:
               - key: my.cnf
                 path: my.cnf
-        - name: localtime
-          hostPath:
-            path: /etc/localtime
 
 ---
 apiVersion: v1
