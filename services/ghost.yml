@@ -60,28 +60,28 @@ spec:
               secretKeyRef:
                 name: ghost-cred
                 key: dbname
-          - name: mail_service
+          - name: mail__service
             value: "Mailgun"
-          - name: mail_from
+          - name: mail__from
             valueFrom:
               secretKeyRef:
                 name: ghost-cred
-                key: mail
-          - name: mail_transport
+                key: mailfrom
+          - name: mail__transport
             value: "SMTP"
-          - name: mail_options_host
+          - name: mail__options__host
             valueFrom:
               secretKeyRef:
                 name: ghost-cred
                 key: mailhost
-          - name: mail_options_port
+          - name: mail__options__port
             value: "587"
-          - name: mail_options_auth_user
+          - name: mail__options__auth__user
             valueFrom:
               secretKeyRef:
                 name: ghost-cred
                 key: mailauth
-          - name: mail_options_auth_pass
+          - name: mail__options__auth__pass
             valueFrom:
               secretKeyRef:
                 name: ghost-cred
