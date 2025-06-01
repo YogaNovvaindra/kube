@@ -61,7 +61,7 @@ spec:
                 name: ghost-cred
                 key: dbname
           - name: mail_service
-            value: "brevo"
+            value: "Mailgun"
           - name: mail_from
             valueFrom:
               secretKeyRef:
