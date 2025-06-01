@@ -153,6 +153,10 @@ spec:
           - name: ghost-db-config
             mountPath: /etc/mysql/conf.d/my.cnf
             subPath: my.cnf
+          - name: localtime
+            mountPath: /etc/localtime
+            subPath: localtime
+            readOnly: true
       volumes:
         - name: ghost-db-data
           hostPath:
@@ -164,6 +168,10 @@ spec:
             items:
               - key: my.cnf
                 path: my.cnf
+        - name: localtime
+          hostPath:
+            path: /etc/localtime
+
 ---
 apiVersion: v1
 kind: Service
