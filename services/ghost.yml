@@ -93,7 +93,6 @@ spec:
             mountPath: /var/lib/ghost/content
           - name: localtime
             mountPath: /etc/localtime
-            subPath: localtime
             readOnly: true
       volumes:
         - name: ghost-data
