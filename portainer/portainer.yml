@@ -27,10 +27,13 @@ kind: Service
 metadata:
   name: portainer-agent
   namespace: portainer
+  annotations:
+    metallb.io/address-pool: "main-pool"
+    metallb.io/allow-shared-ip: "traefik"
 spec:
   type: LoadBalancer
-  externalIPs:
-    - 10.1.1.10
+  # externalIPs:
+  #   - 10.1.1.10
   selector:
     app: portainer-agent
   ports:

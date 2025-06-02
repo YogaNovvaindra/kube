@@ -74,10 +74,11 @@ metadata:
   namespace: tools
   labels:
     app: syncthing
+  annotations:
+    metallb.io/address-pool: "main-pool"
+    metallb.io/allow-shared-ip: "traefik"
 spec:
   type: LoadBalancer
-  externalIPs:
-    - 10.1.1.10
   selector:
     app: syncthing
   ports:
