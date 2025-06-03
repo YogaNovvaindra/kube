@@ -56,7 +56,7 @@ spec:
       volumes:
         - name: config-volume
           hostPath:
-            path: /mnt/cephfs/docker/syncthing-kube
+            path: /mnt/cephfs/docker/tools/syncthing
             type: Directory
         - name: data-volume
           hostPath:
