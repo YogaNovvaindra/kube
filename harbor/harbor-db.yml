@@ -128,13 +128,13 @@ spec:
           mountPath: /var/lib/postgresql/data
         readinessProbe:
           exec:
-            command: ["pg_isready", "-d", "registry", "-U", "yoga"]
+            command: ["pg_isready", "-d", "registry", "-U", "postgres"]
           initialDelaySeconds: 30
           periodSeconds: 60
           timeoutSeconds: 60
         livenessProbe:
           exec:
-            command: ["pg_isready", "-d", "registry", "-U", "yoga"]
+            command: ["pg_isready", "-d", "registry", "-U", "postgres"]
           initialDelaySeconds: 60
           periodSeconds: 60
           timeoutSeconds: 60
