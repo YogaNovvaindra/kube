@@ -67,7 +67,7 @@ spec:
       volumes:
       - name: transmission-config
         hostPath:
-          path: /mnt/cephfs/docker/download/transmission
+          path: /mnt/cephfs/docker/media/download/transmission
           type: Directory
       - name: downloads
         hostPath:
@@ -202,7 +202,7 @@ spec:
       volumes:
       - name: aria2-config
         hostPath:
-          path: /mnt/cephfs/docker/download/aria2
+          path: /mnt/cephfs/docker/media/download/aria2
           type: Directory
       - name: downloads
         hostPath:

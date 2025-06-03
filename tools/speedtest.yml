@@ -114,7 +114,7 @@ spec:
       volumes:
       - name: myspeed-data
         hostPath:
-          path: /mnt/cephfs/docker/speedtest/myspeed
+          path: /mnt/cephfs/docker/tools/speedtest/myspeed
           type: Directory
 ---
 # Service for myspeed
