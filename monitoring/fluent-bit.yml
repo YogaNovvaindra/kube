@@ -43,7 +43,7 @@ data:
         Path              /var/log/containers/*.log
         multiline.parser  docker, cri
         DB                /var/log/flb_kube.db
-        Mem_Buf_Limit     5MB
+        Mem_Buf_Limit     64MB
         Skip_Long_Lines   On
 
     [FILTER]
@@ -63,7 +63,7 @@ data:
     [OUTPUT]
         Name            loki
         Match           kube.*
-        Host            loki.monitoring.svc.cluster.local
+        Host            loki.monitoring
         Port            3100
         Labels          job=fluent-bit,source=kube-logs
         Label_Keys     $kubernetes['namespace_name'],$kubernetes['pod_name'],$kubernetes['container_name']
@@ -93,7 +93,7 @@ data:
     [OUTPUT]
         Name            loki
         Match           k8s_events
-        Host            loki.monitoring.svc.cluster.local
+        Host            loki.monitoring
         Port            3100
         Labels          job=fluent-bit,source=kube-events
         auto_kubernetes_labels On
