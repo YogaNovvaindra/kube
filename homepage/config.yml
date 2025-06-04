@@ -162,10 +162,10 @@ data:
           icon: traefik.svg
           href: https://traefik.ygnv.my.id
           description: Edge router and reverse proxy
-          siteMonitor: http://traefik.traefik.svc.cluster.local:8080
+          siteMonitor: http://traefik.traefik:8080
           widget:
             type: traefik
-            url: http://traefik.traefik.svc.cluster.local:8080
+            url: http://traefik.traefik:8080
 
     - Access Points:
       - SXT AP:
@@ -220,41 +220,41 @@ data:
           icon: https://Keel.sh/img/logo_small.png
           href: https://keel.ygnv.my.id
           description: Container image automation and management
-          siteMonitor: http://keel.keel.svc.cluster.local:9300
+          siteMonitor: http://keel.keel:9300
 
     - Monitoring and Analytics:
       - Grafana:
           icon: grafana.png
           href: https://grafana.ygnv.my.id/dashboards
           description: Data visualization and analytics platform
-          siteMonitor: http://grafana.monitoring.svc.cluster.local:3000
+          siteMonitor: http://grafana.monitoring:3000
           widget:
             type: grafana
-            url: http://grafana.monitoring.svc.cluster.local:3000
+            url: http://grafana.monitoring:3000
             username: ${GRAFANA_USERNAME}
             password: ${GRAFANA_PASSWORD}
       - Uptime Kuma:
           icon: uptime-kuma.svg
           href: https://uptime.ygnv.my.id/dashboard
           description: Uptime and status monitoring tool
-          siteMonitor: http://uptime-kuma.monitoring.svc.cluster.local:3001
+          siteMonitor: http://uptime-kuma.monitoring:3001
           widget:
             type: uptimekuma
-            url: http://uptime-kuma.monitoring.svc.cluster.local:3001
+            url: http://uptime-kuma.monitoring:3001
             slug: server
       - Prometheus:
           icon: prometheus.svg
           href: https://prometheus.ygnv.my.id
           description: Metrics collection and alerting system
-          siteMonitor: http://prometheus.monitoring.svc.cluster.local:9090
+          siteMonitor: http://prometheus.monitoring:9090
           widget:
             type: prometheus
-            url: http://prometheus.monitoring.svc.cluster.local:9090
+            url: http://prometheus.monitoring:9090
       # - InfluxDB:
       #     icon: influxdb.svg
       #     href: http://influxdb.ygnv.my.id
       #     description: Time-series database for metrics storage
-      #     siteMonitor: http://influxdb.monitoring.svc.cluster.local:8086
+      #     siteMonitor: http://influxdb.monitoring:8086
       - MySpeed:
           icon: myspeed.png
           href: https://myspeed.ygnv.my.id
@@ -300,16 +300,16 @@ data:
           icon: argo-cd.svg
           href: https://argocd.ygnv.my.id
           description: GitOps continuous delivery tool for Kubernetes
-          siteMonitor: http://argocd-server.argocd.svc.cluster.local:8080
+          siteMonitor: http://argocd-server.argocd:8080
           widget:
             type: argocd
-            url: http://argocd-server.argocd.svc.cluster.local:8080
+            url: http://argocd-server.argocd:8080
             key: ${ARGOCD_KEY}
       - Harbor:
           icon: harbor.svg
           href: https://reg.ygnv.my.id
           description: Container image registry and management platform
-          siteMonitor: http://nginx.harbor.svc.cluster.local:8080
+          siteMonitor: http://nginx.harbor:8080
       - Ollama:
           icon: ollama.png
           href: https://ai.ygnv.my.id
@@ -344,7 +344,7 @@ data:
           icon: phpmyadmin.png
           href: https://phpmyadmin-services.ygnv.my.id
           description: MySQL database management (services environment)
-          siteMonitor: http://phpmyadmin.services.svc.cluster.local:80
+          siteMonitor: http://phpmyadmin.services:80
       - Online Portfolio:
           icon: https://biarrinetworks.com/hs-fs/hubfs/Collab_big.png?width=592&name=Collab_big.png
           href: https://yoganova.my.id
@@ -398,19 +398,19 @@ data:
           icon: plex.svg
           href: https://plex.ygnv.my.id
           description: Media server for personal video, music, and photo streaming
-          siteMonitor: http://plex.media.svc.cluster.local:32400
+          siteMonitor: http://plex.media:32400
           widget:
             type: plex
-            url: http://plex.media.svc.cluster.local:32400
+            url: http://plex.media:32400
             key: ${PLEX_KEY} # see http://www.plexopedia.com/plex-media-server/general/plex-token/
       - Jellyfin:
           icon: jellyfin.png
           href: https://jellyfin.ygnv.my.id
           description: Open-source media server alternative
-          siteMonitor: http://jellyfin.media.svc.cluster.local:8096
+          siteMonitor: http://jellyfin.media:8096
           widget:
             type: jellyfin
-            url: http://jellyfin.media.svc.cluster.local:8096
+            url: http://jellyfin.media:8096
             key: ${JELLYFIN_KEY}
             enableBlocks: true # optional, defaults to false
             enableNowPlaying: true # optional, defaults to true
@@ -421,57 +421,57 @@ data:
           icon: prowlarr.png
           href: https://prowlarr.ygnv.my.id
           description: Indexer manager and proxy for media servers
-          siteMonitor: http://prowlarr.media.svc.cluster.local:9696
+          siteMonitor: http://prowlarr.media:9696
           widget:
             type: prowlarr
-            url: http://prowlarr.media.svc.cluster.local:9696
+            url: http://prowlarr.media:9696
             key: ${PROWLARR_KEY}
       - Radarr:
           icon: radarr.png
           href: https://radarr.ygnv.my.id
           description: Movie collection manager and automation
-          siteMonitor: http://radarr.media.svc.cluster.local:7878
+          siteMonitor: http://radarr.media:7878
           widget:
             type: radarr
-            url: http://radarr.media.svc.cluster.local:7878
+            url: http://radarr.media:7878
             key: ${RADARR_KEY}
             enableQueue: true # optional, defaults to false
       - Sonarr:
           icon: sonarr.png
           href: https://sonarr.ygnv.my.id
           description: TV series collection manager and automation
-          siteMonitor: http://sonarr.media.svc.cluster.local:8989
+          siteMonitor: http://sonarr.media:8989
           widget:
             type: sonarr
-            url: http://sonarr.media.svc.cluster.local:8989
+            url: http://sonarr.media:8989
             key: ${SONARR_KEY}
             enableQueue: true # optional, defaults to false
       - Bazarr:
           icon: bazarr.png
           href: https://bazarr.ygnv.my.id
           description: Subtitle downloader and manager for Radarr/Sonarr
-          siteMonitor: http://bazarr.media.svc.cluster.local:6767
+          siteMonitor: http://bazarr.media:6767
           widget:
             type: bazarr
-            url: http://bazarr.media.svc.cluster.local:6767
+            url: http://bazarr.media:6767
             key: ${BAZARR_KEY}
       - Overseerr:
           icon: overseerr.png
           href: https://overseerr.ygnv.my.id
           description: Request management and media discovery for Plex
-          siteMonitor: http://overseerr.media.svc.cluster.local:5055
+          siteMonitor: http://overseerr.media:5055
           widget:
             type: overseerr
-            url: http://overseerr.media.svc.cluster.local:5055
+            url: http://overseerr.media:5055
             key: ${OVERSEERR_KEY}
       - Tautulli:
           icon: tautulli.png
           href: https://tautulli.ygnv.my.id
           description: Monitoring and analytics platform for Plex
-          siteMonitor: http://tautulli.media.svc.cluster.local:8181
+          siteMonitor: http://tautulli.media:8181
           widget:
             type: tautulli
-            url: http://tautulli.media.svc.cluster.local:8181
+            url: http://tautulli.media:8181
             key: ${TAUTULLI_KEY}
             enableUser: true # optional, defaults to false
             showEpisodeNumber: true # optional, defaults to false
@@ -480,22 +480,22 @@ data:
           icon: https://maintainerr.ygnv.my.id/logo.svg
           href: https://maintainerr.ygnv.my.id
           description: Automation tool for maintaining Plex libraries
-          siteMonitor: http://maintainerr.media.svc.cluster.local:6246
+          siteMonitor: http://maintainerr.media:6246
 
     - Utilities:
       - Outline:
           icon: sh-outline.svg
           href: https://outline.ygnv.my.id
           description: Knowledge management and note-taking platform 
-          siteMonitor: http://outline.tools.svc.cluster.local:3000
+          siteMonitor: http://outline.tools:3000
       - Immich:
           icon: immich.png
           href: https://immich.ygnv.my.id
           description: Self-hosted photo and video backup solution
-          siteMonitor: http://immich-svc.immich.svc.cluster.local:8080
+          siteMonitor: http://immich-svc.immich:8080
           widget:
             type: immich
-            url: http://immich-svc.immich.svc.cluster.local:8080
+            url: http://immich-svc.immich:8080
             key: ${IMMICH_KEY}
             version: 2
       - Iventoy:
@@ -517,10 +517,10 @@ data:
           icon: transmission.png
           href: https://transmission.ygnv.my.id
           description: BitTorrent client for downloading
-          siteMonitor: http://transmission.media.svc.cluster.local:9091
+          siteMonitor: http://transmission.media:9091
           widget:
             type: transmission
-            url: http://transmission.media.svc.cluster.local:9091
+            url: http://transmission.media:9091
             username: ${TRANSMISSION_USERNAME}
             password: ${TRANSMISSION_PASSWORD}
             rpcUrl: /transmission/ # Optional. Matches the value of "rpc-url" in your Transmission's settings.json file
@@ -528,25 +528,25 @@ data:
           icon: stirling-pdf.svg
           href: https://pdf.ygnv.my.id
           description: Web-based PDF manipulation tool
-          siteMonitor: http://stirling-pdf.tools.svc.cluster.local:8080
+          siteMonitor: http://stirling-pdf.tools:8080
       - IT-Tools:
           icon: it-tools-light.svg
           href: https://tools.ygnv.my.id
           description: Collection of useful IT utilities and tools
-          siteMonitor: http://it-tools.tools.svc.cluster.local:80
+          siteMonitor: http://it-tools.tools:80
       - Reubah:
           icon: mdi-image-edit
           href: https://reubah.ygnv.my.id
           description: Tool for processing images and converting documents
-          siteMonitor: http://reubah.tools.svc.cluster.local:8081
+          siteMonitor: http://reubah.tools:8081
       - Change Detection:
           icon: changedetection.svg
           href: https://changedetection.ygnv.my.id
           description: Website change detection and monitoring
-          siteMonitor: http://changedetection.tools.svc.cluster.local:5000
+          siteMonitor: http://changedetection.tools:5000
           widget:
             type: changedetectionio
-            url: http://changedetection.tools.svc.cluster.local:5000
+            url: http://changedetection.tools:5000
             key: ${CHANGEDETECTION_KEY}
       - Excalidraw:
           icon: excalidraw.svg
