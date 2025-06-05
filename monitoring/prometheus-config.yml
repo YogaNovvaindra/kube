@@ -15,7 +15,7 @@ data:
         static_configs:
           - targets: ["localhost:9090"]
 
-      - job_name: 'pve'
+      - job_name: 'proxmox'
         static_configs:
           - targets: ['${PVE_1_ENDPOINT}']
             labels:
