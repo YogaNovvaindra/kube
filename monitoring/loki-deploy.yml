@@ -96,7 +96,7 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            memory: 128Mi
+            memory: 256Mi
         args:
         - -config.file=/etc/loki/loki.yaml
         - -log.level=warn
