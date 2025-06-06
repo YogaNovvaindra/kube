@@ -60,13 +60,13 @@ This cluster hosts a variety of self-managed applications and services.
 - **👀 Changedetection.io**: Monitors websites for changes.
 - **🎨 Excalidraw**: Virtual collaborative whiteboard.
 - **📂 FileBrowser**: Web-based file management.
-- **代码 Gitea**: Self-hosted Git service.
+- **💻 Gitea**: Self-hosted Git service.
 - **🔧 IT-Tools**: A collection of handy online tools for developers.
 - **📚 Outline**: Collaborative knowledge base/wiki.
 - **🐘 pgAdmin**: PostgreSQL administration and development platform.
 - **🐬 phpMyAdmin**: Web-based administration tool for MySQL and MariaDB.
 - **♻️ Reloader**: Automatically restarts pods when ConfigMaps or Secrets are updated.
-- **🤔 Reubah**: Web based image editor.
+- **🖼️ Reubah**: Web based image editor.
 - **⚙️ Semaphore**: UI for running Ansible playbooks.
 - **💨 Speedtest**: Tool for checking internet connection speed.
 - **📄 Stirling-PDF**: Web-based PDF manipulation tool.
@@ -81,8 +81,8 @@ This cluster hosts a variety of self-managed applications and services.
 - **📡 MKTXP**: Exporter for MikroTik router metrics.
 - **💻 Node Exporter**: Exporter for hardware and OS metrics exposed by *NIX kernels.
 - **📈 Prometheus**: Metrics collection and alerting toolkit.
-- ** virtualization PVE Exporter**: Exporter for Proxmox VE host and guest metrics.
-- ** SNMP Exporter**: Exporter for metrics from SNMP-enabled devices.
+- **🖥️ virtualization PVE Exporter**: Exporter for Proxmox VE host and guest metrics.
+- **📡 SNMP Exporter**: Exporter for metrics from SNMP-enabled devices.
 - **💓 Uptime Kuma**: Self-hosted uptime monitoring tool.
 
 ### 📦 Application Services
