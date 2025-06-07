@@ -1,0 +1,1 @@
+kubeseal --cert sealed-secret/public-key.pem -f homepage/homepage-cred-.tml -o yaml > homepage/homepage-cred.yml
