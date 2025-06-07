@@ -179,7 +179,7 @@ data:
         static_configs:
           - targets: [${OPENWRT_ENDPOINT}]
             labels:
-              instance: openwrt
+              instance: mi4a-wrt
 
       - job_name: 'ubiquiti-snmp'
         metrics_path: /snmp
