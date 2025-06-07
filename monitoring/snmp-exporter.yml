@@ -681,6 +681,9 @@ spec:
         - name: snmp-exporter
           image: reg.ygnv.my.id/docker/prom/snmp-exporter:v0.29.0
           imagePullPolicy: Always
+          resources:
+            requests:
+              memory: 16Mi
           ports:
             - containerPort: 9116
           volumeMounts:
