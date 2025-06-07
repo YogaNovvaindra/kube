@@ -19,7 +19,7 @@ data:
     #Worker pool
     worker_pool:
       #Worker concurrency
-      workers: 2
+      workers: 5
       backend: "redis"
       #Additional config if use 'redis' backend
       redis_pool:
