@@ -11,30 +11,34 @@ data:
       evaluation_interval: 30s
 
     scrape_configs:
-      - job_name: "prometheus"
+      # Self-monitoring
+      - job_name: prometheus
         static_configs:
-          - targets: ["localhost:9090"]
+          - targets: [localhost:9090]
 
-      - job_name: 'proxmox'
-        static_configs:
-          - targets: ['${PVE_1_ENDPOINT}']
-            labels:
-              instance: 'pve1'
-          - targets: ['${PVE_2_ENDPOINT}']
-            labels:
-              instance: 'pve2'
+      # Proxmox VE monitoring
+      - job_name: proxmox
         metrics_path: /pve
         params:
           module: [default]
-          cluster: ['1']
-          node: ['1']
+        static_configs:
+          - targets: 
+              - ${PVE_1_ENDPOINT}
+              - ${PVE_2_ENDPOINT}
+            labels:
+              cluster: '1'
         relabel_configs:
           - source_labels: [__address__]
             target_label: __param_target
+          - source_labels: [__address__]
+            regex: (.*)
+            replacement: ${1}
+            target_label: instance
           - target_label: __address__
-            replacement: pve-exporter:9221  # PVE exporter.
+            replacement: pve-exporter:9221
 
-      - job_name: "kube-node"
+      # Kubernetes Node Exporter
+      - job_name: kube-node
         kubernetes_sd_configs:
           - role: pod
         relabel_configs:
@@ -44,11 +48,12 @@ data:
           - source_labels: [__meta_kubernetes_pod_node_name]
             target_label: instance
 
-      - job_name: 'kube-state-metrics'
+      # Kube State Metrics
+      - job_name: kube-state-metrics
         kubernetes_sd_configs:
           - role: endpointslice
             namespaces:
-              names: [ "monitoring" ]
+              names: [monitoring]
         relabel_configs:
           - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
             action: keep
@@ -56,12 +61,13 @@ data:
           - action: labelmap
             regex: __meta_kubernetes_service_label_(.+)
 
-      # MicroK8s Metrics
-      - job_name: 'kube-cadvisor'
+      # Kubernetes core components
+      - job_name: kube-cadvisor
         scheme: https
         tls_config:
           insecure_skip_verify: true
-        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        authorization:
+          credentials_file: /var/run/secrets/kubernetes.io/serviceaccount/token
         kubernetes_sd_configs:
           - role: node
         metrics_path: /metrics/cadvisor
@@ -69,133 +75,67 @@ data:
           - action: labelmap
             regex: __meta_kubernetes_node_label_(.+)
           - source_labels: [__address__]
-            regex: (.+?):\d+
-            replacement: ${1}:10250 
+            regex: (.+):(\d+)
+            replacement: ${1}:10250
             target_label: __address__
           - source_labels: [__meta_kubernetes_node_name]
             target_label: node
 
-      - job_name: 'kube-kubelet'
+      - job_name: kube-kubelet
         scheme: https
         tls_config:
           insecure_skip_verify: true
-        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        authorization:
+          credentials_file: /var/run/secrets/kubernetes.io/serviceaccount/token
         kubernetes_sd_configs:
           - role: node
         relabel_configs:
           - action: labelmap
             regex: __meta_kubernetes_node_label_(.+)
           - source_labels: [__address__]
-            regex: (.+?):\d+
-            replacement: ${1}:10250 
+            regex: (.+):(\d+)
+            replacement: ${1}:10250
             target_label: __address__
           - source_labels: [__meta_kubernetes_node_name]
             target_label: node
 
-      - job_name: 'kube-apiservers'
-        kubernetes_sd_configs:
-          - role: endpointslice
-            namespaces:
-              names: ["default"]
-        scheme: https
-        tls_config:
-          insecure_skip_verify: true
-        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
-        relabel_configs:
-          - source_labels:
-              [__meta_kubernetes_endpointslice_label_kubernetes_io_service_name, __meta_kubernetes_endpointslice_port_name]
-            action: keep
-            regex: kubernetes;https
-
-      # - job_name: 'kube-scheduler'
-      #   static_configs:
-      #     - targets: ['10:10259']
-      #   scheme: https
-      #   tls_config:
-      #     insecure_skip_verify: true
-      #   bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
-
-      # - job_name: 'kube-controller-manager'
-      #   static_configs:
-      #     - targets: ['10:10257']
-      #   scheme: https
-      #   tls_config:
-      #     insecure_skip_verify: true
-      #   bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
-
-      - job_name: 'kube-dns'
+      # CoreDNS monitoring
+      - job_name: kube-dns
         kubernetes_sd_configs:
           - role: pod
             namespaces:
-              names: ["kube-system"]
+              names: [kube-system]
         relabel_configs:
           - source_labels: [__meta_kubernetes_pod_label_k8s_app]
             action: keep
             regex: kube-dns
           - source_labels: [__meta_kubernetes_pod_ip]
             target_label: __address__
-            replacement: ${1}:9153
+            replacement: $1:9153
 
-      - job_name: 'authentik'
-        static_configs:
-          - targets: ['authentik-server.tools.svc.cluster.local:9300']
-            labels:
-              instance: 'authentik-server'
-      
-      - job_name: 'traefik'
+      # Traefik monitoring
+      - job_name: traefik
         kubernetes_sd_configs:
           - role: pod
             namespaces:
-              names: ["traefik"]
+              names: [traefik]
         relabel_configs:
           - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
             action: keep
             regex: "true"
           - source_labels: [__meta_kubernetes_pod_ip, __meta_kubernetes_pod_annotation_prometheus_io_port]
             action: replace
-            target_label: __address__
             regex: (.+);(.+)
             replacement: $1:$2
+            target_label: __address__
           - source_labels: [__meta_kubernetes_namespace]
             target_label: namespace
           - source_labels: [__meta_kubernetes_pod_name]
             target_label: pod
           - source_labels: [__meta_kubernetes_pod_label_app]
             target_label: app
-      
-      - job_name: 'microceph'
-        static_configs:
-          - targets: ['${MICROCEPH_ENDPOINT_1}', '${MICROCEPH_ENDPOINT_2}', '${MICROCEPH_ENDPOINT_3}']
 
-      - job_name: 'mktxp'
-        honor_timestamps: false
-        static_configs:
-          - targets: ['mktxp:49090']
-            labels:
-              instance: 'mikrotik-exporter'
-
-      - job_name: "openwrt"
-        honor_timestamps: false
-        static_configs:
-          - targets: ['${OPENWRT_ENDPOINT}']
-            labels:
-              instance: 'openwrt'
-
-      - job_name: 'server-node'
-        static_configs:
-          - targets: ['${DOCKER_ENDPOINT}']
-            labels:
-              instance: 'docker'
-          - targets: ['${AAPANEL_ENDPOINT}']
-            labels:
-              instance: 'aapanel'
-          # - targets: ['${IOT_SERVER_ENDPOINT}']
-          #   labels:
-          #     instance: 'IOT-SERVER'
-          - targets: ['${LABS_ENDPOINT}']
-            labels:
-              instance: '8labs'
-
+      # SNMP monitoring
       - job_name: 'ubiquiti-snmp'
         metrics_path: /snmp
         params:
@@ -213,6 +153,23 @@ data:
             target_label: __param_target
           - target_label: __address__
             replacement: snmp-exporter:9116
+
+      # - job_name: 'kube-scheduler'
+      #   static_configs:
+      #     - targets: ['10:10259']
+      #   scheme: https
+      #   tls_config:
+      #     insecure_skip_verify: true
+      #   bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+
+      # - job_name: 'kube-controller-manager'
+      #   static_configs:
+      #     - targets: ['10:10257']
+      #   scheme: https
+      #   tls_config:
+      #     insecure_skip_verify: true
+      #   bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+
 ---
 apiVersion: v1
 kind: ServiceAccount
