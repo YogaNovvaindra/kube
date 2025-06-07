@@ -50,11 +50,9 @@ data:
             namespaces:
               names: [ "monitoring" ]
         relabel_configs:
-          # Keep only services with the annotation `prometheus.io/scrape: "true"`
           - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
             action: keep
             regex: "true"
-          # Add Kubernetes labels as Prometheus labels
           - action: labelmap
             regex: __meta_kubernetes_service_label_(.+)
 
