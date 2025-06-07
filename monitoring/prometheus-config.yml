@@ -99,6 +99,23 @@ data:
           - source_labels: [__meta_kubernetes_node_name]
             target_label: node
 
+      - job_name: kube-apiservers
+        kubernetes_sd_configs:
+          - role: endpointslice
+            namespaces:
+              names: [default]
+        scheme: https
+        tls_config:
+          insecure_skip_verify: true
+        authorization:
+          credentials_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        relabel_configs:
+          - source_labels:
+              [__meta_kubernetes_endpointslice_label_kubernetes_io_service_name, 
+               __meta_kubernetes_endpointslice_port_name]
+            action: keep
+            regex: kubernetes;https
+
       # CoreDNS monitoring
       - job_name: kube-dns
         kubernetes_sd_configs:
@@ -113,7 +130,13 @@ data:
             target_label: __address__
             replacement: $1:9153
 
-      # Traefik monitoring
+      # Services monitoring
+      - job_name: authentik
+        static_configs:
+          - targets: [authentik-server.tools.svc.cluster.local:9300]
+            labels:
+              instance: authentik-server
+
       - job_name: traefik
         kubernetes_sd_configs:
           - role: pod
@@ -135,7 +158,29 @@ data:
           - source_labels: [__meta_kubernetes_pod_label_app]
             target_label: app
 
-      # SNMP monitoring
+      # Storage monitoring
+      - job_name: microceph
+        static_configs:
+          - targets:
+              - ${MICROCEPH_ENDPOINT_1}
+              - ${MICROCEPH_ENDPOINT_2}
+              - ${MICROCEPH_ENDPOINT_3}
+
+      # Network devices monitoring
+      - job_name: mktxp
+        honor_timestamps: false
+        static_configs:
+          - targets: [mktxp:49090]
+            labels:
+              instance: mikrotik-exporter
+
+      - job_name: openwrt
+        honor_timestamps: false
+        static_configs:
+          - targets: [${OPENWRT_ENDPOINT}]
+            labels:
+              instance: openwrt
+
       - job_name: 'ubiquiti-snmp'
         metrics_path: /snmp
         params:
@@ -153,6 +198,19 @@ data:
             target_label: __param_target
           - target_label: __address__
             replacement: snmp-exporter:9116
+
+      # Server infrastructure monitoring
+      - job_name: server-node
+        static_configs:
+          - targets: [${DOCKER_ENDPOINT}]
+            labels:
+              instance: docker
+          - targets: [${AAPANEL_ENDPOINT}]
+            labels:
+              instance: aapanel
+          - targets: [${LABS_ENDPOINT}]
+            labels:
+              instance: 8labs
 
       # - job_name: 'kube-scheduler'
       #   static_configs:
