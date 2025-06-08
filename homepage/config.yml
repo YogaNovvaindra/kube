@@ -137,7 +137,7 @@ data:
             url: http://10.1.1.253
             username: ${OPENWRT_USERNAME}
             password: ${OPENWRT_PASSWORD}
-            interfaceName: wan # optional
+            interfaceName: br-lan # optional
       - Adguard:
           icon: adguard-home.svg
           href: https://adguard.ygnv.my.id
