@@ -27,7 +27,7 @@ spec:
       #     - 109  # GID for render group
       containers:
       - name: plex
-        image: reg.ygnv.my.id/docker/linuxserver/plex:1.41.7
+        image: reg.ygnv.my.id/docker/linuxserver/plex:1.41.8
         imagePullPolicy: Always
         resources:
           requests:
