@@ -212,19 +212,6 @@ data:
             labels:
               instance: 8labs
 
-      # Cloudflare monitoring
-      - job_name: cloudflare
-        static_configs:
-          - targets: [cf-exporter:8080]
-            labels:
-              instance: cf-exporter
-        metrics_path: /metrics
-        relabel_configs:
-          - source_labels: [__address__]
-            target_label: __param_target
-          - target_label: __address__
-            replacement: cf-exporter:8080
-
       # - job_name: 'kube-scheduler'
       #   static_configs:
       #     - targets: ['10:10259']
