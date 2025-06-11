@@ -18,6 +18,7 @@ data:
 
       # Proxmox VE monitoring
       - job_name: proxmox
+        scrape_interval: 60s
         metrics_path: /pve
         params:
           module: [default]
@@ -132,12 +133,14 @@ data:
 
       # Services monitoring
       - job_name: authentik
+        scarpe_interval: 60s
         static_configs:
           - targets: [authentik-server.tools.svc.cluster.local:9300]
             labels:
               instance: authentik-server
 
       - job_name: traefik
+        scrape_interval: 60s
         kubernetes_sd_configs:
           - role: pod
             namespaces:
@@ -201,6 +204,7 @@ data:
 
       # Server infrastructure monitoring
       - job_name: server-node
+        scrape_interval: 60s
         static_configs:
           - targets: [${DOCKER_ENDPOINT}]
             labels:
