@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cf-exporter
+  namespace: monitoring
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: cf-exporter
+  template:
+    metadata:
+      labels:
+        app: cf-exporter
+    spec:
+      containers:
+      - name: cf-exporter
+        image: ghcr.io/lablabs/cloudflare_exporter:latest
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 16Mi
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - secretRef:
+            name: cf-exporter-cred
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cf-exporter
+  namespace: monitoring
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  selector:
+    app: cf-exporter
+---
+
+
+
+        
