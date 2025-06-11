@@ -55,7 +55,6 @@ spec:
           # - "--storage.tsdb.head-chunks-write-queue-size=2048"
           # - "--query.max-concurrency=10"
           # - "--enable-feature=agent"
-          - "--enable-feature=auto-gomemlimit"
         env:
           - name: GOGC
             value: "50"

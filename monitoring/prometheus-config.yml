@@ -133,7 +133,7 @@ data:
 
       # Services monitoring
       - job_name: authentik
-        scarpe_interval: 60s
+        scrape_interval: 60s
         static_configs:
           - targets: [authentik-server.tools.svc.cluster.local:9300]
             labels:
