@@ -132,6 +132,13 @@ data:
             replacement: $1:9153
 
       # Services monitoring
+      - job_name: adguard
+        scrape_interval: 60s
+        static_configs:
+          - targets: [adguard-exporter:9618]
+            labels:
+              instance: adguard-exporter
+
       - job_name: authentik
         scrape_interval: 60s
         static_configs:

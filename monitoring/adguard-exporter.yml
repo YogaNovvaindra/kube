@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: adguard-exporter
+  labels:
+    app: adguard-exporter
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: adguard-exporter
+  template:
+    metadata:
+      labels:
+        app: adguard-exporter
+    spec:
+      containers:
+        - name: adguard-exporter
+          image: reg.ygnv.my.id/ghcr/henrywhitaker3/adguard-exporter:v1.2.0
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: 16Mi
+          ports:
+            - containerPort: 9618
+          envFrom:
+            - secretRef:
+                name: adguard-exporter-cred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: adguard-exporter
+  labels:
+    app: adguard-exporter
+spec:
+  selector:
+    app: adguard-exporter
+  ports:
+    - protocol: TCP
+      port: 9618
+      targetPort: 9618
+  type: ClusterIP
