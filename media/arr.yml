@@ -7,7 +7,6 @@ metadata:
   labels:
     app: flaresolverr
 spec:
-  replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
