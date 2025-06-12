@@ -65,6 +65,26 @@ spec:
     port: 8191
     targetPort: 8191
 ---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: flaresolverr-hpa
+  namespace: media
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: flaresolverr
+  minReplicas: 1
+  maxReplicas: 2
+  metrics:
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 100
+---
 # Prowlarr Deployment
 apiVersion: apps/v1
 kind: Deployment
