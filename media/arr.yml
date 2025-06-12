@@ -26,7 +26,7 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            memory: 256Mi
+            memory: 384Mi
           # limits:
           #   memory: 2Gi
         ports:
