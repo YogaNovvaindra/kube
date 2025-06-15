@@ -7,6 +7,7 @@ metadata:
   labels:
     app: flaresolverr
 spec:
+  replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
@@ -26,7 +27,6 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            cpu: 500m
             memory: 256Mi
           # limits:
           #   memory: 2Gi
@@ -64,26 +64,6 @@ spec:
   - protocol: TCP
     port: 8191
     targetPort: 8191
----
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: flaresolverr-hpa
-  namespace: media
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: flaresolverr
-  minReplicas: 1
-  maxReplicas: 2
-  metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 75
 ---
 # Prowlarr Deployment
 apiVersion: apps/v1
