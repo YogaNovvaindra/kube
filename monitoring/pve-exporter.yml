@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: pve-exporter
-        image: reg.ygnv.my.id/docker/prompve/prometheus-pve-exporter:3.5.4
+        image: reg.ygnv.my.id/docker/prompve/prometheus-pve-exporter:3.5.5
         imagePullPolicy: Always
         resources:
           requests:
