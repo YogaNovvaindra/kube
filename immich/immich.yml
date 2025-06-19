@@ -22,7 +22,7 @@ spec:
         kubernetes.io/hostname: "kube-2"
       containers:
       - name: immich
-        image: reg.ygnv.my.id/ghcr/imagegenius/immich:1.134.0-openvino
+        image: reg.ygnv.my.id/ghcr/imagegenius/immich:1.135.0-openvino
         imagePullPolicy: Always
         resources:
           requests:
