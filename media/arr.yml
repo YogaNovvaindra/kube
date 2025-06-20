@@ -260,7 +260,7 @@ spec:
     spec:
       containers:
       - name: sonarr
-        image: reg.ygnv.my.id/docker/linuxserver/sonarr:4.0.14
+        image: reg.ygnv.my.id/docker/linuxserver/sonarr:4.0.15
         imagePullPolicy: Always
         resources:
           requests:
