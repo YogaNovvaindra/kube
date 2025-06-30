@@ -148,7 +148,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: docker.io/bitnami/nginx:1.28.0
+        image: docker.io/bitnami/nginx:1.29.0
         imagePullPolicy: Always
         resources:
           requests:
