@@ -108,7 +108,7 @@ spec:
     spec:
       containers:
       - name: mktxp
-        image: reg.ygnv.my.id/ghcr/akpw/mktxp:1.2.10
+        image: reg.ygnv.my.id/ghcr/akpw/mktxp:1.2.11
         imagePullPolicy: Always
         resources:
           requests:
