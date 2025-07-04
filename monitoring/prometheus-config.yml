@@ -232,9 +232,6 @@ data:
           - targets: [${KVM_ENDPOINT}]
             labels:
               instance: kvm
-          - targets: [${ARM_ENDPOINT}]
-            labels:
-              instance: arm
 
       # - job_name: 'kube-scheduler'
       #   static_configs:
