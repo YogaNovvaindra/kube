@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: warrior
+  namespace: tools
+  labels:
+    app: warrior
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  selector:
+    matchLabels:
+      app: warrior
+  strategy:
+    type: RollingUpdate
+  replicas: 1
+  revisionHistoryLimit: 3
+  template:
+    metadata:
+      labels:
+        app: warrior
+    spec:
+      containers:
+      - image: atdr.meo.ws/archiveteam/warrior-dockerfile:latest
+        imagePullPolicy: Always
+        name: warrior
+        resources: {}
+        env:
+        - name: DOWNLOADER
+          value: YGNV
+        - name: SELECTED_PROJECT
+          value: auto
+        ports:
+        - containerPort: 8001
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: warrior
+spec:
+  selector:
+    app: warrior
+  type: ClusterIP
+  ports:
+  - port: 8001
+    targetPort: 8001
+
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: warrior
+  namespace: tools
+spec:
+  entryPoints:
+  - http
+  - https
+  routes:
+  - match: Host(`warrior.ygnv.my.id`)
+    kind: Rule
+    services:
+    - name: warrior
+      port: 8001
+  tls:
+    certResolver: cloudflare
