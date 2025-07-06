@@ -37,6 +37,18 @@ spec:
           value: YGNV
         - name: SELECTED_PROJECT
           value: auto
+        - name: HTTP_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: warrior-cred
+              key: HTTP_USERNAME
+        - name: HTTP_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: warrior-cred
+              key: HTTP_PASSWORD
+        - name: CONCURRENT_ITEMS
+          value: "6"
         ports:
         - containerPort: 8001
 
