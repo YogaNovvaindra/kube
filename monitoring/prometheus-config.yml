@@ -229,6 +229,9 @@ data:
           - targets: [${AZURE_ENDPOINT}]
             labels:
               instance: azure
+          - targets: [${AZURETEST_ENDPOINT}]
+            labels:
+              instance: azure-test
           - targets: [${KVM_ENDPOINT}]
             labels:
               instance: kvm
