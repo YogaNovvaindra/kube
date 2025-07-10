@@ -554,7 +554,7 @@ data:
           description: Collaborative whiteboard tool for sketching and drawing
           siteMonitor: http://excalidraw:80
       - ArchiveTeam Warrior:
-          icon: https://wiki.archiveteam.org/index.php/File:Archive_team.png
+          icon: https://wiki.archiveteam.org/images/thumb/f/f3/Archive_team.png/587px-Archive_team.png
           href: https://warrior.ygnv.my.id
           description: Tool for archiving and preserving web pages
           siteMonitor: http://warrior:8001
