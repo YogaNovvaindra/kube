@@ -47,6 +47,7 @@ spec:
           - "--config.file=/etc/prometheus/prometheus.yml"
           - "--storage.tsdb.path=/prometheus"
           - "--web.enable-lifecycle"
+          - "--web.enable-remote-write-receiver"
           - "--storage.tsdb.retention.time=60d"
           - "--storage.tsdb.wal-compression"
           # - "--storage.tsdb.min-block-duration=1h"
