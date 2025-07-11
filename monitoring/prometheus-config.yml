@@ -210,18 +210,18 @@ data:
             replacement: snmp-exporter:9116
 
       # Server infrastructure monitoring
-      - job_name: server-node
-        scrape_interval: 60s
-        static_configs:
-          - targets: [${DOCKER_ENDPOINT}]
-            labels:
-              instance: docker
-          - targets: [${AAPANEL_ENDPOINT}]
-            labels:
-              instance: aapanel
-          - targets: [${LABS_ENDPOINT}]
-            labels:
-              instance: 8labs
+      # - job_name: server-node
+      #   scrape_interval: 60s
+      #   static_configs:
+      #     - targets: [${DOCKER_ENDPOINT}]
+      #       labels:
+      #         instance: docker
+      #     - targets: [${AAPANEL_ENDPOINT}]
+      #       labels:
+      #         instance: aapanel
+      #     - targets: [${LABS_ENDPOINT}]
+      #       labels:
+      #         instance: 8labs
 
       - job_name: server-test
         scrape_interval: 60s
