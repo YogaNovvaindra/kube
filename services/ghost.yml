@@ -42,7 +42,7 @@ spec:
           - name: database__client
             value: "mysql"
           - name: database__connection__host
-            value: "ghost-db"
+            value: "ghostdb"
           - name: database__connection__port
             value: "3306"
           - name: database__connection__user
@@ -121,24 +121,24 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: ghost-db
+  name: ghostdb
   namespace: services
 spec:
   replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
-      app: ghost-db
+      app: ghostdb
   template:
     metadata:
       labels:
-        app: ghost-db
+        app: ghostdb
     spec:
       nodeSelector:
         kubernetes.io/arch: amd64
       terminationGracePeriodSeconds: 10
       containers:
-      - name: ghost-db
+      - name: ghostdb
         image: reg.ygnv.my.id/docker/mysql:9.3.0
         imagePullPolicy: Always
         resources:
@@ -155,17 +155,17 @@ spec:
           - name: TZ
             value: "Asia/Jakarta"
         volumeMounts:
-          - name: ghost-db-data
+          - name: ghostdb-data
             mountPath: /var/lib/mysql
-          - name: ghost-db-config
+          - name: ghostdb-config
             mountPath: /etc/mysql/conf.d/my.cnf
             subPath: my.cnf
       volumes:
-        - name: ghost-db-data
+        - name: ghostdb-data
           hostPath:
             path: /mnt/cephfs/docker/services/ghost/mysql
             type: Directory
-        - name: ghost-db-config
+        - name: ghostdb-config
           configMap:
             name: mysql-config
             items:
@@ -176,11 +176,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: ghost-db
+  name: ghostdb
   namespace: services
 spec:
   selector:
-    app: ghost-db
+    app: ghostdb
   ports:
   - name: mysql
     port: 3306
