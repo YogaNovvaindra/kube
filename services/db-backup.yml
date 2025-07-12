@@ -266,7 +266,7 @@ data:
     set -eo pipefail
     set -o errtrace
 
-    microdnf install -y curl gzip coreutils
+    microdnf install -y curl gzip
 
     discord_notify() {
       local status="$1"; local title="$2"; local description="$3"
