@@ -262,7 +262,7 @@ metadata:
 data:
   ghostdb-dump.sh: |
     #!/bin/sh
-    apk add --no-cache curl mariadb-client
+    apk add --no-cache curl mysql-client
     set -eo pipefail
     set -o errtrace
 
@@ -293,17 +293,17 @@ data:
       "**Host:** $HOSTNAME\n**Time:** $TS_INIT\n**Action:** Starting logical dumps"
 
     mkdir -p "$BACKUP_ROOT"
-    DBS=$(mysql --ssl-mode=DISABLED -h $HOST -u $USER -sN -e "SHOW DATABASES WHERE \`Database\` NOT IN ('information_schema','performance_schema','mysql','sys');")
+    DBS=$(mysql --skip-ssl -h $HOST -u $USER -sN -e "SHOW DATABASES WHERE \`Database\` NOT IN ('information_schema','performance_schema','mysql','sys');")
 
     SUMMARY=""; COUNT=0
     for db in $DBS; do
       COUNT=$((COUNT+1))
-      SIZE=$(mysql --ssl-mode=DISABLED -h $HOST -u $USER -sN \
+      SIZE=$(mysql --skip-ssl -h $HOST -u $USER -sN \
         -e "SELECT CONCAT(ROUND(SUM(data_length+index_length)/1024/1024,2),' MB') \
         FROM information_schema.TABLES WHERE table_schema='$db';")
       TIMESTAMP=$(date +%H%M%S)
       OUT="$BACKUP_ROOT/${db}_${TIMESTAMP}.sql.gz"
-      mysqldump --ssl-mode=DISABLED -h $HOST -u $USER --single-transaction --routines --triggers "$db" \
+      mysqldump --skip-ssl -h $HOST -u $USER --single-transaction --routines --triggers "$db" \
         | gzip > "$OUT"
       FILESIZE=$(du -h "$OUT" | cut -f1)
       sha256sum "$OUT" >> "$BACKUP_ROOT/checksums.sha256"
