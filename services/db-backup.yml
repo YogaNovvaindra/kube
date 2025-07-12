@@ -152,7 +152,7 @@ spec:
             kubernetes.io/arch: amd64
           containers:
           - name: mariadb-dumper
-            image: reg.ygnv.my.id/docker/Alpine:3.22.0.0
+            image: reg.ygnv.my.id/docker/alpine:3.22.0
             imagePullPolicy: Always
             env:
             - name: DISCORD_WEBHOOK_URL
@@ -214,7 +214,7 @@ spec:
             kubernetes.io/arch: amd64
           containers:
           - name: mariadb-snapshotter
-            image: reg.ygnv.my.id/docker/Alpine:3.22.0
+            image: reg.ygnv.my.id/docker/alpine:3.22.0
             imagePullPolicy: Always
             env:
             - name: DISCORD_WEBHOOK_URL
@@ -382,7 +382,7 @@ spec:
             kubernetes.io/arch: amd64
           containers:
           - name: ghostdb-dumper
-            image: reg.ygnv.my.id/docker/Alpine:3.22.0.0
+            image: reg.ygnv.my.id/docker/alpine:3.22.0
             imagePullPolicy: Always
             env:
             - name: DISCORD_WEBHOOK_URL
@@ -414,7 +414,7 @@ spec:
           - name: ghostdb-dumps
             hostPath:
               path: /mnt/cephfs/docker/services/ghost/mysql-backup/dumps
-              type: Directory
+              type: DirectoryOrCreate
           - name: db-creds
             secret:
               secretName: ghost-cred
@@ -444,7 +444,7 @@ spec:
             kubernetes.io/arch: amd64
           containers:
           - name: ghostdb-snapshotter
-            image: reg.ygnv.my.id/docker/Alpine:3.22.0.0
+            image: reg.ygnv.my.id/docker/alpine:3.22.0
             imagePullPolicy: Always
             env:
             - name: DISCORD_WEBHOOK_URL
@@ -480,5 +480,5 @@ spec:
           - name: ghostdb-snapshots
             hostPath:
               path: /mnt/cephfs/docker/services/ghost/mysql-backup/snapshots
-              type: Directory
+              type: DirectoryOrCreate
           restartPolicy: Never

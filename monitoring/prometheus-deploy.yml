@@ -22,7 +22,7 @@ spec:
       serviceAccountName: prometheus
       initContainers:
       - name: config-processor
-        image: reg.ygnv.my.id/docker/Alpine:3.22.0
+        image: reg.ygnv.my.id/docker/alpine:3.22.0
         imagePullPolicy: Always
         command: ['/bin/sh', '-c']
         args:
