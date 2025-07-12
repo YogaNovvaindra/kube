@@ -266,7 +266,7 @@ data:
     set -eo pipefail
     set -o errtrace
 
-    apt-get update && apt-get install -y curl gzip coreutils
+    microdnf install -y curl gzip coreutils
 
     discord_notify() {
       local status="$1"; local title="$2"; local description="$3"
@@ -314,7 +314,6 @@ data:
       SUMMARY="${SUMMARY}• **${db}** — DB size: ${SIZE}, dump: ${FILESIZE}\n"
     done
 
-    # Cleanup old dumps
     find /dumps -type f -mtime +7 -delete
     find /dumps -type d -empty -delete
 
