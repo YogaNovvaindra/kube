@@ -262,7 +262,7 @@ metadata:
 data:
   ghostdb-dump.sh: |
     #!/bin/sh
-    apk add --no-cache curl mysql-client
+    apk add --no-cache curl mysql-client ca-certificates
     set -eo pipefail
     set -o errtrace
 
@@ -414,7 +414,7 @@ spec:
           - name: ghostdb-dumps
             hostPath:
               path: /mnt/cephfs/docker/services/ghost/mysql-backup/dumps
-              type: DirectoryOrCreate
+              type: Directory
           - name: db-creds
             secret:
               secretName: ghost-cred
@@ -480,5 +480,5 @@ spec:
           - name: ghostdb-snapshots
             hostPath:
               path: /mnt/cephfs/docker/services/ghost/mysql-backup/snapshots
-              type: DirectoryOrCreate
+              type: Directory
           restartPolicy: Never
