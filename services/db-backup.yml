@@ -291,8 +291,9 @@ data:
     }
     trap fail ERR
 
-    discord_notify "SUCCESS" "🔔 MySQL Backup Starting" \
-      "**Host:** $HOSTNAME\n**Time:** $TS_INIT\n**Action:** Starting logical dumps"
+    # Starting notification
+    discord_notify "SUCCESS" "🔔 Backup Starting" \
+      "**Host:** $HOSTNAME\n**Time:** $TS_INIT\n**Action:** Starting logical backups"
 
     mkdir -p "$BACKUP_ROOT"
 
@@ -317,11 +318,13 @@ data:
     find /dumps -type f -mtime +7 -delete
     find /dumps -type d -empty -delete
 
+    # Success notification
     TS_END=$(date +"%Y-%m-%d %H:%M:%S")
     DURATION=$(( $(date +%s) - $(date -d "$TS_INIT" +%s) ))
-    FINAL="**Host:** $HOSTNAME\n**Time:** $TS_END\n**Duration:** ${DURATION}s\n\n${SUMMARY}**Total databases:** $COUNT"
-    discord_notify "SUCCESS" "✅ MySQL Dumps Succeeded" "$FINAL"
-    echo "✅ Logical dumps complete"
+    FINAL_DESC="**Host:** $HOSTNAME\n**Time:** $TS_END\n**Duration:** ${DURATION}s\n\n"
+    FINAL_DESC="${FINAL_DESC}${SUMMARY}\n**Total databases:** $COUNT"
+    discord_notify "SUCCESS" "✅ All Backups Succeeded" "$FINAL_DESC"
+    echo "✅ All done!"
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -343,8 +346,7 @@ data:
     }
 
     TS_INIT=$(date +"%Y-%m-%d %H:%M:%S")
-    discord_notify "SUCCESS" "🔔 Filesystem Backup Starting" \
-      "**Host:** ${HOSTNAME}\n**Time:** ${TS_INIT}\n**Action:** FS snapshot"
+    discord_notify "SUCCESS" "🔔 Backup Starting" "**Host:** ${HOSTNAME}\n**Time:** ${TS_INIT}\n**Action:** Starting filesystem backup"
 
     TIMESTAMP=$(date +%Y%m%d%H%M%S)
     ARCHIVE="/snapshots/ghostdb-backup-${TIMESTAMP}.zip"
@@ -352,20 +354,24 @@ data:
 
     if ! zip -rq "$ARCHIVE" .; then
       TS_FAIL=$(date +"%Y-%m-%d %H:%M:%S")
-      discord_notify "FAILED" "🚨 Snapshot FAILED" \
-        "**Host:** ${HOSTNAME}\n**Time:** ${TS_FAIL}\n**Error:** archive failed"
+      discord_notify "FAILED" "🚨 Backup FAILED" "**Host:** ${HOSTNAME}\n**Time:** ${TS_FAIL}\n**Error:** Archive creation failed"
       exit 1
     fi
 
+    # Cleanup old backups
     find /snapshots -type f -name '*.zip' -mtime +7 -print -delete
     find /snapshots -type d -empty -print -delete
 
     TS_END=$(date +"%Y-%m-%d %H:%M:%S")
-    SIZE=$(du -h "$ARCHIVE"|cut -f1)
-    DUR=$(( $(date +%s) - $(date -d "$TS_INIT" +%s) ))
-    SUMMARY="**Host:** ${HOSTNAME}\n**Time:** ${TS_END}\n**Duration:** ${DUR}s\n**Archive:** $(basename "$ARCHIVE") (${SIZE})"
-    discord_notify "SUCCESS" "✅ Snapshot Succeeded" "$SUMMARY"
-    echo "✅ Filesystem snapshot complete"
+    FILE_NAME=$(basename "$ARCHIVE")
+    FILE_SIZE=$(du -h "$ARCHIVE" | cut -f1)
+
+    SUMMARY="**Host:** ${HOSTNAME}\n**Time:** ${TS_END}\n"
+    SUMMARY="${SUMMARY}**Duration:** $(( $(date +%s) - $(date -d "$TS_INIT" +%s) )) seconds\n"
+    SUMMARY="${SUMMARY}**Archive:** ${FILE_NAME} (${FILE_SIZE})"
+
+    discord_notify "SUCCESS" "✅ Backup Succeeded" "$SUMMARY"
+    echo "✅ Backup completed successfully!"
 ---
 apiVersion: batch/v1
 kind: CronJob
