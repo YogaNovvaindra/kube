@@ -14,7 +14,7 @@ spec:
           serviceAccountName: default  # Use default SA with RBAC permissions
           containers:
           - name: sealed-secrets-backup
-            image: reg.ygnv.my.id/docker/bitnami/kubectl:1.33.2
+            image: reg.ygnv.my.id/docker/bitnami/kubectl:1.33.3
             command:
             - /bin/bash
             - -c
