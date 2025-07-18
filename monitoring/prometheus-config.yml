@@ -223,19 +223,6 @@ data:
       #       labels:
       #         instance: 8labs
 
-      - job_name: server-test
-        scrape_interval: 60s
-        static_configs:
-          - targets: [${AZURE_ENDPOINT}]
-            labels:
-              instance: azure
-          - targets: [${AZURETEST_ENDPOINT}]
-            labels:
-              instance: azure-test
-          - targets: [${KVM_ENDPOINT}]
-            labels:
-              instance: kvm
-
       # - job_name: 'kube-scheduler'
       #   static_configs:
       #     - targets: ['10:10259']
