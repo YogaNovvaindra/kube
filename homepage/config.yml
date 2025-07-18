@@ -498,6 +498,11 @@ data:
             url: http://immich-svc.immich:8080
             key: ${IMMICH_KEY}
             version: 2
+      - N8n:
+          icon: n8n.png
+          href: https://n8n.ygnv.my.id
+          description: Workflow automation and integration platform
+          siteMonitor: http://n8n.tools:5678
       - Iventoy:
           icon: netboot.svg
           href: https://iventoy.ygnv.my.id

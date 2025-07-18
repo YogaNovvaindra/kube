@@ -1,0 +1,139 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: n8n
+  namespace: tools
+  labels:
+    app: n8n
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: n8n
+rules:
+- apiGroups: [""]
+  resources:
+  - pods
+  - pods/log
+  - pods/exec
+  verbs: ["get", "list", "watch", "create", "delete"]
+- apiGroups: ["apps"]
+  resources:
+  - deployments
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: ["batch"]
+  resources:
+  - jobs
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: ["extensions"]
+  resources:
+  - ingresses
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: ["traefik.io"]
+  resources:
+  - ingressroutes
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- nonResourceURLs:
+  - /metrics
+  verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: n8n
+  namespace: tools
+subjects:
+- kind: ServiceAccount
+  name: n8n
+  namespace: tools
+roleRef:
+  kind: ClusterRole
+  name: n8n
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: n8n-config
+  namespace: tools
+data:
+  NODE_ENV: "production"
+  GENERIC_TIMEZONE: "Asia/Jakarta"
+  N8N_EDITOR_BASE_URL: "http://n8n.ygnv.my.id"
+  N8N_USER_MANAGEMENT_ENABLED: "true"
+  N8N_RUNNERS_ENABLED: "true"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: n8n
+  namespace: tools
+  labels:
+    app: n8n
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: n8n
+  template:
+    metadata:
+      labels:
+        app: n8n
+    spec:
+      serviceAccountName: n8n
+      nodeSelector:
+        kubernetes.io/hperf: "true"
+      containers:
+      - name: n8n
+        image: reg.ygnv.my.id/docker/n8nio/n8n:1.101.3
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 256Mi
+        ports:
+          - containerPort: 5678
+            name: http
+        envFrom:
+          - configMapRef:
+              name: n8n-config
+        volumeMounts:
+          - name: n8n-data
+            mountPath: /home/node/.n8n
+      volumes:
+        - name: n8n-data
+          hostPath:
+            path: /mnt/cephfs/docker/tools/n8n/
+            type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: n8n
+  namespace: tools
+spec:
+  selector:
+    app: n8n
+  ports:
+    - port: 5678
+      targetPort: http
+  type: ClusterIP
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: n8n
+  namespace: tools
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+  - match: Host(`n8n.ygnv.my.id`)
+    kind: Rule
+    services:
+    - name: n8n
+      port: 5678
+  tls:
+    certResolver: cloudflare
