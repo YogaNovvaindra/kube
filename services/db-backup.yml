@@ -441,7 +441,7 @@ metadata:
   name: services-ghostdb-snapshots
   namespace: services
 spec:
-  schedule: "45 0 * * *"
+  schedule: "35 0 * * *"
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
