@@ -1,0 +1,123 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minio
+  namespace: tools
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: minio
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      containers:
+      - name: minio
+        image: minio/minio:RELEASE.2025-07-18T21-56-31Z
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 512Mi
+        args:
+          - server
+          - --console-address
+          - ":9001"
+          - /data
+        ports:
+        - name: api
+          containerPort: 9000
+        - name: console
+          containerPort: 9001
+        env:
+        - name: MINIO_ROOT_USER
+          valueFrom:
+            secretKeyRef:
+              name: minio-cred
+              key: accesskey
+        - name: MINIO_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: minio-cred
+              key: secretkey
+        - name: MINIO_BROWSER_REDIRECT_URL
+          value: "https://minio.ygnv.my.id/minio/"
+        - name: CONSOLE_SECURE_TLS_REDIRECT
+          value: "false"
+        volumeMounts:
+          - name: minio-data
+            mountPath: /data
+      volumes:
+      - name: minio-data
+        hostPath:
+          path: /mnt/cephfs/docker/tools/minio
+          type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio
+  namespace: tools
+spec:
+  selector:
+    app: minio
+  ports:
+    - name: api
+      port: 9000
+      targetPort: api
+    - name: console
+      port: 9001
+      targetPort: console
+  type: ClusterIP
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: minio
+  namespace: tools
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`minio.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: minio
+          port: 9000
+  tls:
+    certResolver: cloudflare
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: minio
+  namespace: tools
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: tools-minio-strip
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`minio.ygnv.my.id`) && PathPrefix(`/minio`)
+      kind: Rule
+      services:
+        - name: minio
+          port: 9001
+      middlewares:
+        - name: minio-strip
+  tls:
+    certResolver: cloudflare
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: minio-strip
+  namespace: tools
+spec:
+  stripPrefix:
+    prefixes:
+      - /minio
