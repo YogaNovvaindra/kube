@@ -75,7 +75,7 @@ spec:
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: minio
+  name: minio-api
   namespace: tools
 spec:
   entryPoints:
@@ -93,7 +93,7 @@ spec:
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: minio
+  name: minio-webui
   namespace: tools
   annotations:
     traefik.ingress.kubernetes.io/router.middlewares: tools-minio-strip
