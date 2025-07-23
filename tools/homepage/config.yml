@@ -65,9 +65,13 @@ data:
         icon: mdi-wifi
         style: column
         columns: 1
-    # group of 4
+    # end of group of 4
       Utilities:
         icon: mdi-toolbox
+        style: row
+        columns: 4
+      Editor:
+        icon: mdi-pencil
         style: row
         columns: 4
       File Synchronization:
@@ -483,11 +487,6 @@ data:
           siteMonitor: http://maintainerr.media:6246
 
     - Utilities:
-      - Outline:
-          icon: sh-outline.svg
-          href: https://outline.ygnv.my.id
-          description: Knowledge management and note-taking platform 
-          siteMonitor: http://outline.tools:3000
       - Immich:
           icon: immich.png
           href: https://immich.ygnv.my.id
@@ -503,6 +502,11 @@ data:
           href: https://n8n.ygnv.my.id
           description: Workflow automation and integration platform
           siteMonitor: http://n8n.tools:5678
+      - Minio:
+          icon: minio.svg
+          href: https://minio.ygnv.my.id
+          description: Self-hosted object storage service
+          siteMonitor: http://minio.tools:9000
       - Iventoy:
           icon: netboot.svg
           href: https://iventoy.ygnv.my.id
@@ -529,21 +533,11 @@ data:
             username: ${TRANSMISSION_USERNAME}
             password: ${TRANSMISSION_PASSWORD}
             rpcUrl: /transmission/ # Optional. Matches the value of "rpc-url" in your Transmission's settings.json file
-      - Stirling-PDF:
-          icon: stirling-pdf.svg
-          href: https://pdf.ygnv.my.id
-          description: Web-based PDF manipulation tool
-          siteMonitor: http://stirling-pdf.tools:8080
       - IT-Tools:
           icon: it-tools-light.svg
           href: https://tools.ygnv.my.id
           description: Collection of useful IT utilities and tools
           siteMonitor: http://it-tools.tools:80
-      - Reubah:
-          icon: mdi-image-edit
-          href: https://reubah.ygnv.my.id
-          description: Tool for processing images and converting documents
-          siteMonitor: http://reubah.tools:8081
       - Change Detection:
           icon: changedetection.svg
           href: https://changedetection.ygnv.my.id
@@ -553,16 +547,38 @@ data:
             type: changedetectionio
             url: http://changedetection.tools:5000
             key: ${CHANGEDETECTION_KEY}
-      - Excalidraw:
-          icon: excalidraw.svg
-          href: http://excalidraw.ygnv.my.id
-          description: Collaborative whiteboard tool for sketching and drawing
-          siteMonitor: http://excalidraw:80
       - ArchiveTeam Warrior:
           icon: https://wiki.archiveteam.org/images/thumb/f/f3/Archive_team.png/587px-Archive_team.png
           href: https://warrior.ygnv.my.id
           description: Tool for archiving and preserving web pages
           siteMonitor: http://warrior:8001
+
+    - Editor:
+      - Outline:
+          icon: sh-outline.svg
+          href: https://outline.ygnv.my.id
+          description: Knowledge management and note-taking platform 
+          siteMonitor: http://outline.tools:3000
+      - Excalidraw:
+          icon: excalidraw.svg
+          href: http://excalidraw.ygnv.my.id
+          description: Collaborative whiteboard tool for sketching and drawing
+          siteMonitor: http://excalidraw:80
+      - Reubah:
+          icon: mdi-image-edit
+          href: https://reubah.ygnv.my.id
+          description: Tool for processing images and converting documents
+          siteMonitor: http://reubah.tools:8081
+      - Stirling-PDF:
+          icon: stirling-pdf.svg
+          href: https://pdf.ygnv.my.id
+          description: Web-based PDF manipulation tool
+          siteMonitor: http://stirling-pdf.tools:8080
+      - Reactive Resume:
+          icon: https://raw.githubusercontent.com/AmruthPillai/Reactive-Resume/4e91a2e2eff7dfa9beb0828955ba917ab791f69f/apps/client/public/logo/light.svg
+          href: https://resume.ygnv.my.id
+          description: Resume builder and management tool
+          siteMonitor: http://reactive-resume.tools:3000
 
     - Smart Home Devices:
       - Home Assistant:
