@@ -4,25 +4,25 @@ metadata:
   name: reactive-resume-env
   namespace: tools
 data:
-  PORT: 3000
-  NODE_ENV: production
+  PORT: "3000"
+  NODE_ENV: "production"
 
   # -- URLs --
-  PUBLIC_URL: https://resume.ygnv.my.id
-  STORAGE_URL: http://minio:9000/reactive
+  PUBLIC_URL: "https://resume.ygnv.my.id"
+  STORAGE_URL: "http://minio:9000/reactive"
 
   # -- Printer (Chrome) --
-  CHROME_URL: ws://chrome:3000
+  CHROME_URL: "ws://chrome:3000"
 
   # -- Emails --
-  MAIL_FROM: noreply@localhost
+  MAIL_FROM: "noreply@localhost"
   # SMTP_URL: smtp://user:pass@smtp:587 # Optional
 
   # -- Storage (Minio) --
-  STORAGE_ENDPOINT: minio
-  STORAGE_PORT: 9000
-  STORAGE_REGION: ap-southeast-1 # Optional
-  STORAGE_BUCKET: reactive
+  STORAGE_ENDPOINT: "minio"
+  STORAGE_PORT: "9000"
+  STORAGE_REGION: "ap-southeast-1"
+  STORAGE_BUCKET: "reactive"
   STORAGE_USE_SSL: "false"
   STORAGE_SKIP_BUCKET_CHECK: "false"
 
