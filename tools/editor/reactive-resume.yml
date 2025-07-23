@@ -9,7 +9,7 @@ data:
 
   # -- URLs --
   PUBLIC_URL: "https://resume.ygnv.my.id"
-  STORAGE_URL: "http://minio:9000/reactive"
+  STORAGE_URL: "https://minio.ygnv.my.id/reactive"
 
   # -- Printer (Chrome) --
   CHROME_URL: "ws://chrome:3000"
