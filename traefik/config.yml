@@ -27,8 +27,9 @@ data:
         addServicesLabels: true
         entryPoint: "metrics"
 
-    accessLog:
-      format: json
+    # accessLog:
+    #   filePath: /data/access.log
+    #   format: json
     
     entryPoints:
       http:
