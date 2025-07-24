@@ -26,6 +26,9 @@ data:
         addEntryPointsLabels: true
         addServicesLabels: true
         entryPoint: "metrics"
+
+    accessLog:
+      format: json
     
     entryPoints:
       http:
