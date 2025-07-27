@@ -715,32 +715,6 @@ data:
       - BackgroundScanReport
       - ClusterBackgroundScanReport
       - UpdateRequest
-  # New health check customization from the second ConfigMap
-  resource.customizations.health.Service: |
-    hs = {}
-    if obj.spec.type == "LoadBalancer" then
-      -- Check if externalIPs are explicitly defined
-      if obj.spec.externalIPs and #obj.spec.externalIPs > 0 then
-        hs.status = "Healthy"
-        hs.message = "LoadBalancer Service using externalIPs"
-      else
-        -- Fallback to default LoadBalancer status check
-        if obj.status.loadBalancer and obj.status.loadBalancer.ingress and #obj.status.loadBalancer.ingress > 0 then
-          hs.status = "Healthy"
-          hs.message = "LoadBalancer ingress is ready"
-        else
-          hs.status = "Progressing"
-          hs.message = "Waiting for LoadBalancer IP or externalIPs"
-        end
-      end
-    else
-      -- Mark non-LoadBalancer Services as Healthy
-      hs.status = "Healthy"
-      hs.message = "Service is not LoadBalancer type"
-    end
-    return hs
-  # account apikey
-  accounts.homepage: apiKey
 kind: ConfigMap
 metadata:
   labels:
@@ -967,7 +941,7 @@ metadata:
 spec:
   ports:
   - name: http
-    port: 8080
+    port: 80
     protocol: TCP
     targetPort: 8080
   # - name: https
@@ -1508,7 +1482,7 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            memory: 32Mi
+            memory: 16Mi
         name: redis
         ports:
         - containerPort: 6379
@@ -1852,6 +1826,7 @@ spec:
         - /usr/local/bin/argocd
         - /var/run/argocd/argocd-cmp-server
         image: reg.ygnv.my.id/quay/argoproj/argocd:v3.0.12
+        imagePullPolicy: Always
         name: copyutil
         securityContext:
           allowPrivilegeEscalation: false
@@ -2452,6 +2427,12 @@ spec:
               key: controller.self.heal.backoff.cap.seconds
               name: argocd-cmd-params-cm
               optional: true
+        - name: ARGOCD_APPLICATION_CONTROLLER_SELF_HEAL_BACKOFF_COOLDOWN_SECONDS
+          valueFrom:
+            configMapKeyRef:
+              key: controller.self.heal.backoff.cooldown.seconds
+              name: argocd-cmd-params-cm
+              optional: true
         - name: ARGOCD_APPLICATION_CONTROLLER_SYNC_TIMEOUT
           valueFrom:
             configMapKeyRef:
@@ -2588,6 +2569,12 @@ spec:
           valueFrom:
             configMapKeyRef:
               key: controller.cluster.cache.events.processing.interval
+              name: argocd-cmd-params-cm
+              optional: true
+        - name: ARGOCD_APPLICATION_CONTROLLER_COMMIT_SERVER
+          valueFrom:
+            configMapKeyRef:
+              key: commit.server
               name: argocd-cmd-params-cm
               optional: true
         - name: KUBECACHEDIR
