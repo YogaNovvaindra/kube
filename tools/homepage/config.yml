@@ -304,10 +304,10 @@ data:
           icon: argo-cd.svg
           href: https://argocd.ygnv.my.id
           description: GitOps continuous delivery tool for Kubernetes
-          siteMonitor: http://argocd-server.argocd:8080
+          siteMonitor: http://argocd-server.argocd:80
           widget:
             type: argocd
-            url: http://argocd-server.argocd:8080
+            url: http://argocd-server.argocd:80
             key: ${ARGOCD_KEY}
       - Harbor:
           icon: harbor.svg
