@@ -758,7 +758,7 @@ metadata:
   name: argocd-rbac-cm
 data:
   policy.csv: |
-    g, your‑oidc‑group‑name, role:readonly
+    g, homepage, role:readonly
   policy.default: role:readonly
 ---
 apiVersion: v1
