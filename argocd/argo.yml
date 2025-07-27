@@ -715,6 +715,8 @@ data:
       - BackgroundScanReport
       - ClusterBackgroundScanReport
       - UpdateRequest
+  # account apikey
+  accounts.homepage: apiKey
 kind: ConfigMap
 metadata:
   labels:
@@ -759,7 +761,6 @@ metadata:
 data:
   policy.csv: |
     g, homepage, role:readonly
-  policy.default: role:readonly
 ---
 apiVersion: v1
 data:
