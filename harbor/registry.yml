@@ -87,7 +87,7 @@ spec:
     spec:
       containers:
       - name: registry
-        image: docker.io/bitnami/harbor-registry:2.13.1
+        image: goharbor/harbor-registry:v2.13.2
         imagePullPolicy: Always
         resources:
           requests:
@@ -141,7 +141,7 @@ spec:
     spec:
       containers:
       - name: registryctl
-        image: docker.io/bitnami/harbor-registryctl:2.13.1
+        image: goharbor/harbor-registryctl:v2.13.2
         imagePullPolicy: Always
         resources:
           requests:

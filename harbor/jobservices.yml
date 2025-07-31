@@ -64,7 +64,7 @@ spec:
     spec:
       containers:
       - name: jobservice
-        image: docker.io/bitnami/harbor-jobservice:2.13.2
+        image: goharbor/harbor-jobservice:v2.13.2
         imagePullPolicy: Always
         resources:
           requests:
