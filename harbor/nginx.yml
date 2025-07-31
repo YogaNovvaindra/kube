@@ -157,7 +157,7 @@ spec:
             memory: 32Mi
         volumeMounts:
         - name: nginx-config
-          mountPath: /opt/bitnami/nginx/conf/nginx.conf
+          mountPath: /etc/nginx/nginx.conf
           subPath: nginx.conf
       volumes:
       - name: nginx-config
