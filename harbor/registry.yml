@@ -85,6 +85,8 @@ spec:
       labels:
         app: registry
     spec:
+      nodeSelector:
+        kubernetes.io/arch: amd64
       containers:
       - name: registry
         image: goharbor/registry-photon:v2.13.2
@@ -139,6 +141,8 @@ spec:
       labels:
         app: registryctl
     spec:
+      nodeSelector:
+        kubernetes.io/arch: amd64
       containers:
       - name: registryctl
         image: goharbor/harbor-registryctl:v2.13.2
