@@ -32,7 +32,7 @@ spec:
     spec:
       containers:
       - name: core
-        image: docker.io/bitnami/harbor-core:2.13.1
+        image: docker.io/bitnami/harbor-core:2.13.2
         imagePullPolicy: Always
         resources:
           requests:
