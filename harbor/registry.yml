@@ -87,7 +87,7 @@ spec:
     spec:
       containers:
       - name: registry
-        image: goharbor/harbor-registry:v2.13.2
+        image: goharbor/registry-photon:v2.13.2
         imagePullPolicy: Always
         resources:
           requests:
