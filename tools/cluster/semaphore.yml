@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
       - name: semaphore
-        image: reg.ygnv.my.id/docker/semaphoreui/semaphore:v2.15.4
+        image: reg.ygnv.my.id/docker/semaphoreui/semaphore:v2.15.5
         imagePullPolicy: Always
         resources:
           requests:
