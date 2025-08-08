@@ -29,7 +29,7 @@ spec:
       #   runAsGroup: 0
       containers:
       - name: cloudflared
-        image: reg.ygnv.my.id/docker/cloudflare/cloudflared:2025.7.0
+        image: reg.ygnv.my.id/docker/cloudflare/cloudflared:2025.8.0
         imagePullPolicy: Always
         resources:
           requests:
