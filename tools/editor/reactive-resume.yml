@@ -51,7 +51,7 @@ spec:
         kubernetes.io/hperf: "true"
       containers:
       - name: chrome
-        image: reg.ygnv.my.id/ghcr/browserless/chromium:v2.33.0
+        image: reg.ygnv.my.id/ghcr/browserless/chromium:v2.34.0
         imagePullPolicy: Always
         resources:
           requests:
