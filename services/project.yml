@@ -22,7 +22,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: mariadb
-        image: reg.ygnv.my.id/docker/mariadb:11.8.3
+        image: reg.ygnv.my.id/docker/mariadb:12.0.2
         imagePullPolicy: Always
         resources:
           requests:
