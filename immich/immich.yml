@@ -158,7 +158,7 @@ spec:
     spec:
       containers:
       - name: valkey
-        image: reg.ygnv.my.id/docker/valkey/valkey:8.1-alpine
+        image: reg.ygnv.my.id/docker/valkey/valkey:9.0-alpine
         imagePullPolicy: Always
         resources:
           requests:
