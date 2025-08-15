@@ -31,7 +31,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
         - name: valkey
-          image: valkey/valkey:8.1-alpine
+          image: valkey/valkey:9.0-alpine
           imagePullPolicy: Always
           command: ["valkey-server", "/valkey.conf"]
           ports:
