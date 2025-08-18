@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: changedetection
-        image: reg.ygnv.my.id/docker/linuxserver/changedetection.io:0.50.8
+        image: reg.ygnv.my.id/docker/linuxserver/changedetection.io:0.50.9
         imagePullPolicy: Always
         resources:
           requests:
