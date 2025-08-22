@@ -22,7 +22,7 @@ spec:
         kubernetes.io/arch: amd64
       containers:
       - name: excalidraw
-        image: reg.ygnv.my.id/docker/excalidraw/excalidraw:latest@sha256:004d162d6d856203cc223449602b6e6db30c36b712adc2f3333e9df6a64eafc0
+        image: reg.ygnv.my.id/docker/excalidraw/excalidraw:latest@sha256:712cd4e7383509ffa50998e743d1a0d02b5aa8eeae714e4d073b7cfb7884f15c
         imagePullPolicy: Always
         resources:
           requests:
