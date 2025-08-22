@@ -47,7 +47,7 @@ spec:
                 name: homepage-cred
       containers:
         - name: homepage
-          image: reg.ygnv.my.id/ghcr/gethomepage/homepage:v1.4.5
+          image: reg.ygnv.my.id/ghcr/gethomepage/homepage:v1.4.6
           imagePullPolicy: Always
           resources:
             requests:
