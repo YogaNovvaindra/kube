@@ -97,7 +97,7 @@ spec:
           type: Directory
       - name: pictures-volume
         hostPath:
-          path: /mnt/Data/Pictures
+          path: /mnt/cephfs/data/Pictures
           type: Directory
       # Add device volumes
       - name: dri-device

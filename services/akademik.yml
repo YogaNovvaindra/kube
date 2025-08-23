@@ -1,0 +1,81 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: akademik
+  namespace: services
+  labels:
+    app: akademik
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: akademik
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: akademik
+    spec:
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      containers:
+      - name: akademik
+        image: reg.ygnv.my.id/docker/jakubboucek/lamp-devstack-php:8.4.7
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 32Mi
+        ports:
+        - containerPort: 80
+        env:
+        - name: TZ
+          value: "Asia/Jakarta"
+        - name: APACHE_DOCUMENT_ROOT
+          value: "/var/www/html/public"
+        volumeMounts:
+        - name: akademik-data
+          mountPath: /var/www/html
+      volumes:
+      - name: akademik-data
+        hostPath:
+          path: /mnt/cephfs/docker/services/akademik
+          type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: akademik
+  namespace: services
+  labels:
+    app: akademik
+spec:
+  selector:
+    app: akademik
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 80
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: akademik
+  namespace: services
+  labels:
+    app: akademik
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`akademik.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: akademik
+          port: 80
+  tls:
+    certResolver: cloudflare
+---

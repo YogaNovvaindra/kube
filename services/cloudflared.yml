@@ -5,6 +5,11 @@ metadata:
   namespace: services
   labels:
     app: cloudflared
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
 spec:
   revisionHistoryLimit: 3
   selector:
@@ -29,7 +34,7 @@ spec:
       #   runAsGroup: 0
       containers:
       - name: cloudflared
-        image: reg.ygnv.my.id/docker/cloudflare/cloudflared:2025.8.1
+        image: reg.ygnv.my.id/docker/cloudflare/cloudflared:latest
         imagePullPolicy: Always
         resources:
           requests:
