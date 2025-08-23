@@ -210,7 +210,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: db
-        image: reg.ygnv.my.id/docker/tensorchord/pgvecto-rs:pg16-v0.2.1
+        image: reg.ygnv.my.id/ghcr/immich-app/postgres:16-vectorchord0.4.2-pgvectors0.3.0
         imagePullPolicy: Always
         resources:
           requests:
