@@ -233,6 +233,10 @@ spec:
             secretKeyRef:
               name: db-cred
               key: dbname
+        - name: POSTGRES_INITDB_ARGS
+          value: '--data-checksums'
+        - name: DB_STORAGE_TYPE
+          value: 'HDD'
         volumeMounts:
         - name: db-data
           mountPath: /var/lib/postgresql/data
