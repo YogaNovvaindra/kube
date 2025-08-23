@@ -209,7 +209,7 @@ data:
             target_label: app
 
       # Storage monitoring
-      - job_name: microceph
+      - job_name: proxmox-ceph
         static_configs:
           - targets:
               - ${MICROCEPH_ENDPOINT_1}
