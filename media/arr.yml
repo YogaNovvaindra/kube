@@ -23,7 +23,7 @@ spec:
         kubernetes.io/hperf: "true"
       containers:
       - name: flaresolverr
-        image: reg.ygnv.my.id/ghcr/flaresolverr/flaresolverr:v3.3.25
+        image: reg.ygnv.my.id/ghcr/flaresolverr/flaresolverr:v3.4.0
         imagePullPolicy: Always
         resources:
           requests:
