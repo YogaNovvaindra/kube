@@ -63,11 +63,11 @@ spec:
           type: Directory
       - name: plex-tv
         hostPath:
-          path: /mnt/Data/Videos/TV
+          path: /mnt/cephfs/data/Videos/TV
           type: Directory
       - name: plex-movies
         hostPath:
-          path: /mnt/Data/Videos/Movies
+          path: /mnt/cephfs/data/Videos/Movies
           type: Directory
 ---
 # Plex Service
@@ -175,11 +175,11 @@ spec:
           type: Directory
       - name: jellyfin-tvshows
         hostPath:
-          path: /mnt/Data/Videos/TV
+          path: /mnt/cephfs/data/Videos/TV
           type: Directory
       - name: jellyfin-movies
         hostPath:
-          path: /mnt/Data/Videos/Movies
+          path: /mnt/cephfs/data/Videos/Movies
           type: Directory
 ---
 # Jellyfin Service

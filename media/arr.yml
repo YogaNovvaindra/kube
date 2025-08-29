@@ -196,7 +196,7 @@ spec:
           type: Directory
       - name: radarr-movies
         hostPath:
-          path: /mnt/Data/Videos/Movies
+          path: /mnt/cephfs/data/Videos/Movies
           type: Directory
       - name: radarr-downloads
         hostPath:
@@ -288,7 +288,7 @@ spec:
           type: Directory
       - name: sonarr-tv
         hostPath:
-          path: /mnt/Data/Videos/TV
+          path: /mnt/cephfs/data/Videos/TV
           type: Directory
       - name: sonarr-downloads
         hostPath:
@@ -380,11 +380,11 @@ spec:
           type: Directory
       - name: bazarr-movies
         hostPath:
-          path: /mnt/Data/Videos/Movies
+          path: /mnt/cephfs/data/Videos/Movies
           type: Directory
       - name: bazarr-tv
         hostPath:
-          path: /mnt/Data/Videos/TV
+          path: /mnt/cephfs/data/Videos/TV
           type: Directory
 ---
 # Bazarr Service

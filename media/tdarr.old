@@ -84,7 +84,7 @@ spec:
           type: DirectoryOrCreate
       - name: media
         hostPath:
-          path: /mnt/Data/Videos
+          path: /mnt/cephfs/data/Videos
           type: Directory
       - name: transcode-cache
         hostPath:
