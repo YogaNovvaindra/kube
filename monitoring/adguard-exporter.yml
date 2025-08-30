@@ -20,7 +20,7 @@ spec:
       containers:
         - name: adguard-exporter
           image: reg.ygnv.my.id/ghcr/henrywhitaker3/adguard-exporter:v1.2.0
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           resources:
             requests:
               memory: 16Mi

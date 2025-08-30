@@ -93,7 +93,7 @@ spec:
       containers:
       - name: loki
         image: reg.ygnv.my.id/docker/grafana/loki:3.5.3
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 256Mi

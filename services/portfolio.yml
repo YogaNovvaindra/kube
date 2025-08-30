@@ -20,7 +20,7 @@ spec:
       containers:
       - name: portfolio
         image: reg.ygnv.my.id/ghcr/yoganovvaindra/portfolio:v0.1.9
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             cpu: 50m

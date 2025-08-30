@@ -23,7 +23,7 @@ spec:
       containers:
       - name: excalidraw
         image: reg.ygnv.my.id/docker/excalidraw/excalidraw:latest@sha256:712cd4e7383509ffa50998e743d1a0d02b5aa8eeae714e4d073b7cfb7884f15c
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 32Mi

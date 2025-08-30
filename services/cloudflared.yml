@@ -35,7 +35,7 @@ spec:
       containers:
       - name: cloudflared
         image: reg.ygnv.my.id/docker/cloudflare/cloudflared:latest
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             cpu: 200m

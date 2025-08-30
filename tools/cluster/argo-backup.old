@@ -45,7 +45,7 @@ spec:
           serviceAccountName: sa-argocd-backup
           containers:
           - image: quay.io/argoproj/argocd:v2.14.9
-            imagePullPolicy: Always
+            imagePullPolicy: IfNotPresent
             name: backup
             command: ["sh", "-c", 
               "argocd admin export -n argocd > /backup/backup-$(date +%Y-%m-%d)_pod-$HOSTNAME.yml && \

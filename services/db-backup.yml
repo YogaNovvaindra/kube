@@ -153,7 +153,7 @@ spec:
           containers:
           - name: mariadb-dumper
             image: reg.ygnv.my.id/docker/alpine:3.22.1
-            imagePullPolicy: Always
+            imagePullPolicy: IfNotPresent
             env:
             - name: DISCORD_WEBHOOK_URL
               valueFrom:
@@ -215,7 +215,7 @@ spec:
           containers:
           - name: mariadb-snapshotter
             image: reg.ygnv.my.id/docker/alpine:3.22.1
-            imagePullPolicy: Always
+            imagePullPolicy: IfNotPresent
             env:
             - name: DISCORD_WEBHOOK_URL
               valueFrom:
@@ -393,7 +393,7 @@ spec:
           containers:
           - name: ghostdb-dumper
             image: reg.ygnv.my.id/docker/mysql:9.4.0
-            imagePullPolicy: Always
+            imagePullPolicy: IfNotPresent
             env:
             - name: DISCORD_WEBHOOK_URL
               valueFrom:
@@ -455,7 +455,7 @@ spec:
           containers:
           - name: ghostdb-snapshotter
             image: reg.ygnv.my.id/docker/alpine:3.22.1
-            imagePullPolicy: Always
+            imagePullPolicy: IfNotPresent
             env:
             - name: DISCORD_WEBHOOK_URL
               valueFrom:

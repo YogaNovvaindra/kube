@@ -32,7 +32,7 @@ spec:
       containers:
         - name: valkey
           image: reg.ygnv.my.id/docker/valkey/valkey:9.0-alpine
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           command: ["valkey-server", "/valkey.conf"]
           ports:
             - containerPort: 6379
@@ -106,7 +106,7 @@ spec:
       containers:
       - name: postgres
         image: reg.ygnv.my.id/docker/pgautoupgrade/pgautoupgrade:latest@sha256:24e425bc01f679266faa1b7bc33d0ad2b01b05f0f0c82a33b314098f319a1edb
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 128Mi
@@ -181,7 +181,7 @@ spec:
       containers:
       - name: mariadb
         image: reg.ygnv.my.id/docker/mariadb:12.0.2
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 256Mi

@@ -17,7 +17,7 @@ spec:
       containers:
       - name: minio
         image: minio/minio:RELEASE.2025-07-18T21-56-31Z
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 256Mi

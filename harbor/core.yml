@@ -35,7 +35,7 @@ spec:
       containers:
       - name: core
         image: goharbor/harbor-core:v2.13.2
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 64Mi
@@ -224,7 +224,7 @@ spec:
       containers:
       - name: portal
         image: goharbor/harbor-portal:v2.13.2
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 32Mi

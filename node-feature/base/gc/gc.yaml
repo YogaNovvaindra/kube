@@ -23,7 +23,7 @@ spec:
       containers:
         - name: nfd-gc
           image: gcr.io/k8s-staging-nfd/node-feature-discovery:master
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           resources:
             limits:
               cpu: 20m

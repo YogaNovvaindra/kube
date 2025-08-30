@@ -17,7 +17,7 @@ spec:
       containers:
         - name: node-exporter
           image: reg.ygnv.my.id/docker/prom/node-exporter:v1.9.1
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           resources:
             requests:
               memory: 32Mi

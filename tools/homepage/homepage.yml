@@ -26,7 +26,7 @@ spec:
       initContainers:
         - name: config-processor
           image: reg.ygnv.my.id/docker/alpine:3.22.1
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           command: ["/bin/sh", "-c"]
           args:
             - |
@@ -48,7 +48,7 @@ spec:
       containers:
         - name: homepage
           image: reg.ygnv.my.id/ghcr/gethomepage/homepage:v1.4.6
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           resources:
             requests:
               memory: 128Mi

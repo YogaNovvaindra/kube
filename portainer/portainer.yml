@@ -73,7 +73,7 @@ spec:
       containers:
       - name: portainer-agent
         image: reg.ygnv.my.id/docker/portainer/agent:2.33.1-alpine
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 64Mi

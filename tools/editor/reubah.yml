@@ -26,7 +26,7 @@ spec:
       containers:
       - name: reubah
         image: ghcr.io/dendianugerah/reubah:latest
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 32Mi

@@ -67,7 +67,7 @@ spec:
       containers:
       - name: jobservice
         image: goharbor/harbor-jobservice:v2.13.2
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 64Mi

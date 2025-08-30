@@ -23,7 +23,7 @@ spec:
       containers:
       - name: immich
         image: reg.ygnv.my.id/ghcr/imagegenius/immich:1.139.4
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 512Mi
@@ -159,7 +159,7 @@ spec:
       containers:
       - name: valkey
         image: reg.ygnv.my.id/docker/valkey/valkey:9.0-alpine
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 32Mi
@@ -211,7 +211,7 @@ spec:
       containers:
       - name: db
         image: reg.ygnv.my.id/ghcr/immich-app/postgres:16-vectorchord0.4.2-pgvectors0.3.0
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 128Mi

@@ -23,7 +23,7 @@ spec:
       containers:
       - name: mariadb
         image: reg.ygnv.my.id/docker/mariadb:12.0.2
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 256Mi
@@ -91,7 +91,7 @@ spec:
       containers:
       - name: phpmyadmin
         image: reg.ygnv.my.id/docker/phpmyadmin:5.2.2
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 64Mi
@@ -167,7 +167,7 @@ spec:
       containers:
       - name: linear-next
         image: yoganovaindra/linear-next:latest
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
         env:
@@ -232,7 +232,7 @@ spec:
       containers:
       - name: tolonto
         image: reg.ygnv.my.id/docker/jakubboucek/lamp-devstack-php:8.4.11
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 32Mi

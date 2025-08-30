@@ -19,7 +19,7 @@ spec:
       containers:
         - name: uptime-kuma
           image: reg.ygnv.my.id/docker/louislam/uptime-kuma:1.23.16
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           resources:
             requests:
               memory: 256Mi

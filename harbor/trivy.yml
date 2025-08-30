@@ -22,7 +22,7 @@ spec:
       containers:
       - name: trivy-adapter
         image: goharbor/trivy-adapter-photon:v2.13.2
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 128Mi

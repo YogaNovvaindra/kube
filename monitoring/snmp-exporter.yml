@@ -680,7 +680,7 @@ spec:
       containers:
         - name: snmp-exporter
           image: reg.ygnv.my.id/docker/prom/snmp-exporter:v0.29.0
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           resources:
             requests:
               memory: 16Mi
