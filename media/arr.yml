@@ -531,6 +531,8 @@ spec:
           value: info
         - name: SUGGESTARR_PORT
           value: "5000"
+        - name: TZ
+          value: "Asia/Jakarta"
         volumeMounts:
         - name: suggestarr-config
           mountPath: /app/config/config_files
