@@ -526,8 +526,6 @@ spec:
         resources:
           requests:
             memory: 128Mi
-        ports:
-        - containerPort: 5000
         env:
         - name: LOG_LEVEL
           value: info
