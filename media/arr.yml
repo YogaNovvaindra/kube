@@ -499,81 +499,81 @@ spec:
   tls:
     certResolver: cloudflare
 ---
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: suggestarr
-  namespace: media
-  labels:
-    app: suggestarr
-spec:
-  replicas: 1
-  revisionHistoryLimit: 3
-  selector:
-    matchLabels:
-      app: suggestarr
-  strategy:
-    type: RollingUpdate
-  template:
-    metadata:
-      labels:
-        app: suggestarr
-    spec:
-      containers:
-      - name: suggestarr
-        image: reg.ygnv.my.id/docker/ciuse99/suggestarr:v1.0.21
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            memory: 128Mi
-        env:
-        - name: LOG_LEVEL
-          value: info
-        - name: SUGGESTARR_PORT
-          value: "5000"
-        - name: TZ
-          value: "Asia/Jakarta"
-        volumeMounts:
-        - name: suggestarr-config
-          mountPath: /app/config/config_files
-      volumes:
-      - name: suggestarr-config
-        hostPath:
-          path: /mnt/cephfs/docker/media/suggestarr
-          type: Directory
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: suggestarr
-  namespace: media
-  labels:
-    app: suggestarr
-spec:
-  selector:
-    app: suggestarr
-  ports:
-  - protocol: TCP
-    port: 5000
-    targetPort: 5000
----
-apiVersion: traefik.io/v1alpha1
-kind: IngressRoute
-metadata:
-  name: suggestarr
-  namespace: media
-spec:
-  entryPoints:
-    - http
-    - https
-  routes:
-    - match: Host(`suggestarr.ygnv.my.id`)
-      kind: Rule
-      services: 
-        - name: suggestarr
-          port: 5000
-  tls:
-    certResolver: cloudflare
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: suggestarr
+#   namespace: media
+#   labels:
+#     app: suggestarr
+# spec:
+#   replicas: 1
+#   revisionHistoryLimit: 3
+#   selector:
+#     matchLabels:
+#       app: suggestarr
+#   strategy:
+#     type: RollingUpdate
+#   template:
+#     metadata:
+#       labels:
+#         app: suggestarr
+#     spec:
+#       containers:
+#       - name: suggestarr
+#         image: reg.ygnv.my.id/docker/ciuse99/suggestarr:v1.0.21
+#         imagePullPolicy: IfNotPresent
+#         resources:
+#           requests:
+#             memory: 128Mi
+#         env:
+#         - name: LOG_LEVEL
+#           value: info
+#         - name: SUGGESTARR_PORT
+#           value: "5000"
+#         - name: TZ
+#           value: "Asia/Jakarta"
+#         volumeMounts:
+#         - name: suggestarr-config
+#           mountPath: /app/config/config_files
+#       volumes:
+#       - name: suggestarr-config
+#         hostPath:
+#           path: /mnt/cephfs/docker/media/suggestarr
+#           type: Directory
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: suggestarr
+#   namespace: media
+#   labels:
+#     app: suggestarr
+# spec:
+#   selector:
+#     app: suggestarr
+#   ports:
+#   - protocol: TCP
+#     port: 5000
+#     targetPort: 5000
+# ---
+# apiVersion: traefik.io/v1alpha1
+# kind: IngressRoute
+# metadata:
+#   name: suggestarr
+#   namespace: media
+# spec:
+#   entryPoints:
+#     - http
+#     - https
+#   routes:
+#     - match: Host(`suggestarr.ygnv.my.id`)
+#       kind: Rule
+#       services: 
+#         - name: suggestarr
+#           port: 5000
+#   tls:
+#     certResolver: cloudflare
 ---
 # Tautulli Deployment
 apiVersion: apps/v1
