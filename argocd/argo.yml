@@ -1146,7 +1146,7 @@ spec:
               name: argocd-cmd-params-cm
               optional: true
         image: reg.ygnv.my.id/quay/argoproj/argocd:v3.1.1
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 64Mi
@@ -1263,7 +1263,7 @@ spec:
               name: argocd-cmd-params-cm
               optional: true
         image: reg.ygnv.my.id/ghcr/dexidp/dex:v2.43.1-alpine
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 64Mi
@@ -1295,7 +1295,7 @@ spec:
         - /usr/local/bin/argocd
         - /shared/argocd-dex
         image: reg.ygnv.my.id/quay/argoproj/argocd:v3.1.1
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         name: copyutil
         securityContext:
           allowPrivilegeEscalation: false
@@ -1392,7 +1392,7 @@ spec:
               name: argocd-cmd-params-cm
               optional: true
         image: reg.ygnv.my.id/quay/argoproj/argocd:v3.1.1
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 64Mi
@@ -1481,7 +1481,7 @@ spec:
               key: auth
               name: argocd-redis
         image: reg.ygnv.my.id/docker/redis:8.2.1-alpine
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 16Mi
@@ -1500,7 +1500,7 @@ spec:
         - admin
         - redis-initial-password
         image: reg.ygnv.my.id/quay/argoproj/argocd:v3.1.1
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         name: secret-init
         securityContext:
           allowPrivilegeEscalation: false
@@ -1773,7 +1773,7 @@ spec:
         - name: HELM_DATA_HOME
           value: /helm-working-dir
         image: reg.ygnv.my.id/quay/argoproj/argocd:v3.1.1
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 128Mi
@@ -1828,7 +1828,7 @@ spec:
         - /usr/local/bin/argocd
         - /var/run/argocd/argocd-cmp-server
         image: reg.ygnv.my.id/quay/argoproj/argocd:v3.1.1
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         name: copyutil
         securityContext:
           allowPrivilegeEscalation: false
@@ -2201,7 +2201,7 @@ spec:
               name: argocd-cmd-params-cm
               optional: true
         image: reg.ygnv.my.id/quay/argoproj/argocd:v3.1.1
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 64Mi
@@ -2582,7 +2582,7 @@ spec:
         - name: KUBECACHEDIR
           value: /tmp/kubecache
         image: reg.ygnv.my.id/quay/argoproj/argocd:v3.1.1
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 512Mi

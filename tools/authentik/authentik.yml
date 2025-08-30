@@ -30,7 +30,7 @@ spec:
       containers:
         - name: authentik-server
           image: reg.ygnv.my.id/ghcr/goauthentik/server:2025.8.1
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           args: ["server"]
           envFrom:
             - configMapRef:
@@ -84,7 +84,7 @@ spec:
       containers:
         - name: authentik-worker
           image: reg.ygnv.my.id/ghcr/goauthentik/server:2025.8.1
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           args: ["worker"]
           envFrom:
             - configMapRef:

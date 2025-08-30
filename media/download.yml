@@ -27,7 +27,7 @@ spec:
       containers:
       - name: transmission
         image: linuxserver/transmission:latest
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 128Mi
@@ -155,7 +155,7 @@ spec:
       containers:
       - name: aria2
         image: p3terx/aria2-pro:latest
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 32Mi

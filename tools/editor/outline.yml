@@ -51,7 +51,7 @@ spec:
       containers:
       - name: outline
         image: reg.ygnv.my.id/docker/outlinewiki/outline:0.86.1
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 512Mi

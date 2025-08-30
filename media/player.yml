@@ -28,7 +28,7 @@ spec:
       containers:
       - name: plex
         image: reg.ygnv.my.id/docker/linuxserver/plex:1.42.1
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 128Mi
@@ -138,7 +138,7 @@ spec:
       containers:
       - name: jellyfin
         image: reg.ygnv.my.id/ghcr/jellyfin/jellyfin:10.10.7
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 256Mi

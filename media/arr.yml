@@ -24,7 +24,7 @@ spec:
       containers:
       - name: flaresolverr
         image: reg.ygnv.my.id/ghcr/flaresolverr/flaresolverr:v3.4.0
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 256Mi
@@ -89,7 +89,7 @@ spec:
       containers:
       - name: prowlarr
         image: reg.ygnv.my.id/docker/linuxserver/prowlarr:2.0.5
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 128Mi
@@ -169,7 +169,7 @@ spec:
       containers:
       - name: radarr
         image: reg.ygnv.my.id/docker/linuxserver/radarr:5.26.2
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 128Mi
@@ -261,7 +261,7 @@ spec:
       containers:
       - name: sonarr
         image: reg.ygnv.my.id/docker/linuxserver/sonarr:4.0.15
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 256Mi
@@ -353,7 +353,7 @@ spec:
       containers:
       - name: bazarr
         image: reg.ygnv.my.id/docker/linuxserver/bazarr:1.5.2
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 128Mi
@@ -445,7 +445,7 @@ spec:
       containers:
       - name: overseerr
         image: reg.ygnv.my.id/docker/sctx/overseerr:1.34.0
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 256Mi
@@ -523,7 +523,7 @@ spec:
       containers:
       - name: tautulli
         image: reg.ygnv.my.id/ghcr/tautulli/tautulli:v2.15.3
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 128Mi
@@ -603,7 +603,7 @@ spec:
       containers:
       - name: maintainerr
         image: reg.ygnv.my.id/ghcr/jorenn92/maintainerr:2.19.0
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 128Mi

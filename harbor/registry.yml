@@ -90,7 +90,7 @@ spec:
       containers:
       - name: registry
         image: goharbor/registry-photon:v2.13.2
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 32Mi
@@ -146,7 +146,7 @@ spec:
       containers:
       - name: registryctl
         image: goharbor/harbor-registryctl:v2.13.2
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 32Mi

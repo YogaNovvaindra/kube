@@ -23,7 +23,7 @@ spec:
       initContainers:
       - name: config-processor
         image: reg.ygnv.my.id/docker/alpine:3.22.1
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         command: ['/bin/sh', '-c']
         args:
           - apk add gettext &&
@@ -39,7 +39,7 @@ spec:
       containers:
       - name: prometheus
         image: reg.ygnv.my.id/docker/prom/prometheus:v3.5.0
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 512Mi

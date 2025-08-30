@@ -32,7 +32,7 @@ spec:
       containers:
         - name: valkey
           image: valkey/valkey:9.0-alpine
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           command: ["valkey-server", "/valkey.conf"]
           ports:
             - containerPort: 6379
@@ -106,7 +106,7 @@ spec:
       containers:
       - name: postgres
         image: pgautoupgrade/pgautoupgrade:latest@sha256:24e425bc01f679266faa1b7bc33d0ad2b01b05f0f0c82a33b314098f319a1edb
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 128Mi

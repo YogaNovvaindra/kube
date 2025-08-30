@@ -37,7 +37,7 @@ spec:
       containers:
         - name: traefik
           image: traefik:v3.5.1
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           resources:
             requests:
               memory: 128Mi

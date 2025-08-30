@@ -23,7 +23,7 @@ spec:
       containers:
       - name: tdarr
         image: ghcr.io/haveagitgat/tdarr:latest
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         ports:
         - name: webui
           containerPort: 8265

@@ -52,7 +52,7 @@ spec:
       containers:
       - name: chrome
         image: reg.ygnv.my.id/ghcr/browserless/chromium:v2.34.1
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 256Mi
@@ -103,7 +103,7 @@ spec:
       containers:
       - name: reactive-resume
         image: reg.ygnv.my.id/docker/amruthpillai/reactive-resume:v4.4.6
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 256Mi

@@ -31,7 +31,7 @@ spec:
       containers:
       - name: repocket
         image: repocket/repocket:latest
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 32Mi
@@ -75,7 +75,7 @@ spec:
       containers:
       - name: honeygain
         image: honeygain/honeygain:latest
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 32Mi
@@ -133,7 +133,7 @@ spec:
       containers:
       - name: pawns
         image: iproyal/pawns-cli:latest
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 32Mi

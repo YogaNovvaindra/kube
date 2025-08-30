@@ -109,7 +109,7 @@ spec:
       containers:
       - name: mktxp
         image: reg.ygnv.my.id/ghcr/akpw/mktxp:1.2.12
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 64Mi
@@ -123,7 +123,7 @@ spec:
       initContainers:
         - name: config-processor
           image: reg.ygnv.my.id/docker/alpine:3.22.1
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           command: ["/bin/sh", "-c"]
           args:
             - apk add --no-cache gettext;

@@ -21,7 +21,7 @@ spec:
       containers:
       - name: phpmyadmin
         image: reg.ygnv.my.id/docker/phpmyadmin:5.2.2
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 64Mi

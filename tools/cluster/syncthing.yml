@@ -23,7 +23,7 @@ spec:
       containers:
         - name: syncthing
           image: reg.ygnv.my.id/docker/linuxserver/syncthing:2.0.3
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           resources:
             requests:
               memory: 256Mi

@@ -151,7 +151,7 @@ spec:
       containers:
       - name: nginx
         image: goharbor/nginx-photon:v2.13.2
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 32Mi

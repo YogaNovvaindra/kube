@@ -19,7 +19,7 @@ spec:
       containers:
       - name: discord-keel-bridge
         image: reg.ygnv.my.id/docker/gabisonfire/discord-keel-bridge:1.0
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 64Mi

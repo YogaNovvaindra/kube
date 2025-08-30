@@ -142,7 +142,7 @@ spec:
       containers:
         - name: keel
           image: reg.ygnv.my.id/docker/keelhq/keel:0.20.0
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           command: ["/bin/keel"]
           env:
             - name: NAMESPACE

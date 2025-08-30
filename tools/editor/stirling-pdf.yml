@@ -21,7 +21,7 @@ spec:
       containers:
       - name: stirling-pdf
         image: reg.ygnv.my.id/ghcr/stirling-tools/stirling-pdf:1.2.0
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 384Mi

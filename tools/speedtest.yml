@@ -32,7 +32,7 @@ spec:
       containers:
       - name: openspeedtest
         image: reg.ygnv.my.id/docker/openspeedtest/latest:v2.0.6
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 32Mi
@@ -99,7 +99,7 @@ spec:
       containers:
       - name: myspeed
         image: reg.ygnv.my.id/docker/germannewsmaker/myspeed:1.0.9
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 64Mi

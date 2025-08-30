@@ -34,7 +34,7 @@ spec:
       containers:
       - name: influxdb
         image: influxdb:2.7.11
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 256Mi

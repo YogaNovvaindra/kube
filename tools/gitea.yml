@@ -22,7 +22,7 @@ spec:
       containers:
       - name: gitea
         image: reg.ygnv.my.id/docker/gitea/gitea:1.24.5
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 256Mi
@@ -169,7 +169,7 @@ spec:
       containers:
       - name: gitea-mirror
         image: jaedle/mirror-to-gitea:latest
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 32Mi

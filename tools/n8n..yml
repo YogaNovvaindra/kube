@@ -88,7 +88,7 @@ spec:
       containers:
       - name: n8n
         image: reg.ygnv.my.id/docker/n8nio/n8n:1.109.1
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 256Mi
