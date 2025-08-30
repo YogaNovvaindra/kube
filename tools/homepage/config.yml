@@ -568,7 +568,7 @@ data:
           icon: https://raw.githubusercontent.com/plait-board/drawnix/4a25b54c25e4bbf56f245c2ad4e49ac346cedf8f/apps/web/public/logo/logo_drawnix_h.svg
           href: https://drawnix.ygnv.my.id
           description: Online diagramming and flowchart tool
-          siteMonitor: http://drawnix.tools:8080
+          siteMonitor: http://drawnix.tools:8000
       - Reubah:
           icon: mdi-image-edit
           href: https://reubah.ygnv.my.id
