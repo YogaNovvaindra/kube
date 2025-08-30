@@ -531,6 +531,8 @@ spec:
         env:
         - name: LOG_LEVEL
           value: info
+        - name: SUGGESTARR_PORT
+          value: "5000"
         volumeMounts:
         - name: suggestarr-config
           mountPath: /app/config/config_files
