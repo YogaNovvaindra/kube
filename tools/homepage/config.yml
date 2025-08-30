@@ -464,7 +464,7 @@ data:
             url: http://overseerr.media:5055
             key: ${OVERSEERR_KEY}
       - Suggestarr:
-          icon: suggestarr.png
+          icon: suggest-arr.png
           href: https://suggestarr.ygnv.my.id
           description: Media suggestion and recommendation tool
           siteMonitor: http://suggestarr.media:5000
