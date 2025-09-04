@@ -48,7 +48,7 @@ spec:
           - "--storage.tsdb.path=/prometheus"
           - "--web.enable-lifecycle"
           - "--web.enable-remote-write-receiver"
-          - "--storage.tsdb.retention.time=30d"
+          - "--storage.tsdb.retention.time=45d"
           - "--storage.tsdb.wal-compression"
           # - "--storage.tsdb.min-block-duration=1h"
           # - "--storage.tsdb.max-block-duration=2h"
