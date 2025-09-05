@@ -42,7 +42,7 @@ spec:
         imagePullPolicy: IfNotPresent
         resources:
           requests:
-            memory: 512Mi
+            memory: 1Gi
         args:
           - "--config.file=/etc/prometheus/prometheus.yml"
           - "--storage.tsdb.path=/prometheus"
