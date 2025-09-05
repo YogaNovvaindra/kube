@@ -54,7 +54,7 @@ spec:
         imagePullPolicy: IfNotPresent
         resources:
           requests:
-            memory: 512Mi
+            memory: 1Gi
         envFrom:
         - configMapRef:
             name: outline-env
