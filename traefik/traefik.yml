@@ -92,8 +92,8 @@ spec:
   loadBalancerIP: 10.1.1.52
   selector:
     app: traefik
-  # externalIPs:
-  #   - 10.1.1.10
+  externalIPs:
+    - 10.1.1.11
   ports:
     - name: http
       port: 80
