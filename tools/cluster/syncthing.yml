@@ -79,6 +79,7 @@ metadata:
     metallb.io/allow-shared-ip: "traefik"
 spec:
   type: LoadBalancer
+  loadBalancerIP: 10.1.1.52
   selector:
     app: syncthing
   ports:
