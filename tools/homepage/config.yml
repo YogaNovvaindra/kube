@@ -353,9 +353,9 @@ data:
     - File Synchronization:
       - Syncthing Kube:
           icon: syncthing.png
-          href: http://10.1.1.52:8384
+          href: http://10.1.1.55:8384
           description: File synchronization for Kubernetes cluster
-          siteMonitor: http://10.1.1.52:8384
+          siteMonitor: http://10.1.1.55:8384
       - Syncthing DockerKVM:
           icon: syncthing.png
           href: http://10.1.1.20:8384
