@@ -89,7 +89,7 @@ metadata:
 spec:
   # externalTrafficPolicy: Local
   type: LoadBalancer
-  loadBalancerIP: 10.1.1.52
+  loadBalancerIP: 10.1.1.55
   selector:
     app: traefik
   externalIPs:
