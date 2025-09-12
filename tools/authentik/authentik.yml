@@ -93,7 +93,7 @@ spec:
                 name: authentik-cred
           resources:
             requests:
-              memory: 256Mi
+              memory: 512Mi
           volumeMounts:
             - mountPath: /media
               name: media-storage
