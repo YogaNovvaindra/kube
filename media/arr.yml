@@ -200,7 +200,7 @@ spec:
           type: Directory
       - name: radarr-downloads
         hostPath:
-          path: /mnt/Data/downloads
+          path: /mnt/cephfs/data/downloads
           type: Directory
 ---
 # Radarr Service
@@ -292,7 +292,7 @@ spec:
           type: Directory
       - name: sonarr-downloads
         hostPath:
-          path: /mnt/Data/downloads
+          path: /mnt/cephfs/data/downloads
           type: Directory
 ---
 # Sonarr Service
