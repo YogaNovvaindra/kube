@@ -71,11 +71,11 @@ spec:
           type: Directory
       - name: downloads
         hostPath:
-          path: /mnt/Data/downloads
+          path: /mnt/cephfs/data/downloads
           type: Directory
       - name: torrent-watch
         hostPath:
-          path: /mnt/Data/downloads/torrent
+          path: /mnt/cephfs/data/downloads/torrent
           type: Directory
 ---
 # Transmission Service
@@ -206,7 +206,7 @@ spec:
           type: Directory
       - name: downloads
         hostPath:
-          path: /mnt/Data/downloads
+          path: /mnt/cephfs/data/downloads
           type: Directory
 ---
 # Aria2 Service
