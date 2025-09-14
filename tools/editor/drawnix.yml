@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: drawnix
-        image: reg.ygnv.my.id/docker/pubuzhixing/drawnix:v0.2.0
+        image: reg.ygnv.my.id/docker/pubuzhixing/drawnix:v0.3.0
         imagePullPolicy: IfNotPresent
         command: ["/busybox-httpd"]
         args: ["-f", "-v", "-p", "8000", "-c", "httpd.conf"]
