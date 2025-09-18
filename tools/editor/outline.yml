@@ -50,7 +50,7 @@ spec:
     spec:
       containers:
       - name: outline
-        image: reg.ygnv.my.id/docker/outlinewiki/outline:0.87.3
+        image: reg.ygnv.my.id/docker/outlinewiki/outline:0.87.4
         imagePullPolicy: IfNotPresent
         resources:
           requests:
