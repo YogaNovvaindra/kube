@@ -166,13 +166,15 @@ spec:
       labels:
         app: radarr
     spec:
+      nodeSelector:
+        kubernetes.io/hperf: "true"
       containers:
       - name: radarr
         image: reg.ygnv.my.id/docker/linuxserver/radarr:5.27.5
         imagePullPolicy: IfNotPresent
         resources:
           requests:
-            memory: 128Mi
+            memory: 256Mi
         ports:
         - containerPort: 7878
         env:
@@ -258,6 +260,8 @@ spec:
       labels:
         app: sonarr
     spec:
+      nodeSelector:
+        kubernetes.io/hperf: "true"
       containers:
       - name: sonarr
         image: reg.ygnv.my.id/docker/linuxserver/sonarr:4.0.15
