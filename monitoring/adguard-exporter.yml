@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: adguard-exporter
-          image: reg.ygnv.my.id/ghcr/henrywhitaker3/adguard-exporter:v1.2.0
+          image: reg.ygnv.my.id/ghcr/henrywhitaker3/adguard-exporter:v1.2.1
           imagePullPolicy: IfNotPresent
           resources:
             requests:

@@ -23,7 +23,7 @@ spec:
         kubernetes.io/hperf: "true"
       containers:
       - name: flaresolverr
-        image: reg.ygnv.my.id/ghcr/flaresolverr/flaresolverr:v3.4.0
+        image: reg.ygnv.my.id/ghcr/flaresolverr/flaresolverr:v3.4.1
         imagePullPolicy: IfNotPresent
         resources:
           requests:
@@ -356,7 +356,7 @@ spec:
     spec:
       containers:
       - name: bazarr
-        image: reg.ygnv.my.id/docker/linuxserver/bazarr:1.5.2
+        image: reg.ygnv.my.id/docker/linuxserver/bazarr:1.5.3
         imagePullPolicy: IfNotPresent
         resources:
           requests:
