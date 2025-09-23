@@ -26,6 +26,7 @@ data:
           - targets: 
               - ${PVE_1_ENDPOINT}
               - ${PVE_2_ENDPOINT}
+              - ${PVE_THINKPAD_ENDPOINT}
             labels:
               cluster: '1'
         relabel_configs:
