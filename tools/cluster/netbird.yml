@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: netbird-agent
+  namespace: tools
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: netbird-agent
+  template:
+    metadata:
+      labels:
+        app: netbird-agent
+    spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      containers:
+        - name: netbird-agent
+          image: netbirdio/netbird:latest
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+          env:
+            - name: NB_SETUP_KEY
+              value: "FFB6AA35-E5E3-4F8B-BFCF-CE1C1F7897AE"
+            - name: NB_HOSTNAME
+              value: "microk8s"
+          volumeMounts:
+            - name: netbird-agent
+              mountPath: /var/lib/netbird
+          resources: 
+            requests:
+              memory: "64Mi"
+            limits:
+              memory: "512Mi"
+      restartPolicy: Always
+      volumes:
+        - name: netbird-agent
+          hostPath:
+            path: /mnt/cephfs/docker/tools/netbird
+            type: DirectoryOrCreate
