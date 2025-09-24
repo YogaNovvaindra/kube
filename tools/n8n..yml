@@ -87,7 +87,7 @@ spec:
         kubernetes.io/hperf: "true"
       containers:
       - name: n8n
-        image: reg.ygnv.my.id/docker/n8nio/n8n:1.113.1
+        image: reg.ygnv.my.id/docker/n8nio/n8n:1.113.2
         imagePullPolicy: IfNotPresent
         resources:
           requests:
