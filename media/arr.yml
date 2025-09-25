@@ -92,7 +92,7 @@ spec:
         imagePullPolicy: IfNotPresent
         resources:
           requests:
-            memory: 128Mi
+            memory: 256Mi
         ports:
         - containerPort: 9696
         env:
@@ -360,7 +360,7 @@ spec:
         imagePullPolicy: IfNotPresent
         resources:
           requests:
-            memory: 128Mi
+            memory: 256Mi
         ports:
         - containerPort: 6767
         env:

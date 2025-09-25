@@ -172,7 +172,7 @@ spec:
         imagePullPolicy: IfNotPresent
         resources:
           requests:
-            memory: 32Mi
+            memory: 64Mi
         env:
         - name: GITHUB_USERNAME
           valueFrom:
