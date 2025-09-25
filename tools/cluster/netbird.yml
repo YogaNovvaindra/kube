@@ -25,8 +25,6 @@ spec:
               add:
                 - NET_ADMIN
           env:
-            - name: NB_SETUP_KEY
-              value: "FFB6AA35-E5E3-4F8B-BFCF-CE1C1F7897AE"
             - name: NB_HOSTNAME
               value: "microk8s"
           volumeMounts:
