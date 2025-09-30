@@ -22,7 +22,7 @@ spec:
         kubernetes.io/hostname: "kube-2"
       containers:
       - name: immich
-        image: reg.ygnv.my.id/ghcr/imagegenius/immich:1.143.1
+        image: reg.ygnv.my.id/ghcr/imagegenius/immich:1.144.1
         imagePullPolicy: IfNotPresent
         resources:
           requests:
