@@ -16,23 +16,21 @@ spec:
           - name: sealed-secrets-backup
             image: reg.ygnv.my.id/docker/rancher/kubectl:v1.34.1
             command:
-            - /bin/bash
+            - /bin/sh
             - -c
             - |
-              #!/bin/bash
               set -eo pipefail
-              
               BACKUP_DIR="/backup"
-              
-              # Backup private key
+
               PRIVATE_KEY=$(kubectl get secret -n kube-system \
                 -l sealedsecrets.bitnami.com/sealed-secrets-key=active \
                 -o name)
+
               kubectl get -n kube-system ${PRIVATE_KEY} -o yaml \
                 > ${BACKUP_DIR}/sealed-secrets-key-$(date +%Y%m%d-%H%M%S).yaml
-              
+
               # Rotate backups - keep last 3
-              find /backup -name "sealed-secrets-key-*.yaml" -print0 | sort -z | head -zn -3 | xargs -0 rm -f
+              ls -1t /backup/sealed-secrets-key-*.yaml | tail -n +4 | xargs -r rm -f
             volumeMounts:
             - name: backup-volume
               mountPath: /backup
