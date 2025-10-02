@@ -86,6 +86,8 @@ spec:
     app: plex
   type: LoadBalancer
   loadBalancerIP: 10.1.1.53
+  externalIPs:
+    - 10.1.1.11
   ports:
     - protocol: TCP
       port: 32400
