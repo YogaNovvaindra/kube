@@ -18,7 +18,7 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet
       containers:
         - name: netbird-agent
-          image: netbirdio/netbird:0.58.2
+          image: netbirdio/netbird:0.59.0
           imagePullPolicy: IfNotPresent
           securityContext:
             capabilities:
