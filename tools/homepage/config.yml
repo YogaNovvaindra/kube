@@ -209,10 +209,10 @@ data:
           icon: portainer.svg
           href: https://portainer.ygnv.my.id
           description: Docker container management and orchestration
-          siteMonitor: http://10.1.1.20:9000
+          siteMonitor: http://10.1.1.6:9000
           widget:
             type: portainer
-            url: http://10.1.1.20:9000
+            url: http://10.1.1.6:9000
             env: 2
             key: ${PORTAINER_KEY}
       # - Ceph:
@@ -358,9 +358,9 @@ data:
           siteMonitor: http://10.1.1.55:8384
       - Syncthing DockerKVM:
           icon: syncthing.png
-          href: http://10.1.1.20:8384
+          href: http://10.1.1.6:8384
           description: File synchronization for OpenMediaVault
-          siteMonitor: http://10.1.1.20:8384
+          siteMonitor: http://10.1.1.6:8384
       # - Syncthing Azure:
       #     icon: syncthing.png
       #     href: http://192.168.192.252:8384
