@@ -104,17 +104,14 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: postgres
-        image: reg.ygnv.my.id/docker/pgautoupgrade/pgautoupgrade:latest@sha256:a3f301fc9f8b841352af139427514c81a775f990ecb25eddc5ec71fa3187c027
+        image: reg.ygnv.my.id/docker/pgautoupgrade/pgautoupgrade:17-alpine
         imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: 128Mi
         env:
         - name: POSTGRES_USER
-          valueFrom:
-            secretKeyRef:
-              name: db-cred
-              key: username
+          value: postgres
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -122,19 +119,19 @@ spec:
               key: password
         volumeMounts:
         - name: postgres-data
-          mountPath: /var/lib/postgresql
-        readinessProbe:
-          exec:
-            command: ["pg_isready", "-d", "outline", "-U", "yoga"]
-          initialDelaySeconds: 30
-          periodSeconds: 60
-          timeoutSeconds: 60
-        livenessProbe:
-          exec:
-            command: ["pg_isready", "-d", "outline", "-U", "yoga"]
-          initialDelaySeconds: 60
-          periodSeconds: 60
-          timeoutSeconds: 60
+          mountPath: /var/lib/postgresql/data
+        # readinessProbe:
+        #   exec:
+        #     command: ["pg_isready", "-d", "outline", "-U", "yoga"]
+        #   initialDelaySeconds: 30
+        #   periodSeconds: 60
+        #   timeoutSeconds: 60
+        # livenessProbe:
+        #   exec:
+        #     command: ["pg_isready", "-d", "outline", "-U", "yoga"]
+        #   initialDelaySeconds: 60
+        #   periodSeconds: 60
+        #   timeoutSeconds: 60
       volumes:
       - name: postgres-data
         hostPath:
