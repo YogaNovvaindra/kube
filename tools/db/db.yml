@@ -122,7 +122,7 @@ spec:
               key: password
         volumeMounts:
         - name: postgres-data
-          mountPath: /var/lib/postgresql/data
+          mountPath: /var/lib/postgresql
         readinessProbe:
           exec:
             command: ["pg_isready", "-d", "outline", "-U", "yoga"]
