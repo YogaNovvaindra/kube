@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: phpmyadmin
-        image: reg.ygnv.my.id/docker/phpmyadmin:5.2.2
+        image: reg.ygnv.my.id/docker/phpmyadmin:5.2.3
         imagePullPolicy: IfNotPresent
         resources:
           requests:
