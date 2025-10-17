@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: stirling-pdf
-        image: reg.ygnv.my.id/ghcr/stirling-tools/stirling-pdf:1.4.0
+        image: reg.ygnv.my.id/ghcr/stirling-tools/stirling-pdf:1.5.0
         imagePullPolicy: IfNotPresent
         resources:
           requests:
