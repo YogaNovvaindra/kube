@@ -24,7 +24,7 @@ spec:
         app: warrior
     spec:
       nodeSelector:
-        kubernetes.io/arch: amd64
+        kubernetes.io/disk: hdd
       containers:
       - image: atdr.meo.ws/archiveteam/warrior-dockerfile:latest
         imagePullPolicy: IfNotPresent
