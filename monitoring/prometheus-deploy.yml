@@ -38,7 +38,7 @@ spec:
               name: prometheus-cred
       containers:
       - name: prometheus
-        image: reg.ygnv.my.id/docker/prom/prometheus:v3.7.1
+        image: reg.ygnv.my.id/docker/prom/prometheus:v3.7.2
         imagePullPolicy: IfNotPresent
         resources:
           requests:
