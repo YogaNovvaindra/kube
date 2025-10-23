@@ -14,7 +14,7 @@ data:
 
     # Discord notifier helper
     DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL:-""}
-    
+
     discord_notify() {
       local status="$1"   # "SUCCESS" or "FAILED"
       local title="$2"
@@ -29,7 +29,7 @@ data:
     TS_INIT=$(date +"%Y-%m-%d %H:%M:%S")
 
     # Configurable env vars (mounted from Secret)
-    SRC="/mnt/cephfs/docker/"
+    SRC="/mnt/cephfs/docker"
     DEST="/mnt/Data/Docker/kube"
 
     BACKUP="$DEST/backup"
@@ -86,36 +86,33 @@ spec:
       backoffLimit: 0
       template:
         spec:
+          restartPolicy: OnFailure
           containers:
             - name: kube-backup
               image: debian:trixie-slim
               imagePullPolicy: IfNotPresent
+              command: ["/bin/bash", "/scripts/backup.sh"]
+              env:
+                - name: DISCORD_WEBHOOK_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: discord-cred
+                      key: DISCORD_URL
               volumeMounts:
                 - name: backup-script
                   mountPath: /scripts
-              command: ["/bin/bash", "/scripts/backup.sh"]
-              env:
-              - name: DISCORD_WEBHOOK_URL
-                valueFrom:
-                  secretKeyRef:
-                    name: discord-cred
-                    key: DISCORD_URL
-          restartPolicy: OnFailure
-          volumeMounts:
-            - name: backup-script
-              mountPath: /scripts
-            - name: backup-storage
-              mountPath: /mnt/Data/Docker/kube
-            - name: cephfs-storage
-              mountPath: /mnt/cephfs/docker
-          lifecycle:
-              postStart:
-                exec:
-                  command:
-                    - sh
-                    - -c
-                    - |
-                      apt-get update && apt-get install -y rsync && chmod +x /scripts/backup.sh
+                - name: backup-storage
+                  mountPath: /mnt/Data/Docker/kube
+                - name: cephfs-storage
+                  mountPath: /mnt/cephfs/docker
+              lifecycle:
+                postStart:
+                  exec:
+                    command:
+                      - sh
+                      - -c
+                      - |
+                        apt-get update && apt-get install -y rsync && chmod +x /scripts/backup.sh
           volumes:
             - name: backup-script
               configMap:
