@@ -86,7 +86,7 @@ spec:
       backoffLimit: 0
       template:
         spec:
-          restartPolicy: OnFailure
+          restartPolicy: Never
           containers:
             - name: backup-kube
               image: debian:trixie-slim
