@@ -13,6 +13,8 @@ data:
     apt-get update -qq && apt-get install -y -qq curl rsync && rm -rf /var/lib/apt/lists/*
 
     # Discord notifier helper
+    DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL:-""}
+    
     discord_notify() {
       local status="$1"   # "SUCCESS" or "FAILED"
       local title="$2"
