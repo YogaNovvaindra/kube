@@ -112,7 +112,7 @@ spec:
                 - /bin/bash
                 - -c
                 - |
-                  cp /tools/* /usr/bin/ && chmod +x /scripts/backup.sh && /scripts/backup.sh
+                  cp /tools/* /usr/bin/ && /scripts/backup.sh
               env:
                 - name: DISCORD_WEBHOOK_URL
                   valueFrom:
