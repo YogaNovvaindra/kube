@@ -1,0 +1,76 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kube-backup-script
+data:
+  backup.sh: |
+    #!/bin/bash
+    set -euo pipefail
+
+    SRC="/mnt/cephfs/docker/" 
+    DEST="/mnt/Data/Docker/kube"
+
+    BACKUP="$DEST/backup"
+    RECYCLE="$DEST/recycle/$(date +%Y-%m-%d)"
+
+    EXCLUDES=(
+        --exclude "harbor/data/registry*"
+        --exclude "*/harbor/data/registry*"
+    )
+
+    mkdir -p "$BACKUP" "$RECYCLE"
+
+    echo "[INFO] Starting rsync from $SRC to $BACKUP"
+    rsync -avhzr --progress --delete \
+      --backup --backup-dir="$RECYCLE" \
+      "${EXCLUDES[@]}" \
+      "$SRC" "$BACKUP/"
+
+    echo "[INFO] Backup completed successfully."
+
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: kube-backup
+spec:
+  schedule: "0 3 * * *"  # Daily at 3 AM
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: kube-backup
+              image: debian:trixie-slim
+              imagePullPolicy: IfNotPresent
+              volumeMounts:
+                - name: backup-script
+                  mountPath: /scripts
+              command: ["/bin/bash", "/scripts/backup.sh"]
+          restartPolicy: OnFailure
+          volumeMounts:
+            - name: backup-script
+              mountPath: /scripts
+            - name: backup-storage
+              mountPath: /mnt/Data/Docker/kube
+            - name: cephfs-storage
+              mountPath: /mnt/cephfs/docker
+          lifecycle:
+              postStart:
+                exec:
+                  command:
+                    - sh
+                    - -c
+                    - |
+                      apt-get update && apt-get install -y rsync && chmod +x /scripts/backup.sh
+          volumes:
+            - name: backup-script
+              configMap:
+                name: kube-backup-script
+                defaultMode: 0755
+            - name: backup-storage
+              hostPath:
+                path: /mnt/Data/Docker/kube
+            - name: cephfs-storage
+              hostPath:
+                path: /mnt/cephfs/docker
