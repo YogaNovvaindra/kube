@@ -9,9 +9,6 @@ data:
     set -euo pipefail
     set -o errtrace
 
-    # Install required tools (lightweight)
-    apt-get update -qq && apt-get install -y -qq curl rsync && rm -rf /var/lib/apt/lists/*
-
     # Discord notifier helper
     DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL:-""}
 
