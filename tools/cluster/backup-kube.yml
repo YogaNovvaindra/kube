@@ -76,11 +76,11 @@ metadata:
 spec:
   schedule: "0 3 * * *"  # Daily at 3 AM
   concurrencyPolicy: Forbid
-  successfulJobsHistoryLimit: 1
-  failedJobsHistoryLimit: 1
+  # successfulJobsHistoryLimit: 1
+  # failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
-      backoffLimit: 0
+      # backoffLimit: 0
       template:
         spec:
           restartPolicy: OnFailure
