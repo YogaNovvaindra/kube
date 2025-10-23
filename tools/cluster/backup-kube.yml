@@ -5,7 +5,7 @@ metadata:
   namespace: tools
 data:
   backup.sh: |
-    #!/bin/sh
+    #!/bin/bash
     set -euo pipefail
     set -o errtrace
 
