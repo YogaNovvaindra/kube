@@ -9,6 +9,9 @@ data:
     set -euo pipefail
     set -o errtrace
 
+    # Install required tools (lightweight)
+    apt-get update -qq && apt-get install -y -qq curl rsync && rm -rf /var/lib/apt/lists/*
+
     # Discord notifier helper
     DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL:-""}
 
@@ -76,33 +79,14 @@ metadata:
 spec:
   schedule: "0 3 * * *"  # Daily at 3 AM
   concurrencyPolicy: Forbid
-  # successfulJobsHistoryLimit: 1
-  # failedJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
-      # backoffLimit: 0
+      backoffLimit: 0
       template:
         spec:
           restartPolicy: OnFailure
-
-          # Init container installs dependencies into a shared emptyDir
-          initContainers:
-            - name: prepare-tools
-              image: debian:trixie-slim
-              command:
-                - /bin/bash
-                - -c
-                - |
-                  set -e
-                  apt-get update -qq && apt-get install -y -qq curl rsync which && \
-                  cp $(command -v curl) $(command -v rsync) /tools/ && \
-                  echo "✅ Tools copied to /tools" && \
-                  ls -l /tools && \
-                  rm -rf /var/lib/apt/lists/*
-              volumeMounts:
-                - name: tools-bin
-                  mountPath: /tools
-
           containers:
             - name: backup-kube
               image: debian:trixie-slim
@@ -111,7 +95,7 @@ spec:
                 - /bin/bash
                 - -c
                 - |
-                  cp /tools/* /usr/bin/ && /scripts/backup.sh
+                  /scripts/backup.sh
               env:
                 - name: DISCORD_WEBHOOK_URL
                   valueFrom:
