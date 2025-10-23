@@ -94,8 +94,10 @@ spec:
                 - -c
                 - |
                   set -e
-                  apt-get update -qq && apt-get install -y -qq curl rsync && \
-                  cp $(which curl) $(which rsync) /tools/ && \
+                  apt-get update -qq && apt-get install -y -qq curl rsync which && \
+                  cp $(command -v curl) $(command -v rsync) /tools/ && \
+                  echo "✅ Tools copied to /tools" && \
+                  ls -l /tools && \
                   rm -rf /var/lib/apt/lists/*
               volumeMounts:
                 - name: tools-bin
