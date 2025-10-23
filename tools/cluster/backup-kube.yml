@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: kube-backup-script
+  name: backup-kube-script
   namespace: tools
 data:
   backup.sh: |
@@ -87,11 +87,32 @@ spec:
       template:
         spec:
           restartPolicy: OnFailure
+
+          # Init container installs dependencies into a shared emptyDir
+          initContainers:
+            - name: prepare-tools
+              image: debian:trixie-slim
+              command:
+                - /bin/bash
+                - -c
+                - |
+                  set -e
+                  apt-get update -qq && apt-get install -y -qq curl rsync && \
+                  cp $(which curl) $(which rsync) /tools/ && \
+                  rm -rf /var/lib/apt/lists/*
+              volumeMounts:
+                - name: tools-bin
+                  mountPath: /tools
+
           containers:
             - name: kube-backup
               image: debian:trixie-slim
               imagePullPolicy: IfNotPresent
-              command: ["/bin/bash", "/scripts/backup.sh"]
+              command:
+                - /bin/bash
+                - -c
+                - |
+                  cp /tools/* /usr/bin/ && chmod +x /scripts/backup.sh && /scripts/backup.sh
               env:
                 - name: DISCORD_WEBHOOK_URL
                   valueFrom:
@@ -99,21 +120,19 @@ spec:
                       name: discord-cred
                       key: DISCORD_URL
               volumeMounts:
+                - name: tools-bin
+                  mountPath: /tools
                 - name: backup-script
                   mountPath: /scripts
                 - name: backup-storage
                   mountPath: /mnt/Data/Docker/kube
                 - name: cephfs-storage
                   mountPath: /mnt/cephfs/docker
-              lifecycle:
-                postStart:
-                  exec:
-                    command:
-                      - sh
-                      - -c
-                      - |
-                        apt-get update && apt-get install -y rsync && chmod +x /scripts/backup.sh
+
+          # Volumes shared between init and main container
           volumes:
+            - name: tools-bin
+              emptyDir: {}
             - name: backup-script
               configMap:
                 name: kube-backup-script
@@ -124,4 +143,5 @@ spec:
             - name: cephfs-storage
               hostPath:
                 path: /mnt/cephfs/docker
+
                 
