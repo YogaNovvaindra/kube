@@ -26,7 +26,7 @@ spec:
             - "--path.sysfs=/host/sys"
             - "--no-collector.wifi"
             - "--no-collector.hwmon"
-            - "--collector.filesystem.ignored-mount-points=^/(dev|proc|sys|run)($|/)"
+            - "--collector.filesystem.ignored-mount-points=^/(dev|proc|sys|run|var/log)($|/)"
             - "--collector.netclass.ignored-devices=^(veth.*|cali.*)$"
             - "--collector.netdev.device-exclude=^(veth.*|cali.*)$"
           env:
