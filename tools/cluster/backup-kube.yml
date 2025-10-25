@@ -62,6 +62,10 @@ data:
       "${EXCLUDES[@]}" \
       "$SRC" "$BACKUP/"
 
+    # Clean up old recycle dirs (keep 7)
+    echo "[INFO] Cleaning up old recycle folders..."
+    find "$DEST/recycle" -mindepth 1 -maxdepth 1 -type d | sort | head -n -7 | xargs -r rm -rf --
+
     # Finish
     TS_END=$(date +"%Y-%m-%d %H:%M:%S")
     DURATION=$(( $(date +%s) - $(date -d "$TS_INIT" +%s) ))
