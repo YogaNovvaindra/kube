@@ -56,15 +56,15 @@ data:
 
     mkdir -p "$BACKUP" "$RECYCLE"
 
+    # Clean up old recycle dirs (keep 7)
+    echo "[INFO] Cleaning up old recycle folders..."
+    find "$DEST/recycle" -mindepth 1 -maxdepth 1 -type d | sort | head -n -7 | xargs -r rm -rf --
+
     echo "[INFO] Running rsync..."
     rsync -avhzr --progress --delete \
       --backup --backup-dir="$RECYCLE" \
       "${EXCLUDES[@]}" \
       "$SRC" "$BACKUP/"
-
-    # Clean up old recycle dirs (keep 7)
-    echo "[INFO] Cleaning up old recycle folders..."
-    find "$DEST/recycle" -mindepth 1 -maxdepth 1 -type d | sort | head -n -7 | xargs -r rm -rf --
 
     # Finish
     TS_END=$(date +"%Y-%m-%d %H:%M:%S")
@@ -107,8 +107,6 @@ spec:
                       name: discord-cred
                       key: DISCORD_URL
               volumeMounts:
-                - name: tools-bin
-                  mountPath: /tools
                 - name: backup-script
                   mountPath: /scripts
                 - name: backup-storage
@@ -118,8 +116,6 @@ spec:
 
           # Volumes shared between init and main container
           volumes:
-            - name: tools-bin
-              emptyDir: {}
             - name: backup-script
               configMap:
                 name: backup-kube-script
