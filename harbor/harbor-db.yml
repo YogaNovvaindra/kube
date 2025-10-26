@@ -104,7 +104,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: postgres
-        image: pgautoupgrade/pgautoupgrade:latest@sha256:e6560662d4400ec8bd15b3d4c9c8e924c98f30d62f39df881cc99338165b0274
+        image: pgautoupgrade/pgautoupgrade:latest@sha256:5a0d3202b70a836e44705e4732ccff7653360a1bb55a8768d38206104462a2e8
         imagePullPolicy: IfNotPresent
         resources:
           requests:
