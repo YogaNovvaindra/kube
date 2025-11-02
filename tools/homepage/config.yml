@@ -356,10 +356,10 @@ data:
           href: http://10.1.1.55:8384
           description: File synchronization for Kubernetes cluster
           siteMonitor: http://10.1.1.55:8384
-      - Syncthing DockerKVM:
+      - Syncthing Arm:
           icon: syncthing.png
           href: http://10.1.1.6:8384
-          description: File synchronization for OpenMediaVault
+          description: File synchronization for ARM-based devices
           siteMonitor: http://10.1.1.6:8384
       # - Syncthing Azure:
       #     icon: syncthing.png
@@ -502,16 +502,16 @@ data:
           href: https://n8n.ygnv.my.id
           description: Workflow automation and integration platform
           siteMonitor: http://n8n.tools:5678
-      - Minio:
-          icon: minio.svg
-          href: https://minio.ygnv.my.id
-          description: Self-hosted object storage service
-          siteMonitor: http://minio.tools:9000
-      - Iventoy:
-          icon: netboot.svg
-          href: https://iventoy.ygnv.my.id
-          description: Network boot and OS deployment server
-          siteMonitor: http://10.1.1.51:26000
+      # - Minio:
+      #     icon: minio.svg
+      #     href: https://minio.ygnv.my.id
+      #     description: Self-hosted object storage service
+      #     siteMonitor: http://minio.tools:9000
+      # - Iventoy:
+      #     icon: netboot.svg
+      #     href: https://iventoy.ygnv.my.id
+      #     description: Network boot and OS deployment server
+      #     siteMonitor: http://10.1.1.51:26000
       - File Browser:
           icon: filebrowser.png
           href: https://file.ygnv.my.id
@@ -564,26 +564,31 @@ data:
           href: http://excalidraw.ygnv.my.id
           description: Collaborative whiteboard tool for sketching and drawing
           siteMonitor: http://excalidraw:80
-      - Drawnix:
-          icon: https://raw.githubusercontent.com/plait-board/drawnix/4a25b54c25e4bbf56f245c2ad4e49ac346cedf8f/apps/web/public/logo/logo_drawnix_h.svg
-          href: https://drawnix.ygnv.my.id
-          description: Online diagramming and flowchart tool
-          siteMonitor: http://drawnix.tools:8000
+      # - Drawnix:
+      #     icon: https://raw.githubusercontent.com/plait-board/drawnix/4a25b54c25e4bbf56f245c2ad4e49ac346cedf8f/apps/web/public/logo/logo_drawnix_h.svg
+      #     href: https://drawnix.ygnv.my.id
+      #     description: Online diagramming and flowchart tool
+      #     siteMonitor: http://drawnix.tools:8000
       - Reubah:
           icon: mdi-image-edit
           href: https://reubah.ygnv.my.id
           description: Tool for processing images and converting documents
           siteMonitor: http://reubah.tools:8081
-      - Stirling-PDF:
-          icon: stirling-pdf.svg
-          href: https://pdf.ygnv.my.id
-          description: Web-based PDF manipulation tool
-          siteMonitor: http://stirling-pdf.tools:8080
-      - Reactive Resume:
-          icon: https://raw.githubusercontent.com/AmruthPillai/Reactive-Resume/4e91a2e2eff7dfa9beb0828955ba917ab791f69f/apps/client/public/logo/light.svg
-          href: https://resume.ygnv.my.id
-          description: Resume builder and management tool
-          siteMonitor: http://reactive-resume.tools:3000
+      # - Stirling-PDF:
+      #     icon: stirling-pdf.svg
+      #     href: https://pdf.ygnv.my.id
+      #     description: Web-based PDF manipulation tool
+      #     siteMonitor: http://stirling-pdf.tools:8080
+      - BentoPDF:
+          icon: bentopdf.svg
+          href: https://bentopdf.ygnv.my.id
+          description: All-in-one document converter and editor
+          siteMonitor: http://bentopdf.tools:8080
+      # - Reactive Resume:
+      #     icon: https://raw.githubusercontent.com/AmruthPillai/Reactive-Resume/4e91a2e2eff7dfa9beb0828955ba917ab791f69f/apps/client/public/logo/light.svg
+      #     href: https://resume.ygnv.my.id
+      #     description: Resume builder and management tool
+      #     siteMonitor: http://reactive-resume.tools:3000
 
     - Smart Home Devices:
       - Home Assistant:
