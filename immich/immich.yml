@@ -146,6 +146,7 @@ metadata:
   labels:
     app: valkey
 spec:
+  serviceName: valkey
   replicas: 1
   revisionHistoryLimit: 3
   selector:

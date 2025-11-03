@@ -124,6 +124,7 @@ metadata:
   name: ghostdb
   namespace: services
 spec:
+  serviceName: ghostdb
   replicas: 1
   revisionHistoryLimit: 3
   selector:

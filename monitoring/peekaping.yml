@@ -50,6 +50,7 @@ metadata:
   name: peekaping-mongo
   namespace: monitoring
 spec:
+  serviceName: peekaping-mongo
   replicas: 1
   revisionHistoryLimit: 3
   selector:

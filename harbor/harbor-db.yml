@@ -18,6 +18,7 @@ metadata:
   labels:
     app: valkey
 spec:
+  serviceName: valkey
   replicas: 1
   revisionHistoryLimit: 3
   selector:
@@ -89,6 +90,7 @@ metadata:
   labels:
     app: postgres
 spec:
+  serviceName: postgres
   replicas: 1
   revisionHistoryLimit: 3
   selector:

@@ -7,6 +7,7 @@ metadata:
   labels:
     app: mariadb
 spec:
+  serviceName: mariadb
   replicas: 1
   revisionHistoryLimit: 3
   selector:
