@@ -1480,7 +1480,7 @@ spec:
             secretKeyRef:
               key: auth
               name: argocd-redis
-        image: reg.ygnv.my.id/docker/redis:8.2.2-alpine
+        image: reg.ygnv.my.id/docker/redis:8.2.3-alpine
         imagePullPolicy: IfNotPresent
         resources:
           requests:
