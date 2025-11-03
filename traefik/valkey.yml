@@ -5,6 +5,7 @@ metadata:
   name: valkey
   namespace: traefik
 spec:
+  serviceName: valkey
   replicas: 1
   revisionHistoryLimit: 3
   selector:
