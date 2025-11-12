@@ -111,6 +111,10 @@ spec:
                       a failed sync. If set to 0, no retries will be performed.
                     format: int64
                     type: integer
+                  refresh:
+                    description: 'Refresh indicates if the latest revision should
+                      be used on retry instead of the initial one (default: false)'
+                    type: boolean
                 type: object
               sync:
                 description: Sync contains parameters for the operation
@@ -1475,11 +1479,15 @@ spec:
                       path:
                         description: |-
                           Path is a directory path within the git repository where hydrated manifests should be committed to and synced
-                          from. If hydrateTo is set, this is just the path from which hydrated manifests will be synced.
+                          from. The Path should never point to the root of the repo. If hydrateTo is set, this is just the path from which
+                          hydrated manifests will be synced.
+                        minLength: 1
+                        pattern: ^.{2,}|[^./]$
                         type: string
                       targetBranch:
-                        description: TargetBranch is the branch to which hydrated
-                          manifests should be committed
+                        description: |-
+                          TargetBranch is the branch from which hydrated manifests will be synced.
+                          If HydrateTo is not set, this is also the branch to which hydrated manifests are committed.
                         type: string
                     required:
                     - path
@@ -1883,6 +1891,10 @@ spec:
                         description: 'AllowEmpty allows apps have zero live resources
                           (default: false)'
                         type: boolean
+                      enabled:
+                        description: Enable allows apps to explicitly control automated
+                          sync
+                        type: boolean
                       prune:
                         description: 'Prune specifies whether to delete resources
                           from the cluster that are not found in the sources anymore
@@ -1934,6 +1946,10 @@ spec:
                           a failed sync. If set to 0, no retries will be performed.
                         format: int64
                         type: integer
+                      refresh:
+                        description: 'Refresh indicates if the latest revision should
+                          be used on retry instead of the initial one (default: false)'
+                        type: boolean
                     type: object
                   syncOptions:
                     description: Options allow you to specify whole app sync-options
@@ -1986,12 +2002,13 @@ spec:
                     format: date-time
                     type: string
                   message:
-                    description: Message is a human-readable informational message
-                      describing the health status
+                    description: |-
+                      Message is a human-readable informational message describing the health status
+
+                      Deprecated: this field is not used and will be removed in a future release.
                     type: string
                   status:
-                    description: Status holds the status code of the application or
-                      resource
+                    description: Status holds the status code of the application
                     type: string
                 type: object
               history:
@@ -2901,6 +2918,11 @@ spec:
                               be performed.
                             format: int64
                             type: integer
+                          refresh:
+                            description: 'Refresh indicates if the latest revision
+                              should be used on retry instead of the initial one (default:
+                              false)'
+                            type: boolean
                         type: object
                       sync:
                         description: Sync contains parameters for the operation
@@ -3860,6 +3882,12 @@ spec:
                               description: HookType specifies the type of the hook.
                                 Empty for non-hook resources
                               type: string
+                            images:
+                              description: Images contains the images related to the
+                                ResourceResult
+                              items:
+                                type: string
+                              type: array
                             kind:
                               description: Kind specifies the API kind of the resource
                               type: string
@@ -4737,8 +4765,10 @@ spec:
                         (e.g., Healthy, Degraded, Progressing).
                       properties:
                         lastTransitionTime:
-                          description: LastTransitionTime is the time the HealthStatus
-                            was set or updated
+                          description: |-
+                            LastTransitionTime is the time the HealthStatus was set or updated
+
+                            Deprecated: this field is not used and will be removed in a future release.
                           format: date-time
                           type: string
                         message:
@@ -4746,8 +4776,7 @@ spec:
                             describing the health status
                           type: string
                         status:
-                          description: Status holds the status code of the application
-                            or resource
+                          description: Status holds the status code of the resource
                           type: string
                       type: object
                     hook:
@@ -4866,11 +4895,15 @@ spec:
                               path:
                                 description: |-
                                   Path is a directory path within the git repository where hydrated manifests should be committed to and synced
-                                  from. If hydrateTo is set, this is just the path from which hydrated manifests will be synced.
+                                  from. The Path should never point to the root of the repo. If hydrateTo is set, this is just the path from which
+                                  hydrated manifests will be synced.
+                                minLength: 1
+                                pattern: ^.{2,}|[^./]$
                                 type: string
                               targetBranch:
-                                description: TargetBranch is the branch to which hydrated
-                                  manifests should be committed
+                                description: |-
+                                  TargetBranch is the branch from which hydrated manifests will be synced.
+                                  If HydrateTo is not set, this is also the branch to which hydrated manifests are committed.
                                 type: string
                             required:
                             - path
@@ -4945,11 +4978,15 @@ spec:
                               path:
                                 description: |-
                                   Path is a directory path within the git repository where hydrated manifests should be committed to and synced
-                                  from. If hydrateTo is set, this is just the path from which hydrated manifests will be synced.
+                                  from. The Path should never point to the root of the repo. If hydrateTo is set, this is just the path from which
+                                  hydrated manifests will be synced.
+                                minLength: 1
+                                pattern: ^.{2,}|[^./]$
                                 type: string
                               targetBranch:
-                                description: TargetBranch is the branch to which hydrated
-                                  manifests should be committed
+                                description: |-
+                                  TargetBranch is the branch from which hydrated manifests will be synced.
+                                  If HydrateTo is not set, this is also the branch to which hydrated manifests are committed.
                                 type: string
                             required:
                             - path
@@ -6289,6 +6326,8 @@ spec:
                                     syncSource:
                                       properties:
                                         path:
+                                          minLength: 1
+                                          pattern: ^.{2,}|[^./]$
                                           type: string
                                         targetBranch:
                                           type: string
@@ -6547,6 +6586,8 @@ spec:
                                       properties:
                                         allowEmpty:
                                           type: boolean
+                                        enabled:
+                                          type: boolean
                                         prune:
                                           type: boolean
                                         selfHeal:
@@ -6578,6 +6619,8 @@ spec:
                                         limit:
                                           format: int64
                                           type: integer
+                                        refresh:
+                                          type: boolean
                                       type: object
                                     syncOptions:
                                       items:
@@ -6969,6 +7012,8 @@ spec:
                                     syncSource:
                                       properties:
                                         path:
+                                          minLength: 1
+                                          pattern: ^.{2,}|[^./]$
                                           type: string
                                         targetBranch:
                                           type: string
@@ -7227,6 +7272,8 @@ spec:
                                       properties:
                                         allowEmpty:
                                           type: boolean
+                                        enabled:
+                                          type: boolean
                                         prune:
                                           type: boolean
                                         selfHeal:
@@ -7258,6 +7305,8 @@ spec:
                                         limit:
                                           format: int64
                                           type: integer
+                                        refresh:
+                                          type: boolean
                                       type: object
                                     syncOptions:
                                       items:
@@ -7293,6 +7342,8 @@ spec:
                         files:
                           items:
                             properties:
+                              exclude:
+                                type: boolean
                               path:
                                 type: string
                             required:
@@ -7648,6 +7699,8 @@ spec:
                                     syncSource:
                                       properties:
                                         path:
+                                          minLength: 1
+                                          pattern: ^.{2,}|[^./]$
                                           type: string
                                         targetBranch:
                                           type: string
@@ -7906,6 +7959,8 @@ spec:
                                       properties:
                                         allowEmpty:
                                           type: boolean
+                                        enabled:
+                                          type: boolean
                                         prune:
                                           type: boolean
                                         selfHeal:
@@ -7937,6 +7992,8 @@ spec:
                                         limit:
                                           format: int64
                                           type: integer
+                                        refresh:
+                                          type: boolean
                                       type: object
                                     syncOptions:
                                       items:
@@ -8307,6 +8364,8 @@ spec:
                                     syncSource:
                                       properties:
                                         path:
+                                          minLength: 1
+                                          pattern: ^.{2,}|[^./]$
                                           type: string
                                         targetBranch:
                                           type: string
@@ -8565,6 +8624,8 @@ spec:
                                       properties:
                                         allowEmpty:
                                           type: boolean
+                                        enabled:
+                                          type: boolean
                                         prune:
                                           type: boolean
                                         selfHeal:
@@ -8596,6 +8657,8 @@ spec:
                                         limit:
                                           format: int64
                                           type: integer
+                                        refresh:
+                                          type: boolean
                                       type: object
                                     syncOptions:
                                       items:
@@ -8991,6 +9054,8 @@ spec:
                                               syncSource:
                                                 properties:
                                                   path:
+                                                    minLength: 1
+                                                    pattern: ^.{2,}|[^./]$
                                                     type: string
                                                   targetBranch:
                                                     type: string
@@ -9249,6 +9314,8 @@ spec:
                                                 properties:
                                                   allowEmpty:
                                                     type: boolean
+                                                  enabled:
+                                                    type: boolean
                                                   prune:
                                                     type: boolean
                                                   selfHeal:
@@ -9280,6 +9347,8 @@ spec:
                                                   limit:
                                                     format: int64
                                                     type: integer
+                                                  refresh:
+                                                    type: boolean
                                                 type: object
                                               syncOptions:
                                                 items:
@@ -9671,6 +9740,8 @@ spec:
                                               syncSource:
                                                 properties:
                                                   path:
+                                                    minLength: 1
+                                                    pattern: ^.{2,}|[^./]$
                                                     type: string
                                                   targetBranch:
                                                     type: string
@@ -9929,6 +10000,8 @@ spec:
                                                 properties:
                                                   allowEmpty:
                                                     type: boolean
+                                                  enabled:
+                                                    type: boolean
                                                   prune:
                                                     type: boolean
                                                   selfHeal:
@@ -9960,6 +10033,8 @@ spec:
                                                   limit:
                                                     format: int64
                                                     type: integer
+                                                  refresh:
+                                                    type: boolean
                                                 type: object
                                               syncOptions:
                                                 items:
@@ -9995,6 +10070,8 @@ spec:
                                   files:
                                     items:
                                       properties:
+                                        exclude:
+                                          type: boolean
                                         path:
                                           type: string
                                       required:
@@ -10350,6 +10427,8 @@ spec:
                                               syncSource:
                                                 properties:
                                                   path:
+                                                    minLength: 1
+                                                    pattern: ^.{2,}|[^./]$
                                                     type: string
                                                   targetBranch:
                                                     type: string
@@ -10608,6 +10687,8 @@ spec:
                                                 properties:
                                                   allowEmpty:
                                                     type: boolean
+                                                  enabled:
+                                                    type: boolean
                                                   prune:
                                                     type: boolean
                                                   selfHeal:
@@ -10639,6 +10720,8 @@ spec:
                                                   limit:
                                                     format: int64
                                                     type: integer
+                                                  refresh:
+                                                    type: boolean
                                                 type: object
                                               syncOptions:
                                                 items:
@@ -11009,6 +11092,8 @@ spec:
                                               syncSource:
                                                 properties:
                                                   path:
+                                                    minLength: 1
+                                                    pattern: ^.{2,}|[^./]$
                                                     type: string
                                                   targetBranch:
                                                     type: string
@@ -11267,6 +11352,8 @@ spec:
                                                 properties:
                                                   allowEmpty:
                                                     type: boolean
+                                                  enabled:
+                                                    type: boolean
                                                   prune:
                                                     type: boolean
                                                   selfHeal:
@@ -11298,6 +11385,8 @@ spec:
                                                   limit:
                                                     format: int64
                                                     type: integer
+                                                  refresh:
+                                                    type: boolean
                                                 type: object
                                               syncOptions:
                                                 items:
@@ -11676,6 +11765,8 @@ spec:
                                               syncSource:
                                                 properties:
                                                   path:
+                                                    minLength: 1
+                                                    pattern: ^.{2,}|[^./]$
                                                     type: string
                                                   targetBranch:
                                                     type: string
@@ -11934,6 +12025,8 @@ spec:
                                                 properties:
                                                   allowEmpty:
                                                     type: boolean
+                                                  enabled:
+                                                    type: boolean
                                                   prune:
                                                     type: boolean
                                                   selfHeal:
@@ -11965,6 +12058,8 @@ spec:
                                                   limit:
                                                     format: int64
                                                     type: integer
+                                                  refresh:
+                                                    type: boolean
                                                 type: object
                                               syncOptions:
                                                 items:
@@ -12120,12 +12215,16 @@ spec:
                                     - project
                                     - repo
                                     type: object
+                                  continueOnRepoNotFoundError:
+                                    type: boolean
                                   filters:
                                     items:
                                       properties:
                                         branchMatch:
                                           type: string
                                         targetBranchMatch:
+                                          type: string
+                                        titleMatch:
                                           type: string
                                       type: object
                                     type: array
@@ -12135,6 +12234,10 @@ spec:
                                         type: string
                                       insecure:
                                         type: boolean
+                                      labels:
+                                        items:
+                                          type: string
+                                        type: array
                                       owner:
                                         type: string
                                       repo:
@@ -12562,6 +12665,8 @@ spec:
                                               syncSource:
                                                 properties:
                                                   path:
+                                                    minLength: 1
+                                                    pattern: ^.{2,}|[^./]$
                                                     type: string
                                                   targetBranch:
                                                     type: string
@@ -12820,6 +12925,8 @@ spec:
                                                 properties:
                                                   allowEmpty:
                                                     type: boolean
+                                                  enabled:
+                                                    type: boolean
                                                   prune:
                                                     type: boolean
                                                   selfHeal:
@@ -12851,6 +12958,8 @@ spec:
                                                   limit:
                                                     format: int64
                                                     type: integer
+                                                  refresh:
+                                                    type: boolean
                                                 type: object
                                               syncOptions:
                                                 items:
@@ -13447,6 +13556,8 @@ spec:
                                               syncSource:
                                                 properties:
                                                   path:
+                                                    minLength: 1
+                                                    pattern: ^.{2,}|[^./]$
                                                     type: string
                                                   targetBranch:
                                                     type: string
@@ -13705,6 +13816,8 @@ spec:
                                                 properties:
                                                   allowEmpty:
                                                     type: boolean
+                                                  enabled:
+                                                    type: boolean
                                                   prune:
                                                     type: boolean
                                                   selfHeal:
@@ -13736,6 +13849,8 @@ spec:
                                                   limit:
                                                     format: int64
                                                     type: integer
+                                                  refresh:
+                                                    type: boolean
                                                 type: object
                                               syncOptions:
                                                 items:
@@ -14123,6 +14238,8 @@ spec:
                                     syncSource:
                                       properties:
                                         path:
+                                          minLength: 1
+                                          pattern: ^.{2,}|[^./]$
                                           type: string
                                         targetBranch:
                                           type: string
@@ -14381,6 +14498,8 @@ spec:
                                       properties:
                                         allowEmpty:
                                           type: boolean
+                                        enabled:
+                                          type: boolean
                                         prune:
                                           type: boolean
                                         selfHeal:
@@ -14412,6 +14531,8 @@ spec:
                                         limit:
                                           format: int64
                                           type: integer
+                                        refresh:
+                                          type: boolean
                                       type: object
                                     syncOptions:
                                       items:
@@ -14809,6 +14930,8 @@ spec:
                                               syncSource:
                                                 properties:
                                                   path:
+                                                    minLength: 1
+                                                    pattern: ^.{2,}|[^./]$
                                                     type: string
                                                   targetBranch:
                                                     type: string
@@ -15067,6 +15190,8 @@ spec:
                                                 properties:
                                                   allowEmpty:
                                                     type: boolean
+                                                  enabled:
+                                                    type: boolean
                                                   prune:
                                                     type: boolean
                                                   selfHeal:
@@ -15098,6 +15223,8 @@ spec:
                                                   limit:
                                                     format: int64
                                                     type: integer
+                                                  refresh:
+                                                    type: boolean
                                                 type: object
                                               syncOptions:
                                                 items:
@@ -15489,6 +15616,8 @@ spec:
                                               syncSource:
                                                 properties:
                                                   path:
+                                                    minLength: 1
+                                                    pattern: ^.{2,}|[^./]$
                                                     type: string
                                                   targetBranch:
                                                     type: string
@@ -15747,6 +15876,8 @@ spec:
                                                 properties:
                                                   allowEmpty:
                                                     type: boolean
+                                                  enabled:
+                                                    type: boolean
                                                   prune:
                                                     type: boolean
                                                   selfHeal:
@@ -15778,6 +15909,8 @@ spec:
                                                   limit:
                                                     format: int64
                                                     type: integer
+                                                  refresh:
+                                                    type: boolean
                                                 type: object
                                               syncOptions:
                                                 items:
@@ -15813,6 +15946,8 @@ spec:
                                   files:
                                     items:
                                       properties:
+                                        exclude:
+                                          type: boolean
                                         path:
                                           type: string
                                       required:
@@ -16168,6 +16303,8 @@ spec:
                                               syncSource:
                                                 properties:
                                                   path:
+                                                    minLength: 1
+                                                    pattern: ^.{2,}|[^./]$
                                                     type: string
                                                   targetBranch:
                                                     type: string
@@ -16426,6 +16563,8 @@ spec:
                                                 properties:
                                                   allowEmpty:
                                                     type: boolean
+                                                  enabled:
+                                                    type: boolean
                                                   prune:
                                                     type: boolean
                                                   selfHeal:
@@ -16457,6 +16596,8 @@ spec:
                                                   limit:
                                                     format: int64
                                                     type: integer
+                                                  refresh:
+                                                    type: boolean
                                                 type: object
                                               syncOptions:
                                                 items:
@@ -16827,6 +16968,8 @@ spec:
                                               syncSource:
                                                 properties:
                                                   path:
+                                                    minLength: 1
+                                                    pattern: ^.{2,}|[^./]$
                                                     type: string
                                                   targetBranch:
                                                     type: string
@@ -17085,6 +17228,8 @@ spec:
                                                 properties:
                                                   allowEmpty:
                                                     type: boolean
+                                                  enabled:
+                                                    type: boolean
                                                   prune:
                                                     type: boolean
                                                   selfHeal:
@@ -17116,6 +17261,8 @@ spec:
                                                   limit:
                                                     format: int64
                                                     type: integer
+                                                  refresh:
+                                                    type: boolean
                                                 type: object
                                               syncOptions:
                                                 items:
@@ -17494,6 +17641,8 @@ spec:
                                               syncSource:
                                                 properties:
                                                   path:
+                                                    minLength: 1
+                                                    pattern: ^.{2,}|[^./]$
                                                     type: string
                                                   targetBranch:
                                                     type: string
@@ -17752,6 +17901,8 @@ spec:
                                                 properties:
                                                   allowEmpty:
                                                     type: boolean
+                                                  enabled:
+                                                    type: boolean
                                                   prune:
                                                     type: boolean
                                                   selfHeal:
@@ -17783,6 +17934,8 @@ spec:
                                                   limit:
                                                     format: int64
                                                     type: integer
+                                                  refresh:
+                                                    type: boolean
                                                 type: object
                                               syncOptions:
                                                 items:
@@ -17938,12 +18091,16 @@ spec:
                                     - project
                                     - repo
                                     type: object
+                                  continueOnRepoNotFoundError:
+                                    type: boolean
                                   filters:
                                     items:
                                       properties:
                                         branchMatch:
                                           type: string
                                         targetBranchMatch:
+                                          type: string
+                                        titleMatch:
                                           type: string
                                       type: object
                                     type: array
@@ -17953,6 +18110,10 @@ spec:
                                         type: string
                                       insecure:
                                         type: boolean
+                                      labels:
+                                        items:
+                                          type: string
+                                        type: array
                                       owner:
                                         type: string
                                       repo:
@@ -18380,6 +18541,8 @@ spec:
                                               syncSource:
                                                 properties:
                                                   path:
+                                                    minLength: 1
+                                                    pattern: ^.{2,}|[^./]$
                                                     type: string
                                                   targetBranch:
                                                     type: string
@@ -18638,6 +18801,8 @@ spec:
                                                 properties:
                                                   allowEmpty:
                                                     type: boolean
+                                                  enabled:
+                                                    type: boolean
                                                   prune:
                                                     type: boolean
                                                   selfHeal:
@@ -18669,6 +18834,8 @@ spec:
                                                   limit:
                                                     format: int64
                                                     type: integer
+                                                  refresh:
+                                                    type: boolean
                                                 type: object
                                               syncOptions:
                                                 items:
@@ -19265,6 +19432,8 @@ spec:
                                               syncSource:
                                                 properties:
                                                   path:
+                                                    minLength: 1
+                                                    pattern: ^.{2,}|[^./]$
                                                     type: string
                                                   targetBranch:
                                                     type: string
@@ -19523,6 +19692,8 @@ spec:
                                                 properties:
                                                   allowEmpty:
                                                     type: boolean
+                                                  enabled:
+                                                    type: boolean
                                                   prune:
                                                     type: boolean
                                                   selfHeal:
@@ -19554,6 +19725,8 @@ spec:
                                                   limit:
                                                     format: int64
                                                     type: integer
+                                                  refresh:
+                                                    type: boolean
                                                 type: object
                                               syncOptions:
                                                 items:
@@ -19945,6 +20118,8 @@ spec:
                                     syncSource:
                                       properties:
                                         path:
+                                          minLength: 1
+                                          pattern: ^.{2,}|[^./]$
                                           type: string
                                         targetBranch:
                                           type: string
@@ -20203,6 +20378,8 @@ spec:
                                       properties:
                                         allowEmpty:
                                           type: boolean
+                                        enabled:
+                                          type: boolean
                                         prune:
                                           type: boolean
                                         selfHeal:
@@ -20234,6 +20411,8 @@ spec:
                                         limit:
                                           format: int64
                                           type: integer
+                                        refresh:
+                                          type: boolean
                                       type: object
                                     syncOptions:
                                       items:
@@ -20611,6 +20790,8 @@ spec:
                                     syncSource:
                                       properties:
                                         path:
+                                          minLength: 1
+                                          pattern: ^.{2,}|[^./]$
                                           type: string
                                         targetBranch:
                                           type: string
@@ -20869,6 +21050,8 @@ spec:
                                       properties:
                                         allowEmpty:
                                           type: boolean
+                                        enabled:
+                                          type: boolean
                                         prune:
                                           type: boolean
                                         selfHeal:
@@ -20900,6 +21083,8 @@ spec:
                                         limit:
                                           format: int64
                                           type: integer
+                                        refresh:
+                                          type: boolean
                                       type: object
                                     syncOptions:
                                       items:
@@ -21055,12 +21240,16 @@ spec:
                           - project
                           - repo
                           type: object
+                        continueOnRepoNotFoundError:
+                          type: boolean
                         filters:
                           items:
                             properties:
                               branchMatch:
                                 type: string
                               targetBranchMatch:
+                                type: string
+                              titleMatch:
                                 type: string
                             type: object
                           type: array
@@ -21070,6 +21259,10 @@ spec:
                               type: string
                             insecure:
                               type: boolean
+                            labels:
+                              items:
+                                type: string
+                              type: array
                             owner:
                               type: string
                             repo:
@@ -21497,6 +21690,8 @@ spec:
                                     syncSource:
                                       properties:
                                         path:
+                                          minLength: 1
+                                          pattern: ^.{2,}|[^./]$
                                           type: string
                                         targetBranch:
                                           type: string
@@ -21755,6 +21950,8 @@ spec:
                                       properties:
                                         allowEmpty:
                                           type: boolean
+                                        enabled:
+                                          type: boolean
                                         prune:
                                           type: boolean
                                         selfHeal:
@@ -21786,6 +21983,8 @@ spec:
                                         limit:
                                           format: int64
                                           type: integer
+                                        refresh:
+                                          type: boolean
                                       type: object
                                     syncOptions:
                                       items:
@@ -22382,6 +22581,8 @@ spec:
                                     syncSource:
                                       properties:
                                         path:
+                                          minLength: 1
+                                          pattern: ^.{2,}|[^./]$
                                           type: string
                                         targetBranch:
                                           type: string
@@ -22640,6 +22841,8 @@ spec:
                                       properties:
                                         allowEmpty:
                                           type: boolean
+                                        enabled:
+                                          type: boolean
                                         prune:
                                           type: boolean
                                         selfHeal:
@@ -22671,6 +22874,8 @@ spec:
                                         limit:
                                           format: int64
                                           type: integer
+                                        refresh:
+                                          type: boolean
                                       type: object
                                     syncOptions:
                                       items:
@@ -22752,6 +22957,8 @@ spec:
                 type: object
               strategy:
                 properties:
+                  deletionOrder:
+                    type: string
                   rollingSync:
                     properties:
                       steps:
@@ -23133,6 +23340,8 @@ spec:
                           syncSource:
                             properties:
                               path:
+                                minLength: 1
+                                pattern: ^.{2,}|[^./]$
                                 type: string
                               targetBranch:
                                 type: string
@@ -23391,6 +23600,8 @@ spec:
                             properties:
                               allowEmpty:
                                 type: boolean
+                              enabled:
+                                type: boolean
                               prune:
                                 type: boolean
                               selfHeal:
@@ -23422,6 +23633,8 @@ spec:
                               limit:
                                 format: int64
                                 type: integer
+                              refresh:
+                                type: boolean
                             type: object
                           syncOptions:
                             items:
@@ -23527,6 +23740,9 @@ spec:
                       type: string
                   type: object
                 type: array
+              resourcesCount:
+                format: int64
+                type: integer
             type: object
         required:
         - metadata
@@ -23623,6 +23839,7 @@ spec:
                 type: array
               description:
                 description: Description contains optional project description
+                maxLength: 255
                 type: string
               destinationServiceAccounts:
                 description: DestinationServiceAccounts holds information about the
@@ -23833,6 +24050,11 @@ spec:
                       items:
                         type: string
                       type: array
+                    description:
+                      description: Description of the sync that will be applied to
+                        the schedule, can be used to add any information such as a
+                        ticket number for example
+                      type: string
                     duration:
                       description: Duration is the amount of time the sync window
                         will be open
