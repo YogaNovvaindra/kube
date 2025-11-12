@@ -23,6 +23,8 @@ spec:
       labels:
         app: ecoguardian
     spec:
+      nodeSelector:
+        kubernetes.io/disk: hdd
       containers:
       - name: ecoguardian
         image: ghcr.io/yoganovvaindra/ecoguardian-web:latest
