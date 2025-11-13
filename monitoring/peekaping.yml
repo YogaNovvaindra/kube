@@ -116,7 +116,7 @@ spec:
 ---
 # 🔁 Valkey (Redis-compatible)
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: peekaping-valkey
   namespace: monitoring
