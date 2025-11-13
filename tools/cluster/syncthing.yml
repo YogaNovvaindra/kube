@@ -49,23 +49,23 @@ spec:
           volumeMounts:
             - name: config-volume
               mountPath: /config
-            - name: data-volume
-              mountPath: /data
             - name: cephfs-volume
               mountPath: /cephfs
+            # - name: data-volume
+            #   mountPath: /data
       volumes:
         - name: config-volume
           hostPath:
             path: /mnt/cephfs/docker/tools/syncthing
             type: Directory
-        - name: data-volume
-          hostPath:
-            path: /mnt/Data
-            type: Directory
         - name: cephfs-volume
           hostPath:
             path: /mnt/cephfs
             type: Directory
+        # - name: data-volume
+        #   hostPath:
+        #     path: /mnt/Data
+        #     type: Directory
 ---
 apiVersion: v1
 kind: Service
