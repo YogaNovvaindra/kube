@@ -40,7 +40,7 @@ spec:
           volumeMounts:
             # - name: data
             #   mountPath: /srv/Data
-            # - name: cephfs
+            - name: cephfs
               mountPath: /srv/CephFS
             - name: srv
               mountPath: /srv
@@ -52,7 +52,7 @@ spec:
         # - name: data
         #   hostPath:
         #     path: /mnt/Data
-        # - name: cephfs
+        - name: cephfs
           hostPath:
             path: /mnt/cephfs
         - name: srv
