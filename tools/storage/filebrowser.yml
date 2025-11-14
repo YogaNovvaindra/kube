@@ -38,9 +38,9 @@ spec:
             - name: PGID
               value: "0"
           volumeMounts:
-            - name: data
-              mountPath: /srv/Data
-            - name: cephfs
+            # - name: data
+            #   mountPath: /srv/Data
+            # - name: cephfs
               mountPath: /srv/CephFS
             - name: srv
               mountPath: /srv
@@ -49,10 +49,10 @@ spec:
             - name: config
               mountPath: /config
       volumes:
-        - name: data
-          hostPath:
-            path: /mnt/Data
-        - name: cephfs
+        # - name: data
+        #   hostPath:
+        #     path: /mnt/Data
+        # - name: cephfs
           hostPath:
             path: /mnt/cephfs
         - name: srv
