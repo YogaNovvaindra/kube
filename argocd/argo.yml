@@ -1305,6 +1305,9 @@ spec:
         - /shared/argocd-dex
         image: reg.ygnv.my.id/quay/argoproj/argocd:v3.2.0
         imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            memory: 64Mi
         name: copyutil
         securityContext:
           allowPrivilegeEscalation: false
