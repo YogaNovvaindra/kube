@@ -1274,8 +1274,11 @@ spec:
               key: dexserver.disable.tls
               name: argocd-cmd-params-cm
               optional: true
-        image: ghcr.io/dexidp/dex:v2.44.0
-        imagePullPolicy: Always
+        image: reg.ygnv.my.id/ghcr/dexidp/dex:v2.44.0
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            memory: 64Mi
         name: dex
         ports:
         - containerPort: 5556
@@ -1305,9 +1308,6 @@ spec:
         - /shared/argocd-dex
         image: reg.ygnv.my.id/quay/argoproj/argocd:v3.2.0
         imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            memory: 64Mi
         name: copyutil
         securityContext:
           allowPrivilegeEscalation: false
