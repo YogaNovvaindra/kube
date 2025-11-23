@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: gitea
-        image: reg.ygnv.my.id/docker/gitea/gitea:1.25.1
+        image: reg.ygnv.my.id/docker/gitea/gitea:1.25.2
         imagePullPolicy: IfNotPresent
         resources:
           requests:
