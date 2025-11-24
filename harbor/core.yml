@@ -34,7 +34,7 @@ spec:
         kubernetes.io/arch: amd64
       containers:
       - name: core
-        image: goharbor/harbor-core:v2.14.0
+        image: goharbor/harbor-core:v2.14.1
         imagePullPolicy: IfNotPresent
         resources:
           requests:
