@@ -145,14 +145,14 @@ spec:
               command: ["valkey-cli", "ping"]
             initialDelaySeconds: 10
             periodSeconds: 30
-          volumeMounts:
-            - name: valkey-data
-              mountPath: /data
-      volumes:
-        - name: valkey-data
-          hostPath:
-            path: /mnt/cephfs/docker/monitoring/peekaping/valkey
-            type: Directory
+      #     volumeMounts:
+      #       - name: valkey-data
+      #         mountPath: /data
+      # volumes:
+      #   - name: valkey-data
+      #     hostPath:
+      #       path: /mnt/cephfs/docker/monitoring/peekaping/valkey
+      #       type: Directory
 ---
 apiVersion: v1
 kind: Service
