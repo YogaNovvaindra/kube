@@ -1148,7 +1148,7 @@ spec:
               key: applicationsetcontroller.status.max.resources.count
               name: argocd-cmd-params-cm
               optional: true
-        image: reg.ygnv.my.id/quay/argoproj/argocd:v3.2.0
+        image: reg.ygnv.my.id/quay/argoproj/argocd:v3.2.1
         imagePullPolicy: IfNotPresent
         resources:
           requests:
@@ -1306,7 +1306,7 @@ spec:
         - -n
         - /usr/local/bin/argocd
         - /shared/argocd-dex
-        image: reg.ygnv.my.id/quay/argoproj/argocd:v3.2.0
+        image: reg.ygnv.my.id/quay/argoproj/argocd:v3.2.1
         imagePullPolicy: IfNotPresent
         name: copyutil
         securityContext:
@@ -1403,7 +1403,7 @@ spec:
               key: notificationscontroller.repo.server.plaintext
               name: argocd-cmd-params-cm
               optional: true
-        image: reg.ygnv.my.id/quay/argoproj/argocd:v3.2.0
+        image: reg.ygnv.my.id/quay/argoproj/argocd:v3.2.1
         imagePullPolicy: IfNotPresent
         resources:
           requests:
@@ -1511,7 +1511,7 @@ spec:
         - argocd
         - admin
         - redis-initial-password
-        image: reg.ygnv.my.id/quay/argoproj/argocd:v3.2.0
+        image: reg.ygnv.my.id/quay/argoproj/argocd:v3.2.1
         imagePullPolicy: IfNotPresent
         name: secret-init
         securityContext:
@@ -1802,7 +1802,7 @@ spec:
           value: /helm-working-dir
         - name: HELM_DATA_HOME
           value: /helm-working-dir
-        image: reg.ygnv.my.id/quay/argoproj/argocd:v3.2.0
+        image: reg.ygnv.my.id/quay/argoproj/argocd:v3.2.1
         imagePullPolicy: IfNotPresent
         resources:
           requests:
@@ -1858,7 +1858,7 @@ spec:
         command:
         - sh
         - -c
-        image: reg.ygnv.my.id/quay/argoproj/argocd:v3.2.0
+        image: reg.ygnv.my.id/quay/argoproj/argocd:v3.2.1
         imagePullPolicy: IfNotPresent
         name: copyutil
         securityContext:
@@ -2231,7 +2231,7 @@ spec:
               key: server.sync.replace.allowed
               name: argocd-cmd-params-cm
               optional: true
-        image: reg.ygnv.my.id/quay/argoproj/argocd:v3.2.0
+        image: reg.ygnv.my.id/quay/argoproj/argocd:v3.2.1
         imagePullPolicy: IfNotPresent
         resources:
           requests:
@@ -2618,7 +2618,7 @@ spec:
               optional: true
         - name: KUBECACHEDIR
           value: /tmp/kubecache
-        image: reg.ygnv.my.id/quay/argoproj/argocd:v3.2.0
+        image: reg.ygnv.my.id/quay/argoproj/argocd:v3.2.1
         imagePullPolicy: IfNotPresent
         resources:
           requests:
