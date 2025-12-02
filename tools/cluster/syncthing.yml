@@ -22,7 +22,7 @@ spec:
       #   kubernetes.io/arch: amd64
       containers:
         - name: syncthing
-          image: reg.ygnv.my.id/docker/linuxserver/syncthing:2.0.11
+          image: reg.ygnv.my.id/docker/linuxserver/syncthing:2.0.12
           imagePullPolicy: IfNotPresent
           resources:
             requests:
