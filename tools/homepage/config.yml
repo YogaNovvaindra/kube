@@ -263,6 +263,14 @@ data:
             type: myspeed
             url: http://myspeed:5216
             password: ${MYSPEED_PASSWORD}
+      - Peekaping:
+          icon: 	https://peekaping.com/logo-mascot.webp
+          href: https://peekaping.ygnv.my.id
+          description: Real-time network latency monitoring
+          siteMonitor: http://peekaping.monitoring:80
+          widget:
+            type: peekaping
+            url: http://peekaping.monitoring:80
 
     - Security:
       - Vaultwarden:
@@ -631,39 +639,29 @@ data:
           siteMonitor: http://10.0.0.253
       - Client Winda:
           icon: google-wifi.png
-          href: http://10.0.0.2
+          href: http://10.0.0.2:8080
           description: Personal client device (Winda)
-          siteMonitor: http://10.0.0.2
+          siteMonitor: http://10.0.0.2:8080
       - Client Enggal:
           icon: google-wifi.png
           href: http://10.0.0.3
           description: Personal client device (Enggal)
           siteMonitor: http://10.0.0.3
-      - Client Shelly:
-          icon: tp-link.png
-          href: http://10.0.0.4
-          description: Personal client device (Shelly)
-          siteMonitor: http://10.0.0.4
       - Client Yolan:
           icon: tp-link.png
-          href: http://10.0.0.5
+          href: http://10.0.0.5:8080
           description: Personal client device (Yolan)
-          siteMonitor: http://10.0.0.5
-      - Client Gadis:
-          icon: tp-link.png
-          href: http://10.0.0.6
-          description: Personal client device (Gadis)
-          siteMonitor: http://10.0.0.6
+          siteMonitor: http://10.0.0.5:8080
       - Client Domo:
           icon: tp-link.png
-          href: http://10.0.0.7
+          href: http://10.0.0.7:8080
           description: Personal client device (Domo)
-          siteMonitor: http://10.0.0.7
+          siteMonitor: http://10.0.0.7:8080
       - Client Brian:
           icon: tp-link.png
-          href: http://10.0.0.8
+          href: http://10.0.0.8:8080
           description: Personal client device (Brian)
-          siteMonitor: http://10.0.0.8
+          siteMonitor: http://10.0.0.8:8080
       - Rossa Station:
           icon: google-wifi.png
           href: http://10.1.2.254
