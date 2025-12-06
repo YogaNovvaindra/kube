@@ -78,7 +78,6 @@ spec:
             - --provider=cloudflare
             - --cloudflare-proxied
             - --cloudflare-dns-records-per-page=100
-            - --cloudflare-record-comment="provisioned by external-dns"
             - --log-format=json
             - --log-level=info
             - --interval=2m
