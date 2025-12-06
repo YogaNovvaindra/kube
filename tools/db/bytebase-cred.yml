@@ -1,0 +1,13 @@
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: bytebase-cred
+  namespace: tools
+spec:
+  encryptedData:
+    PG_URL: AgBUWDy9Zm6mLX3VMgt1fn7RGcQh7R+E7MQZWYf6f5bAM6NQn7GMQUhzxT+4KIXPPXqw0oNA8ItDM7VNiqACJDPmbYuRQpV5DwE4Ox6yECCNV/AFAsEFrpN7IDy7bLxQCbACwZ1DTxyQk4Os3Z9iIxzG48FftDwjlqDZmprvbgFBFj4cSHh8ZWPF1Q31I32ntTozht+eJAylywcYDQgxM/kdROUsFOe9PgwTu0ooNyROixxo2kJNVTyZLVAIVZn4BxRPqb1F24zbP1b0fvvXeBiVShx7XWleUYPUaBMyhkpwYbh8/eDqEemiXC5YBcOQefrMg+NLh0Sy8lrM+LP1bIfY/t/dRUS6fkHVQIkHutQnbeLT9jx/d5LFzvIHZ3DExV+kO5C2GtD3nnaFhpWjTXQg7RRaAY2yema8MlGKpHNn8aXz7Wghbdh6s6cDecem+E9za+00WnQ7UgWYe7cJj656NszLcl/Il4dUKP+jnx6CgTxulPiM0/XBzCjZL5ikDeAy06qzKofND4wXbmP+uI1bkAxa4Z47K6LeQBMSa03x3hsUpOFSkIwdUD5bDiqDBuBtQySAvD3jZ+APmOpzPbhzcGhmS79q275AqFKWlDigynh5r4zYwCZGEv0el+zblxa+Pz1CUx6fCHZVquqm7ApoXWfzn8wMJ91DY4UUIQGfiUf0cuIgWQuvytWqSmkpnQsmJ/N4r32koTO+3P5HYGzu5R5xRbOt5eHV+9dbvtuWY9kcQeRynqBMmdSGSfZZcUZ2om9IujetYlOMFVs7EOzC
+  template:
+    metadata:
+      name: bytebase-cred
+      namespace: tools
