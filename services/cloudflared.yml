@@ -25,28 +25,35 @@ spec:
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchLabels:
-                app: cloudflared
-            topologyKey: kubernetes.io/hostname
-      # securityContext:
-      #   runAsUser: 0
-      #   runAsGroup: 0
+            - labelSelector:
+                matchLabels:
+                  app: cloudflared
+              topologyKey: kubernetes.io/hostname
       containers:
-      - name: cloudflared
-        image: reg.ygnv.my.id/docker/cloudflare/cloudflared:latest
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            cpu: 200m
-            memory: 32Mi
-        envFrom:
-        - secretRef:
-            name: cloudflared-cred
-        args: 
-          - "tunnel"
-          -  "--no-autoupdate"
-          - "run"
+        - name: cloudflared
+          image: reg.ygnv.my.id/docker/cloudflare/cloudflared:latest
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: 200m
+              memory: 32Mi
+          envFrom:
+            - secretRef:
+                name: cloudflared-cred
+          args:
+            - "tunnel"
+            - "--no-autoupdate"
+            # - "--config"
+            # - "/etc/cloudflared/config.yaml"
+            - "run"
+      #   volumeMounts:
+      #     - name: config
+      #       mountPath: /etc/cloudflared
+      #       readOnly: true
+      # volumes:
+      #   - name: config
+      #     configMap:
+      #       name: cloudflared-config
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
@@ -61,9 +68,9 @@ spec:
   minReplicas: 2
   maxReplicas: 3
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 100
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 100
