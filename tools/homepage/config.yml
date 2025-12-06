@@ -527,7 +527,7 @@ data:
           siteMonitor: http://filebrowser:80
       - RustFS:
           icon: https://rustfs.com/images/rustfs-github.png
-          href: https://rustfs.ygnv.my.id
+          href: https://rustfs-console.ygnv.my.id
           description: S3-compatible object storage service
           siteMonitor: http://rustfs:9000
       - Openspeedtest:
