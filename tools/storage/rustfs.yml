@@ -57,6 +57,8 @@ spec:
               value: "true"
             - name: RUSTFS_SERVER_DOMAINS
               value: "rustfs.ygnv.my.id"
+            - name: RUSTFS_REGION
+              value: "us-east-1"
           volumeMounts:
             - name: rustfs-data
               mountPath: /data
