@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: rustfs
   namespace: tools
@@ -11,12 +11,13 @@ metadata:
     keel.sh/match-tag: "true"
     keel.sh/pollSchedule: "@every 6h"
 spec:
+  serviceName: rustfs
   replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
       app: rustfs
-  strategy:
+  updateStrategy:
     type: RollingUpdate
   template:
     metadata:
