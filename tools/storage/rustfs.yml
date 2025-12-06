@@ -113,6 +113,11 @@ spec:
     - http
     - https
   routes:
+    - match: Host(`rustfs.ygnv.my.id`) && PathPrefix(`/rustfs/console`)
+      kind: Rule
+      services:
+        - name: rustfs
+          port: 9001
     - match: Host(`rustfs.ygnv.my.id`) && PathPrefix(`/console`)
       kind: Rule
       services:
