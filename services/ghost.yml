@@ -30,70 +30,70 @@ spec:
         app: ghost
     spec:
       containers:
-      - name: ghost
-        image: reg.ygnv.my.id/docker/ghost:6.10.0
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            memory: 256Mi
-        ports:
-        - containerPort: 2368
-        env:
-          - name: database__client
-            value: "mysql"
-          - name: database__connection__host
-            value: "ghostdb"
-          - name: database__connection__port
-            value: "3306"
-          - name: database__connection__user
-            valueFrom:
-              secretKeyRef:
-                name: ghost-cred
-                key: dbuser
-          - name: database__connection__password
-            valueFrom:
-              secretKeyRef:
-                name: ghost-cred
-                key: dbpass
-          - name: database__connection__database
-            valueFrom:
-              secretKeyRef:
-                name: ghost-cred
-                key: dbname
-          - name: mail__service
-            value: "Mailgun"
-          - name: mail__from
-            valueFrom:
-              secretKeyRef:
-                name: ghost-cred
-                key: mailfrom
-          - name: mail__transport
-            value: "SMTP"
-          - name: mail__options__host
-            valueFrom:
-              secretKeyRef:
-                name: ghost-cred
-                key: mailhost
-          - name: mail__options__port
-            value: "587"
-          - name: mail__options__auth__user
-            valueFrom:
-              secretKeyRef:
-                name: ghost-cred
-                key: mailauth
-          - name: mail__options__auth__pass
-            valueFrom:
-              secretKeyRef:
-                name: ghost-cred
-                key: mailpass
-          - name: url
-            value: "https://ygnv.my.id"
-        volumeMounts:
-          - name: ghost-data
-            mountPath: /var/lib/ghost/content
-          - name: localtime
-            mountPath: /etc/localtime
-            readOnly: true
+        - name: ghost
+          image: reg.ygnv.my.id/docker/ghost:6.10.0
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 256Mi
+          ports:
+            - containerPort: 2368
+          env:
+            - name: database__client
+              value: "mysql"
+            - name: database__connection__host
+              value: "ghostdb"
+            - name: database__connection__port
+              value: "3306"
+            - name: database__connection__user
+              valueFrom:
+                secretKeyRef:
+                  name: ghost-cred
+                  key: dbuser
+            - name: database__connection__password
+              valueFrom:
+                secretKeyRef:
+                  name: ghost-cred
+                  key: dbpass
+            - name: database__connection__database
+              valueFrom:
+                secretKeyRef:
+                  name: ghost-cred
+                  key: dbname
+            - name: mail__service
+              value: "Mailgun"
+            - name: mail__from
+              valueFrom:
+                secretKeyRef:
+                  name: ghost-cred
+                  key: mailfrom
+            - name: mail__transport
+              value: "SMTP"
+            - name: mail__options__host
+              valueFrom:
+                secretKeyRef:
+                  name: ghost-cred
+                  key: mailhost
+            - name: mail__options__port
+              value: "587"
+            - name: mail__options__auth__user
+              valueFrom:
+                secretKeyRef:
+                  name: ghost-cred
+                  key: mailauth
+            - name: mail__options__auth__pass
+              valueFrom:
+                secretKeyRef:
+                  name: ghost-cred
+                  key: mailpass
+            - name: url
+              value: "https://ygnv.my.id"
+          volumeMounts:
+            - name: ghost-data
+              mountPath: /var/lib/ghost/content
+            - name: localtime
+              mountPath: /etc/localtime
+              readOnly: true
       volumes:
         - name: ghost-data
           hostPath:
@@ -109,14 +109,19 @@ kind: Service
 metadata:
   name: ghost
   namespace: services
+  annotations:
+    # ExternalDNS will create DNS record for root domain
+    external-dns.alpha.kubernetes.io/hostname: blog.yoganova.my.id
+    external-dns.alpha.kubernetes.io/ttl: "120"
+    external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
 spec:
   type: ClusterIP
   selector:
     app: ghost
   ports:
-  - name: ghost
-    port: 2368
-    targetPort: 2368
+    - name: ghost
+      port: 2368
+      targetPort: 2368
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -139,28 +144,28 @@ spec:
         kubernetes.io/arch: amd64
       terminationGracePeriodSeconds: 10
       containers:
-      - name: ghostdb
-        image: reg.ygnv.my.id/docker/mysql:9.5.0
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            memory: 256Mi
-        ports:
-        - containerPort: 3306
-        env:
-          - name: MYSQL_ROOT_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: ghost-cred
-                key: sqlpass
-          - name: TZ
-            value: "Asia/Jakarta"
-        volumeMounts:
-          - name: ghostdb-data
-            mountPath: /var/lib/mysql
-          - name: ghostdb-config
-            mountPath: /etc/mysql/conf.d/my.cnf
-            subPath: my.cnf
+        - name: ghostdb
+          image: reg.ygnv.my.id/docker/mysql:9.5.0
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 256Mi
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ghost-cred
+                  key: sqlpass
+            - name: TZ
+              value: "Asia/Jakarta"
+          volumeMounts:
+            - name: ghostdb-data
+              mountPath: /var/lib/mysql
+            - name: ghostdb-config
+              mountPath: /etc/mysql/conf.d/my.cnf
+              subPath: my.cnf
       volumes:
         - name: ghostdb-data
           hostPath:
@@ -183,7 +188,7 @@ spec:
   selector:
     app: ghostdb
   ports:
-  - name: mysql
-    port: 3306
-    targetPort: 3306
+    - name: mysql
+      port: 3306
+      targetPort: 3306
   clusterIP: None
