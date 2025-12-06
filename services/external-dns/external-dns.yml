@@ -70,11 +70,12 @@ spec:
           args:
             - --source=ingress
             - --source=service
-            - --default-targets=9141b1d3-89ab-4302-a7eb-7eede71828fd.cfargotunnel.com
+            - --publish-internal-services
             # Manage root domain ygnv.my.id (only if explicitly annotated)
             # Manage all subdomains for yoganova.my.id
             - --domain-filter=ygnv.my.id
             - --domain-filter=yoganova.my.id
+            - --default-targets=9141b1d3-89ab-4302-a7eb-7eede71828fd.cfargotunnel.com
             - --provider=cloudflare
             - --cloudflare-proxied
             - --cloudflare-dns-records-per-page=100
