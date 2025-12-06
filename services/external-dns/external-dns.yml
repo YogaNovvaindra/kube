@@ -70,7 +70,7 @@ spec:
           args:
             - --source=ingress
             - --source=service
-            - --default-target=e3c07ae0-xxxx.cfargotunnel.com
+            - --default-target=9141b1d3-89ab-4302-a7eb-7eede71828fd.cfargotunnel.com
             # Manage root domain ygnv.my.id (only if explicitly annotated)
             # Manage all subdomains for yoganova.my.id
             - --domain-filter=ygnv.my.id
