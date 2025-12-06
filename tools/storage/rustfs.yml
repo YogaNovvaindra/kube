@@ -113,28 +113,11 @@ spec:
     - http
     - https
   routes:
-    - match: Host(`rustfs.ygnv.my.id`) && PathPrefix(`/rustfs/console`)
+    - match: Host(`rustfs-console.ygnv.my.id`)
       kind: Rule
       services:
         - name: rustfs
           port: 9001
-    - match: Host(`rustfs.ygnv.my.id`) && PathPrefix(`/console`)
-      kind: Rule
-      services:
-        - name: rustfs
-          port: 9001
-      middlewares:
-        - name: rustfs-console-replace
   tls:
     certResolver: cloudflare
----
-apiVersion: traefik.io/v1alpha1
-kind: Middleware
-metadata:
-  name: rustfs-console-replace
-  namespace: tools
-spec:
-  replacePathRegex:
-    regex: ^/console(.*)
-    replacement: /rustfs/console$1
 
