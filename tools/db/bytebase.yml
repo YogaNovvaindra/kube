@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: bytebase
+  namespace: tools
+spec:
+  # To prevent data races, only request one replica.
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: bytebase
+  template:
+    metadata:
+      labels:
+        app: bytebase
+    spec:
+      containers:
+        - name: bytebase
+          image: bytebase/bytebase:3.12.2
+          imagePullPolicy: IfNotPresent
+          # Configure external PostgreSQL following the guide:
+          # https://www.bytebase.com/docs/get-started/self-host/external-postgres
+          envFrom:
+            - secretRef:
+                name: bytebase-cred
+          args:
+            [
+              '--port',
+              '8080',
+            ]
+          ports:
+            - containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 300
+            periodSeconds: 300
+            timeoutSeconds: 10
+          volumeMounts:
+            - name: bytebase-data
+              mountPath: /var/opt/bytebase
+      volumes:
+        - name: bytebase-data
+          hostPath:
+            path: /mnt/cephfs/docker/tools/bytebase
+            type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bytebase-entrypoint
+  namespace: default
+spec:
+  # Optional
+  type: ClusterIP
+  selector:
+    app: bytebase
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
