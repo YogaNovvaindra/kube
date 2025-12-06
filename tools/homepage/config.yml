@@ -26,7 +26,7 @@ data:
     # Layout configuration
     layout:
 
-    # group of 4
+    # Core Infrastructure (group of 4)
       Network Infrastructure:
         icon: mdi-network
         style: column
@@ -39,43 +39,63 @@ data:
         icon: mdi-chart-line
         style: column
         columns: 1
-      Web Hosting and Management:
-        icon: mdi-web
-        style: column
-        columns: 1
-    # end of group of 4
-      Media:
-        icon: mdi-play-circle
-        style: row
-        columns: 4
-    # group of 4
-      Smart Home Devices:
-        icon: mdi-home-automation
-        style: column
-        columns: 1
-      Development and Version Control:
-        icon: mdi-code-braces
-        style: column
-        columns: 1
       Security:
         icon: mdi-shield-lock
         style: column
         columns: 1
-      Access Points:
-        icon: mdi-wifi
+    # end of group of 4
+
+    # Development and DevOps (group of 2)
+      Development and DevOps:
+        icon: mdi-code-braces
         style: column
         columns: 1
-    # end of group of 4
-      Utilities:
+      Database Management:
+        icon: mdi-database
+        style: column
+        columns: 1
+    # end of group of 2
+
+    # Web Services (group of 2)
+      Web Hosting:
+        icon: mdi-web
+        style: column
+        columns: 1
+      Content Creation:
+        icon: mdi-pencil
+        style: column
+        columns: 1
+    # end of group of 2
+
+    # Media and Entertainment
+      Media:
+        icon: mdi-play-circle
+        style: row
+        columns: 4
+
+    # File and Storage Management
+      File Management:
+        icon: mdi-folder-multiple
+        style: row
+        columns: 4
+
+    # Automation and Productivity
+      Automation:
+        icon: mdi-robot
+        style: row
+        columns: 4
+      Productivity Tools:
         icon: mdi-toolbox
         style: row
         columns: 4
-      Editor:
-        icon: mdi-pencil
+
+    # Personal Services
+      Photo Management:
+        icon: mdi-image-multiple
         style: row
         columns: 4
-      File Synchronization:
-        icon: mdi-sync
+      Smart Home:
+        icon: mdi-home-automation
         style: row
         columns: 4
       Client Devices:
@@ -171,7 +191,6 @@ data:
             type: traefik
             url: http://traefik.traefik:8080
 
-    - Access Points:
       - SXT AP:
           icon: https://cdn.jsdelivr.net/gh/PapirusDevelopmentTeam/papirus_icons/src/apps_mikrotik.svg
           href: http://192.168.1.3
@@ -290,7 +309,7 @@ data:
           description: Security information and event management (SIEM)
           ping: 192.168.192.4
 
-    - Development and Version Control:
+    - Development and DevOps:
       - Gitea:
           icon: gitea.png
           href: https://git.ygnv.my.id/explore
@@ -320,20 +339,7 @@ data:
       #     description: AI model serving and management platform
       #     siteMonitor: http://192.168.192.3:8080
 
-    - Web Hosting and Management:
-      - YGNV Hosting:
-          icon: https://ssd-disclosure.com/wp-content/uploads/2022/11/bt_logo-1.png
-          href: https://aapanel.ygnv.my.id/aapanel
-          description: YGNV web hosting management panel
-      - File Panel:
-          icon: filebrowser.png
-          href: https://filepanel.ygnv.my.id
-          description: File management interface for web hosting
-      - Ghost:
-          icon: ghost.png
-          href: https://ygnv.my.id/ghost
-          description: Ghost CMS blogging platform
-        #   siteMonitor: http://ygnv.my.id/ghost
+    - Database Management:
       - PgAdmin:
           icon: sh-postgresql.svg
           href: https://pgadmin.ygnv.my.id
@@ -354,13 +360,28 @@ data:
           href: https://bytebase.ygnv.my.id
           description: Database schema change and version control
           siteMonitor: http://bytebase:80
+
+    - Web Hosting:
+      - YGNV Hosting:
+          icon: https://ssd-disclosure.com/wp-content/uploads/2022/11/bt_logo-1.png
+          href: https://aapanel.ygnv.my.id/aapanel
+          description: YGNV web hosting management panel
+      - File Panel:
+          icon: filebrowser.png
+          href: https://filepanel.ygnv.my.id
+          description: File management interface for web hosting
+      - Ghost:
+          icon: ghost.png
+          href: https://ygnv.my.id/ghost
+          description: Ghost CMS blogging platform
+        #   siteMonitor: http://ygnv.my.id/ghost
       - Online Portfolio:
           icon: https://biarrinetworks.com/hs-fs/hubfs/Collab_big.png?width=592&name=Collab_big.png
           href: https://yoganova.my.id
           description: Personal online portfolio website
           siteMonitor: https://yoganova.my.id
 
-    - File Synchronization:
+    - File Management:
       - Syncthing Kube:
           icon: syncthing.png
           href: http://10.1.1.55:8384
@@ -386,6 +407,16 @@ data:
           href: http://192.168.192.4:8384
           description: File synchronization for 8Labs devices
           siteMonitor: http://192.168.192.4:8384
+      - File Browser:
+          icon: filebrowser.png
+          href: https://file.ygnv.my.id
+          description: Web-based file management interface
+          siteMonitor: http://filebrowser:80
+      - RustFS:
+          icon: https://rustfs.com/images/rustfs-github.png
+          href: https://rustfs.ygnv.my.id/rustfs/console
+          description: S3-compatible object storage service
+          siteMonitor: http://rustfs:9000
           
     - Media:
       - "":
@@ -491,37 +522,28 @@ data:
           description: Automation tool for maintaining Plex libraries
           siteMonitor: http://maintainerr.media:6246
 
-    - Utilities:
-      - Immich:
-          icon: immich.png
-          href: https://immich.ygnv.my.id
-          description: Self-hosted photo and video backup solution
-          siteMonitor: http://immich-svc.immich:8080
-          widget:
-            type: immich
-            url: http://immich-svc.immich:8080
-            key: ${IMMICH_KEY}
-            version: 2
+    - Automation:
       - N8n:
           icon: n8n.png
           href: https://n8n.ygnv.my.id
           description: Workflow automation and integration platform
           siteMonitor: http://n8n.tools:5678
+      - Change Detection:
+          icon: changedetection.svg
+          href: https://changedetection.ygnv.my.id
+          description: Website change detection and monitoring
+          siteMonitor: http://changedetection.tools:5000
+          widget:
+            type: changedetectionio
+            url: http://changedetection.tools:5000
+            key: ${CHANGEDETECTION_KEY}
       # - Iventoy:
       #     icon: netboot.svg
       #     href: https://iventoy.ygnv.my.id
       #     description: Network boot and OS deployment server
       #     siteMonitor: http://10.1.1.51:26000
-      - File Browser:
-          icon: filebrowser.png
-          href: https://file.ygnv.my.id
-          description: Web-based file management interface
-          siteMonitor: http://filebrowser:80
-      - RustFS:
-          icon: https://rustfs.com/images/rustfs-github.png
-          href: https://rustfs.ygnv.my.id/rustfs/console
-          description: S3-compatible object storage service
-          siteMonitor: http://rustfs:9000
+
+    - Productivity Tools:
       - Openspeedtest:
           icon: openspeedtest.png
           href: https://speedtest.ygnv.my.id
@@ -543,22 +565,13 @@ data:
           href: https://tools.ygnv.my.id
           description: Collection of useful IT utilities and tools
           siteMonitor: http://it-tools.tools:80
-      - Change Detection:
-          icon: changedetection.svg
-          href: https://changedetection.ygnv.my.id
-          description: Website change detection and monitoring
-          siteMonitor: http://changedetection.tools:5000
-          widget:
-            type: changedetectionio
-            url: http://changedetection.tools:5000
-            key: ${CHANGEDETECTION_KEY}
       - ArchiveTeam Warrior:
           icon: https://wiki.archiveteam.org/images/thumb/f/f3/Archive_team.png/587px-Archive_team.png
           href: https://warrior.ygnv.my.id
           description: Tool for archiving and preserving web pages
           siteMonitor: http://warrior:8001
 
-    - Editor:
+    - Content Creation:
       - Outline:
           icon: sh-outline.svg
           href: https://outline.ygnv.my.id
@@ -595,7 +608,19 @@ data:
       #     description: Resume builder and management tool
       #     siteMonitor: http://reactive-resume.tools:3000
 
-    - Smart Home Devices:
+    - Photo Management:
+      - Immich:
+          icon: immich.png
+          href: https://immich.ygnv.my.id
+          description: Self-hosted photo and video backup solution
+          siteMonitor: http://immich-svc.immich:8080
+          widget:
+            type: immich
+            url: http://immich-svc.immich:8080
+            key: ${IMMICH_KEY}
+            version: 2
+
+    - Smart Home:
       - Home Assistant:
           icon: home-assistant.png
           href: http://homeassistant.ygnv.my.id
