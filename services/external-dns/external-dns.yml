@@ -68,6 +68,7 @@ spec:
           image: registry.k8s.io/external-dns/external-dns:v0.20.0
           imagePullPolicy: IfNotPresent
           args:
+            - --all-namespaces
             - --source=ingress
             - --source=service
             - --default-targets=9141b1d3-89ab-4302-a7eb-7eede71828fd.cfargotunnel.com
@@ -78,6 +79,7 @@ spec:
             - --provider=cloudflare
             - --cloudflare-proxied
             - --cloudflare-dns-records-per-page=100
+            - --cloudflare-record-comment="provisioned by external-dns"
             - --log-format=json
             - --log-level=info
             - --interval=2m
