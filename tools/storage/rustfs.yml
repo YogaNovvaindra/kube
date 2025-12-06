@@ -1,0 +1,137 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rustfs
+  namespace: tools
+  labels:
+    app: rustfs
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: rustfs
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: rustfs
+    spec:
+      containers:
+        - name: rustfs
+          image: rustfs/rustfs:latest
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 256Mi
+          args:
+            - --address
+            - ":9000"
+            - --console-enable
+            - --server-domains
+            - "example.com"
+            - /data
+          ports:
+            - name: api
+              containerPort: 9000
+            - name: console
+              containerPort: 9001
+          env:
+            - name: RUSTFS_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: rustfs-cred
+                  key: accesskey
+            - name: RUSTFS_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: rustfs-cred
+                  key: secretkey
+            - name: RUSTFS_CONSOLE_ENABLE
+              value: "true"
+            - name: RUSTFS_SERVER_DOMAINS
+              value: "example.com"
+          volumeMounts:
+            - name: rustfs-data
+              mountPath: /data
+      volumes:
+        - name: rustfs-data
+          hostPath:
+            path: /mnt/cephfs/docker/tools/rustfs
+            type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rustfs
+  namespace: tools
+  labels:
+    app: rustfs
+spec:
+  selector:
+    app: rustfs
+  ports:
+    - name: api
+      port: 9000
+      targetPort: api
+    - name: console
+      port: 9001
+      targetPort: console
+  type: ClusterIP
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: rustfs-api
+  namespace: tools
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`rustfs.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: rustfs
+          port: 9000
+  tls:
+    certResolver: cloudflare
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: rustfs-console
+  namespace: tools
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: tools-rustfs-strip
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`rustfs.ygnv.my.id`) && PathPrefix(`/console`)
+      kind: Rule
+      services:
+        - name: rustfs
+          port: 9001
+      middlewares:
+        - name: rustfs-strip
+  tls:
+    certResolver: cloudflare
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: rustfs-strip
+  namespace: tools
+spec:
+  stripPrefix:
+    prefixes:
+      - /console
+

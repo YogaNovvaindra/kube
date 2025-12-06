@@ -17,8 +17,11 @@ spec:
     spec:
       containers:
         - name: bytebase
-          image: bytebase/bytebase:3.12.2
+          image: reg.ygnv.my.id/docker/bytebase/bytebase:3.12.2
           imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 384Mi
           # Configure external PostgreSQL following the guide:
           # https://www.bytebase.com/docs/get-started/self-host/external-postgres
           envFrom:
@@ -45,7 +48,7 @@ spec:
         - name: bytebase-data
           hostPath:
             path: /mnt/cephfs/docker/tools/bytebase
-            type: DirectoryOrCreate
+            type: Directory
 
 ---
 apiVersion: v1
