@@ -68,7 +68,6 @@ spec:
           image: registry.k8s.io/external-dns/external-dns:v0.20.0
           imagePullPolicy: IfNotPresent
           args:
-            - --all-namespaces
             - --source=ingress
             - --source=service
             - --default-targets=9141b1d3-89ab-4302-a7eb-7eede71828fd.cfargotunnel.com
