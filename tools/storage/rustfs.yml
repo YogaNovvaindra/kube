@@ -108,8 +108,6 @@ kind: IngressRoute
 metadata:
   name: rustfs-console
   namespace: tools
-  annotations:
-    traefik.ingress.kubernetes.io/router.middlewares: tools-rustfs-strip
 spec:
   entryPoints:
     - http
@@ -121,17 +119,17 @@ spec:
         - name: rustfs
           port: 9001
       middlewares:
-        - name: rustfs-strip
+        - name: rustfs-console-replace
   tls:
     certResolver: cloudflare
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
-  name: rustfs-strip
+  name: rustfs-console-replace
   namespace: tools
 spec:
-  stripPrefix:
-    prefixes:
-      - /console
+  replacePathRegex:
+    regex: ^/console(.*)
+    replacement: /rustfs/console$1
 
