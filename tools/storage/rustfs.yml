@@ -64,7 +64,7 @@ spec:
         - name: rustfs-data
           hostPath:
             path: /mnt/cephfs/docker/tools/rustfs
-            type: Directory
+            type: DirectoryOrCreate
 ---
 apiVersion: v1
 kind: Service
