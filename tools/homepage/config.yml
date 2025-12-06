@@ -177,11 +177,11 @@ data:
           href: http://192.168.1.3
           description: MikroTik SXT Access Point
           siteMonitor: http://192.168.1.3
-      - Tenda Home:
-          icon: tenda.svg
-          href: http://10.1.1.254
-          description: Tenda home Access Point
-          siteMonitor: http://10.1.1.254
+      # - Tenda Home:
+      #     icon: tenda.svg
+      #     href: http://10.1.1.254
+      #     description: Tenda home Access Point
+      #     siteMonitor: http://10.1.1.254
       - Desa AP:
           icon: google-wifi.png
           href: http://10.0.0.254
@@ -267,10 +267,7 @@ data:
           icon: 	https://peekaping.com/logo-mascot.webp
           href: https://peekaping.ygnv.my.id
           description: Real-time network latency monitoring
-          siteMonitor: http://peekaping.monitoring:80
-          widget:
-            type: peekaping
-            url: http://peekaping.monitoring:80
+          siteMonitor: http://peekaping-web.monitoring:80
 
     - Security:
       - Vaultwarden:
@@ -317,11 +314,11 @@ data:
           href: https://reg.ygnv.my.id
           description: Container image registry and management platform
           siteMonitor: http://nginx.harbor:8080
-      - Ollama:
-          icon: ollama.png
-          href: https://ai.ygnv.my.id
-          description: AI model serving and management platform
-          siteMonitor: http://192.168.192.3:8080
+      # - Ollama:
+      #     icon: ollama.png
+      #     href: https://ai.ygnv.my.id
+      #     description: AI model serving and management platform
+      #     siteMonitor: http://192.168.192.3:8080
 
     - Web Hosting and Management:
       - YGNV Hosting:
@@ -522,7 +519,7 @@ data:
           siteMonitor: http://filebrowser:80
       - RustFS:
           icon: https://rustfs.com/images/rustfs-github.png
-          href: https://rustfs-console.ygnv.my.id
+          href: https://rustfs.ygnv.my.id/rustfs/console
           description: S3-compatible object storage service
           siteMonitor: http://rustfs:9000
       - Openspeedtest:
