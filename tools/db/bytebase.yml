@@ -51,8 +51,8 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: bytebase-entrypoint
-  namespace: default
+  name: bytebase
+  namespace: tools
 spec:
   # Optional
   type: ClusterIP
@@ -80,6 +80,6 @@ spec:
       kind: Rule
       services:
         - name: bytebase
-          port: 8080
+          port: 80
   tls:
     certResolver: cloudflare
