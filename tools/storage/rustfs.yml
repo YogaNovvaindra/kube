@@ -116,7 +116,7 @@ spec:
     - http
     - https
   routes:
-    - match: Host(`rustfs-console.ygnv.my.id`)
+    - match: Host(`rustfs.ygnv.my.id`) && PathPrefix(`/rustfs/console`)
       kind: Rule
       services:
         - name: rustfs
