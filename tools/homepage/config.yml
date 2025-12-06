@@ -352,6 +352,11 @@ data:
           href: https://phpmyadmin-services.ygnv.my.id
           description: MySQL database management (services environment)
           siteMonitor: http://phpmyadmin.services:80
+      - Bytebase:
+          icon: https://www.bytebase.com/favicon/favicon.png
+          href: https://bytebase.ygnv.my.id
+          description: Database schema change and version control
+          siteMonitor: http://bytebase:80
       - Online Portfolio:
           icon: https://biarrinetworks.com/hs-fs/hubfs/Collab_big.png?width=592&name=Collab_big.png
           href: https://yoganova.my.id
@@ -510,11 +515,6 @@ data:
           href: https://n8n.ygnv.my.id
           description: Workflow automation and integration platform
           siteMonitor: http://n8n.tools:5678
-      # - Minio:
-      #     icon: minio.svg
-      #     href: https://minio.ygnv.my.id
-      #     description: Self-hosted object storage service
-      #     siteMonitor: http://minio.tools:9000
       # - Iventoy:
       #     icon: netboot.svg
       #     href: https://iventoy.ygnv.my.id
@@ -525,6 +525,11 @@ data:
           href: https://file.ygnv.my.id
           description: Web-based file management interface
           siteMonitor: http://filebrowser:80
+      - RustFS:
+          icon: https://rustfs.com/images/rustfs-github.png
+          href: https://rustfs.ygnv.my.id
+          description: S3-compatible object storage service
+          siteMonitor: http://rustfs:9000
       - Openspeedtest:
           icon: openspeedtest.png
           href: https://speedtest.ygnv.my.id
