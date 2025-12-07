@@ -11,6 +11,8 @@ spec:
     path: services
     repoURL: https://github.com/YogaNovvaindra/kube.git
     targetRevision: HEAD
+    directory:
+      recurse: true
   sources: []
   project: default
   syncPolicy:
@@ -18,4 +20,4 @@ spec:
       prune: true
       selfHeal: true
     syncOptions:
-    - CreateNamespace=true
+      - CreateNamespace=true

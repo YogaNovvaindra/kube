@@ -18,18 +18,18 @@ spec:
         app: portfolio
     spec:
       containers:
-      - name: portfolio
-        image: reg.ygnv.my.id/ghcr/yoganovvaindra/portfolio:v0.1.9
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            cpu: 50m
-            memory: 32Mi
-        ports:
-        - containerPort: 80
-        env:
-        - name: TZ
-          value: Asia/Jakarta
+        - name: portfolio
+          image: reg.ygnv.my.id/ghcr/yoganovvaindra/portfolio:v0.1.9
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+          ports:
+            - containerPort: 80
+          env:
+            - name: TZ
+              value: Asia/Jakarta
 ---
 apiVersion: v1
 kind: Service
@@ -43,8 +43,8 @@ spec:
   selector:
     app: portfolio
   ports:
-  - port: 80
-    targetPort: 80
+    - port: 80
+      targetPort: 80
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
@@ -59,9 +59,9 @@ spec:
   minReplicas: 1
   maxReplicas: 5
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 100
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 100
