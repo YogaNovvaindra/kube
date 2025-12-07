@@ -1,0 +1,31 @@
+---
+# Cloudflared configuration file
+# Direct service routing - no Traefik needed
+# All routing is managed here in Kubernetes YAML files
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloudflared-config
+  namespace: services
+data:
+  config.yaml: |
+    # Works with token-based authentication (TUNNEL_TOKEN)
+    # The tunnel ID is automatically extracted from the token
+    # 
+    # For config-based auth, uncomment and set:
+    # tunnel: YOUR_TUNNEL_ID
+    # credentials-file: /etc/cloudflared/creds.json
+    
+    ingress:
+      # Root domain ygnv.my.id - route to main site (Ghost)
+      - hostname: "ygnv.my.id"
+        service: http://ghost.services.svc.cluster.local:2368
+      
+      # All subdomains of yoganova.my.id - route to various services
+      # Add more specific routes above this wildcard if needed
+      - hostname: "yoganova.my.id"
+        service: http://portfolio.services.svc.cluster.local:80
+      
+      # Catch-all rule (must be last) - returns 404 for unmatched hosts
+      - service: http_status:404
+
