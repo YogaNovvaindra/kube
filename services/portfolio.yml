@@ -18,18 +18,18 @@ spec:
         app: portfolio
     spec:
       containers:
-        - name: portfolio
-          image: reg.ygnv.my.id/ghcr/yoganovvaindra/portfolio:v0.1.9
-          imagePullPolicy: IfNotPresent
-          resources:
-            requests:
-              cpu: 50m
-              memory: 32Mi
-          ports:
-            - containerPort: 80
-          env:
-            - name: TZ
-              value: Asia/Jakarta
+      - name: portfolio
+        image: reg.ygnv.my.id/ghcr/yoganovvaindra/portfolio:v0.2.2
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        ports:
+        - containerPort: 80
+        env:
+        - name: TZ
+          value: Asia/Jakarta
 ---
 apiVersion: v1
 kind: Service
