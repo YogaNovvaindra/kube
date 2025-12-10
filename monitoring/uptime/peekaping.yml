@@ -363,7 +363,7 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: reg.ygnv.my.id/docker/nginx:1.29.3-alpine
+          image: reg.ygnv.my.id/docker/nginx:1.29.4-alpine
           imagePullPolicy: IfNotPresent
           resources:
             requests:
