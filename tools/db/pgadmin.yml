@@ -22,7 +22,7 @@ spec:
         kubernetes.io/arch: amd64
       containers:
       - name: pgadmin
-        image: reg.ygnv.my.id/docker/dpage/pgadmin4:9.10
+        image: reg.ygnv.my.id/docker/dpage/pgadmin4:9.11
         imagePullPolicy: IfNotPresent
         resources:
           requests:
