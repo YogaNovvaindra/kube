@@ -92,7 +92,7 @@ spec:
       serviceAccountName: loki
       containers:
       - name: loki
-        image: reg.ygnv.my.id/docker/grafana/loki:3.6.2
+        image: reg.ygnv.my.id/docker/grafana/loki:3.6.3
         imagePullPolicy: IfNotPresent
         resources:
           requests:
