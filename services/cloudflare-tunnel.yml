@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cloudflare-api-key
+  namespace: services
+type: Opaque
+stringData:
+  apiToken: "" # Add your Cloudflare API token here
+---
+apiVersion: networking.cfargotunnel.com/v1alpha1
+kind: Tunnel
+metadata:
+  name: cloudflare-tunnel
+  namespace: services
+spec:
+  cloudflare:
+    email: "" # Add your Cloudflare email here
+    apiSecret: cloudflare-api-key
+    accountName: "" # Add your Cloudflare account name here
+    zoneName: "" # Add your Cloudflare zone name here
+  tunnelConfig:
+    tunnelSecret: cloudflared-cred
+  replicas: 2
+---
+apiVersion: networking.cfargotunnel.com/v1alpha1
+kind: TunnelBinding
+metadata:
+  name: ghost-tunnel
+  namespace: services
+spec:
+  tunnelRef:
+    name: cloudflare-tunnel
+    namespace: services
+  subjects:
+    - name: "ygnv.my.id"
+      service:
+        name: ghost
+        port: 2368
+---
+apiVersion: networking.cfargotunnel.com/v1alpha1
+kind: TunnelBinding
+metadata:
+  name: portfolio-tunnel
+  namespace: services
+spec:
+  tunnelRef:
+    name: cloudflare-tunnel
+    namespace: services
+  subjects:
+    - name: "yoganova.my.id"
+      service:
+        name: portfolio
+        port: 80
