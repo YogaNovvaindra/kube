@@ -29,7 +29,7 @@ spec:
         kubernetes.io/arch: amd64
       containers:
         - name: authentik-server
-          image: reg.ygnv.my.id/ghcr/goauthentik/server:2025.10.2
+          image: reg.ygnv.my.id/ghcr/goauthentik/server:2025.10.3
           imagePullPolicy: IfNotPresent
           args: ["server"]
           envFrom:
@@ -83,7 +83,7 @@ spec:
         kubernetes.io/arch: amd64
       containers:
         - name: authentik-worker
-          image: reg.ygnv.my.id/ghcr/goauthentik/server:2025.10.2
+          image: reg.ygnv.my.id/ghcr/goauthentik/server:2025.10.3
           imagePullPolicy: IfNotPresent
           args: ["worker"]
           envFrom:
