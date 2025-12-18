@@ -123,7 +123,7 @@ spec:
         - name: gitea-http
           port: 3000
   tls:
-    certResolver: cloudflare
+    secretName: ygnv-wildcard-cert
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRouteTCP

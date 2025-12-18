@@ -71,4 +71,4 @@ spec:
     - name: pgadmin
       port: 80
   tls:
-    certResolver: cloudflare
+    secretName: ygnv-wildcard-cert

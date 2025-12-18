@@ -143,7 +143,7 @@ spec:
         - name: prowlarr
           port: 9696
   tls:
-    certResolver: cloudflare
+    secretName: ygnv-wildcard-cert
 ---
 # Radarr Deployment
 apiVersion: apps/v1
@@ -237,7 +237,7 @@ spec:
         - name: radarr
           port: 7878
   tls:
-    certResolver: cloudflare
+    secretName: ygnv-wildcard-cert
 ---
 # Sonarr Deployment
 apiVersion: apps/v1
@@ -331,7 +331,7 @@ spec:
         - name: sonarr
           port: 8989
   tls:
-    certResolver: cloudflare
+    secretName: ygnv-wildcard-cert
 ---
 # Bazarr Deployment
 apiVersion: apps/v1
@@ -423,7 +423,7 @@ spec:
         - name: bazarr
           port: 6767
   tls:
-    certResolver: cloudflare
+    secretName: ygnv-wildcard-cert
 ---
 # Overseerr Deployment
 apiVersion: apps/v1
@@ -501,7 +501,7 @@ spec:
         - name: overseerr
           port: 5055
   tls:
-    certResolver: cloudflare
+    secretName: ygnv-wildcard-cert
 ---
 # apiVersion: apps/v1
 # kind: Deployment
@@ -657,7 +657,7 @@ spec:
         - name: tautulli
           port: 8181
   tls:
-    certResolver: cloudflare
+    secretName: ygnv-wildcard-cert
 ---
 # Maintainerr Deployment
 apiVersion: apps/v1
@@ -733,5 +733,5 @@ spec:
         - name: maintainerr
           port: 6246
   tls:
-    certResolver: cloudflare
+    secretName: ygnv-wildcard-cert
 ---

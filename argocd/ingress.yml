@@ -14,4 +14,4 @@ spec:
         - name: argocd-server
           port: 80
   tls:
-    certResolver: cloudflare
+    secretName: ygnv-wildcard-cert

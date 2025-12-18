@@ -130,4 +130,4 @@ spec:
         - name: tdarr
           port: 8265
   tls:
-    certResolver: cloudflare
+    secretName: ygnv-wildcard-cert

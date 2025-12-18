@@ -53,30 +53,30 @@ spec:
               containerPort: 8080
             - name: metrics
               containerPort: 8899
-          env:
-            - name: CF_API_EMAIL
-              valueFrom:
-                secretKeyRef:
-                  name: traefik-cred
-                  key: CF_API_EMAIL
-            - name: CF_DNS_API_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: traefik-cred
-                  key: CF_DNS_API_TOKEN
+          # env:
+          #   - name: CF_API_EMAIL
+          #     valueFrom:
+          #       secretKeyRef:
+          #         name: traefik-cred
+          #         key: CF_API_EMAIL
+          #   - name: CF_DNS_API_TOKEN
+          #     valueFrom:
+          #       secretKeyRef:
+          #         name: traefik-cred
+          #         key: CF_DNS_API_TOKEN
           volumeMounts:
             - name: config
               mountPath: /etc/traefik
-            - name: data
-              mountPath: /data
+            # - name: data
+            #   mountPath: /data
       volumes:
         - name: config
           configMap:
             name: traefik-config
-        - name: data
-          hostPath:
-            path: /mnt/cephfs/docker/traefik
-            type: Directory
+        # - name: data
+        #   hostPath:
+        #     path: /mnt/cephfs/docker/traefik
+        #     type: Directory
 ---
 apiVersion: v1
 kind: Service
@@ -123,8 +123,4 @@ spec:
         - name: api@internal
           kind: TraefikService
   tls:
-    certResolver: cloudflare
-    domains:
-      - main: ygnv.my.id
-        sans:
-          - "*.ygnv.my.id"
+    secretName: ygnv-wildcard-cert

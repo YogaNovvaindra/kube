@@ -110,4 +110,4 @@ spec:
         - name: homepage
           port: 3000
   tls:
-    certResolver: cloudflare
+    secretName: ygnv-wildcard-cert

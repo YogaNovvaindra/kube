@@ -136,7 +136,7 @@ spec:
         - name: immich-svc
           port: 8080
   tls:
-    certResolver: cloudflare
+    secretName: ygnv-wildcard-cert
 ---
 apiVersion: apps/v1
 kind: StatefulSet

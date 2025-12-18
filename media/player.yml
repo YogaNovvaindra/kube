@@ -109,7 +109,7 @@ spec:
         - name: plex
           port: 32400
   tls:
-    certResolver: cloudflare
+    secretName: ygnv-wildcard-cert
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -221,4 +221,4 @@ spec:
         - name: jellyfin
           port: 8096
   tls:
-    certResolver: cloudflare
+    secretName: ygnv-wildcard-cert
