@@ -25,7 +25,7 @@ spec:
       enableServiceLinks: true
       initContainers:
         - name: config-processor
-          image: reg.ygnv.my.id/docker/alpine:3.23.0
+          image: reg.ygnv.my.id/docker/alpine:3.23.2
           imagePullPolicy: IfNotPresent
           command: ["/bin/sh", "-c"]
           args:
