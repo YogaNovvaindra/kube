@@ -42,7 +42,7 @@ spec:
             requests:
               memory: 128Mi
           args:
-            - --configfile=/etc/traefik/traefik.yml
+            - --configfile=/etc/traefik/traefik.yaml
             - --providers.kubernetescrd.leaderelection=true
           ports:
             - name: http
