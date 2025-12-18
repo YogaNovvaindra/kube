@@ -62,10 +62,11 @@
     "reg.ygnv.my.id/ghcr": "ghcr.io",
     "reg.ygnv.my.id/quay": "quay.io"
   },
-  "regexManagers": [
+  "customManagers": [
     {
-      "fileMatch": [
-        "kustomization\\.ya?ml$"
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/kustomization\\.ya?ml$/"
       ],
       "matchStrings": [
         "https://github\\.com/cert-manager/cert-manager/releases/download/(?<currentValue>v[0-9.]+)/cert-manager\\.yaml"
@@ -74,8 +75,9 @@
       "depNameTemplate": "cert-manager/cert-manager"
     },
     {
-      "fileMatch": [
-        "kustomization\\.ya?ml$"
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/kustomization\\.ya?ml$/"
       ],
       "matchStrings": [
         "https://raw\\.githubusercontent\\.com/traefik/traefik/(?<currentValue>v[0-9.]+)/docs/content/reference/dynamic-configuration/kubernetes-crd-definition-v1\\.yml"
@@ -84,8 +86,9 @@
       "depNameTemplate": "traefik/traefik"
     },
     {
-      "fileMatch": [
-        "kustomization\\.ya?ml$"
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/kustomization\\.ya?ml$/"
       ],
       "matchStrings": [
         "https://raw\\.githubusercontent\\.com/metallb/metallb/(?<currentValue>v[0-9.]+)/config/manifests/metallb-native\\.yaml"
@@ -94,8 +97,9 @@
       "depNameTemplate": "metallb/metallb"
     },
     {
-      "fileMatch": [
-        "kustomization\\.ya?ml$"
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/kustomization\\.ya?ml$/"
       ],
       "matchStrings": [
         "https://raw\\.githubusercontent\\.com/argoproj/argo-cd/(?<currentValue>v[0-9.]+|master)/manifests/install\\.yaml"
