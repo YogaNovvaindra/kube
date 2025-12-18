@@ -98,6 +98,11 @@ data:
                     "value": "{{.app.spec.source.repoURL}}",
                     "inline": false
                   },
+                   {
+                    "name": "Changes",
+                    "value": "{{ with $c := call .repo.GetCommitMetadata .app.status.sync.revision }}{{ $c.Message }} - {{ $c.Author }}{{ end }}",
+                    "inline": false
+                  },
                   {
                     "name": "Error",
                     "value": "```{{.app.status.operationState.message}}```",
@@ -146,6 +151,11 @@ data:
                   {
                     "name": "Repository",
                     "value": "{{.app.spec.source.repoURL}}",
+                    "inline": false
+                  },
+                   {
+                    "name": "Changes",
+                    "value": "{{ with $c := call .repo.GetCommitMetadata .app.status.sync.revision }}{{ $c.Message }} - {{ $c.Author }}{{ end }}",
                     "inline": false
                   }
                 ],
