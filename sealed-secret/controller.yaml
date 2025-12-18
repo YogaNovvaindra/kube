@@ -30,7 +30,7 @@ spec:
         command:
         - controller
         env: []
-        image: bitnami/sealed-secrets-controller:0.33.1
+        image: bitnami/sealed-secrets-controller:0.34.0
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
