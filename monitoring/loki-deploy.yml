@@ -145,5 +145,4 @@ spec:
     services:
     - name: loki
       port: 3100
-  tls:
-    secretName: ygnv-wildcard-cert
+  tls: {}

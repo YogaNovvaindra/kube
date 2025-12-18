@@ -123,8 +123,7 @@ spec:
       services:
         - name: transmission
           port: 9091
-  tls:
-    secretName: ygnv-wildcard-cert
+  tls: {}
 ---
 # Aria2 Deployment
 apiVersion: apps/v1

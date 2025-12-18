@@ -135,8 +135,7 @@ spec:
       services:
         - name: phpmyadmin
           port: 80
-  tls:
-    secretName: ygnv-wildcard-cert
+  tls: {}
 ---
 apiVersion: apps/v1
 kind: Deployment

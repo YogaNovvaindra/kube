@@ -108,8 +108,7 @@ spec:
       services:
         - name: plex
           port: 32400
-  tls:
-    secretName: ygnv-wildcard-cert
+  tls: {}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -220,5 +219,4 @@ spec:
       services:
         - name: jellyfin
           port: 8096
-  tls:
-    secretName: ygnv-wildcard-cert
+  tls: {}

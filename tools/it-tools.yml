@@ -60,5 +60,4 @@ spec:
       services:
         - name: it-tools
           port: 80
-  tls:
-    secretName: ygnv-wildcard-cert
+  tls: {}

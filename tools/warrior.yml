@@ -81,5 +81,4 @@ spec:
     services:
     - name: warrior
       port: 8001
-  tls:
-    secretName: ygnv-wildcard-cert
+  tls: {}

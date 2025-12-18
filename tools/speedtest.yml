@@ -72,8 +72,7 @@ spec:
       services:
         - name: openspeedtest
           port: 3000
-  tls:
-    secretName: ygnv-wildcard-cert
+  tls: {}
 ---
 # Deployment for myspeed
 apiVersion: apps/v1
@@ -150,5 +149,4 @@ spec:
       services:
         - name: myspeed
           port: 5216
-  tls:
-    secretName: ygnv-wildcard-cert
+  tls: {}

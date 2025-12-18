@@ -105,8 +105,7 @@ spec:
       services:
         - name: keel
           port: 9300
-  tls:
-    secretName: ygnv-wildcard-cert
+  tls: {}
 ---
 apiVersion: apps/v1
 kind: Deployment

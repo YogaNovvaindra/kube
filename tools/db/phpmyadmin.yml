@@ -66,5 +66,4 @@ spec:
       services:
         - name: phpmyadmin
           port: 80
-  tls:
-    secretName: ygnv-wildcard-cert
+  tls: {}

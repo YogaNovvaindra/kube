@@ -100,5 +100,4 @@ spec:
       services:
         - name: outline
           port: 3000
-  tls:
-    secretName: ygnv-wildcard-cert
+  tls: {}

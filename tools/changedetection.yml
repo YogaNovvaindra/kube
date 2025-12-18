@@ -77,5 +77,4 @@ spec:
     services:
     - name: changedetection
       port: 5000
-  tls:
-    secretName: ygnv-wildcard-cert
+  tls: {}
