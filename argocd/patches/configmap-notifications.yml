@@ -29,13 +29,13 @@ data:
                 "description": "**{{.app.metadata.name}}** has been synced successfully.",
                 "fields": [
                   {
-                    "name": "Health Status",
-                    "value": "{{.app.status.health.status}}",
+                    "name": "Sync Status",
+                    "value": "{{.app.status.sync.status}}",
                     "inline": true
                   },
                   {
-                    "name": "Sync Status",
-                    "value": "{{.app.status.sync.status}}",
+                    "name": "Health Status",
+                    "value": "{{.app.status.health.status}}",
                     "inline": true
                   },
                   {
@@ -94,13 +94,13 @@ data:
                     "inline": true
                   },
                   {
-                    "name": "Error",
-                    "value": "```{{.app.status.operationState.message}}```",
+                    "name": "Repository",
+                    "value": "{{.app.spec.source.repoURL}}",
                     "inline": false
                   },
                   {
-                    "name": "Repository",
-                    "value": "{{.app.spec.source.repoURL}}",
+                    "name": "Error",
+                    "value": "```{{.app.status.operationState.message}}```",
                     "inline": false
                   }
                 ],
@@ -138,7 +138,12 @@ data:
                     "value": "{{.app.status.sync.status}}",
                     "inline": true
                   },
-                   {
+                  {
+                    "name": "Reason",
+                    "value": "{{.app.status.health.message}}",
+                    "inline": false
+                  },
+                  {
                     "name": "Repository",
                     "value": "{{.app.spec.source.repoURL}}",
                     "inline": false
@@ -178,7 +183,7 @@ data:
                     "value": "{{ if .app.status.operationState.operation.initiatedBy }}{{ .app.status.operationState.operation.initiatedBy.username }}{{ else }}Automatic{{ end }}",
                     "inline": true
                   },
-                   {
+                  {
                     "name": "Repository",
                     "value": "{{.app.spec.source.repoURL}}",
                     "inline": false
