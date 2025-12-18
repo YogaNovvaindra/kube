@@ -73,6 +73,7 @@ data:
     
     providers:
       kubernetesCRD: {}
+      kubernetesIngress: {}
       file:
         directory: /etc/traefik
         watch: true
