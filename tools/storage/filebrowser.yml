@@ -97,5 +97,4 @@ spec:
       services:
         - name: filebrowser
           port: 80
-  tls:
-    secretName: ygnv-wildcard-cert
+  tls: {}

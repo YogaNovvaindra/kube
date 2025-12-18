@@ -70,5 +70,4 @@ spec:
     services:
     - name: pgadmin
       port: 80
-  tls:
-    secretName: ygnv-wildcard-cert
+  tls: {}

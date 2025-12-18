@@ -90,6 +90,5 @@ spec:
       services:
         - name: influxdb
           port: 8086
-  tls:
-    secretName: ygnv-wildcard-cert
+  tls: {}
 

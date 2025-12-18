@@ -194,6 +194,5 @@ spec:
       services:
         - name: nginx
           port: 8080
-  tls:
-    secretName: ygnv-wildcard-cert
+  tls: {}
 ---

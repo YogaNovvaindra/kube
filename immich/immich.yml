@@ -135,8 +135,7 @@ spec:
       services:
         - name: immich-svc
           port: 8080
-  tls:
-    secretName: ygnv-wildcard-cert
+  tls: {}
 ---
 apiVersion: apps/v1
 kind: StatefulSet

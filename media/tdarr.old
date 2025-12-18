@@ -129,5 +129,4 @@ spec:
       services:
         - name: tdarr
           port: 8265
-  tls:
-    secretName: ygnv-wildcard-cert
+  tls: {}

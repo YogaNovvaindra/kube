@@ -106,5 +106,4 @@ spec:
         - name: prometheus
           port: 9090
           # strategy: drr
-  tls:
-    secretName: ygnv-wildcard-cert
+  tls: {}

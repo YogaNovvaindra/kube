@@ -109,5 +109,4 @@ spec:
       services:
         - name: homepage
           port: 3000
-  tls:
-    secretName: ygnv-wildcard-cert
+  tls: {}
