@@ -11,17 +11,17 @@ resources:
 
 patches:
   # Apply custom configurations to ConfigMaps
-  - path: patches/configmap-cmd-params.yaml
-  - path: patches/configmap-cm.yaml
-  - path: patches/configmap-rbac.yaml
-  - path: patches/configmap-notifications.yaml
+  - path: patches/configmap-cmd-params.yml
+  - path: patches/configmap-cm.yml
+  - path: patches/configmap-rbac.yml
+  - path: patches/configmap-notifications.yml
     target:
       kind: ConfigMap
       name: argocd-notifications-cm
   # Set imagePullPolicy to IfNotPresent for all deployments
-  - path: patches/image-pull-policy.yaml
+  - path: patches/image-pull-policy.yml
   # Set resource requests for all containers
-  - path: patches/resources.yaml
+  - path: patches/resources.yml
 
 images:
   # Replace all Argo CD images with custom registry

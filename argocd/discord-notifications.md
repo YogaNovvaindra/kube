@@ -26,19 +26,19 @@ Replace the placeholder with your actual Discord webhook URL:
 
 ```bash
 # Edit the secret file
-nano discord-webhook-secret.yaml
+nano discord-webhook-secret.yml
 
 # Replace YOUR_DISCORD_WEBHOOK_URL_HERE with your actual webhook URL
 # Example: https://discord.com/api/webhooks/123456789/abcdefghijklmnop
 
 # Seal the secret using kubeseal
-kubeseal --format=yaml < discord-webhook-secret.yaml > discord-webhook-sealed-secret.yaml
+kubeseal --format=yaml < discord-webhook-secret.yml > discord-webhook-sealed-secret.yml
 
 # Delete the unsealed secret file (IMPORTANT for security)
-rm discord-webhook-secret.yaml
+rm discord-webhook-secret.yml
 
 # Commit the sealed secret
-git add discord-webhook-sealed-secret.yaml
+git add discord-webhook-sealed-secret.yml
 git commit -m "Add Discord webhook sealed secret for ArgoCD notifications"
 ```
 
@@ -132,7 +132,7 @@ argocd app sync <app-name>
 
 ## Customization
 
-To customize notification templates, edit `patches/configmap-notifications.yaml` and modify the Discord embed format. You can change:
+To customize notification templates, edit `patches/configmap-notifications.yml` and modify the Discord embed format. You can change:
 - Colors (decimal color codes)
 - Fields displayed
 - Message format

@@ -27,10 +27,10 @@ spec:
                 -o name)
 
               kubectl get -n kube-system ${PRIVATE_KEY} -o yaml \
-                > ${BACKUP_DIR}/sealed-secrets-key-$(date +%Y%m%d-%H%M%S).yaml
+                > ${BACKUP_DIR}/sealed-secrets-key-$(date +%Y%m%d-%H%M%S).yml
 
               # Rotate backups - keep last 3
-              ls -1t /backup/sealed-secrets-key-*.yaml | tail -n +4 | xargs -r rm -f
+              ls -1t /backup/sealed-secrets-key-*.yml | tail -n +4 | xargs -r rm -f
             volumeMounts:
             - name: backup-volume
               mountPath: /backup

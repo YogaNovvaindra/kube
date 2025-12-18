@@ -6,14 +6,14 @@ This directory contains a Kustomize-based deployment of Argo CD using the offici
 
 ```
 argocd/
-├── kustomization.yaml              # Main kustomization file
+├── kustomization.yml              # Main kustomization file
 ├── ingress.yml                     # Traefik IngressRoute
 └── patches/
-    ├── configmap-cmd-params.yaml   # Server insecure mode for Traefik
-    ├── configmap-cm.yaml           # Homepage account configuration
-    ├── configmap-rbac.yaml         # RBAC for homepage account
-    ├── image-pull-policy.yaml      # Set imagePullPolicy to IfNotPresent
-    └── resources.yaml              # Memory resource requests
+    ├── configmap-cmd-params.yml   # Server insecure mode for Traefik
+    ├── configmap-cm.yml           # Homepage account configuration
+    ├── configmap-rbac.yml         # RBAC for homepage account
+    ├── image-pull-policy.yml      # Set imagePullPolicy to IfNotPresent
+    └── resources.yml              # Memory resource requests
 ```
 
 ## Customizations
@@ -68,7 +68,7 @@ This means you get automatic updates to Argo CD while maintaining your customiza
 
 ## Renovate Integration
 
-✅ **Renovate will automatically update image tags** in `kustomization.yaml`:
+✅ **Renovate will automatically update image tags** in `kustomization.yml`:
 - Detects `newTag` fields for all three images
 - Creates PRs when new versions are available in your registry
 - Keeps Argo CD, Dex, and Redis up-to-date
@@ -93,5 +93,5 @@ To update immediately:
 kubectl apply -k . --server-side --force-conflicts
 ```
 
-To pin to a specific version, add `newTag` to the images in `kustomization.yaml`.
+To pin to a specific version, add `newTag` to the images in `kustomization.yml`.
 ```
