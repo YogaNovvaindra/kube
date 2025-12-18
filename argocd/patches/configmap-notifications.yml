@@ -24,25 +24,24 @@ data:
             "embeds": [
               {
                 "title": "✅ Application Synced Successfully",
-                "description": "**{{.app.metadata.name}}** has been synced successfully.",
-                "color": 3066993,
+                "url": "https://argocd.ygnv.my.id/applications/{{.app.metadata.name}}",
+                "color": 4358529,
+                "description": "**{{.app.metadata.name}}** has been synced successfully to revision **{{.app.status.sync.revision}}**.",
                 "fields": [
-                  {
-                    "name": "Sync Status",
-                    "value": "{{.app.status.sync.status}}",
-                    "inline": true
-                  },
                   {
                     "name": "Health Status",
                     "value": "{{.app.status.health.status}}",
                     "inline": true
                   },
                   {
-                    "name": "Revision",
-                    "value": "{{.app.status.sync.revision}}",
-                    "inline": false
+                    "name": "Sync Status",
+                    "value": "{{.app.status.sync.status}}",
+                    "inline": true
                   }
                 ],
+                "footer": {
+                  "text": "ArgoCD Notification"
+                },
                 "timestamp": "{{.app.status.operationState.finishedAt}}"
               }
             ]
@@ -60,25 +59,24 @@ data:
             "embeds": [
               {
                 "title": "❌ Application Sync Failed",
-                "description": "**{{.app.metadata.name}}** sync has failed.",
+                "url": "https://argocd.ygnv.my.id/applications/{{.app.metadata.name}}",
                 "color": 15158332,
+                "description": "**{{.app.metadata.name}}** sync failed with error:\n```{{.app.status.operationState.message}}```",
                 "fields": [
-                  {
-                    "name": "Sync Status",
-                    "value": "{{.app.status.sync.status}}",
-                    "inline": true
-                  },
                   {
                     "name": "Health Status",
                     "value": "{{.app.status.health.status}}",
                     "inline": true
                   },
                   {
-                    "name": "Error",
-                    "value": "{{.app.status.operationState.message}}",
-                    "inline": false
+                    "name": "Sync Status",
+                    "value": "{{.app.status.sync.status}}",
+                    "inline": true
                   }
                 ],
+                 "footer": {
+                  "text": "ArgoCD Notification"
+                },
                 "timestamp": "{{.app.status.operationState.finishedAt}}"
               }
             ]
@@ -96,8 +94,9 @@ data:
             "embeds": [
               {
                 "title": "⚠️ Application Health Degraded",
-                "description": "**{{.app.metadata.name}}** health status is degraded.",
+                "url": "https://argocd.ygnv.my.id/applications/{{.app.metadata.name}}",
                 "color": 16776960,
+                "description": "**{{.app.metadata.name}}** health status is degraded.",
                 "fields": [
                   {
                     "name": "Health Status",
@@ -110,6 +109,9 @@ data:
                     "inline": true
                   }
                 ],
+                 "footer": {
+                  "text": "ArgoCD Notification"
+                },
                 "timestamp": "{{.app.metadata.creationTimestamp}}"
               }
             ]
@@ -127,20 +129,19 @@ data:
             "embeds": [
               {
                 "title": "🔄 Application Sync Started",
-                "description": "**{{.app.metadata.name}}** sync is in progress.",
+                "url": "https://argocd.ygnv.my.id/applications/{{.app.metadata.name}}",
                 "color": 3447003,
+                "description": "**{{.app.metadata.name}}** sync is in progress. Initiated by **{{ if .app.status.operationState.operation.initiatedBy }}{{ .app.status.operationState.operation.initiatedBy.username }}{{ else }}Automatic{{ end }}**.",
                 "fields": [
                   {
                     "name": "Sync Status",
                     "value": "{{.app.status.sync.status}}",
                     "inline": true
-                  },
-                  {
-                    "name": "Initiated By",
-                    "value": "{{.app.status.operationState.operation.initiatedBy.username}}",
-                    "inline": true
                   }
                 ],
+                 "footer": {
+                  "text": "ArgoCD Notification"
+                },
                 "timestamp": "{{.app.status.operationState.startedAt}}"
               }
             ]
