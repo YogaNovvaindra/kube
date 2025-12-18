@@ -15,6 +15,9 @@ patches:
   - path: patches/configmap-cm.yaml
   - path: patches/configmap-rbac.yaml
   - path: patches/configmap-notifications.yaml
+    target:
+      kind: ConfigMap
+      name: argocd-notifications-cm
   # Set imagePullPolicy to IfNotPresent for all deployments
   - path: patches/image-pull-policy.yaml
   # Set resource requests for all containers

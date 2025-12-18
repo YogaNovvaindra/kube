@@ -4,6 +4,7 @@ metadata:
   name: argocd-notifications-cm
   namespace: argocd
 data:
+  $patch: merge
   # Discord service configuration
   service.discord: |
     token: $discord-webhook-url
