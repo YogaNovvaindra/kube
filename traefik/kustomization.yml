@@ -10,6 +10,7 @@ resources:
   - valkey.yml
   - config.yml
   - traefik.yml
+  - service-account.yml
   - ingress.yml
   - tls-store.yml
   - certificate.yml
