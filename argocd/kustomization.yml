@@ -15,6 +15,7 @@ patches:
   - path: patches/configmap-cmd-params.yml
   - path: patches/configmap-cm.yml
   - path: patches/configmap-rbac.yml
+  - path: patches/secret-ownership.yml
   - path: patches/configmap-notifications.yml
     target:
       kind: ConfigMap
