@@ -11,6 +11,7 @@ spec:
     path: argocd
     repoURL: https://github.com/YogaNovvaindra/kube.git
     targetRevision: HEAD
+    kustomize: {}
   sources: []
   project: default
   syncPolicy:
