@@ -19,3 +19,14 @@ patches:
   # Set resource requests for all containers
   - path: patches/resources.yaml
 
+images:
+  # Replace all Argo CD images with custom registry
+  # Renovate will automatically update these tags
+  - name: quay.io/argoproj/argocd
+    newName: reg.ygnv.my.id/quay/argoproj/argocd
+  # Replace Dex image
+  - name: ghcr.io/dexidp/dex
+    newName: reg.ygnv.my.id/ghcr/dexidp/dex
+  # Replace Redis image
+  - name: public.ecr.aws/docker/library/redis
+    newName: reg.ygnv.my.id/docker/redis
