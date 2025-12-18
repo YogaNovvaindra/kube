@@ -61,5 +61,47 @@
     "reg.ygnv.my.id/docker": "docker.io",
     "reg.ygnv.my.id/ghcr": "ghcr.io",
     "reg.ygnv.my.id/quay": "quay.io"
-  }
+  },
+  "regexManagers": [
+    {
+      "fileMatch": [
+        "kustomization\\.ya?ml$"
+      ],
+      "matchStrings": [
+        "https://github\\.com/cert-manager/cert-manager/releases/download/(?<currentValue>v[0-9.]+)/cert-manager\\.yaml"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "cert-manager/cert-manager"
+    },
+    {
+      "fileMatch": [
+        "kustomization\\.ya?ml$"
+      ],
+      "matchStrings": [
+        "https://raw\\.githubusercontent\\.com/traefik/traefik/(?<currentValue>v[0-9.]+)/docs/content/reference/dynamic-configuration/kubernetes-crd-definition-v1\\.yml"
+      ],
+      "datasourceTemplate": "github-tags",
+      "depNameTemplate": "traefik/traefik"
+    },
+    {
+      "fileMatch": [
+        "kustomization\\.ya?ml$"
+      ],
+      "matchStrings": [
+        "https://raw\\.githubusercontent\\.com/metallb/metallb/(?<currentValue>v[0-9.]+)/config/manifests/metallb-native\\.yaml"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "metallb/metallb"
+    },
+    {
+      "fileMatch": [
+        "kustomization\\.ya?ml$"
+      ],
+      "matchStrings": [
+        "https://raw\\.githubusercontent\\.com/argoproj/argo-cd/(?<currentValue>v[0-9.]+|master)/manifests/install\\.yaml"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "argoproj/argo-cd"
+    }
+  ]
 }

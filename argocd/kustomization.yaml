@@ -4,8 +4,8 @@ kind: Kustomization
 namespace: argocd
 
 resources:
-  # Official Argo CD installation manifest as remote base
-  - https://raw.githubusercontent.com/argoproj/argo-cd/master/manifests/install.yaml
+  # Official Argo CD installation manifest - stable release
+  - https://raw.githubusercontent.com/argoproj/argo-cd/v3.2.2/manifests/install.yaml
   # Custom Traefik IngressRoute
   - ingress.yml
 
@@ -18,20 +18,4 @@ patches:
   - path: patches/image-pull-policy.yaml
   # Set resource requests for all containers
   - path: patches/resources.yaml
-
-images:
-  # Replace all Argo CD images with custom registry
-  # Renovate will automatically update these tags
-  - name: quay.io/argoproj/argocd
-    newName: reg.ygnv.my.id/quay/argoproj/argocd
-    newTag: v3.4.0
-  # Replace Dex image
-  - name: ghcr.io/dexidp/dex
-    newName: reg.ygnv.my.id/ghcr/dexidp/dex
-    newTag: v2.44.0
-  # Replace Redis image
-  - name: public.ecr.aws/docker/library/redis
-    newName: reg.ygnv.my.id/docker/redis
-    newTag: 8.4.0-alpine
-
 
