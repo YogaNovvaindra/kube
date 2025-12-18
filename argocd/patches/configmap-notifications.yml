@@ -26,7 +26,7 @@ data:
                 "title": "✅ Application Synced Successfully",
                 "url": "https://argocd.ygnv.my.id/applications/{{.app.metadata.name}}",
                 "color": 4358529,
-                "description": "**{{.app.metadata.name}}** has been synced successfully to revision **{{.app.status.sync.revision}}**.",
+                "description": "**{{.app.metadata.name}}** has been synced successfully.",
                 "fields": [
                   {
                     "name": "Health Status",
@@ -37,10 +37,30 @@ data:
                     "name": "Sync Status",
                     "value": "{{.app.status.sync.status}}",
                     "inline": true
+                  },
+                  {
+                    "name": "Repository",
+                    "value": "{{.app.spec.source.repoURL}}",
+                    "inline": false
+                  },
+                  {
+                    "name": "Revision",
+                    "value": "{{.app.spec.source.targetRevision}}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Synced Commit",
+                    "value": "{{.app.status.sync.revision}}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Changes",
+                    "value": "{{ with $c := call .repo.GetCommitMetadata .app.status.sync.revision }}{{ $c.Message }} - {{ $c.Author }}{{ end }}",
+                    "inline": false
                   }
                 ],
                 "footer": {
-                  "text": "ArgoCD Notification"
+                  "text": "ArgoCD Notification • {{.app.status.operationState.finishedAt}}"
                 },
                 "timestamp": "{{.app.status.operationState.finishedAt}}"
               }
@@ -61,21 +81,31 @@ data:
                 "title": "❌ Application Sync Failed",
                 "url": "https://argocd.ygnv.my.id/applications/{{.app.metadata.name}}",
                 "color": 15158332,
-                "description": "**{{.app.metadata.name}}** sync failed with error:\n```{{.app.status.operationState.message}}```",
+                "description": "**{{.app.metadata.name}}** sync failed.",
                 "fields": [
+                  {
+                    "name": "Sync Status",
+                    "value": "{{.app.status.sync.status}}",
+                    "inline": true
+                  },
                   {
                     "name": "Health Status",
                     "value": "{{.app.status.health.status}}",
                     "inline": true
                   },
                   {
-                    "name": "Sync Status",
-                    "value": "{{.app.status.sync.status}}",
-                    "inline": true
+                    "name": "Error",
+                    "value": "```{{.app.status.operationState.message}}```",
+                    "inline": false
+                  },
+                  {
+                    "name": "Repository",
+                    "value": "{{.app.spec.source.repoURL}}",
+                    "inline": false
                   }
                 ],
                  "footer": {
-                  "text": "ArgoCD Notification"
+                  "text": "ArgoCD Notification • {{.app.status.operationState.finishedAt}}"
                 },
                 "timestamp": "{{.app.status.operationState.finishedAt}}"
               }
@@ -107,6 +137,11 @@ data:
                     "name": "Sync Status",
                     "value": "{{.app.status.sync.status}}",
                     "inline": true
+                  },
+                   {
+                    "name": "Repository",
+                    "value": "{{.app.spec.source.repoURL}}",
+                    "inline": false
                   }
                 ],
                  "footer": {
@@ -131,16 +166,31 @@ data:
                 "title": "🔄 Application Sync Started",
                 "url": "https://argocd.ygnv.my.id/applications/{{.app.metadata.name}}",
                 "color": 3447003,
-                "description": "**{{.app.metadata.name}}** sync is in progress. Initiated by **{{ if .app.status.operationState.operation.initiatedBy }}{{ .app.status.operationState.operation.initiatedBy.username }}{{ else }}Automatic{{ end }}**.",
+                "description": "**{{.app.metadata.name}}** sync is in progress.",
                 "fields": [
                   {
                     "name": "Sync Status",
                     "value": "{{.app.status.sync.status}}",
                     "inline": true
+                  },
+                  {
+                    "name": "Initiated By",
+                    "value": "{{ if .app.status.operationState.operation.initiatedBy }}{{ .app.status.operationState.operation.initiatedBy.username }}{{ else }}Automatic{{ end }}",
+                    "inline": true
+                  },
+                   {
+                    "name": "Repository",
+                    "value": "{{.app.spec.source.repoURL}}",
+                    "inline": false
+                  },
+                  {
+                    "name": "Revision",
+                    "value": "{{.app.spec.source.targetRevision}}",
+                    "inline": true
                   }
                 ],
                  "footer": {
-                  "text": "ArgoCD Notification"
+                  "text": "ArgoCD Notification • {{.app.status.operationState.startedAt}}"
                 },
                 "timestamp": "{{.app.status.operationState.startedAt}}"
               }
