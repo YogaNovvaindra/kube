@@ -23,25 +23,26 @@ data:
             "avatar_url": "https://raw.githubusercontent.com/argoproj/argo-cd/master/docs/assets/logo.png",
             "embeds": [
               {
-                "title": "✅ {{.app.metadata.name}} | Synced Successfully",
-                "url": "https://argocd.ygnv.my.id/applications/{{.app.metadata.name}}",
-                "color": 4358529,
-                "description": "Application synced to revision **{{.app.status.sync.revision}}**",
+                "title": "✅ Application Synced Successfully",
+                "description": "**{{.app.metadata.name}}** has been synced successfully.",
+                "color": 3066993,
                 "fields": [
+                  {
+                    "name": "Sync Status",
+                    "value": "{{.app.status.sync.status}}",
+                    "inline": true
+                  },
                   {
                     "name": "Health Status",
                     "value": "{{.app.status.health.status}}",
                     "inline": true
                   },
                   {
-                    "name": "Sync Status",
-                    "value": "{{.app.status.sync.status}}",
-                    "inline": true
+                    "name": "Revision",
+                    "value": "{{.app.status.sync.revision}}",
+                    "inline": false
                   }
                 ],
-                "footer": {
-                  "text": "ArgoCD Notification"
-                },
                 "timestamp": "{{.app.status.operationState.finishedAt}}"
               }
             ]
@@ -58,25 +59,26 @@ data:
             "avatar_url": "https://raw.githubusercontent.com/argoproj/argo-cd/master/docs/assets/logo.png",
             "embeds": [
               {
-                "title": "❌ {{.app.metadata.name}} | Sync Failed",
-                "url": "https://argocd.ygnv.my.id/applications/{{.app.metadata.name}}",
+                "title": "❌ Application Sync Failed",
+                "description": "**{{.app.metadata.name}}** sync has failed.",
                 "color": 15158332,
-                "description": "Sync failed with error:\n```{{.app.status.operationState.message}}```",
                 "fields": [
+                  {
+                    "name": "Sync Status",
+                    "value": "{{.app.status.sync.status}}",
+                    "inline": true
+                  },
                   {
                     "name": "Health Status",
                     "value": "{{.app.status.health.status}}",
                     "inline": true
                   },
                   {
-                    "name": "Sync Status",
-                    "value": "{{.app.status.sync.status}}",
-                    "inline": true
+                    "name": "Error",
+                    "value": "{{.app.status.operationState.message}}",
+                    "inline": false
                   }
                 ],
-                 "footer": {
-                  "text": "ArgoCD Notification"
-                },
                 "timestamp": "{{.app.status.operationState.finishedAt}}"
               }
             ]
@@ -93,8 +95,8 @@ data:
             "avatar_url": "https://raw.githubusercontent.com/argoproj/argo-cd/master/docs/assets/logo.png",
             "embeds": [
               {
-                "title": "⚠️ {{.app.metadata.name}} | Health Degraded",
-                "url": "https://argocd.ygnv.my.id/applications/{{.app.metadata.name}}",
+                "title": "⚠️ Application Health Degraded",
+                "description": "**{{.app.metadata.name}}** health status is degraded.",
                 "color": 16776960,
                 "fields": [
                   {
@@ -108,9 +110,6 @@ data:
                     "inline": true
                   }
                 ],
-                 "footer": {
-                  "text": "ArgoCD Notification"
-                },
                 "timestamp": "{{.app.metadata.creationTimestamp}}"
               }
             ]
@@ -127,20 +126,21 @@ data:
             "avatar_url": "https://raw.githubusercontent.com/argoproj/argo-cd/master/docs/assets/logo.png",
             "embeds": [
               {
-                "title": "🔄 {{.app.metadata.name}} | Sync Started",
-                "url": "https://argocd.ygnv.my.id/applications/{{.app.metadata.name}}",
+                "title": "🔄 Application Sync Started",
+                "description": "**{{.app.metadata.name}}** sync is in progress.",
                 "color": 3447003,
-                "description": "Sync operation initiated by **{{.app.status.operationState.operation.initiatedBy.username}}**",
                 "fields": [
                   {
                     "name": "Sync Status",
                     "value": "{{.app.status.sync.status}}",
                     "inline": true
+                  },
+                  {
+                    "name": "Initiated By",
+                    "value": "{{.app.status.operationState.operation.initiatedBy.username}}",
+                    "inline": true
                   }
                 ],
-                 "footer": {
-                  "text": "ArgoCD Notification"
-                },
                 "timestamp": "{{.app.status.operationState.startedAt}}"
               }
             ]
