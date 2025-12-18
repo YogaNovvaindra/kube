@@ -8,6 +8,7 @@ resources:
   - https://raw.githubusercontent.com/argoproj/argo-cd/v3.2.2/manifests/install.yaml
   # Custom Traefik IngressRoute
   - ingress.yml
+  - discord-webhook-sealed-secret.yml
 
 patches:
   # Apply custom configurations to ConfigMaps
