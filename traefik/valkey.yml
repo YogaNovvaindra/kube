@@ -25,14 +25,14 @@ spec:
             memory: 32Mi
         ports:
         - containerPort: 6379
-        volumeMounts:
-        - name: valkey-data
-          mountPath: /data
-      volumes:
-      - name: valkey-data
-        hostPath:
-          path: /mnt/cephfs/docker/traefik/valkey
-          type: Directory
+      #   volumeMounts:
+      #   - name: valkey-data
+      #     mountPath: /data
+      # volumes:
+      # - name: valkey-data
+      #   hostPath:
+      #     path: /mnt/cephfs/docker/traefik/valkey
+      #     type: Directory
 ---
 apiVersion: v1
 kind: Service
