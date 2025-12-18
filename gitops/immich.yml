@@ -3,6 +3,11 @@ kind: Application
 metadata:
   name: immich
   namespace: argocd
+  annotations:
+    notifications.argoproj.io/subscribe.on-sync-succeeded.discord: ""
+    notifications.argoproj.io/subscribe.on-sync-failed.discord: ""
+    notifications.argoproj.io/subscribe.on-health-degraded.discord: ""
+    notifications.argoproj.io/subscribe.on-sync-running.discord: ""
 spec:
   destination:
     namespace: immich
