@@ -16,6 +16,9 @@ patches:
   - path: patches/configmap-cm.yml
   - path: patches/configmap-rbac.yml
   - path: patches/secret-ownership.yml
+    target:
+      kind: Secret
+      name: argocd-notifications-secret
   - path: patches/configmap-notifications.yml
     target:
       kind: ConfigMap
