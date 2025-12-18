@@ -44,7 +44,7 @@ spec:
             - "tunnel"
             - "--no-autoupdate"
             # - "--config"
-            # - "/etc/cloudflared/config.yaml"
+            # - "/etc/cloudflared/config.yml"
             - "run"
       #   volumeMounts:
       #     - name: config

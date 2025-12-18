@@ -32,7 +32,7 @@ metadata:
   name: loki-config
   namespace: monitoring
 data:
-  loki.yaml: |
+  loki.yml: |
     auth_enabled: false
     server:
       http_listen_port: 3100
@@ -98,7 +98,7 @@ spec:
           requests:
             memory: 256Mi
         args:
-        - -config.file=/etc/loki/loki.yaml
+        - -config.file=/etc/loki/loki.yml
         - -log.level=warn
         ports:
         - containerPort: 3100

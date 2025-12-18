@@ -8,7 +8,7 @@ metadata:
   name: cloudflared-config
   namespace: services
 data:
-  config.yaml: |
+  config.yml: |
     # Works with token-based authentication (TUNNEL_TOKEN)
     # The tunnel ID is automatically extracted from the token
     # 
