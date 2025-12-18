@@ -110,7 +110,7 @@ data:
                     "inline": true
                   }
                 ],
-                "timestamp": "{{time.Now}}"
+                "timestamp": "{{.app.metadata.creationTimestamp}}"
               }
             ]
           }
