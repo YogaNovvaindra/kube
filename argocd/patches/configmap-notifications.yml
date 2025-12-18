@@ -5,16 +5,18 @@ metadata:
   namespace: argocd
 data:
   $patch: merge
-  # Discord service configuration
-  service.discord: |
-    token: $discord-webhook-url
+  # Discord service configuration using generic webhook
+  service.webhook.discord: |
+    url: $discord-webhook-url
+    headers:
+      - name: Content-Type
+        value: application/json
 
   # Template for successful sync
   template.app-sync-succeeded: |
     webhook:
       discord:
         method: POST
-        path: /slack
         body: |
           {
             "username": "ArgoCD",
@@ -51,7 +53,6 @@ data:
     webhook:
       discord:
         method: POST
-        path: /slack
         body: |
           {
             "username": "ArgoCD",
@@ -88,7 +89,6 @@ data:
     webhook:
       discord:
         method: POST
-        path: /slack
         body: |
           {
             "username": "ArgoCD",
@@ -120,7 +120,6 @@ data:
     webhook:
       discord:
         method: POST
-        path: /slack
         body: |
           {
             "username": "ArgoCD",
