@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-rbac-cm
+data:
+  # Grant readonly role to homepage account
+  policy.csv: |
+    g, homepage, role:readonly

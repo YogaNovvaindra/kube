@@ -109,11 +109,6 @@ kind: Service
 metadata:
   name: ghost
   namespace: services
-  annotations:
-    # ExternalDNS will create DNS record for root domain
-    external-dns.alpha.kubernetes.io/hostname: blog.yoganova.my.id
-    external-dns.alpha.kubernetes.io/target: 9141b1d3-89ab-4302-a7eb-7eede71828fd.cfargotunnel.com
-    external-dns.alpha.kubernetes.io/proxied: "true"
 spec:
   type: ClusterIP
   selector:
