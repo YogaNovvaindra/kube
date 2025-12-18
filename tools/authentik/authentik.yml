@@ -149,4 +149,4 @@ spec:
         - name: authentik-server
           port: 9000
   tls:
-    certResolver: cloudflare
+    secretName: ygnv-wildcard-cert

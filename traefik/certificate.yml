@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ygnv-wildcard-cert
+  namespace: traefik
+spec:
+  secretName: ygnv-wildcard-cert
+  issuerRef:
+    name: cloudflare-issuer
+    kind: ClusterIssuer
+  commonName: "*.ygnv.my.id"
+  dnsNames:
+  - "ygnv.my.id"
+  - "*.ygnv.my.id"

@@ -136,4 +136,4 @@ spec:
     - name: n8n
       port: 5678
   tls:
-    certResolver: cloudflare
+    secretName: ygnv-wildcard-cert

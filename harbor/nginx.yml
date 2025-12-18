@@ -195,5 +195,5 @@ spec:
         - name: nginx
           port: 8080
   tls:
-    certResolver: cloudflare
+    secretName: ygnv-wildcard-cert
 ---

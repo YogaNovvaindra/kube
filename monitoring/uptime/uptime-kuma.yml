@@ -69,5 +69,5 @@ spec:
         - name: uptime-kuma
           port: 3001
   tls:
-    certResolver: cloudflare
+    secretName: ygnv-wildcard-cert
 

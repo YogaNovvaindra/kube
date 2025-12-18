@@ -3,4 +3,6 @@ kind: Kustomization
 
 resources:
   - https://github.com/cert-manager/cert-manager/releases/download/v1.17.2/cert-manager.yaml
-namespace: kube-system
+  - cloudflare-secret.yml
+  - cluster-issuer.yml
+namespace: cert-manager
