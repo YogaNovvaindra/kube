@@ -39,6 +39,11 @@ data:
                     "inline": true
                   },
                   {
+                    "name": "Initiated By",
+                    "value": "{{ if .app.status.operationState.operation.initiatedBy.username }}{{ .app.status.operationState.operation.initiatedBy.username }}{{ else }}Automatic{{ end }}",
+                    "inline": true
+                  },
+                  {
                     "name": "Repository",
                     "value": "{{.app.spec.source.repoURL}}",
                     "inline": false
@@ -94,6 +99,11 @@ data:
                     "inline": true
                   },
                   {
+                    "name": "Initiated By",
+                    "value": "{{ if .app.status.operationState.operation.initiatedBy.username }}{{ .app.status.operationState.operation.initiatedBy.username }}{{ else }}Automatic{{ end }}",
+                    "inline": true
+                  },
+                  {
                     "name": "Repository",
                     "value": "{{.app.spec.source.repoURL}}",
                     "inline": false
@@ -144,11 +154,6 @@ data:
                     "inline": true
                   },
                   {
-                    "name": "Reason",
-                    "value": "{{ if .app.status.health.message }}{{ .app.status.health.message }}{{ else }}{{ range .app.status.resources }}{{ if eq .health.status "Degraded" }}{{ .name }}: {{ .health.message | default "Degraded" }}\\n{{ end }}{{ end }}{{ end }}",
-                    "inline": false
-                  },
-                  {
                     "name": "Repository",
                     "value": "{{.app.spec.source.repoURL}}",
                     "inline": false
@@ -156,6 +161,11 @@ data:
                    {
                     "name": "Changes",
                     "value": "{{ with $c := call .repo.GetCommitMetadata .app.status.sync.revision }}{{ $c.Message }} - {{ $c.Author }}{{ end }}",
+                    "inline": false
+                  },
+                  {
+                    "name": "Reason",
+                    "value": "{{ if .app.status.health.message }}{{ .app.status.health.message }}{{ else }}{{ range .app.status.resources }}{{ if eq .health.status "Degraded" }}{{ .name }}: {{ .health.message | default "Degraded" }}\\n{{ end }}{{ end }}{{ end }}",
                     "inline": false
                   }
                 ],
@@ -190,10 +200,10 @@ data:
                   },
                   {
                     "name": "Initiated By",
-                    "value": "{{ if .app.status.operationState.operation.initiatedBy }}{{ .app.status.operationState.operation.initiatedBy.username }}{{ else }}Automatic{{ end }}",
+                    "value": "{{ if .app.status.operationState.operation.initiatedBy.username }}{{ .app.status.operationState.operation.initiatedBy.username }}{{ else }}Automatic{{ end }}",
                     "inline": true
                   },
-                   {
+                  {
                     "name": "Repository",
                     "value": "{{.app.spec.source.repoURL}}",
                     "inline": false
