@@ -132,73 +132,73 @@ This cluster hosts a variety of self-managed applications and services.
 ### 🛠️ General Tools & Utilities
 
 #### 🔐 Security & Authentication
-- **🔑 Authentik**: Centralized authentication and identity provider (mentioned in Infrastructure).
-- **🔐 Passbolt**: Self-hosted password manager (alternative to Vaultwarden).
-- **🛡️ Vaultwarden**: Self-hosted password manager (Bitwarden compatible; mentioned in Security).
+- [🔑 Authentik](file:///home/yoga/Documents/kube/tools/authentik): Centralized authentication and identity provider.
+- [🔐 Passbolt](file:///home/yoga/Documents/kube/tools/passbolt-cred.tml): Self-hosted password manager (alternative to Vaultwarden).
+- [🛡️ Vaultwarden](file:///home/yoga/Documents/kube/tools/vaultwarden.yml): Self-hosted password manager (Bitwarden compatible).
 
 #### 💻 Development & Code Management
-- **💻 Gitea**: Self-hosted Git service.
-- **📊 Bytebase**: Database schema change and version control tool.
-- **📚 Outline**: Collaborative knowledge base/wiki.
-- **⚙️ Semaphore**: UI for running Ansible playbooks.
+- [💻 Gitea](file:///home/yoga/Documents/kube/tools/gitea.yml): Self-hosted Git service.
+- [📊 Bytebase](file:///home/yoga/Documents/kube/tools/db/bytebase.yml): Database schema change and version control tool.
+- [📚 Outline](file:///home/yoga/Documents/kube/tools/editor/outline.yml): Collaborative knowledge base/wiki.
+- [⚙️ Semaphore](file:///home/yoga/Documents/kube/tools/cluster/semaphore.yml): UI for running Ansible playbooks.
 
 #### 📝 Document & File Management
-- **📄 BentoPDF**: PDF manipulation and conversion tool.
-- **📄 Stirling-PDF**: Web-based PDF manipulation tool.
-- **🖼️ Reubah**: Web based image editor.
-- **📂 FileBrowser**: Web-based file management.
-- **🔗 Syncthing**: Continuous file synchronization across devices.
+- [📄 BentoPDF](file:///home/yoga/Documents/kube/tools/editor/bentopdf.yml): PDF manipulation and conversion tool.
+- [📄 Stirling-PDF](file:///home/yoga/Documents/kube/tools/editor/stirling-pdf.tml): Web-based PDF manipulation tool.
+- [🖼️ Reubah](file:///home/yoga/Documents/kube/tools/editor/reubah.yml): Web based image editor.
+- [📂 FileBrowser](file:///home/yoga/Documents/kube/tools/storage/filebrowser.yml): Web-based file management.
+- [🔗 Syncthing](file:///home/yoga/Documents/kube/tools/storage/syncthing.yml): Continuous file synchronization across devices.
 
 #### 🗄️ Storage & Databases
-- **🗄️ RustFS**: S3-compatible object storage solution.
-- **🐘 pgAdmin**: PostgreSQL administration and development platform.
-- **🐬 phpMyAdmin**: Web-based administration tool for MySQL and MariaDB.
+- [🗄️ RustFS](file:///home/yoga/Documents/kube/tools/storage/rustfs.yml): S3-compatible object storage solution.
+- [🐘 pgAdmin](file:///home/yoga/Documents/kube/tools/db/pgadmin.yml): PostgreSQL administration and development platform.
+- [🐬 phpMyAdmin](file:///home/yoga/Documents/kube/tools/db/phpmyadmin.yml): Web-based administration tool for MySQL and MariaDB.
 
 #### 🎨 Collaboration & Productivity
-- **🎨 Excalidraw**: Virtual collaborative whiteboard.
-- **🏠 Homepage**: Dashboard for managing and accessing all services.
-- **🔄 n8n**: Workflow automation platform.
+- [🎨 Excalidraw](file:///home/yoga/Documents/kube/tools/editor/excalidraw.yml): Virtual collaborative whiteboard.
+- [🏠 Homepage](file:///home/yoga/Documents/kube/tools/homepage): Dashboard for managing and accessing all services.
+- [🔄 n8n](file:///home/yoga/Documents/kube/tools/n8n.yml): Workflow automation platform.
 
-#### 🔧 Utilities & Tools
-- **👀 Changedetection.io**: Monitors websites for changes.
-- **🔧 IT-Tools**: A collection of handy online tools for developers.
-- **🌐 Netbird**: VPN mesh networking solution.
-- **♻️ Reloader**: Automatically restarts pods when ConfigMaps or Secrets are updated.
-- **💨 Speedtest**: Tool for checking internet connection speed.
-- **📦 Warrior**: Archive Team Warrior for distributed archiving.
+- [� Changedetection.io](file:///home/yoga/Documents/kube/tools/changedetection.yml): Monitors websites for changes.
+- [🔧 IT-Tools](file:///home/yoga/Documents/kube/tools/it-tools.yml): A collection of handy online tools for developers.
+- [🌐 Netbird](file:///home/yoga/Documents/kube/tools/netvisor.yml): VPN mesh networking solution (Netvisor).
+- [♻️ Reloader](file:///home/yoga/Documents/kube/tools/reloader.yml): Automatically restarts pods when ConfigMaps or Secrets are updated.
+- [💨 Speedtest](file:///home/yoga/Documents/kube/tools/speedtest.yml): Tool for checking internet connection speed.
+- [🛡️ Vert](file:///home/yoga/Documents/kube/tools/editor/vert.yml): Clean and simple RSS feed reader.
+- [📦 Warrior](file:///home/yoga/Documents/kube/tools/warrior.yml): Archive Team Warrior for distributed archiving.
 
 ### 📊 Observability & Monitoring
-- **🛡️ AdGuard Exporter**: Exports AdGuard DNS metrics to Prometheus.
-- **📜 Fluent-bit**: Lightweight log processor and forwarder.
-- **📊 Grafana**: Dashboards for visualizing metrics and logs.
-- **☸️ Kube State Metrics**: Exposes cluster-level metrics.
-- **✍️ Loki**: Horizontally-scalable, multi-tenant log aggregation system.
-- **📡 MKTXP**: Exporter for MikroTik router metrics.
-- **💻 Node Exporter**: Exporter for hardware and OS metrics exposed by *NIX kernels.
-- **🔍 Peekaping**: Advanced uptime monitoring and status page solution.
-- **📈 Prometheus**: Metrics collection and alerting toolkit.
-- **🖥️ PVE Exporter**: Exporter for Proxmox VE host and guest metrics.
-- **📡 SNMP Exporter**: Exporter for metrics from SNMP-enabled devices.
-- **💓 Uptime Kuma**: Self-hosted uptime monitoring tool.
+- [🛡️ AdGuard Exporter](file:///home/yoga/Documents/kube/monitoring/adguard-exporter.yml): Exports AdGuard DNS metrics to Prometheus.
+- [📜 Fluent-bit](file:///home/yoga/Documents/kube/monitoring/fluent-bit.yml): Lightweight log processor and forwarder.
+- [📊 Grafana](file:///home/yoga/Documents/kube/monitoring/grafana.yml): Dashboards for visualizing metrics and logs.
+- [☸️ Kube State Metrics](file:///home/yoga/Documents/kube/monitoring/kube-state-metrics.yml): Exposes cluster-level metrics.
+- [✍️ Loki](file:///home/yoga/Documents/kube/monitoring/loki-deploy.yml): Horizontally-scalable, multi-tenant log aggregation system.
+- [📡 MKTXP](file:///home/yoga/Documents/kube/monitoring/mktxp.yml): Exporter for MikroTik router metrics.
+- [💻 Node Exporter](file:///home/yoga/Documents/kube/monitoring/node-exporter.yml): Exporter for hardware and OS metrics exposed by *NIX kernels.
+- [🔍 Peekaping](file:///home/yoga/Documents/kube/monitoring/uptime/peekaping.yml): Advanced uptime monitoring and status page solution.
+- [📈 Prometheus](file:///home/yoga/Documents/kube/monitoring/prometheus-deploy.yml): Metrics collection and alerting toolkit.
+- [🖥️ PVE Exporter](file:///home/yoga/Documents/kube/monitoring/pve-exporter.yml): Exporter for Proxmox VE host and guest metrics.
+- [📡 SNMP Exporter](file:///home/yoga/Documents/kube/monitoring/snmp-exporter.yml): Exporter for metrics from SNMP-enabled devices.
+- [💓 Uptime Kuma](file:///home/yoga/Documents/kube/monitoring/uptime/uptime-kuma.yml): Self-hosted uptime monitoring tool.
 
 ### 📦 Application Services
-- **🐳 Harbor**: Cloud native container registry.
-- **🖼️ Immich**: Self-hosted backup solution for photos and videos.
-- **💰 Money**: Personal finance management application.
-- **☁️ Cloudflared**: Creates secure tunnels to Cloudflare's edge.
-- **🌿 Ecoguardian**: Environmental monitoring service.
-- **✍️ Ghost**: Professional publishing platform / blogging.
-- **📊 Linear**: Issue tracking and project management (self-hosted).
-- **🖼️ Portfolio**: Application to showcase projects/work.
-- **📋 Project**: All my personal projects.
+- [🐳 Harbor](file:///home/yoga/Documents/kube/harbor/harbor.yml): Cloud native container registry.
+- [🖼️ Immich](file:///home/yoga/Documents/kube/immich/immich.yml): Self-hosted backup solution for photos and videos.
+- [💰 Money](file:///home/yoga/Documents/kube/money/money.yml): Personal finance management application.
+- [☁️ Cloudflared](file:///home/yoga/Documents/kube/services/cloudflared.yml): Creates secure tunnels to Cloudflare's edge.
+- [🌿 Ecoguardian](file:///home/yoga/Documents/kube/services/ecoguardian.yml): Environmental monitoring service.
+- [✍️ Ghost](file:///home/yoga/Documents/kube/services/ghost.yml): Professional publishing platform / blogging.
+- [📊 Linear](file:///home/yoga/Documents/kube/services/linear-cred.yml): Issue tracking and project management (self-hosted).
+- [🖼️ Portfolio](file:///home/yoga/Documents/kube/services/portfolio.yml): Application to showcase projects/work.
+- [📋 Project](file:///home/yoga/Documents/kube/services/project.yml): All my personal projects.
 
 ### 🎬 Media
-- **🎬 Plex Media Server**: 4K transcoding capable media server
-- **📺 Arr Suite**: Radarr/Sonarr/Bazarr stack for automated media management
-- **📥 Transmission & Aria2**: Torrent download clients
-- **📊 Tautulli**: Plex usage monitoring and analytics
-- **📂 Overseerr**: Media request management and discovery
-- **🔧 FlareSolverr**: Proxy server to bypass Cloudflare protection
+- [🎬 Plex Media Server](file:///home/yoga/Documents/kube/media/player.yml): 4K transcoding capable media server and player suite.
+- [📺 Arr Suite](file:///home/yoga/Documents/kube/media/arr.yml): Radarr/Sonarr/Bazarr stack for automated media management.
+- [📥 Transmission & Aria2](file:///home/yoga/Documents/kube/media/download.yml): Torrent and general download clients.
+- [📊 Tautulli](file:///home/yoga/Documents/kube/media/player.yml): Plex usage monitoring and analytics.
+- [📂 Overseerr](file:///home/yoga/Documents/kube/media/arr.yml): Media request management and discovery.
+- [🔧 FlareSolverr](file:///home/yoga/Documents/kube/media/arr.yml): Proxy server to bypass Cloudflare protection.
 
 ## 🛠 Infrastructure
 
@@ -208,19 +208,19 @@ This cluster hosts a variety of self-managed applications and services.
 - **🏷️ Node Feature Discovery (NFD)**: Detects hardware features and labels nodes, enabling advanced workload scheduling
 
 ### Networking & Ingress
-- **🚦 Traefik**: TLS-terminating ingress controller with automatic Let's Encrypt certificates
-- **📡 MetalLB**: Load balancer for bare-metal environments
-- **🌐 Netbird**: VPN mesh networking for secure remote access
-- **☁️ Cloudflared**: Cloudflare tunnel integration for external access
+- **🚦 Traefik**: TLS-terminating ingress controller with automatic Let's Encrypt certificates.
+- **📡 MetalLB**: Load balancer for bare-metal environments providing internal IP management.
+- **🌐 Netbird**: VPN mesh networking for secure remote access.
+- **☁️ Cloudflared**: Secure Cloudflare Tunnel integration for exposing services without public IPs or port forwarding.
 
 ### Storage
 - **🗂 CephFS**: Distributed storage with replication (primary storage)
 - **🗄️ RustFS**: S3-compatible object storage for applications requiring S3 API
 
 ### Security & Certificates
-- **🔐 Authentik**: Centralized authentication gateway and SSO provider
-- **🔒 cert-manager**: Automated TLS certificate management with Let's Encrypt integration
-- **🛡️ Trivy**: Container vulnerability scanning and security analysis
+- [🔐 Authentik](file:///home/yoga/Documents/kube/tools/authentik): Centralized authentication gateway and SSO provider.
+- [🔒 cert-manager](file:///home/yoga/Documents/kube/cert-manager): Automated TLS certificate management with Let's Encrypt integration.
+- [🛡️ Trivy](file:///home/yoga/Documents/kube/trivy): Container vulnerability scanning and security analysis.
 
 ### Data & Caching
 - **💾 Valkey/Redis**: In-memory data store used by Authentik, Immich, and other services
