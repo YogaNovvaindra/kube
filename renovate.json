@@ -80,7 +80,7 @@
         "/kustomization\\.ya?ml$/"
       ],
       "matchStrings": [
-        "https://raw\\.githubusercontent\\.com/traefik/traefik/(?<currentValue>v[0-9.]+)/docs/content/reference/dynamic-configuration/kubernetes-crd-definition-v1\\.yml"
+        "https://raw\\.githubusercontent\\.com/traefik/traefik/(?:refs/tags/)?(?<currentValue>v[0-9.]+)/docs/content/reference/dynamic-configuration/kubernetes-crd-(?:definition-v1|rbac)\\.yml"
       ],
       "datasourceTemplate": "github-tags",
       "depNameTemplate": "traefik/traefik"
@@ -106,6 +106,17 @@
       ],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "argoproj/argo-cd"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/kustomization\\.ya?ml$/"
+      ],
+      "matchStrings": [
+        "https://raw\\.githubusercontent\\.com/aquasecurity/trivy-operator/(?<currentValue>v[0-9.]+)/deploy/static/trivy-operator\\.yaml"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "aquasecurity/trivy-operator"
     }
   ]
 }
