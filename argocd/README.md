@@ -32,66 +32,52 @@ argocd/
 - **Accounts**: Homepage service account with readonly role
 - **Ingress**: Traefik IngressRoute at `argocd.ygnv.my.id`
 
+## Notifications
+
+Argo CD is configured to send notifications to Discord using the `argocd-notifications-controller`.
+
+### 1. Setup Discord Webhook
+1. Create a webhook in your Discord channel and copy the URL.
+2. Store the URL in a sealed secret:
+   ```bash
+   # Create a temporary secret file (do not commit)
+   echo -n "https://discord.com/api/webhooks/..." > discord-webhook.url
+   kubectl create secret generic argocd-notifications-secret --from-file=discord-webhook=discord-webhook.url --dry-run=client -o yaml | kubeseal > discord-webhook-sealed-secret.yml
+   rm discord-webhook.url
+   ```
+
+### 2. Enable Notifications
+Add annotations to your `Application` resources:
+```yaml
+metadata:
+  annotations:
+    notifications.argoproj.io/subscribe.on-sync-succeeded.discord: ""
+    notifications.argoproj.io/subscribe.on-sync-failed.discord: ""
+```
+
+---
+
 ## Deployment
 
 ### Build and preview
 ```bash
-kubectl kustomize /home/yoga/Documents/kube/argocd
+kubectl kustomize .
 ```
 
 ### Apply to cluster
-
-**Important**: Use server-side apply to handle large CRD annotations:
-```bash
-kubectl apply -k /home/yoga/Documents/kube/argocd --server-side --force-conflicts
-```
-
-Or from the argocd directory:
 ```bash
 kubectl apply -k . --server-side --force-conflicts
 ```
 
-### Delete deployment
-```bash
-kubectl delete -k /home/yoga/Documents/kube/argocd
-```
+## Useful Commands
 
-## GitOps Management
-
-When you add this to your `gitops/argocd.yml` as an Argo CD Application, it will:
-- ✅ Automatically track updates from the official Argo CD GitHub repository
-- ✅ Update CRDs and resources when the base manifest changes
-- ✅ Apply your custom patches on top of the latest version
-- ✅ Keep your deployment in sync with your Git repository
-
-This means you get automatic updates to Argo CD while maintaining your customizations!
-
-## Renovate Integration
-
-✅ **Renovate will automatically update image tags** in `kustomization.yml`:
-- Detects `newTag` fields for all three images
-- Creates PRs when new versions are available in your registry
-- Keeps Argo CD, Dex, and Redis up-to-date
-
-Make sure your `renovate.json` includes kustomize support (it should by default).
-
-## Initial Admin Password
-
-Get the initial admin password:
+### Get initial admin password
 ```bash
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 ```
 
-## Updating
-
-### Automatic Updates (via GitOps)
-When managed by Argo CD, updates happen automatically as the official manifest changes on GitHub.
-
-### Manual Updates
-To update immediately:
+### Check Logs
 ```bash
-kubectl apply -k . --server-side --force-conflicts
+kubectl logs -n argocd -l app.kubernetes.io/name=argocd-notifications-controller
 ```
-
-To pin to a specific version, add `newTag` to the images in `kustomization.yml`.
 ```
