@@ -23,6 +23,21 @@ data:
   datasources.yaml: |
     apiVersion: 1
     datasources:
+      - name: Prometheus
+        type: prometheus
+        access: proxy
+        orgId: 1
+        url: http://prometheus:9090
+        basicAuth: false
+        isDefault: true
+        version: 1
+        editable: false
+        apiVersion: 1
+        uid: prometheus
+        jsonData:
+          exemplarTraceIdDestinations:
+            - name: trace_id
+              datasourceUid: tempo
       - name: Tempo
         type: tempo
         access: proxy
@@ -48,6 +63,7 @@ data:
         version: 1
         editable: false
         apiVersion: 1
+        uid: loki
         jsonData:
           derivedFields:
             - datasourceUid: tempo
