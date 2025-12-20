@@ -7,7 +7,7 @@ metadata:
     app: ecoguardian
   annotations:
     keel.sh/policy: force
-    keel.sh/trigger: poll 
+    keel.sh/trigger: poll
     keel.sh/match-tag: "true"
     keel.sh/pollSchedule: "@every 6h"
 spec:
@@ -26,38 +26,38 @@ spec:
       nodeSelector:
         kubernetes.io/disk: hdd
       containers:
-      - name: ecoguardian
-        image: ghcr.io/yoganovvaindra/ecoguardian-web:latest
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            memory: 128Mi
-          limits:
-            memory: 512Mi
-        env:
-        - name: DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: ecoguardian-cred
-              key: db-url
-        - name: NEXTAUTH_URL
-          value: "https://ecoguardian.yoganova.my.id"
-        - name: NEXT_PUBLIC_SITE_URL
-          value: "https://ecoguardian.yoganova.my.id"
-        - name: NEXT_PUBLIC_CHART_URL
-          value: "https://ecochart.yoganova.my.id"
-        - name: GOOGLE_CLIENT_ID
-          value: ""
-        - name: GOOGLE_CLIENT_SECRET
-          value: ""
-        volumeMounts:
-        - name: images
-          mountPath: /app/images
+        - name: ecoguardian
+          image: ghcr.io/yoganovvaindra/ecoguardian-web:latest
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 128Mi
+            limits:
+              memory: 512Mi
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: ecoguardian-cred
+                  key: db-url
+            - name: NEXTAUTH_URL
+              value: "https://ecoguardian.yoganova.my.id"
+            - name: NEXT_PUBLIC_SITE_URL
+              value: "https://ecoguardian.yoganova.my.id"
+            - name: NEXT_PUBLIC_CHART_URL
+              value: "https://ecochart.yoganova.my.id"
+            - name: GOOGLE_CLIENT_ID
+              value: ""
+            - name: GOOGLE_CLIENT_SECRET
+              value: ""
+          volumeMounts:
+            - name: images
+              mountPath: /app/images
       volumes:
-      - name: images
-        hostPath:
-          path: /mnt/cephfs/docker/services/ecoguardian/images
-          type: Directory
+        - name: images
+          hostPath:
+            path: /mnt/cephfs/docker/services/ecoguardian/images
+            type: Directory
 ---
 apiVersion: v1
 kind: Service
@@ -69,25 +69,6 @@ spec:
   selector:
     app: ecoguardian
   ports:
-  - name: ecoguardian
-    port: 3000
-    targetPort: 3000
----
-apiVersion: networking.cfargotunnel.com/v1alpha1
-kind: TunnelBinding
-metadata:
-  name: ecoguardian-binding
-  namespace: services
-spec:
-  tunnelRef:
-    kind: ClusterTunnel
-    name: tunnel-yoganova
-  subjects:
     - name: ecoguardian
-      spec:
-        fqdn: ecoguardian.yoganova.my.id
-        protocol: http
-    - name: ecoguardian
-      spec:
-        fqdn: ecochart.yoganova.my.id
-        protocol: http
+      port: 3000
+      targetPort: 3000
