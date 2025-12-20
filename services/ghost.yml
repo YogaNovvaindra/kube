@@ -187,18 +187,3 @@ spec:
       port: 3306
       targetPort: 3306
   clusterIP: None
----
-apiVersion: networking.cfargotunnel.com/v1alpha1
-kind: TunnelBinding
-metadata:
-  name: ghost-binding
-  namespace: services
-spec:
-  tunnelRef:
-    kind: ClusterTunnel
-    name: tunnel-ygnv
-  subjects:
-    - name: ghost
-      spec:
-        fqdn: ygnv.my.id
-        protocol: http

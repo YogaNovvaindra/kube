@@ -1,0 +1,16 @@
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: cloudflared-cred
+  namespace: services
+spec:
+  encryptedData:
+    TUNNEL_TOKEN: AgBRZf/syvzXgWG+ZcvsAN6b/Mv1ULUuxt0KGWsmydcT91RhyOYpijHBIRbaQbAGOxZxTenct53xfcGf0Jajkc3DIwc1tlMYRecfPKDQZsT9eRtvoPcuvP4G1qkJ7zQuxzo95p8H4Oj9OMsVaTj2Mt0+YDGR/HKjMvpu8Esybpu8jr4u7VQkC7El896vPpYpanceBDtj9iDKlXaPj8veTnFXAky7ET88IBNE5z3ttJ35WwxQ1r27pdlZ02fOdSZ8O2CCfApR9lVEuOeB0FehljWwkv1rru2MJwNpwlTXp+ZEZxcySPbZDcawiog9rzy8r3cDgl44Z/Lb2q9p/UxDZ1WhOrcotNpc239hcxiiRc0wJOboGpcfaAITqEoM+A6gWalzVo79ivLsDaVgarl39F3zZNl2lzWZ72lNO//act8SL0wi1U8Si4R5i5vfbeSgaVJBtWp8Udi2HmrlFD2RslBWy8g9QqzpndwVm0YKZQVKcvz18aIQvwYCb9CPfPUdsnpbuDCsFnKXYkMY/oHRwEUxz2Y5mZQe1/MiOmEB1My+CvuARKmty40rOzFyR0p9uSHVdec1lI4io/ECA+Hre7iRTyls0Sq6I73kg5NbPf9H4IlZUhgUSMhIaAuwnbkO6KPDVUp//vjtnxmJg5CbCrAEA0ewE4TeOjqP6Mb03hDJIOHi+myMemXsEUeShItzMDGjFLPbu9YKtuysZ6qLOuSh+RztE6c8xcKMrsJ7vT/I1u6QLw0ly5DJnOplD4A6Wp71/QTGME+y1phd5oUsPdUWulIBim9LstwypJYd8mLV01tG4jj/KR3MkJAye1Xm3T00NYxBERTJopgLmdPYmDEbfsOJj2djIKAiF7h5itFy025np5VJ6TcszingH2b0KLFTYRrvC6QgU+w1M/Zol0q6/jZgd/ff89b0X3Vbc+/AD/Mme/6GwiSe
+  template:
+    metadata:
+      creationTimestamp: null
+      name: cloudflared-cred
+      namespace: services
+    type: Opaque

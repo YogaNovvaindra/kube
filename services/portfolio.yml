@@ -18,18 +18,18 @@ spec:
         app: portfolio
     spec:
       containers:
-      - name: portfolio
-        image: reg.ygnv.my.id/ghcr/yoganovvaindra/portfolio:v0.2.8
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            cpu: 50m
-            memory: 32Mi
-        ports:
-        - containerPort: 80
-        env:
-        - name: TZ
-          value: Asia/Jakarta
+        - name: portfolio
+          image: reg.ygnv.my.id/ghcr/yoganovvaindra/portfolio:v0.2.8
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+          ports:
+            - containerPort: 80
+          env:
+            - name: TZ
+              value: Asia/Jakarta
 ---
 apiVersion: v1
 kind: Service
@@ -65,18 +65,3 @@ spec:
         target:
           type: Utilization
           averageUtilization: 100
----
-apiVersion: networking.cfargotunnel.com/v1alpha1
-kind: TunnelBinding
-metadata:
-  name: portfolio-binding
-  namespace: services
-spec:
-  tunnelRef:
-    kind: ClusterTunnel
-    name: tunnel-yoganova
-  subjects:
-    - name: portfolio
-      spec:
-        fqdn: yoganova.my.id
-        protocol: http
