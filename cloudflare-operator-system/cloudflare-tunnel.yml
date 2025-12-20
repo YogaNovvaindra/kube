@@ -1,0 +1,23 @@
+apiVersion: networking.cfargotunnel.com/v1alpha2
+kind: ClusterTunnel
+metadata:
+  name: tunnel-ygnv
+spec:
+  cloudflare:
+    domain: "ygnv.my.id"
+    secret: "cloudflare-cred"
+  existingTunnel:
+    id: 9141b1d3-89ab-4302-a7eb-7eede71828fd
+    name: "main-tunnel"
+---
+apiVersion: networking.cfargotunnel.com/v1alpha2
+kind: ClusterTunnel
+metadata:
+  name: tunnel-yoganova
+spec:
+  cloudflare:
+    domain: "yoganova.my.id"
+    secret: "cloudflare-cred"
+  existingTunnel:
+    id: 9141b1d3-89ab-4302-a7eb-7eede71828fd
+    name: "main-tunnel"

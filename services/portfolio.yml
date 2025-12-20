@@ -65,3 +65,18 @@ spec:
         target:
           type: Utilization
           averageUtilization: 100
+---
+apiVersion: networking.cfargotunnel.com/v1alpha1
+kind: TunnelBinding
+metadata:
+  name: portfolio-binding
+  namespace: services
+spec:
+  tunnelRef:
+    kind: ClusterTunnel
+    name: tunnel-yoganova
+  subjects:
+    - name: portfolio
+      spec:
+        fqdn: yoganova.my.id
+        protocol: http

@@ -120,6 +120,25 @@ spec:
   - port: 80
     targetPort: 80
 ---
+apiVersion: networking.cfargotunnel.com/v1alpha1
+kind: TunnelBinding
+metadata:
+  name: project-binding
+  namespace: services
+spec:
+  tunnelRef:
+    kind: ClusterTunnel
+    name: tunnel-yoganova
+  subjects:
+    - name: tolonto
+      spec:
+        fqdn: tolonto.yoganova.my.id
+        protocol: http
+    - name: linear-next
+      spec:
+        fqdn: linear.yoganova.my.id
+        protocol: http
+---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
