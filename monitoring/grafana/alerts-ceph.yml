@@ -137,7 +137,9 @@ data:
                   conditions:
                     - evaluator:
                         params: [90]
-                    type: gt
+                        type: gt
+                      operator:
+                        type: and
                       query:
                         params: [A]
                       type: query

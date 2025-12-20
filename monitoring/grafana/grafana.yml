@@ -64,14 +64,29 @@ spec:
             sources:
               - configMap:
                   name: grafana-alerts-cpu
+                  items:
+                    - key: alerts-cpu.yaml
+                      path: alerts-cpu.yaml
               - configMap:
                   name: grafana-alerts-ram
+                  items:
+                    - key: alerts-ram.yaml
+                      path: alerts-ram.yaml
               - configMap:
                   name: grafana-alerts-reboot
+                  items:
+                    - key: alerts-reboot.yaml
+                      path: alerts-reboot.yaml
               - configMap:
                   name: grafana-alerts-storage
+                  items:
+                    - key: alerts-storage.yaml
+                      path: alerts-storage.yaml
               - configMap:
                   name: grafana-alerts-ceph
+                  items:
+                    - key: alerts-ceph.yaml
+                      path: alerts-ceph.yaml
         - name: grafana-data
 
           hostPath:
