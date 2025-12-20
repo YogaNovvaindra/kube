@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  namespace: harbor
+  labels:
+    app: postgres
+spec:
+  serviceName: postgres
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      nodeSelector:
+        kubernetes.io/hperf: "true"
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: postgres
+          image: pgautoupgrade/pgautoupgrade:latest@sha256:b440eb344035aa246f36ea8cb7a45db7e8b216686b475e2fd509905a36005e9f
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 128Mi
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: harbor-cred
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: harbor-cred
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              value: registry
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-d", "registry", "-U", "postgres"]
+            initialDelaySeconds: 30
+            periodSeconds: 60
+            timeoutSeconds: 60
+          livenessProbe:
+            exec:
+              command: ["pg_isready", "-d", "registry", "-U", "postgres"]
+            initialDelaySeconds: 60
+            periodSeconds: 60
+            timeoutSeconds: 60
+      volumes:
+        - name: postgres-data
+          hostPath:
+            path: /mnt/cephfs/docker/harbor/postgres/data
+            type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: harbor
+  labels:
+    app: postgres
+spec:
+  selector:
+    app: postgres
+  ports:
+    - port: 5432
+      targetPort: 5432
+  type: ClusterIP

@@ -1,0 +1,72 @@
+# Harbor Helm Chart Values
+# Reference: https://github.com/goharbor/harbor-helm/blob/master/values.yaml
+
+expose:
+  type: ingress
+  tls:
+    enabled: true
+    certSource: "none"
+  ingress:
+    hosts:
+      core: reg.ygnv.my.id
+    # We disable standard ingress because we use custom IngressRoute in nginx.yml
+    # Or we can let Helm manage it and delete nginx.yml
+    annotations:
+      kubernetes.io/ingress.class: traefik
+
+externalURL: https://reg.ygnv.my.id
+
+# Using your existing Postgres - all credentials from harbor-cred secret
+database:
+  type: external
+  external:
+    host: "postgres"
+    port: 5432
+    existingSecret: "harbor-cred"
+    usernameKey: "POSTGRES_USER"
+    passwordKey: "POSTGRES_PASSWORD"
+    coreDatabaseKey: "POSTGRES_DB"
+
+# Using your existing Redis (Valkey)
+redis:
+  type: external
+  external:
+    addr: "valkey:6379"
+
+persistence:
+  enabled: true
+  persistentVolumeClaim:
+    registry:
+      existingClaim: "harbor-registry-pvc"
+    jobservice:
+      existingClaim: "harbor-jobservice-pvc"
+
+# Using harbor-cred secret for all credentials
+harborAdminPassword: "" # Will be set via existingSecret below
+
+existingSecretAdminPassword: "harbor-cred"
+existingSecretAdminPasswordKey: "HARBOR_ADMIN_PASSWORD"
+
+core:
+  existingSecret: "harbor-cred"
+  secretName: "CORE_SECRET"
+  xsrfKey: "CORE_KEY"
+
+jobservice:
+  existingSecret: "harbor-cred"
+  secret: "JOBSERVICE_SECRET"
+
+registry:
+  existingSecret: "harbor-cred"
+  secret: "REGISTRY_HTTP_SECRET"
+  credentials:
+    existingSecret: "harbor-cred"
+    username: "REGISTRY_CREDENTIAL_USERNAME"
+    password: "REGISTRY_CREDENTIAL_PASSWORD"
+
+# Disable components you might not need or manage manually
+trivy:
+  enabled: true # Your current core.yml says WITH_TRIVY=true
+
+metrics:
+  enabled: false

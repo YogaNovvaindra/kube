@@ -6,11 +6,12 @@ Harbor is an open-source trusted cloud native registry project that stores, sign
 
 - **`core.yml`**: Core Harbor service and API.
 - **`registry.yml`**: Container registry storage service.
-- **`harbor-db.yml`**: PostgreSQL database for Harbor.
+- **`harbor/db/postgres.yml`**: PostgreSQL database for Harbor.
+- **`harbor/db/valkey.yml`**: Valkey (Redis) for Harbor.
 - **`nginx.yml`**: Internal proxy for Harbor components.
 - **`jobservices.yml`**: Handles background tasks like replication and scanning.
 - **`trivy.yml`**: Integrated vulnerability scanner.
-- **`db-backup.yml`**: Automated backup jobs for the database.
+- **`harbor/db/backup.yml`**: Automated backup jobs for the database.
 
 ## Usage
 

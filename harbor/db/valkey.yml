@@ -1,0 +1,83 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: valkey-config
+  namespace: harbor
+data:
+  valkey.conf: |
+    # Valkey configuration settings
+    maxmemory 128mb
+    maxmemory-policy allkeys-lru
+    # Add other necessary configurations
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: valkey
+  namespace: harbor
+  labels:
+    app: valkey
+spec:
+  serviceName: valkey
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: valkey
+  template:
+    metadata:
+      labels:
+        app: valkey
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: valkey
+          image: valkey/valkey:9.0-alpine
+          imagePullPolicy: IfNotPresent
+          command: ["valkey-server", "/valkey.conf"]
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - name: valkey-conf
+              mountPath: /valkey.conf
+              subPath: valkey.conf
+            - name: valkey-data
+              mountPath: /data
+          resources:
+            requests:
+              memory: 32Mi
+          readinessProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 5
+            periodSeconds: 30
+            timeoutSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 5
+      volumes:
+        - name: valkey-conf
+          configMap:
+            name: valkey-config
+        - name: valkey-data
+          hostPath:
+            path: /mnt/cephfs/docker/harbor/valkey
+            type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: valkey
+  namespace: harbor
+  labels:
+    app: valkey
+spec:
+  selector:
+    app: valkey
+  ports:
+    - port: 6379
+      targetPort: 6379
+  type: ClusterIP
