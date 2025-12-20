@@ -20,9 +20,6 @@ data:
                 relativeTimeRange:
                   from: 600
                   to: 0
-                relativeTimeRange:
-                  from: 600
-                  to: 0
                 datasourceUid: prometheus
                 model:
                   datasource: { type: prometheus, uid: prometheus }
