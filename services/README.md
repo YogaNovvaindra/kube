@@ -9,6 +9,7 @@ This directory contains various application services and their configurations.
 - **[EcoGuardian](file:///home/yoga/Documents/kube/services/ecoguardian.yml)**: Environmental monitoring.
 - **[Linear](file:///home/yoga/Documents/kube/services/linear-cred.yml)**: Issue tracking.
 - **[Cloudflared](file:///home/yoga/Documents/kube/services/cloudflared.yml)**: Secure tunneling to the web.
+- **[Project](file:///home/yoga/Documents/kube/services/project.yml)**: Personal projects.
 
 ## Shared Resources
 
