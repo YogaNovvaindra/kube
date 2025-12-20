@@ -70,6 +70,8 @@ spec:
                   name: grafana-alerts-reboot
               - configMap:
                   name: grafana-alerts-storage
+              - configMap:
+                  name: grafana-alerts-ceph
         - name: grafana-data
 
           hostPath:
