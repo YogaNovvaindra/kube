@@ -49,10 +49,6 @@ data:
         editable: false
         apiVersion: 1
         uid: prometheus
-        jsonData:
-          exemplarTraceIdDestinations:
-            - name: trace_id
-              datasourceUid: tempo
       - name: Loki
         type: loki
         access: proxy
@@ -64,12 +60,6 @@ data:
         editable: false
         apiVersion: 1
         uid: loki
-        jsonData:
-          derivedFields:
-            - datasourceUid: tempo
-              matcherRegex: "trace_id=(\\w+)"
-              name: TraceID
-              url: "${__value.raw}"
 ---
 apiVersion: apps/v1
 kind: Deployment
