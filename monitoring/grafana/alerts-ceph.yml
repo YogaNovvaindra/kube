@@ -8,7 +8,7 @@ data:
     apiVersion: 1
     groups:
       - orgId: 1
-        name: ceph_cluster_health
+        name: Ceph Cluster
         folder: Ceph Alerts
         interval: 1m
         rules:
@@ -17,832 +17,453 @@ data:
             condition: C
             data:
               - refId: A
-                relativeTimeRange:
-                  from: 300
-                  to: 0
                 datasourceUid: prometheus
                 model:
+                  datasource: { type: prometheus, uid: prometheus }
                   expr: 'ceph_health_status == 2'
                   refId: A
-                  intervalMs: 1000
-                  maxDataPoints: 43200
-              - refId: C
-                relativeTimeRange:
-                  from: 300
-                  to: 0
+              - refId: B
                 datasourceUid: __expr__
                 model:
-                  type: classic_conditions
-                  conditions:
-                    - evaluator:
-                        params: [0]
-                        type: gt
-                      operator:
-                        type: and
-                      query:
-                        params: [A]
-                      type: query
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: A
+                  reducer: mean
+                  refId: B
+                  type: reduce
+              - refId: C
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: B
                   refId: C
-            noDataState: NoData
-            execErrState: Alerting
+                  type: threshold
+                  conditions:
+                    - evaluator: { params: [0], type: gt }
+                      operator: { type: and }
+                      query: { params: [C] }
+                      reducer: { params: [], type: last }
+                      type: query
             for: 5m
             annotations:
-              summary: "Ceph cluster health is in ERROR state"
-              description: "Ceph cluster health status is ERROR (value: 2)"
+              summary: "Ceph Cluster Health: Error"
+              description: "Ceph cluster is in ERROR state. Check `ceph -s` for details."
             labels:
               severity: critical
-              component: ceph
-          - uid: ceph_health_warn
+
+          - uid: ceph_health_warning
             title: Ceph Cluster Health Warning
             condition: C
             data:
               - refId: A
-                relativeTimeRange:
-                  from: 300
-                  to: 0
                 datasourceUid: prometheus
                 model:
+                  datasource: { type: prometheus, uid: prometheus }
                   expr: 'ceph_health_status == 1'
                   refId: A
+              - refId: B
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: A
+                  reducer: mean
+                  refId: B
+                  type: reduce
               - refId: C
                 datasourceUid: __expr__
                 model:
-                  type: classic_conditions
-                  conditions:
-                    - evaluator:
-                        params: [0]
-                        type: gt
-                      query:
-                        params: [A]
-                      type: query
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: B
                   refId: C
-            noDataState: NoData
-            execErrState: Alerting
+                  type: threshold
+                  conditions:
+                    - evaluator: { params: [0], type: gt }
+                      operator: { type: and }
+                      query: { params: [C] }
+                      reducer: { params: [], type: last }
+                      type: query
             for: 10m
             annotations:
-              summary: "Ceph cluster health warning"
-              description: "Ceph cluster has warnings - check ceph_health_detail metric"
+              summary: "Ceph Cluster Health: Warning"
+              description: "Ceph cluster health is WARNING. Current status value: {{ $values.B.Value }}."
             labels:
               severity: warning
-              component: ceph
-          - uid: ceph_cluster_nearly_full
-            title: Ceph Cluster Nearly Full
-            condition: C
-            data:
-              - refId: A
-                relativeTimeRange:
-                  from: 600
-                  to: 0
-                datasourceUid: prometheus
-                model:
-                  expr: '(ceph_cluster_total_used_bytes / ceph_cluster_total_bytes) * 100'
-                  refId: A
-              - refId: C
-                datasourceUid: __expr__
-                model:
-                  type: classic_conditions
-                  conditions:
-                    - evaluator:
-                        params: [80]
-                        type: gt
-                      query:
-                        params: [A]
-                      type: query
-                  refId: C
-            noDataState: NoData
-            execErrState: Alerting
-            for: 10m
-            annotations:
-              summary: "Ceph cluster capacity warning"
-              description: "Cluster is {{ $value | printf \"%.2f\" }}% full"
-            labels:
-              severity: warning
-              component: ceph
-          - uid: ceph_cluster_critically_full
-            title: Ceph Cluster Critically Full
-            condition: C
-            data:
-              - refId: A
-                relativeTimeRange:
-                  from: 600
-                  to: 0
-                datasourceUid: prometheus
-                model:
-                  expr: '(ceph_cluster_total_used_bytes / ceph_cluster_total_bytes) * 100'
-                  refId: A
-              - refId: C
-                datasourceUid: __expr__
-                model:
-                  type: classic_conditions
-                  conditions:
-                    - evaluator:
-                        params: [90]
-                        type: gt
-                      operator:
-                        type: and
-                      query:
-                        params: [A]
-                      type: query
-                  refId: C
-            noDataState: NoData
-            execErrState: Alerting
-            for: 5m
-            annotations:
-              summary: "Ceph cluster critically full"
-              description: "Cluster is {{ $value | printf \"%.2f\" }}% full - CRITICAL"
-            labels:
-              severity: critical
-              component: ceph
-      - orgId: 1
-        name: ceph_osd_alerts
-        folder: Ceph Alerts
-        interval: 1m
-        rules:
+
           - uid: ceph_osd_down
             title: Ceph OSD Down
             condition: C
             data:
               - refId: A
-                relativeTimeRange:
-                  from: 300
-                  to: 0
                 datasourceUid: prometheus
                 model:
+                  datasource: { type: prometheus, uid: prometheus }
                   expr: 'ceph_osd_up == 0'
                   refId: A
+              - refId: B
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: A
+                  reducer: mean
+                  refId: B
+                  type: reduce
               - refId: C
                 datasourceUid: __expr__
                 model:
-                  type: classic_conditions
-                  conditions:
-                    - evaluator:
-                        params: [0]
-                        type: gt
-                      query:
-                        params: [A]
-                      type: query
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: B
                   refId: C
-            noDataState: NoData
-            execErrState: Alerting
+                  type: threshold
+                  conditions:
+                    - evaluator: { params: [0], type: gt }
+                      operator: { type: and }
+                      query: { params: [C] }
+                      reducer: { params: [], type: last }
+                      type: query
             for: 5m
             annotations:
-              summary: "Ceph OSD is down"
-              description: "OSD {{ $labels.ceph_daemon }} is down"
+              summary: "Ceph OSD Down: {{ $labels.ceph_daemon }}"
+              description: "OSD {{ $labels.ceph_daemon }} on host {{ $labels.hostname }} is DOWN."
             labels:
               severity: critical
-              component: ceph-osd
-          - uid: ceph_osd_out
-            title: Ceph OSD Out of Cluster
-            condition: C
-            data:
-              - refId: A
-                relativeTimeRange:
-                  from: 300
-                  to: 0
-                datasourceUid: prometheus
-                model:
-                  expr: 'ceph_osd_in == 0'
-                  refId: A
-              - refId: C
-                datasourceUid: __expr__
-                model:
-                  type: classic_conditions
-                  conditions:
-                    - evaluator:
-                        params: [0]
-                        type: gt
-                      query:
-                        params: [A]
-                      type: query
-                  refId: C
-            noDataState: NoData
-            execErrState: Alerting
-            for: 10m
-            annotations:
-              summary: "Ceph OSD marked out"
-              description: "OSD {{ $labels.ceph_daemon }} is marked out of the cluster"
-            labels:
-              severity: warning
-              component: ceph-osd
-          - uid: ceph_osd_high_commit_latency
-            title: Ceph OSD High Commit Latency
-            condition: C
-            data:
-              - refId: A
-                relativeTimeRange:
-                  from: 600
-                  to: 0
-                datasourceUid: prometheus
-                model:
-                  expr: 'ceph_osd_commit_latency_ms'
-                  refId: A
-              - refId: C
-                datasourceUid: __expr__
-                model:
-                  type: classic_conditions
-                  conditions:
-                    - evaluator:
-                        params: [100]
-                        type: gt
-                      query:
-                        params: [A]
-                      type: query
-                  refId: C
-            noDataState: NoData
-            execErrState: Alerting
-            for: 10m
-            annotations:
-              summary: "Ceph OSD high commit latency"
-              description: "OSD {{ $labels.ceph_daemon }} has commit latency of {{ $value | printf \"%.2f\" }}ms"
-            labels:
-              severity: warning
-              component: ceph-performance
-          - uid: ceph_osd_high_apply_latency
-            title: Ceph OSD High Apply Latency
-            condition: C
-            data:
-              - refId: A
-                relativeTimeRange:
-                  from: 600
-                  to: 0
-                datasourceUid: prometheus
-                model:
-                  expr: 'ceph_osd_apply_latency_ms'
-                  refId: A
-              - refId: C
-                datasourceUid: __expr__
-                model:
-                  type: classic_conditions
-                  conditions:
-                    - evaluator:
-                        params: [100]
-                        type: gt
-                      query:
-                        params: [A]
-                      type: query
-                  refId: C
-            noDataState: NoData
-            execErrState: Alerting
-            for: 10m
-            annotations:
-              summary: "Ceph OSD high apply latency"
-              description: "OSD {{ $labels.ceph_daemon }} has apply latency of {{ $value | printf \"%.2f\" }}ms"
-            labels:
-              severity: warning
-              component: ceph-performance
-      - orgId: 1
-        name: ceph_pool_alerts
-        folder: Ceph Alerts
-        interval: 1m
-        rules:
-          - uid: ceph_pool_nearly_full
-            title: Ceph Pool Nearly Full
-            condition: C
-            data:
-              - refId: A
-                relativeTimeRange:
-                  from: 600
-                  to: 0
-                datasourceUid: prometheus
-                model:
-                  expr: 'ceph_pool_percent_used'
-                  refId: A
-              - refId: C
-                datasourceUid: __expr__
-                model:
-                  type: classic_conditions
-                  conditions:
-                    - evaluator:
-                        params: [80]
-                        type: gt
-                      query:
-                        params: [A]
-                      type: query
-                  refId: C
-            noDataState: NoData
-            execErrState: Alerting
-            for: 10m
-            annotations:
-              summary: "Ceph pool nearly full"
-              description: "Pool {{ $labels.name }} is {{ $value | printf \"%.2f\" }}% full"
-            labels:
-              severity: warning
-              component: ceph-pool
-          - uid: ceph_pool_critically_full
-            title: Ceph Pool Critically Full
-            condition: C
-            data:
-              - refId: A
-                relativeTimeRange:
-                  from: 600
-                  to: 0
-                datasourceUid: prometheus
-                model:
-                  expr: 'ceph_pool_percent_used'
-                  refId: A
-              - refId: C
-                datasourceUid: __expr__
-                model:
-                  type: classic_conditions
-                  conditions:
-                    - evaluator:
-                        params: [90]
-                        type: gt
-                      query:
-                        params: [A]
-                      type: query
-                  refId: C
-            noDataState: NoData
-            execErrState: Alerting
-            for: 5m
-            annotations:
-              summary: "Ceph pool critically full"
-              description: "Pool {{ $labels.name }} is {{ $value | printf \"%.2f\" }}% full - CRITICAL"
-            labels:
-              severity: critical
-              component: ceph-pool
-      - orgId: 1
-        name: ceph_mon_alerts
-        folder: Ceph Alerts
-        interval: 1m
-        rules:
-          - uid: ceph_mon_not_in_quorum
+
+          - uid: ceph_mon_down
             title: Ceph Monitor Not in Quorum
             condition: C
             data:
               - refId: A
-                relativeTimeRange:
-                  from: 300
-                  to: 0
                 datasourceUid: prometheus
                 model:
+                  datasource: { type: prometheus, uid: prometheus }
                   expr: 'ceph_mon_quorum_status == 0'
                   refId: A
+              - refId: B
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: A
+                  reducer: mean
+                  refId: B
+                  type: reduce
               - refId: C
                 datasourceUid: __expr__
                 model:
-                  type: classic_conditions
-                  conditions:
-                    - evaluator:
-                        params: [0]
-                        type: gt
-                      query:
-                        params: [A]
-                      type: query
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: B
                   refId: C
-            noDataState: NoData
-            execErrState: Alerting
+                  type: threshold
+                  conditions:
+                    - evaluator: { params: [0], type: gt }
+                      operator: { type: and }
+                      query: { params: [C] }
+                      reducer: { params: [], type: last }
+                      type: query
             for: 5m
             annotations:
-              summary: "Ceph monitor not in quorum"
-              description: "Monitor {{ $labels.ceph_daemon }} is not in quorum"
+              summary: "Ceph Monitor Down: {{ $labels.ceph_daemon }}"
+              description: "Monitor {{ $labels.ceph_daemon }} is not in quorum."
             labels:
               severity: critical
-              component: ceph-mon
-          - uid: ceph_mon_low_count
-            title: Ceph Monitor Count Low
+
+          - uid: ceph_mgr_none_active
+            title: Ceph No Active MGR
             condition: C
             data:
               - refId: A
-                relativeTimeRange:
-                  from: 300
-                  to: 0
                 datasourceUid: prometheus
                 model:
-                  expr: 'sum(ceph_mon_quorum_status == 1)'
+                  datasource: { type: prometheus, uid: prometheus }
+                  expr: 'sum(ceph_mgr_status) == 0'
                   refId: A
+              - refId: B
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: A
+                  reducer: mean
+                  refId: B
+                  type: reduce
               - refId: C
                 datasourceUid: __expr__
                 model:
-                  type: classic_conditions
-                  conditions:
-                    - evaluator:
-                        params: [2]
-                        type: lt
-                      query:
-                        params: [A]
-                      type: query
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: B
                   refId: C
-            noDataState: NoData
-            execErrState: Alerting
+                  type: threshold
+                  conditions:
+                    - evaluator: { params: [0], type: gt }
+                      operator: { type: and }
+                      query: { params: [C] }
+                      reducer: { params: [], type: last }
+                      type: query
             for: 5m
             annotations:
-              summary: "Ceph monitor count critically low"
-              description: "Only {{ $value }} monitors in quorum - need at least 2"
+              summary: "Ceph No Active MGR"
+              description: "No active Ceph Manager (MGR) daemon found in the cluster."
             labels:
               severity: critical
-              component: ceph-mon
-      - orgId: 1
-        name: ceph_pg_alerts
-        folder: Ceph Alerts
-        interval: 1m
-        rules:
-          - uid: ceph_pgs_not_active_clean
-            title: Ceph PGs Not Active+Clean
+
+          - uid: ceph_slow_ops
+            title: Ceph Slow Operations
             condition: C
             data:
               - refId: A
-                relativeTimeRange:
-                  from: 600
-                  to: 0
                 datasourceUid: prometheus
                 model:
-                  expr: '(ceph_pg_total - (ceph_pg_active + ceph_pg_clean)) / 2'
+                  datasource: { type: prometheus, uid: prometheus }
+                  expr: 'ceph_healthcheck_slow_ops > 0'
                   refId: A
+              - refId: B
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: A
+                  reducer: mean
+                  refId: B
+                  type: reduce
               - refId: C
                 datasourceUid: __expr__
                 model:
-                  type: classic_conditions
-                  conditions:
-                    - evaluator:
-                        params: [0]
-                        type: gt
-                      query:
-                        params: [A]
-                      type: query
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: B
                   refId: C
-            noDataState: NoData
-            execErrState: Alerting
+                  type: threshold
+                  conditions:
+                    - evaluator: { params: [0], type: gt }
+                      operator: { type: and }
+                      query: { params: [C] }
+                      reducer: { params: [], type: last }
+                      type: query
             for: 10m
             annotations:
-              summary: "Ceph PGs not in active+clean state"
-              description: "{{ $value }} PGs are not in active+clean state"
+              summary: "Ceph Slow Operations Detected"
+              description: "Slow operations detected in the cluster. This may indicate performance issues."
             labels:
               severity: warning
-              component: ceph-pg
-          - uid: ceph_pgs_degraded
-            title: Ceph PGs Degraded
+
+          - uid: ceph_health_detail_alert
+            title: Ceph Detailed Health Issue
             condition: C
             data:
               - refId: A
-                relativeTimeRange:
-                  from: 600
-                  to: 0
                 datasourceUid: prometheus
                 model:
-                  expr: 'ceph_pg_degraded'
+                  datasource: { type: prometheus, uid: prometheus }
+                  expr: 'ceph_health_detail == 1'
                   refId: A
+              - refId: B
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: A
+                  reducer: mean
+                  refId: B
+                  type: reduce
               - refId: C
                 datasourceUid: __expr__
                 model:
-                  type: classic_conditions
-                  conditions:
-                    - evaluator:
-                        params: [0]
-                        type: gt
-                      query:
-                        params: [A]
-                      type: query
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: B
                   refId: C
-            noDataState: NoData
-            execErrState: Alerting
-            for: 10m
-            annotations:
-              summary: "Ceph PGs degraded"
-              description: "{{ $value }} PGs are in degraded state"
-            labels:
-              severity: warning
-              component: ceph-pg
-          - uid: ceph_pgs_down
-            title: Ceph PGs Down
-            condition: C
-            data:
-              - refId: A
-                relativeTimeRange:
-                  from: 300
-                  to: 0
-                datasourceUid: prometheus
-                model:
-                  expr: 'ceph_pg_down'
-                  refId: A
-              - refId: C
-                datasourceUid: __expr__
-                model:
-                  type: classic_conditions
+                  type: threshold
                   conditions:
-                    - evaluator:
-                        params: [0]
-                        type: gt
-                      query:
-                        params: [A]
+                    - evaluator: { params: [0], type: gt }
+                      operator: { type: and }
+                      query: { params: [C] }
+                      reducer: { params: [], type: last }
                       type: query
-                  refId: C
-            noDataState: NoData
-            execErrState: Alerting
             for: 5m
             annotations:
-              summary: "Ceph PGs down"
-              description: "{{ $value }} PGs are down - DATA LOSS RISK"
-            labels:
-              severity: critical
-              component: ceph-pg
-          - uid: ceph_pgs_inconsistent
-            title: Ceph PGs Inconsistent
-            condition: C
-            data:
-              - refId: A
-                relativeTimeRange:
-                  from: 600
-                  to: 0
-                datasourceUid: prometheus
-                model:
-                  expr: 'ceph_pg_inconsistent'
-                  refId: A
-              - refId: C
-                datasourceUid: __expr__
-                model:
-                  type: classic_conditions
-                  conditions:
-                    - evaluator:
-                        params: [0]
-                        type: gt
-                      query:
-                        params: [A]
-                      type: query
-                  refId: C
-            noDataState: NoData
-            execErrState: Alerting
-            for: 5m
-            annotations:
-              summary: "Ceph PGs inconsistent"
-              description: "{{ $value }} PGs have inconsistent data"
-            labels:
-              severity: critical
-              component: ceph-pg
-          - uid: ceph_pgs_undersized
-            title: Ceph PGs Undersized
-            condition: C
-            data:
-              - refId: A
-                relativeTimeRange:
-                  from: 600
-                  to: 0
-                datasourceUid: prometheus
-                model:
-                  expr: 'ceph_pg_undersized'
-                  refId: A
-              - refId: C
-                datasourceUid: __expr__
-                model:
-                  type: classic_conditions
-                  conditions:
-                    - evaluator:
-                        params: [0]
-                        type: gt
-                      query:
-                        params: [A]
-                      type: query
-                  refId: C
-            noDataState: NoData
-            execErrState: Alerting
-            for: 10m
-            annotations:
-              summary: "Ceph PGs undersized"
-              description: "{{ $value }} PGs are undersized (fewer replicas than configured)"
+              summary: "Ceph Health Detail: {{ $labels.name }}"
+              description: "Ceph health check '{{ $labels.name }}' is active with severity {{ $labels.severity }}."
             labels:
               severity: warning
-              component: ceph-pg
-          - uid: ceph_pgs_stale
-            title: Ceph PGs Stale
+
+          - uid: ceph_osd_high_latency
+            title: Ceph OSD High Latency
             condition: C
             data:
               - refId: A
-                relativeTimeRange:
-                  from: 300
-                  to: 0
                 datasourceUid: prometheus
                 model:
-                  expr: 'ceph_pg_stale'
+                  datasource: { type: prometheus, uid: prometheus }
+                  expr: 'ceph_osd_apply_latency_ms'
                   refId: A
+              - refId: B
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: A
+                  reducer: mean
+                  refId: B
+                  type: reduce
               - refId: C
                 datasourceUid: __expr__
                 model:
-                  type: classic_conditions
-                  conditions:
-                    - evaluator:
-                        params: [0]
-                        type: gt
-                      query:
-                        params: [A]
-                      type: query
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: B
                   refId: C
-            noDataState: NoData
-            execErrState: Alerting
-            for: 5m
-            annotations:
-              summary: "Ceph PGs stale"
-              description: "{{ $value }} PGs are stale (not receiving updates)"
-            labels:
-              severity: critical
-              component: ceph-pg
-      - orgId: 1
-        name: ceph_object_alerts
-        folder: Ceph Alerts
-        interval: 1m
-        rules:
-          - uid: ceph_objects_degraded
-            title: Ceph Objects Degraded
-            condition: C
-            data:
-              - refId: A
-                relativeTimeRange:
-                  from: 600
-                  to: 0
-                datasourceUid: prometheus
-                model:
-                  expr: 'ceph_num_objects_degraded'
-                  refId: A
-              - refId: C
-                datasourceUid: __expr__
-                model:
-                  type: classic_conditions
+                  type: threshold
                   conditions:
-                    - evaluator:
-                        params: [0]
-                        type: gt
-                      query:
-                        params: [A]
+                    - evaluator: { params: [150], type: gt }
+                      operator: { type: and }
+                      query: { params: [C] }
+                      reducer: { params: [], type: last }
                       type: query
-                  refId: C
-            noDataState: NoData
-            execErrState: Alerting
             for: 10m
             annotations:
-              summary: "Ceph objects degraded"
-              description: "{{ $value }} objects are degraded"
+              summary: "Ceph OSD High Latency: {{ $labels.ceph_daemon }}"
+              description: "OSD {{ $labels.ceph_daemon }} has high apply latency: {{ $values.B.Value | printf \"%.2f\" }}ms."
             labels:
               severity: warning
-              component: ceph-objects
-          - uid: ceph_objects_misplaced
-            title: Ceph Objects Misplaced
+
+          - uid: ceph_cluster_capacity_warn
+            title: Ceph Cluster Near Full
             condition: C
             data:
               - refId: A
-                relativeTimeRange:
-                  from: 600
-                  to: 0
                 datasourceUid: prometheus
                 model:
-                  expr: 'ceph_num_objects_misplaced'
+                  datasource: { type: prometheus, uid: prometheus }
+                  expr: '(ceph_cluster_total_used_bytes / ceph_cluster_total_bytes) * 100'
                   refId: A
+              - refId: B
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: A
+                  reducer: last
+                  refId: B
+                  type: reduce
               - refId: C
                 datasourceUid: __expr__
                 model:
-                  type: classic_conditions
-                  conditions:
-                    - evaluator:
-                        params: [1000]
-                        type: gt
-                      query:
-                        params: [A]
-                      type: query
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: B
                   refId: C
-            noDataState: NoData
-            execErrState: Alerting
+                  type: threshold
+                  conditions:
+                    - evaluator: { params: [80], type: gt }
+                      operator: { type: and }
+                      query: { params: [C] }
+                      reducer: { params: [], type: last }
+                      type: query
             for: 15m
             annotations:
-              summary: "Ceph objects misplaced"
-              description: "{{ $value }} objects are misplaced (being rebalanced)"
+              summary: "Ceph Cluster Near Full"
+              description: "Cluster capacity usage is above 80% (Current: {{ $values.B.Value | printf \"%.2f\" }}%)."
             labels:
-              severity: info
-              component: ceph-objects
-          - uid: ceph_objects_unfound
-            title: Ceph Objects Unfound
+              severity: warning
+
+          - uid: ceph_cluster_capacity_crit
+            title: Ceph Cluster Critically Full
             condition: C
             data:
               - refId: A
-                relativeTimeRange:
-                  from: 300
-                  to: 0
                 datasourceUid: prometheus
                 model:
-                  expr: 'ceph_num_objects_unfound'
+                  datasource: { type: prometheus, uid: prometheus }
+                  expr: '(ceph_cluster_total_used_bytes / ceph_cluster_total_bytes) * 100'
                   refId: A
+              - refId: B
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: A
+                  reducer: last
+                  refId: B
+                  type: reduce
               - refId: C
                 datasourceUid: __expr__
                 model:
-                  type: classic_conditions
-                  conditions:
-                    - evaluator:
-                        params: [0]
-                        type: gt
-                      query:
-                        params: [A]
-                      type: query
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: B
                   refId: C
-            noDataState: NoData
-            execErrState: Alerting
-            for: 5m
-            annotations:
-              summary: "Ceph objects unfound"
-              description: "{{ $value }} objects are unfound - DATA LOSS RISK"
-            labels:
-              severity: critical
-              component: ceph-objects
-      - orgId: 1
-        name: ceph_ops_alerts
-        folder: Ceph Alerts
-        interval: 1m
-        rules:
-          - uid: ceph_slow_ops
-            title: Ceph Slow Operations Detected
-            condition: C
-            data:
-              - refId: A
-                relativeTimeRange:
-                  from: 300
-                  to: 0
-                datasourceUid: prometheus
-                model:
-                  expr: 'ceph_healthcheck_slow_ops'
-                  refId: A
-              - refId: C
-                relativeTimeRange:
-                  from: 300
-                  to: 0
-                datasourceUid: __expr__
-                model:
-                  type: classic_conditions
+                  type: threshold
                   conditions:
-                    - evaluator:
-                        params: [0]
-                        type: gt
-                      query:
-                        params: [A]
+                    - evaluator: { params: [90], type: gt }
+                      operator: { type: and }
+                      query: { params: [C] }
+                      reducer: { params: [], type: last }
                       type: query
-                  refId: C
-            noDataState: NoData
-            execErrState: Alerting
             for: 10m
             annotations:
-              summary: "Ceph slow operations detected"
-              description: "Slow operations detected in the cluster - may indicate performance issues"
+              summary: "Ceph Cluster Critically Full"
+              description: "Cluster capacity usage is above 90% (Current: {{ $values.B.Value | printf \"%.2f\" }}%)."
             labels:
-              severity: warning
-              component: ceph-performance
-          - uid: ceph_osd_noout_set
-            title: Ceph OSD NoOut Flag Set
+              severity: critical
+
+          - uid: ceph_pool_capacity_warn
+            title: Ceph Pool Near Full
             condition: C
             data:
               - refId: A
-                relativeTimeRange:
-                  from: 3600
-                  to: 0
                 datasourceUid: prometheus
                 model:
-                  expr: 'ceph_osd_flag_noout'
+                  datasource: { type: prometheus, uid: prometheus }
+                  expr: 'ceph_pool_percent_used * 100'
                   refId: A
+              - refId: B
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: A
+                  reducer: last
+                  refId: B
+                  type: reduce
               - refId: C
                 datasourceUid: __expr__
                 model:
-                  type: classic_conditions
-                  conditions:
-                    - evaluator:
-                        params: [0]
-                        type: gt
-                      query:
-                        params: [A]
-                      type: query
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: B
                   refId: C
-            noDataState: NoData
-            execErrState: Alerting
-            for: 1h
+                  type: threshold
+                  conditions:
+                    - evaluator: { params: [80], type: gt }
+                      operator: { type: and }
+                      query: { params: [C] }
+                      reducer: { params: [], type: last }
+                      type: query
+            for: 15m
             annotations:
-              summary: "Ceph noout flag set for extended period"
-              description: "The noout flag has been set for over 1 hour - verify if this is intentional"
+              summary: "Ceph Pool Near Full: {{ $labels.name }}"
+              description: "Pool {{ $labels.name }} is above 80% full (Current: {{ $values.B.Value | printf \"%.2f\" }}%)."
             labels:
-              severity: info
-              component: ceph-maintenance
-          - uid: ceph_osd_noscrub_set
-            title: Ceph OSD NoScrub Flag Set
+              severity: warning
+
+          - uid: ceph_pool_capacity_crit
+            title: Ceph Pool Critically Full
             condition: C
             data:
               - refId: A
-                relativeTimeRange:
-                  from: 86400
-                  to: 0
                 datasourceUid: prometheus
                 model:
-                  expr: 'ceph_osd_flag_noscrub'
+                  datasource: { type: prometheus, uid: prometheus }
+                  expr: 'ceph_pool_percent_used * 100'
                   refId: A
+              - refId: B
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: A
+                  reducer: last
+                  refId: B
+                  type: reduce
               - refId: C
                 datasourceUid: __expr__
                 model:
-                  type: classic_conditions
-                  conditions:
-                    - evaluator:
-                        params: [0]
-                        type: gt
-                      query:
-                        params: [A]
-                      type: query
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: B
                   refId: C
-            noDataState: NoData
-            execErrState: Alerting
-            for: 24h
+                  type: threshold
+                  conditions:
+                    - evaluator: { params: [90], type: gt }
+                      operator: { type: and }
+                      query: { params: [C] }
+                      reducer: { params: [], type: last }
+                      type: query
+            for: 10m
             annotations:
-              summary: "Ceph noscrub flag set for extended period"
-              description: "The noscrub flag has been set for over 24 hours - scrubbing is disabled"
+              summary: "Ceph Pool Critically Full: {{ $labels.name }}"
+              description: "Pool {{ $labels.name }} is above 90% full (Current: {{ $values.B.Value | printf \"%.2f\" }}%)."
             labels:
-              severity: warning
-              component: ceph-maintenance
+              severity: critical

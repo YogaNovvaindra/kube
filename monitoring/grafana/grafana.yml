@@ -87,6 +87,21 @@ spec:
                   items:
                     - key: alerts-ceph.yaml
                       path: alerts-ceph.yaml
+              - configMap:
+                  name: grafana-alerts-kube
+                  items:
+                    - key: alerts-kube.yaml
+                      path: alerts-kube.yaml
+              - configMap:
+                  name: grafana-alerts-infra
+                  items:
+                    - key: alerts-infra.yaml
+                      path: alerts-infra.yaml
+              - configMap:
+                  name: grafana-alerts-link
+                  items:
+                    - key: alerts-link.yaml
+                      path: alerts-link.yaml
         - name: grafana-data
 
           hostPath:

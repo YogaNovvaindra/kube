@@ -1,0 +1,241 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-alerts-kube
+  namespace: monitoring
+data:
+  alerts-kube.yaml: |
+    apiVersion: 1
+    groups:
+      - orgId: 1
+        name: Kubernetes
+        folder: Kube Alerts
+        interval: 1m
+        rules:
+          - uid: pod_crash_looping
+            title: Pod Crash Looping
+            condition: C
+            data:
+              - refId: A
+                datasourceUid: prometheus
+                model:
+                  datasource: { type: prometheus, uid: prometheus }
+                  expr: 'increase(kube_pod_container_status_restarts_total[15m]) > 3'
+                  refId: A
+              - refId: B
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: A
+                  reducer: last
+                  refId: B
+                  type: reduce
+              - refId: C
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: B
+                  refId: C
+                  type: threshold
+                  conditions:
+                    - evaluator: { params: [3], type: gt }
+                      operator: { type: and }
+                      query: { params: [C] }
+                      reducer: { params: [], type: last }
+                      type: query
+            for: 5m
+            annotations:
+              summary: "Pod Crash Loop: {{ $labels.pod }}"
+              description: "Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} has restarted {{ $values.B.Value }} times in the last 15 minutes."
+            labels:
+              severity: warning
+
+          - uid: deployment_replicas_mismatch
+            title: Deployment Replicas Mismatch
+            condition: C
+            data:
+              - refId: A
+                datasourceUid: prometheus
+                model:
+                  datasource: { type: prometheus, uid: prometheus }
+                  expr: 'kube_deployment_status_replicas_ready != kube_deployment_status_replicas_desired'
+                  refId: A
+              - refId: B
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: A
+                  reducer: last
+                  refId: B
+                  type: reduce
+              - refId: C
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: B
+                  refId: C
+                  type: threshold
+                  conditions:
+                    - evaluator: { params: [0], type: gt }
+                      operator: { type: and }
+                      query: { params: [C] }
+                      reducer: { params: [], type: last }
+                      type: query
+            for: 10m
+            annotations:
+              summary: "Deployment Mismatch: {{ $labels.deployment }}"
+              description: "Deployment {{ $labels.deployment }} has {{ $labels.ready_replicas }} ready replicas but expected {{ $labels.desired_replicas }}."
+            labels:
+              severity: warning
+
+          - uid: pod_oom_killed
+            title: Pod Container OOMKilled
+            condition: C
+            data:
+              - refId: A
+                datasourceUid: prometheus
+                model:
+                  datasource: { type: prometheus, uid: prometheus }
+                  expr: 'kube_pod_container_status_terminated_reason{reason="OOMKilled"} > 0'
+                  refId: A
+              - refId: B
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: A
+                  reducer: last
+                  refId: B
+                  type: reduce
+              - refId: C
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: B
+                  refId: C
+                  type: threshold
+                  conditions:
+                    - evaluator: { params: [0], type: gt }
+                      operator: { type: and }
+                      query: { params: [C] }
+                      reducer: { params: [], type: last }
+                      type: query
+            for: 1m
+            annotations:
+              summary: "OOMKilled: {{ $labels.pod }}"
+              description: "Container {{ $labels.container }} in pod {{ $labels.pod }} was terminated due to Out Of Memory (OOM)."
+            labels:
+              severity: critical
+
+          - uid: pod_image_pull_error
+            title: Pod Image Pull Error
+            condition: C
+            data:
+              - refId: A
+                datasourceUid: prometheus
+                model:
+                  datasource: { type: prometheus, uid: prometheus }
+                  expr: 'kube_pod_container_status_waiting_reason{reason=~"ImagePullBackOff|ErrImagePull"} > 0'
+                  refId: A
+              - refId: B
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: A
+                  reducer: last
+                  refId: B
+                  type: reduce
+              - refId: C
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: B
+                  refId: C
+                  type: threshold
+                  conditions:
+                    - evaluator: { params: [0], type: gt }
+                      operator: { type: and }
+                      query: { params: [C] }
+                      reducer: { params: [], type: last }
+                      type: query
+            for: 5m
+            annotations:
+              summary: "Image Pull Error: {{ $labels.pod }}"
+              description: "Pod {{ $labels.pod }} is failing to pull image {{ $labels.image }}."
+            labels:
+              severity: warning
+
+          - uid: node_memory_pressure
+            title: Node Memory Pressure
+            condition: C
+            data:
+              - refId: A
+                datasourceUid: prometheus
+                model:
+                  datasource: { type: prometheus, uid: prometheus }
+                  expr: 'kube_node_status_condition{condition="MemoryPressure", status="true"} > 0'
+                  refId: A
+              - refId: B
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: A
+                  reducer: last
+                  refId: B
+                  type: reduce
+              - refId: C
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: B
+                  refId: C
+                  type: threshold
+                  conditions:
+                    - evaluator: { params: [0], type: gt }
+                      operator: { type: and }
+                      query: { params: [C] }
+                      reducer: { params: [], type: last }
+                      type: query
+            for: 5m
+            annotations:
+              summary: "Node Memory Pressure: {{ $labels.node }}"
+              description: "Node {{ $labels.node }} is under memory pressure."
+            labels:
+              severity: warning
+
+          - uid: cert_expiry_soon
+            title: Certificate Expiry Soon
+            condition: C
+            data:
+              - refId: A
+                datasourceUid: prometheus
+                model:
+                  datasource: { type: prometheus, uid: prometheus }
+                  expr: '(certmanager_certificate_expiration_timestamp_seconds - time()) / 86400'
+                  refId: A
+              - refId: B
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: A
+                  reducer: last
+                  refId: B
+                  type: reduce
+              - refId: C
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: B
+                  refId: C
+                  type: threshold
+                  conditions:
+                    - evaluator: { params: [14], type: lt }
+                      operator: { type: and }
+                      query: { params: [C] }
+                      reducer: { params: [], type: last }
+                      type: query
+            for: 1h
+            annotations:
+              summary: "Certificate Expiry: {{ $labels.name }}"
+              description: "Certificate {{ $labels.name }} in namespace {{ $labels.namespace }} will expire in {{ $values.B.Value | printf \"%.1f\" }} days."
+            labels:
+              severity: warning

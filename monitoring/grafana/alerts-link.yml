@@ -1,0 +1,89 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-alerts-link
+  namespace: monitoring
+data:
+  alerts-link.yaml: |
+    apiVersion: 1
+    groups:
+      - orgId: 1
+        name: Network Links
+        folder: Network Alerts
+        interval: 1m
+        rules:
+          - uid: ubiquiti_low_signal
+            title: Ubiquiti Low RSSI
+            condition: C
+            data:
+              - refId: A
+                datasourceUid: prometheus
+                model:
+                  datasource: { type: prometheus, uid: prometheus }
+                  expr: 'ubiquiti_snmp_airmax_signal'
+                  refId: A
+              - refId: B
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: A
+                  reducer: mean
+                  refId: B
+                  type: reduce
+              - refId: C
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: B
+                  refId: C
+                  type: threshold
+                  conditions:
+                    - evaluator: { params: [-75], type: lt }
+                      operator: { type: and }
+                      query: { params: [C] }
+                      reducer: { params: [], type: last }
+                      type: query
+            for: 10m
+            annotations:
+              summary: "Ubiquiti Low Signal: {{ $labels.instance }}"
+              description: "Ubiquiti link {{ $labels.instance }} has low signal strength: {{ $values.B.Value }} dBm."
+            labels:
+              severity: warning
+
+          - uid: isp_wan_saturation
+            title: ISP WAN Saturation
+            condition: C
+            data:
+              - refId: A
+                datasourceUid: prometheus
+                model:
+                  datasource: { type: prometheus, uid: prometheus }
+                  expr: 'rate(ifHCOutOctets{ifName="WAN"}[5m]) * 8 / 1000000'
+                  refId: A
+              - refId: B
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: A
+                  reducer: mean
+                  refId: B
+                  type: reduce
+              - refId: C
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: B
+                  refId: C
+                  type: threshold
+                  conditions:
+                    - evaluator: { params: [90], type: gt }
+                      operator: { type: and }
+                      query: { params: [C] }
+                      reducer: { params: [], type: last }
+                      type: query
+            for: 5m
+            annotations:
+              summary: "ISP WAN Near Saturation"
+              description: "ISP WAN link output traffic is high: {{ $values.B.Value | printf \"%.1f\" }} Mbps."
+            labels:
+              severity: info

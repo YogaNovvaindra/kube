@@ -1,0 +1,127 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-alerts-infra
+  namespace: monitoring
+data:
+  alerts-infra.yaml: |
+    apiVersion: 1
+    groups:
+      - orgId: 1
+        name: Infrastructure
+        folder: Infra Alerts
+        interval: 1m
+        rules:
+          - uid: target_down
+            title: Monitoring Target Down
+            condition: C
+            data:
+              - refId: A
+                datasourceUid: prometheus
+                model:
+                  datasource: { type: prometheus, uid: prometheus }
+                  expr: 'up == 0'
+                  refId: A
+              - refId: B
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: A
+                  reducer: mean
+                  refId: B
+                  type: reduce
+              - refId: C
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: B
+                  refId: C
+                  type: threshold
+                  conditions:
+                    - evaluator: { params: [0], type: gt }
+                      operator: { type: and }
+                      query: { params: [C] }
+                      reducer: { params: [], type: last }
+                      type: query
+            for: 5m
+            annotations:
+              summary: "Target Down: {{ $labels.job }}"
+              description: "Monitoring target {{ $labels.instance }} (job: {{ $labels.job }}) is unreachable."
+            labels:
+              severity: critical
+
+          - uid: traefik_high_error_rate
+            title: Traefik High Error Rate
+            condition: C
+            data:
+              - refId: A
+                datasourceUid: prometheus
+                model:
+                  datasource: { type: prometheus, uid: prometheus }
+                  expr: 'sum(rate(traefik_entrypoint_requests_total{code=~"5.."}[5m])) / sum(rate(traefik_entrypoint_requests_total[5m])) * 100 > 5'
+                  refId: A
+              - refId: B
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: A
+                  reducer: mean
+                  refId: B
+                  type: reduce
+              - refId: C
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: B
+                  refId: C
+                  type: threshold
+                  conditions:
+                    - evaluator: { params: [5], type: gt }
+                      operator: { type: and }
+                      query: { params: [C] }
+                      reducer: { params: [], type: last }
+                      type: query
+            for: 5m
+            annotations:
+              summary: "High HTTP 5xx Error Rate"
+              description: "Traefik is reporting a high rate of 5xx errors (Current: {{ $values.B.Value | printf \"%.2f\" }}%)."
+            labels:
+              severity: warning
+
+          - uid: authentik_worker_absent
+            title: Authentik Worker Absent
+            condition: C
+            data:
+              - refId: A
+                datasourceUid: prometheus
+                model:
+                  datasource: { type: prometheus, uid: prometheus }
+                  expr: 'absent(up{job="authentik"} == 1)'
+                  refId: A
+              - refId: B
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: A
+                  reducer: mean
+                  refId: B
+                  type: reduce
+              - refId: C
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: B
+                  refId: C
+                  type: threshold
+                  conditions:
+                    - evaluator: { params: [0], type: gt }
+                      operator: { type: and }
+                      query: { params: [C] }
+                      reducer: { params: [], type: last }
+                      type: query
+            for: 5m
+            annotations:
+              summary: "Authentik Worker Absent"
+              description: "No active Authentik worker detected."
+            labels:
+              severity: critical
