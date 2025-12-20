@@ -1,0 +1,119 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tempo
+  namespace: monitoring
+  labels:
+    app: tempo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tempo
+  template:
+    metadata:
+      labels:
+        app: tempo
+    spec:
+      containers:
+        - name: tempo
+          image: reg.ygnv.my.id/docker/grafana/tempo:latest
+          imagePullPolicy: IfNotPresent
+          args:
+            - "-config.file=/etc/tempo/tempo.yaml"
+            - "-mem-ballast-size-mbs=1024"
+          ports:
+            - containerPort: 3200 # compactor
+            - containerPort: 4317 # otlp grpc
+            - containerPort: 4318 # otlp http
+            - containerPort: 14268 # jaeger ingest
+            - containerPort: 14250 # jaeger grpc
+            - containerPort: 9411 # zipkin
+          volumeMounts:
+            - mountPath: /etc/tempo
+              name: tempo-config
+            - mountPath: /var/tempo
+              name: tempo-storage
+          resources:
+            requests:
+              memory: 512Mi
+              cpu: 100m
+            limits:
+              memory: 2Gi
+              cpu: 1
+      volumes:
+        - name: tempo-config
+          configMap:
+            name: tempo-config
+        - name: tempo-storage
+          hostPath:
+            path: /mnt/cephfs/docker/monitoring/tempo
+            type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tempo-config
+  namespace: monitoring
+data:
+  tempo.yaml: |
+    server:
+      http_listen_port: 3200
+
+    distributor:
+      receivers:
+        otlp:
+          protocols:
+            grpc:
+            http:
+        jaeger:
+          protocols:
+            thrift_http:
+            grpc:
+        zipkin:
+
+    ingester:
+      trace_idle_period: 10s
+      max_block_bytes: 1_000_000
+      max_block_duration: 5m
+
+    compactor:
+      compaction:
+        compaction_window: 1h
+        max_block_bytes: 100_000_000
+        block_retention: 14d
+        compacted_block_retention: 1h
+
+    storage:
+      trace:
+        backend: local
+        local:
+          path: /var/tempo
+        wal:
+          path: /var/tempo/wal
+
+    overrides:
+      metrics_generator_processors: [service-graphs, span-metrics]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tempo
+  namespace: monitoring
+  labels:
+    app: tempo
+spec:
+  ports:
+    - port: 3200
+      name: http
+    - port: 4317
+      name: otlp-grpc
+    - port: 4318
+      name: otlp-http
+    - port: 14268
+      name: jaeger-ingest
+    - port: 9411
+      name: zipkin
+  selector:
+    app: tempo

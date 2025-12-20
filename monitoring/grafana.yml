@@ -14,6 +14,47 @@ data:
   GF_AUTH_SIGNOUT_REDIRECT_URL: "https://auth.ygnv.my.id/application/o/grafana/end-session/"
   GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH: "contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer'"
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasources
+  namespace: monitoring
+data:
+  datasources.yaml: |
+    apiVersion: 1
+    datasources:
+      - name: Tempo
+        type: tempo
+        access: proxy
+        orgId: 1
+        url: http://tempo:3200
+        basicAuth: false
+        isDefault: false
+        version: 1
+        editable: false
+        apiVersion: 1
+        uid: tempo
+        jsonData:
+          httpMethod: GET
+          nodeGraph:
+            enabled: true
+      - name: Loki
+        type: loki
+        access: proxy
+        orgId: 1
+        url: http://loki:3100
+        basicAuth: false
+        isDefault: false
+        version: 1
+        editable: false
+        apiVersion: 1
+        jsonData:
+          derivedFields:
+            - datasourceUid: tempo
+              matcherRegex: "trace_id=(\\w+)"
+              name: TraceID
+              url: "$${__value.raw}"
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -35,27 +76,32 @@ spec:
         app: grafana
     spec:
       containers:
-      - name: grafana
-        image: reg.ygnv.my.id/docker/grafana/grafana:12.3.1
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            memory: 256Mi
-        ports:
-        - containerPort: 3000
-        envFrom:
-        - configMapRef:
-            name: grafana-env
-        - secretRef:
-            name: grafana-cred
-        volumeMounts:
-        - name: grafana-data
-          mountPath: /var/lib/grafana
+        - name: grafana
+          image: reg.ygnv.my.id/docker/grafana/grafana:12.3.1
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 256Mi
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: grafana-env
+            - secretRef:
+                name: grafana-cred
+          volumeMounts:
+            - name: grafana-datasources
+              mountPath: /etc/grafana/provisioning/datasources
+            - name: grafana-data
+              mountPath: /var/lib/grafana
       volumes:
-      - name: grafana-data
-        hostPath:
-          path: /mnt/cephfs/docker/monitoring/grafana
-          type: Directory
+        - name: grafana-datasources
+          configMap:
+            name: grafana-datasources
+        - name: grafana-data
+          hostPath:
+            path: /mnt/cephfs/docker/monitoring/grafana
+            type: Directory
 ---
 apiVersion: v1
 kind: Service
@@ -68,9 +114,9 @@ spec:
   selector:
     app: grafana
   ports:
-  - protocol: TCP
-    port: 3000
-    targetPort: 3000
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
