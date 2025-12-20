@@ -18,10 +18,10 @@ spec:
     spec:
       containers:
         - name: tempo
-          image: reg.ygnv.my.id/docker/grafana/tempo:latest
+          image: reg.ygnv.my.id/docker/grafana/tempo:2.9.0
           imagePullPolicy: IfNotPresent
           args:
-            - "-config.file=/etc/tempo/tempo.yaml"
+            - "-config.file=/etc/tempo/tempo.yml"
             - "-mem-ballast-size-mbs=1024"
           ports:
             - containerPort: 3200 # compactor
@@ -49,15 +49,14 @@ spec:
         - name: tempo-storage
           hostPath:
             path: /mnt/cephfs/docker/monitoring/tempo
-            type: DirectoryOrCreate
----
+            type: Directory---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: tempo-config
   namespace: monitoring
 data:
-  tempo.yaml: |
+  tempo.yml: |
     server:
       http_listen_port: 3200
 
@@ -82,7 +81,7 @@ data:
       compaction:
         compaction_window: 1h
         max_block_bytes: 100_000_000
-        block_retention: 14d
+        block_retention: 360h
         compacted_block_retention: 1h
 
     storage:
