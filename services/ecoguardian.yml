@@ -72,3 +72,22 @@ spec:
   - name: ecoguardian
     port: 3000
     targetPort: 3000
+---
+apiVersion: networking.cfargotunnel.com/v1alpha1
+kind: TunnelBinding
+metadata:
+  name: ecoguardian-binding
+  namespace: services
+spec:
+  tunnelRef:
+    kind: ClusterTunnel
+    name: tunnel-yoganova
+  subjects:
+    - name: ecoguardian
+      spec:
+        fqdn: ecoguardian.yoganova.my.id
+        protocol: http
+    - name: ecoguardian
+      spec:
+        fqdn: ecochart.yoganova.my.id
+        protocol: http
