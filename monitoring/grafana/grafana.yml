@@ -14,70 +14,6 @@ data:
   GF_AUTH_SIGNOUT_REDIRECT_URL: "https://auth.ygnv.my.id/application/o/grafana/end-session/"
   GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH: "contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer'"
 ---
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: grafana-datasources
-  namespace: monitoring
-data:
-  datasources.yaml: |
-    apiVersion: 1
-    deleteDatasources:
-      - name: Loki
-        orgId: 1
-      - name: Prometheus
-        orgId: 1
-      - name: Tempo
-        orgId: 1
-    datasources:
-      - name: Tempo
-        type: tempo
-        access: proxy
-        orgId: 1
-        url: http://tempo:3200
-        basicAuth: false
-        isDefault: false
-        version: 2
-        editable: false
-        apiVersion: 1
-        uid: tempo
-        jsonData:
-          httpMethod: GET
-          nodeGraph:
-            enabled: true
-      - name: Prometheus
-        type: prometheus
-        access: proxy
-        orgId: 1
-        url: http://prometheus:9090
-        basicAuth: false
-        isDefault: true
-        version: 3
-        editable: false
-        apiVersion: 1
-        uid: prometheus
-        jsonData:
-          exemplarTraceIdDestinations:
-            - name: trace_id
-              datasourceUid: tempo
-      - name: Loki
-        type: loki
-        access: proxy
-        orgId: 1
-        url: http://loki:3100
-        basicAuth: false
-        isDefault: false
-        version: 3
-        editable: false
-        apiVersion: 1
-        uid: loki
-        jsonData:
-          derivedFields:
-            - datasourceUid: tempo
-              matcherRegex: "trace_id=(\\w+)"
-              name: TraceID
-              url: "$${__value.raw}"
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -115,13 +51,27 @@ spec:
           volumeMounts:
             - name: grafana-datasources
               mountPath: /etc/grafana/provisioning/datasources
+            - name: grafana-alerts
+              mountPath: /etc/grafana/provisioning/alerting
             - name: grafana-data
               mountPath: /var/lib/grafana
       volumes:
         - name: grafana-datasources
           configMap:
             name: grafana-datasources
+        - name: grafana-alerts
+          projected:
+            sources:
+              - configMap:
+                  name: grafana-alerts-cpu
+              - configMap:
+                  name: grafana-alerts-ram
+              - configMap:
+                  name: grafana-alerts-reboot
+              - configMap:
+                  name: grafana-alerts-storage
         - name: grafana-data
+
           hostPath:
             path: /mnt/cephfs/docker/monitoring/grafana
             type: Directory

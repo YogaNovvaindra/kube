@@ -1,0 +1,186 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-alerts-cpu
+  namespace: monitoring
+data:
+  alerts-cpu.yaml: |
+    apiVersion: 1
+    groups:
+      - orgId: 1
+        name: CPU
+        folder: Server
+        interval: 5m
+        rules:
+          - uid: fdzibjzxkgmwwb
+            title: CPU
+            condition: C
+            data:
+              - refId: A
+                relativeTimeRange:
+                  from: 300
+                  to: 0
+                datasourceUid: prometheus
+                model:
+                  datasource:
+                    type: prometheus
+                    uid: prometheus
+                  editorMode: code
+                  expr: 100 * (1 - (sum(rate(node_cpu_seconds_total{mode="idle"}[5m])) by (instance, job) / sum(rate(node_cpu_seconds_total[5m])) by (instance, job)))
+                  hide: false
+                  instant: false
+                  intervalMs: 1000
+                  legendFormat: __auto
+                  maxDataPoints: 43200
+                  range: true
+                  refId: A
+              - refId: B
+                relativeTimeRange:
+                  from: 300
+                  to: 0
+                datasourceUid: __expr__
+                model:
+                  conditions:
+                    - evaluator:
+                        params: []
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                          - B
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                  datasource:
+                    type: __expr__
+                    uid: __expr__
+                  expression: A
+                  intervalMs: 1000
+                  maxDataPoints: 43200
+                  reducer: mean
+                  refId: B
+                  type: reduce
+              - refId: C
+                relativeTimeRange:
+                  from: 300
+                  to: 0
+                datasourceUid: __expr__
+                model:
+                  conditions:
+                    - evaluator:
+                        params:
+                          - 80
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                          - C
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                  datasource:
+                    type: __expr__
+                    uid: __expr__
+                  expression: B
+                  intervalMs: 1000
+                  maxDataPoints: 43200
+                  refId: C
+                  type: threshold
+            noDataState: NoData
+            execErrState: Error
+            annotations:
+              description: |-
+                CPU usage is above 80% for the last 5 minutes.
+                  Current CPU Usage: {{ $values.B.Value | printf "%.2f" }}%
+              summary: High CPU usage detected (instance {{ $labels.instance }}, job {{ $labels.job }})
+            isPaused: false
+          - uid: aee0na19cb280f
+            title: CPU mktxp
+            condition: C
+            data:
+              - refId: A
+                relativeTimeRange:
+                  from: 300
+                  to: 0
+                datasourceUid: prometheus
+                model:
+                  datasource:
+                    type: prometheus
+                    uid: prometheus
+                  editorMode: code
+                  expr: avg_over_time(mktxp_system_cpu_load[5m])
+                  hide: false
+                  instant: false
+                  intervalMs: 1000
+                  legendFormat: __auto
+                  maxDataPoints: 43200
+                  range: true
+                  refId: A
+              - refId: B
+                relativeTimeRange:
+                  from: 300
+                  to: 0
+                datasourceUid: __expr__
+                model:
+                  conditions:
+                    - evaluator:
+                        params: []
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                          - B
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                  datasource:
+                    type: __expr__
+                    uid: __expr__
+                  expression: A
+                  intervalMs: 1000
+                  maxDataPoints: 43200
+                  reducer: mean
+                  refId: B
+                  type: reduce
+              - refId: C
+                relativeTimeRange:
+                  from: 300
+                  to: 0
+                datasourceUid: __expr__
+                model:
+                  conditions:
+                    - evaluator:
+                        params:
+                          - 80
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                          - C
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                  datasource:
+                    type: __expr__
+                    uid: __expr__
+                  expression: B
+                  intervalMs: 1000
+                  maxDataPoints: 43200
+                  refId: C
+                  type: threshold
+            noDataState: NoData
+            execErrState: Error
+            annotations:
+              description: |-
+                CPU usage is above 80% for the last 5 minutes.
+                  Current CPU Usage: {{ $values.B.Value | printf "%.2f" }}%
+              summary: High CPU usage detected (instance {{ $labels.routerboard_name }})
+            isPaused: false

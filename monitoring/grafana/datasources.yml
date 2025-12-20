@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasources
+  namespace: monitoring
+data:
+  datasources.yaml: |
+    apiVersion: 1
+    deleteDatasources:
+      - name: Loki
+        orgId: 1
+      - name: Prometheus
+        orgId: 1
+      - name: Tempo
+        orgId: 1
+    datasources:
+      - name: Tempo
+        type: tempo
+        access: proxy
+        orgId: 1
+        url: http://tempo:3200
+        basicAuth: false
+        isDefault: false
+        version: 2
+        editable: false
+        apiVersion: 1
+        uid: tempo
+        jsonData:
+          httpMethod: GET
+          nodeGraph:
+            enabled: true
+      - name: Prometheus
+        type: prometheus
+        access: proxy
+        orgId: 1
+        url: http://prometheus:9090
+        basicAuth: false
+        isDefault: true
+        version: 3
+        editable: false
+        apiVersion: 1
+        uid: prometheus
+        jsonData:
+          exemplarTraceIdDestinations:
+            - name: trace_id
+              datasourceUid: tempo
+      - name: Loki
+        type: loki
+        access: proxy
+        orgId: 1
+        url: http://loki:3100
+        basicAuth: false
+        isDefault: false
+        version: 3
+        editable: false
+        apiVersion: 1
+        uid: loki
+        jsonData:
+          derivedFields:
+            - datasourceUid: tempo
+              matcherRegex: "trace_id=(\\w+)"
+              name: TraceID
+              url: "$${__value.raw}"
