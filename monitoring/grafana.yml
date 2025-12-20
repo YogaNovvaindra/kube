@@ -52,10 +52,14 @@ data:
         url: http://prometheus:9090
         basicAuth: false
         isDefault: true
-        version: 2
+        version: 3
         editable: false
         apiVersion: 1
         uid: prometheus
+        jsonData:
+          exemplarTraceIdDestinations:
+            - name: trace_id
+              datasourceUid: tempo
       - name: Loki
         type: loki
         access: proxy
@@ -63,10 +67,16 @@ data:
         url: http://loki:3100
         basicAuth: false
         isDefault: false
-        version: 2
+        version: 3
         editable: false
         apiVersion: 1
         uid: loki
+        jsonData:
+          derivedFields:
+            - datasourceUid: tempo
+              matcherRegex: "trace_id=(\\w+)"
+              name: TraceID
+              url: "$${__value.raw}"
 ---
 apiVersion: apps/v1
 kind: Deployment
