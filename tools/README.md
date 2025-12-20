@@ -14,5 +14,4 @@ A collection of utility tools, development environments, and automation platform
 
 - **[Gitea](file:///home/yoga/Documents/kube/tools/gitea.yml)**: Git code hosting.
 - **[n8n](file:///home/yoga/Documents/kube/tools/n8n.yml)**: Workflow automation.
-- **[Reloader](file:///home/yoga/Documents/kube/tools/reloader.yml)**: Automatic pod restarter.
 - **[Speedtest](file:///home/yoga/Documents/kube/tools/speedtest.yml)**: Network performance monitoring.

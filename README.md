@@ -122,7 +122,7 @@ This Git repository is organized to support a GitOps workflow with ArgoCD:
 - **`gitops/`**: This directory contains ArgoCD `Application` custom resources. Each file typically defines an application or a group of related applications to be deployed and managed by ArgoCD. These definitions point to the actual Kubernetes manifests, Helm charts, or Kustomizations for each application.
 - **`apps.yml`**: This file, located in the root, is an ArgoCD `Application` definition that implements the app-of-apps pattern. It tells ArgoCD to monitor the `gitops/` directory, effectively deploying all applications defined within that path.
 - **Application Manifest Directories (e.g., `harbor/`, `monitoring/`, `tools/`, `services/`, etc.)**: Each of these top-level directories typically holds the raw Kubernetes YAML manifests, Kustomize configurations, or Helm chart value files for a specific application or a logical group of services. The ArgoCD `Application` definitions in `gitops/` will point to these directories as their source.
-- **`cert-manager/`, `metallb/`, `node-feature/`, `sealed-secret/`, `traefik/`, `trivy/`**: These directories contain resources for cluster add-ons or system-level services, often managed as separate ArgoCD applications.
+- **`cert-manager/`, `cluster/`, `metallb/`, `node-feature/`, `traefik/`, `trivy/`**: These directories contain resources for cluster add-ons or system-level services, often managed as separate ArgoCD applications.
 
 ## 📦 Applications
 
@@ -131,9 +131,9 @@ This cluster hosts a variety of self-managed applications and services.
 ### 🚀 Core Infrastructure & GitOps
 
 - **🔄 ArgoCD**: GitOps deployment controller.
-- **🐋 Keel**: Automated image updates for latest tags.
+- **🐋 Keel**: Automated image updates for latest tags (located in [cluster/](file:///home/yoga/Documents/kube/cluster/README.md)).
 - **[🕵️ Portainer Agent](file:///home/yoga/Documents/kube/portainer/README.md)**: Connects to a Portainer instance for cluster management.
-- **🔏 Sealed Secrets**: Manages encrypted secrets in Git.
+- **🔏 Sealed Secrets**: Manages encrypted secrets in Git (located in [cluster/](file:///home/yoga/Documents/kube/cluster/README.md)).
 - **🚦 Traefik**: TLS-terminating ingress controller (mentioned in Infrastructure).
 - **⚖️ MetalLB**: Load balancer for bare-metal environments (mentioned in Infrastructure).
 
@@ -175,7 +175,7 @@ This cluster hosts a variety of self-managed applications and services.
 - [� Changedetection.io](file:///home/yoga/Documents/kube/tools/changedetection.yml): Monitors websites for changes.
 - [🔧 IT-Tools](file:///home/yoga/Documents/kube/tools/it-tools.yml): A collection of handy online tools for developers.
 - [🌐 Netbird](file:///home/yoga/Documents/kube/tools/netvisor.yml): VPN mesh networking solution (Netvisor).
-- [♻️ Reloader](file:///home/yoga/Documents/kube/tools/reloader.yml): Automatically restarts pods when ConfigMaps or Secrets are updated.
+- [♻️ Reloader](file:///home/yoga/Documents/kube/cluster/reloader/reloader.yml): Automatically restarts pods when ConfigMaps or Secrets are updated.
 - [💨 Speedtest](file:///home/yoga/Documents/kube/tools/speedtest.yml): Tool for checking internet connection speed.
 - [🛡️ Vert](file:///home/yoga/Documents/kube/tools/editor/vert.yml): Clean and simple RSS feed reader.
 - [📦 Warrior](file:///home/yoga/Documents/kube/tools/warrior.yml): Archive Team Warrior for distributed archiving.
