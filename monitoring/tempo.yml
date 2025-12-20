@@ -50,6 +50,7 @@ spec:
           hostPath:
             path: /mnt/cephfs/docker/monitoring/tempo
             type: Directory
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
