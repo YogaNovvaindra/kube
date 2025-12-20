@@ -27,12 +27,15 @@ Welcome to my HomeLab Kubernetes Cluster! This repository contains the configura
 ## 📸 Screenshots
 
 ### 🏠 Homepage
+
 ![Homepage](images/homepage.png)
 
 ### 🚀 ArgoCD
+
 ![ArgoCD](images/argocd.png)
 
 ### 📊 Grafana
+
 ![Grafana](images/grafana.png)
 
 ## 📊 Statistics
@@ -56,7 +59,7 @@ The Kubernetes cluster follows **declarative infrastructure management** princip
 
 - **📜 Declarative Configuration**: Entire infrastructure defined as code in version-controlled manifests
 - **🔄 GitOps Automation**: ArgoCD synchronization with self-healing capabilities
-- **🆕 Continuous Updates**: 
+- **🆕 Continuous Updates**:
   - `Keel`: Automatic rolling updates for latest container images
   - `Renovate`: Semantic versioning maintenance for container images
 - **📊 Observability Stack**: Prometheus/Grafana monitoring with alert integration
@@ -70,14 +73,14 @@ Before deploying this infrastructure, ensure you have:
 
 - **Kubernetes Cluster**: MicroK8s or compatible Kubernetes distribution (v1.24+)
 - **Storage**: CephFS provisioner configured or alternative storage class
-- **Network**: 
+- **Network**:
   - MetalLB configured for LoadBalancer services (bare-metal)
   - DNS configured for ingress domains
   - Optional: Cloudflare tunnel for external access
 - **Git Repository**: Access to this repository for ArgoCD
 - **Sealed Secrets**: Sealed Secrets controller installed and configured
 - **Container Registry**: Access to container images (Harbor or public registries)
-- **Hardware**: 
+- **Hardware**:
   - Sufficient resources for 50+ applications
   - GPU support for media transcoding (optional)
   - Network-attached storage for persistent volumes
@@ -85,20 +88,24 @@ Before deploying this infrastructure, ensure you have:
 ## 🚀 Quick Start
 
 1. **Bootstrap ArgoCD**:
+
    ```bash
    kubectl apply -f argocd/
    ```
 
 2. **Deploy App-of-Apps**:
+
    ```bash
    kubectl apply -f apps.yml
    ```
 
 3. **Access ArgoCD UI**:
+
    - Port-forward: `kubectl port-forward svc/argocd-server -n argocd 8080:443`
    - Get admin password: `kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d`
 
 4. **Monitor Deployments**:
+
    - ArgoCD will automatically sync applications from the `gitops/` directory
    - Check status in ArgoCD UI or via CLI: `argocd app list`
 
@@ -122,9 +129,10 @@ This Git repository is organized to support a GitOps workflow with ArgoCD:
 This cluster hosts a variety of self-managed applications and services.
 
 ### 🚀 Core Infrastructure & GitOps
+
 - **🔄 ArgoCD**: GitOps deployment controller.
 - **🐋 Keel**: Automated image updates for latest tags.
-- **🕵️ Portainer Agent**: Connects to a Portainer instance for cluster management.
+- **[🕵️ Portainer Agent](file:///home/yoga/Documents/kube/portainer/README.md)**: Connects to a Portainer instance for cluster management.
 - **🔏 Sealed Secrets**: Manages encrypted secrets in Git.
 - **🚦 Traefik**: TLS-terminating ingress controller (mentioned in Infrastructure).
 - **⚖️ MetalLB**: Load balancer for bare-metal environments (mentioned in Infrastructure).
@@ -132,17 +140,20 @@ This cluster hosts a variety of self-managed applications and services.
 ### 🛠️ General Tools & Utilities
 
 #### 🔐 Security & Authentication
+
 - [🔑 Authentik](file:///home/yoga/Documents/kube/tools/authentik): Centralized authentication and identity provider.
 - [🔐 Passbolt](file:///home/yoga/Documents/kube/tools/passbolt-cred.tml): Self-hosted password manager (alternative to Vaultwarden).
 - [🛡️ Vaultwarden](file:///home/yoga/Documents/kube/tools/vaultwarden.yml): Self-hosted password manager (Bitwarden compatible).
 
 #### 💻 Development & Code Management
+
 - [💻 Gitea](file:///home/yoga/Documents/kube/tools/gitea.yml): Self-hosted Git service.
 - [📊 Bytebase](file:///home/yoga/Documents/kube/tools/db/bytebase.yml): Database schema change and version control tool.
 - [📚 Outline](file:///home/yoga/Documents/kube/tools/editor/outline.yml): Collaborative knowledge base/wiki.
 - [⚙️ Semaphore](file:///home/yoga/Documents/kube/tools/cluster/semaphore.yml): UI for running Ansible playbooks.
 
 #### 📝 Document & File Management
+
 - [📄 BentoPDF](file:///home/yoga/Documents/kube/tools/editor/bentopdf.yml): PDF manipulation and conversion tool.
 - [📄 Stirling-PDF](file:///home/yoga/Documents/kube/tools/editor/stirling-pdf.tml): Web-based PDF manipulation tool.
 - [🖼️ Reubah](file:///home/yoga/Documents/kube/tools/editor/reubah.yml): Web based image editor.
@@ -150,11 +161,13 @@ This cluster hosts a variety of self-managed applications and services.
 - [🔗 Syncthing](file:///home/yoga/Documents/kube/tools/storage/syncthing.yml): Continuous file synchronization across devices.
 
 #### 🗄️ Storage & Databases
+
 - [🗄️ RustFS](file:///home/yoga/Documents/kube/tools/storage/rustfs.yml): S3-compatible object storage solution.
 - [🐘 pgAdmin](file:///home/yoga/Documents/kube/tools/db/pgadmin.yml): PostgreSQL administration and development platform.
 - [🐬 phpMyAdmin](file:///home/yoga/Documents/kube/tools/db/phpmyadmin.yml): Web-based administration tool for MySQL and MariaDB.
 
 #### 🎨 Collaboration & Productivity
+
 - [🎨 Excalidraw](file:///home/yoga/Documents/kube/tools/editor/excalidraw.yml): Virtual collaborative whiteboard.
 - [🏠 Homepage](file:///home/yoga/Documents/kube/tools/homepage): Dashboard for managing and accessing all services.
 - [🔄 n8n](file:///home/yoga/Documents/kube/tools/n8n.yml): Workflow automation platform.
@@ -168,13 +181,14 @@ This cluster hosts a variety of self-managed applications and services.
 - [📦 Warrior](file:///home/yoga/Documents/kube/tools/warrior.yml): Archive Team Warrior for distributed archiving.
 
 ### 📊 Observability & Monitoring
+
 - [🛡️ AdGuard Exporter](file:///home/yoga/Documents/kube/monitoring/adguard-exporter.yml): Exports AdGuard DNS metrics to Prometheus.
 - [📜 Fluent-bit](file:///home/yoga/Documents/kube/monitoring/fluent-bit.yml): Lightweight log processor and forwarder.
 - [📊 Grafana](file:///home/yoga/Documents/kube/monitoring/grafana.yml): Dashboards for visualizing metrics and logs.
 - [☸️ Kube State Metrics](file:///home/yoga/Documents/kube/monitoring/kube-state-metrics.yml): Exposes cluster-level metrics.
 - [✍️ Loki](file:///home/yoga/Documents/kube/monitoring/loki-deploy.yml): Horizontally-scalable, multi-tenant log aggregation system.
 - [📡 MKTXP](file:///home/yoga/Documents/kube/monitoring/mktxp.yml): Exporter for MikroTik router metrics.
-- [💻 Node Exporter](file:///home/yoga/Documents/kube/monitoring/node-exporter.yml): Exporter for hardware and OS metrics exposed by *NIX kernels.
+- [💻 Node Exporter](file:///home/yoga/Documents/kube/monitoring/node-exporter.yml): Exporter for hardware and OS metrics exposed by \*NIX kernels.
 - [🔍 Peekaping](file:///home/yoga/Documents/kube/monitoring/uptime/peekaping.yml): Advanced uptime monitoring and status page solution.
 - [📈 Prometheus](file:///home/yoga/Documents/kube/monitoring/prometheus-deploy.yml): Metrics collection and alerting toolkit.
 - [🖥️ PVE Exporter](file:///home/yoga/Documents/kube/monitoring/pve-exporter.yml): Exporter for Proxmox VE host and guest metrics.
@@ -182,6 +196,7 @@ This cluster hosts a variety of self-managed applications and services.
 - [💓 Uptime Kuma](file:///home/yoga/Documents/kube/monitoring/uptime/uptime-kuma.yml): Self-hosted uptime monitoring tool.
 
 ### 📦 Application Services
+
 - [🐳 Harbor](file:///home/yoga/Documents/kube/harbor/harbor.yml): Cloud native container registry.
 - [🖼️ Immich](file:///home/yoga/Documents/kube/immich/immich.yml): Self-hosted backup solution for photos and videos.
 - [💰 Money](file:///home/yoga/Documents/kube/money/money.yml): Personal finance management application.
@@ -193,6 +208,7 @@ This cluster hosts a variety of self-managed applications and services.
 - [📋 Project](file:///home/yoga/Documents/kube/services/project.yml): All my personal projects.
 
 ### 🎬 Media
+
 - [🎬 Plex Media Server](file:///home/yoga/Documents/kube/media/player.yml): 4K transcoding capable media server and player suite.
 - [📺 Arr Suite](file:///home/yoga/Documents/kube/media/arr.yml): Radarr/Sonarr/Bazarr stack for automated media management.
 - [📥 Transmission & Aria2](file:///home/yoga/Documents/kube/media/download.yml): Torrent and general download clients.
@@ -203,26 +219,31 @@ This cluster hosts a variety of self-managed applications and services.
 ## 🛠 Infrastructure
 
 ### Core Platform
+
 - **☸ Kubernetes**: MicroK8s cluster with embedded Ceph storage
 - **📦 Helm**: Package manager for chart deployments
 - **🏷️ Node Feature Discovery (NFD)**: Detects hardware features and labels nodes, enabling advanced workload scheduling
 
 ### Networking & Ingress
+
 - **🚦 Traefik**: TLS-terminating ingress controller with automatic Let's Encrypt certificates.
 - **📡 MetalLB**: Load balancer for bare-metal environments providing internal IP management.
 - **🌐 Netbird**: VPN mesh networking for secure remote access.
 - **☁️ Cloudflared**: Secure Cloudflare Tunnel integration for exposing services without public IPs or port forwarding.
 
 ### Storage
+
 - **🗂 CephFS**: Distributed storage with replication (primary storage)
 - **🗄️ RustFS**: S3-compatible object storage for applications requiring S3 API
 
 ### Security & Certificates
+
 - [🔐 Authentik](file:///home/yoga/Documents/kube/tools/authentik): Centralized authentication gateway and SSO provider.
 - [🔒 cert-manager](file:///home/yoga/Documents/kube/cert-manager): Automated TLS certificate management with Let's Encrypt integration.
 - [🛡️ Trivy](file:///home/yoga/Documents/kube/trivy): Container vulnerability scanning and security analysis.
 
 ### Data & Caching
+
 - **💾 Valkey/Redis**: In-memory data store used by Authentik, Immich, and other services
 - **🗄️ PostgreSQL/MariaDB**: Relational databases for various applications
 
@@ -268,6 +289,7 @@ graph TB
 ### Common Issues
 
 #### ArgoCD Applications Not Syncing
+
 ```bash
 # Check application status
 argocd app list
@@ -280,21 +302,25 @@ argocd app sync <app-name>
 ```
 
 #### Pods Stuck in Pending
+
 - Check node resources: `kubectl describe node`
 - Verify storage classes: `kubectl get storageclass`
 - Check node selectors match available nodes
 
 #### Storage Issues
+
 - Verify CephFS is mounted: `kubectl get pv`
 - Check storage class: `kubectl get storageclass`
 - Review PVC status: `kubectl get pvc -A`
 
 #### Certificate/Ingress Issues
+
 - Verify cert-manager is running: `kubectl get pods -n cert-manager`
 - Check certificate status: `kubectl get certificates -A`
 - Review Traefik logs: `kubectl logs -n traefik -l app.kubernetes.io/name=traefik`
 
 #### Secret Decryption Issues
+
 - Ensure Sealed Secrets controller is running
 - Verify secret was sealed with correct controller certificate
 - Check sealed secret status: `kubectl get sealedsecrets -A`
@@ -324,11 +350,14 @@ kubectl describe pod -n <namespace> <pod-name>
 - Review individual application logs in their respective namespaces
 
 ## 🤝 Contributing & Adaptation
+
 While primarily personal infrastructure, this setup demonstrates:
+
 - Enterprise-grade patterns for homelab use
 - Scalable GitOps implementation
 - Security-conscious home infrastructure
-Feel free to fork and adapt components to your environment!
+  Feel free to fork and adapt components to your environment!
 
 ## 📜 License
+
 This project is licensed under the MIT License.
