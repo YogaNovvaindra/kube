@@ -5,6 +5,7 @@ expose:
   type: ingress
   tls:
     enabled: true
+    certSource: "none"
   ingress:
     hosts:
       core: reg.ygnv.my.id
