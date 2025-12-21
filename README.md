@@ -119,10 +119,10 @@ Before deploying this infrastructure, ensure you have:
 
 This Git repository is organized to support a GitOps workflow with ArgoCD:
 
-- **`gitops/`**: This directory contains ArgoCD `Application` custom resources. Each file typically defines an application or a group of related applications to be deployed and managed by ArgoCD. These definitions point to the actual Kubernetes manifests, Helm charts, or Kustomizations for each application.
-- **`apps.yml`**: This file, located in the root, is an ArgoCD `Application` definition that implements the app-of-apps pattern. It tells ArgoCD to monitor the `gitops/` directory, effectively deploying all applications defined within that path.
-- **Application Manifest Directories (e.g., `harbor/`, `monitoring/`, `tools/`, `services/`, etc.)**: Each of these top-level directories typically holds the raw Kubernetes YAML manifests, Kustomize configurations, or Helm chart value files for a specific application or a logical group of services. The ArgoCD `Application` definitions in `gitops/` will point to these directories as their source.
-- **`cert-manager/`, `cluster/`, `metallb/`, `node-feature/`, `traefik/`, `trivy/`**: These directories contain resources for cluster add-ons or system-level services, often managed as separate ArgoCD applications.
+- **`gitops/`**: GitOps orchestration directory containing ArgoCD `Application` definitions. These resources manage the lifecycle of all cluster applications, including core infrastructure and user services.
+- **`apps.yml`**: Implementation of the "App-of-Apps" pattern, serving as the root entry point for ArgoCD to manage the `gitops/` directory.
+- **Application Manifests**: Top-level directories (e.g., `harbor/`, `monitoring/`, `services/`) containing raw Kubernetes manifests, Kustomize overlays, or Helm chart `values.yaml` files.
+- **`cluster/`**: Contains core system-level services consolidated into the cluster-wide GitOps management flow.
 
 ## 📦 Applications
 
@@ -132,7 +132,7 @@ This cluster hosts a variety of self-managed applications and services.
 
 - **🔄 ArgoCD**: GitOps deployment controller.
 - **🐋 Keel**: Automated image updates for latest tags (located in [cluster.yml](file:///home/yoga/Documents/kube/gitops/cluster.yml)).
-- **[🕵️ Portainer Agent](file:///home/yoga/Documents/kube/portainer/README.md)**: Connects to a Portainer instance for cluster management.
+- **[🕵️ Portainer Agent](file:///home/yoga/Documents/kube/portainer/portainer.yml)**: Connects to a Portainer instance for cluster management.
 - **🔏 Sealed Secrets**: Manages encrypted secrets in Git (located in [cluster.yml](file:///home/yoga/Documents/kube/gitops/cluster.yml)).
 - **♻️ Reloader**: Automatically restarts pods when ConfigMaps or Secrets are updated (located in [cluster.yml](file:///home/yoga/Documents/kube/gitops/cluster.yml)).
 - **🚦 Traefik**: TLS-terminating ingress controller (mentioned in Infrastructure).
@@ -143,22 +143,19 @@ This cluster hosts a variety of self-managed applications and services.
 #### 🔐 Security & Authentication
 
 - [🔑 Authentik](file:///home/yoga/Documents/kube/tools/authentik): Centralized authentication and identity provider.
-- [🔐 Passbolt](file:///home/yoga/Documents/kube/tools/passbolt-cred.tml): Self-hosted password manager (alternative to Vaultwarden).
 - [🛡️ Vaultwarden](file:///home/yoga/Documents/kube/tools/vaultwarden.yml): Self-hosted password manager (Bitwarden compatible).
 
 #### 💻 Development & Code Management
 
-- [💻 Gitea](file:///home/yoga/Documents/kube/tools/gitea.yml): Self-hosted Git service.
+- [💻 Gitea](file:///home/yoga/Documents/kube/tools/gitea.yml): Self-hosted Git service and repository manager.
 - [📊 Bytebase](file:///home/yoga/Documents/kube/tools/db/bytebase.yml): Database schema change and version control tool.
 - [📚 Outline](file:///home/yoga/Documents/kube/tools/editor/outline.yml): Collaborative knowledge base/wiki.
 - [⚙️ Semaphore](file:///home/yoga/Documents/kube/tools/cluster/semaphore.yml): UI for running Ansible playbooks.
 
 #### 📝 Document & File Management
 
-- [📄 BentoPDF](file:///home/yoga/Documents/kube/tools/editor/bentopdf.yml): PDF manipulation and conversion tool.
-- [📄 Stirling-PDF](file:///home/yoga/Documents/kube/tools/editor/stirling-pdf.tml): Web-based PDF manipulation tool.
-- [� Reactive Resume](file:///home/yoga/Documents/kube/tools/editor/reactive-resume.tml): A free and open-source resume builder.
-- [📂 FileBrowser](file:///home/yoga/Documents/kube/tools/storage/filebrowser.yml): Web-based file management.
+- [📄 BentoPDF](file:///home/yoga/Documents/kube/tools/editor/bentopdf.yml): Self-hosted PDF manipulation and conversion tool suite.
+- [📂 FileBrowser](file:///home/yoga/Documents/kube/tools/storage/filebrowser.yml): Web-based file management interface for remote access.
 - [🔗 Syncthing](file:///home/yoga/Documents/kube/tools/storage/syncthing.yml): Continuous file synchronization across devices.
 
 #### 🗄️ Storage & Databases
@@ -172,10 +169,9 @@ This cluster hosts a variety of self-managed applications and services.
 - [🎨 Excalidraw](file:///home/yoga/Documents/kube/tools/editor/excalidraw.yml): Virtual collaborative whiteboard.
 - [🏠 Homepage](file:///home/yoga/Documents/kube/tools/homepage): Dashboard for managing and accessing all services.
 - [🔄 n8n](file:///home/yoga/Documents/kube/tools/n8n.yml): Workflow automation platform.
-
-- [� Changedetection.io](file:///home/yoga/Documents/kube/tools/changedetection.yml): Monitors websites for changes.
-- [🔧 IT-Tools](file:///home/yoga/Documents/kube/tools/it-tools.yml): A collection of handy online tools for developers.
-- [🌐 Netbird](file:///home/yoga/Documents/kube/tools/netvisor.tml): VPN mesh networking solution (Netvisor).
+- [🔍 Changedetection.io](file:///home/yoga/Documents/kube/tools/changedetection.yml): Self-hosted website change monitoring.
+- [🔧 IT-Tools](file:///home/yoga/Documents/kube/tools/it-tools.yml): Collection of handy online tools for developers.
+- [🌐 Netbird](file:///home/yoga/Documents/kube/tools/cluster/netbird.yml): Mesh VPN and P2P networking solution for secure access.
 - [♻️ Reloader](file:///home/yoga/Documents/kube/gitops/cluster.yml): Automatically restarts pods when ConfigMaps or Secrets are updated.
 - [💨 Speedtest](file:///home/yoga/Documents/kube/tools/speedtest.yml): Tool for checking internet connection speed.
 - [🛡️ Vert](file:///home/yoga/Documents/kube/tools/editor/vert.yml): Clean and simple RSS feed reader.
@@ -189,8 +185,7 @@ This cluster hosts a variety of self-managed applications and services.
 - [☸️ Kube State Metrics](file:///home/yoga/Documents/kube/monitoring/kube-state-metrics.yml): Exposes cluster-level metrics.
 - [✍️ Loki](file:///home/yoga/Documents/kube/monitoring/loki-deploy.yml): Horizontally-scalable, multi-tenant log aggregation system.
 - [📡 MKTXP](file:///home/yoga/Documents/kube/monitoring/mktxp.yml): Exporter for MikroTik router metrics.
-- [💻 Node Exporter](file:///home/yoga/Documents/kube/monitoring/node-exporter.yml): Exporter for hardware and OS metrics exposed by \*NIX kernels.
-- [🔍 Peekaping](file:///home/yoga/Documents/kube/monitoring/uptime/peekaping.tml): Advanced uptime monitoring and status page solution.
+- [💻 Node Exporter](file:///home/yoga/Documents/kube/monitoring/node-exporter.yml): Hardware and OS metrics exporter for \*NIX kernels.
 - [📈 Prometheus](file:///home/yoga/Documents/kube/monitoring/prometheus-deploy.yml): Metrics collection and alerting toolkit.
 - [🖥️ PVE Exporter](file:///home/yoga/Documents/kube/monitoring/pve-exporter.yml): Exporter for Proxmox VE host and guest metrics.
 - [📡 SNMP Exporter](file:///home/yoga/Documents/kube/monitoring/snmp-exporter.yml): Exporter for metrics from SNMP-enabled devices.
@@ -199,16 +194,16 @@ This cluster hosts a variety of self-managed applications and services.
 
 ### 📦 Application Services
 
-- [🐳 Harbor](file:///home/yoga/Documents/kube/gitops/harbor.yml): Cloud native container registry.
-- [🖼️ Immich](file:///home/yoga/Documents/kube/immich/immich.yml): Self-hosted backup solution for photos and videos.
-- [💰 Money](file:///home/yoga/Documents/kube/money/money.yml): Personal finance management application.
-- [🗄️ DB Backup](file:///home/yoga/Documents/kube/services/db-backup.yml): Automated database backup service for all databases in the cluster.
-- [☁️ Cloudflared](file:///home/yoga/Documents/kube/services/cloudflared.yml): Creates secure tunnels to Cloudflare's edge.
-- [🌿 Ecoguardian](file:///home/yoga/Documents/kube/services/ecoguardian.yml): Environmental monitoring service.
-- [✍️ Ghost](file:///home/yoga/Documents/kube/services/ghost.yml): Professional publishing platform / blogging.
-- [📊 Linear](file:///home/yoga/Documents/kube/services/linear-cred.yml): Issue tracking and project management (self-hosted).
-- [🖼️ Portfolio](file:///home/yoga/Documents/kube/services/portfolio.yml): Application to showcase projects/work.
-- [📋 Project](file:///home/yoga/Documents/kube/services/project.yml): All my personal projects.
+- [🐳 Harbor](file:///home/yoga/Documents/kube/harbor/): Enterprise-grade cloud native container registry.
+- [🖼️ Immich](file:///home/yoga/Documents/kube/immich/immich.yml): Self-hosted high-performance photo and video backup solution.
+- [💰 Money](file:///home/yoga/Documents/kube/money/money.yml): Personal finance management and budgeting application.
+- [🗄️ DB Backup](file:///home/yoga/Documents/kube/services/db-backup.yml): Automated multi-database backup service for cluster-wide reliability.
+- [☁️ Cloudflared](file:///home/yoga/Documents/kube/services/cloudflared.yml): Secure Cloudflare Tunnel orchestration for edge connectivity.
+- [🌿 Ecoguardian](file:///home/yoga/Documents/kube/services/ecoguardian.yml): Environmental monitoring and analytical service.
+- [✍️ Ghost](file:///home/yoga/Documents/kube/services/ghost.yml): Professional self-hosted publishing platform and blog.
+- [📊 Linear](file:///home/yoga/Documents/kube/services/linear-cred.yml): Streamlined issue tracking and project management suite.
+- [🖼️ Portfolio](file:///home/yoga/Documents/kube/services/portfolio.yml): Personal showcase application for projects and professional work.
+- [📋 Project](file:///home/yoga/Documents/kube/services/project.yml): Centralized management for personal development projects.
 
 ### 🎬 Media
 
