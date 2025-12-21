@@ -54,25 +54,14 @@ existingSecretAdminPassword: "harbor-cred"
 existingSecretAdminPasswordKey: "HARBOR_ADMIN_PASSWORD"
 
 core:
-  existingSecret: "harbor-cred"
+  existingSecret: ""
   existingXsrfSecret: "harbor-cred"
   existingXsrfSecretKey: "CORE_KEY"
-  extraEnvVars:
-    - name: CORE_SECRET
-      valueFrom:
-        secretKeyRef:
-          name: "harbor-cred"
-          key: "CORE_SECRET"
 
 jobservice:
-  existingSecret: "harbor-cred"
+  existingSecret: ""
   secret: "JOBSERVICE_SECRET"
   extraEnvVars:
-    - name: CORE_SECRET
-      valueFrom:
-        secretKeyRef:
-          name: "harbor-cred"
-          key: "CORE_SECRET"
     - name: REGISTRY_CREDENTIAL_PASSWORD
       valueFrom:
         secretKeyRef:
