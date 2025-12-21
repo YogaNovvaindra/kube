@@ -166,20 +166,6 @@ data:
             action: keep
             regex: kubernetes;https
 
-      # Fluent-Bit monitoring
-      - job_name: fluent-bit
-        kubernetes_sd_configs:
-          - role: pod
-            namespaces:
-              names: [monitoring]
-        relabel_configs:
-          - source_labels: [__meta_kubernetes_pod_label_app]
-            action: keep
-            regex: fluent-(logs|events)
-          - source_labels: [__meta_kubernetes_pod_ip]
-            target_label: __address__
-            replacement: $1:2020
-
       # CoreDNS monitoring
       - job_name: kube-dns
         kubernetes_sd_configs:
