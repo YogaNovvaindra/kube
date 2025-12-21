@@ -12,6 +12,6 @@ spec:
     - match: Host(`reg.ygnv.my.id`)
       kind: Rule
       services:
-        - name: harbor
+        - name:
           port: 80
   tls: {}

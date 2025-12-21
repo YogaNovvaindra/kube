@@ -20,9 +20,6 @@ spec:
     - repoURL: https://github.com/YogaNovvaindra/kube.git
       targetRevision: HEAD
       ref: local
-    - repoURL: https://github.com/YogaNovvaindra/kube.git
-      path: harbor/ingress.yml
-      targetRevision: HEAD
   destination:
     server: https://kubernetes.default.svc
     namespace: harbor
@@ -36,15 +33,21 @@ spec:
     - group: ""
       kind: Secret
       name: harbor-core
-      jsonPointers:
-        - /data
+      jqPathExpressions:
+        - .data
+        - .metadata.annotations
+        - .metadata.labels
     - group: ""
       kind: Secret
       name: harbor-jobservice
-      jsonPointers:
-        - /data
+      jqPathExpressions:
+        - .data
+        - .metadata.annotations
+        - .metadata.labels
     - group: ""
       kind: Secret
       name: harbor-registry
-      jsonPointers:
-        - /data
+      jqPathExpressions:
+        - .data
+        - .metadata.annotations
+        - .metadata.labels
