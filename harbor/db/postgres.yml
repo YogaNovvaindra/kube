@@ -32,26 +32,31 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: harbor-cred
-                  key: POSTGRES_USER
+                  key: POSTGRES_USERNAME
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: harbor-cred
-                  key: POSTGRES_PASSWORD
+                  key: POSTGRESQL_PASSWORD
             - name: POSTGRES_DB
-              value: registry
+              valueFrom:
+                secretKeyRef:
+                  name: harbor-cred
+                  key: POSTGRESQL_DATABASE
           volumeMounts:
             - name: postgres-data
               mountPath: /var/lib/postgresql
           readinessProbe:
             exec:
-              command: ["pg_isready", "-d", "registry", "-U", "postgres"]
+              command:
+                ["pg_isready", "-d", "$(POSTGRES_DB)", "-U", "$(POSTGRES_USER)"]
             initialDelaySeconds: 30
             periodSeconds: 60
             timeoutSeconds: 60
           livenessProbe:
             exec:
-              command: ["pg_isready", "-d", "registry", "-U", "postgres"]
+              command:
+                ["pg_isready", "-d", "$(POSTGRES_DB)", "-U", "$(POSTGRES_USER)"]
             initialDelaySeconds: 60
             periodSeconds: 60
             timeoutSeconds: 60

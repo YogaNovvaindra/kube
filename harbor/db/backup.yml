@@ -124,7 +124,7 @@ data:
       discord_notify "FAILED" "🚨 Backup FAILED" "$FAIL_DESCRIPTION"
       exit 1
     fi
-    
+
     # Cleanup old backups
     find /snapshots -type f -name '*.zip' -mtime +7 -print -delete
     find /snapshots -type d -empty -print -delete
@@ -147,70 +147,7 @@ metadata:
   name: harbor-pg-dumps
   namespace: harbor
 spec:
-  schedule: "25 0 * * *"   # every day @ 00:20 UTC+7
-  concurrencyPolicy: Forbid
-  successfulJobsHistoryLimit: 1
-  failedJobsHistoryLimit: 1
-  jobTemplate:
-    spec:
-      backoffLimit: 0
-      # ttlSecondsAfterFinished: 600 
-      template:
-        spec:
-          nodeSelector:
-            kubernetes.io/arch: amd64
-          containers:
-          - name: postgres-dumper
-            image: reg.ygnv.my.id/docker/pgautoupgrade/pgautoupgrade:latest@sha256:b440eb344035aa246f36ea8cb7a45db7e8b216686b475e2fd509905a36005e9f
-            imagePullPolicy: IfNotPresent
-            env:
-            - name: DISCORD_WEBHOOK_URL
-              valueFrom:
-                secretKeyRef:
-                  name: discord-cred
-                  key: DISCORD_URL
-            command: ["/bin/sh", "/scripts/pg-dump.sh"]
-            volumeMounts:
-            - name: localtime
-              mountPath: /etc/localtime
-              readOnly: true
-            - name: pg-dumps
-              mountPath: /dumps
-            - name: postgres-creds
-              mountPath: /etc/creds
-              readOnly: true
-            - name: pg-dump-config
-              mountPath: /scripts
-          volumes:
-          - name: pg-dump-config
-            configMap:
-              name: pg-dump-config
-              defaultMode: 0744
-          - name: localtime
-            hostPath:
-              path: /etc/localtime
-              type: File
-          - name: pg-dumps
-            hostPath:
-              path: /mnt/cephfs/docker/harbor/postgres/backup/pg-dumps
-              type: Directory
-          - name: postgres-creds
-            secret:
-              secretName: harbor-cred
-              items:
-              - key: POSTGRES_USER
-                path: username
-              - key: POSTGRES_PASSWORD
-                path: password
-          restartPolicy: Never
----
-apiVersion: batch/v1
-kind: CronJob
-metadata:
-  name: harbor-pg-snapshots
-  namespace: harbor
-spec:
-  schedule: "55 0 * * *"  # Daily at 00:50 UTC+7
+  schedule: "25 0 * * *" # every day @ 00:20 UTC+7
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
@@ -223,42 +160,105 @@ spec:
           nodeSelector:
             kubernetes.io/arch: amd64
           containers:
-          - name: phostgres-snapshotter
-            image: reg.ygnv.my.id/docker/alpine:3.23.2
-            imagePullPolicy: IfNotPresent
-            env:
-            - name: DISCORD_WEBHOOK_URL
-              valueFrom:
-                secretKeyRef:
-                  name: discord-cred
-                  key: DISCORD_URL
-            command: ["/bin/sh", "/scripts/pg-snapshot.sh"]
-            volumeMounts:
-            - name: localtime
-              mountPath: /etc/localtime
-              readOnly: true
-            - name: pgdata
-              mountPath: /pgdata
-              readOnly: true
-            - name: pg-snapshots
-              mountPath: /snapshots
-            - name: pg-snapshot-config
-              mountPath: /scripts
+            - name: postgres-dumper
+              image: reg.ygnv.my.id/docker/pgautoupgrade/pgautoupgrade:latest@sha256:b440eb344035aa246f36ea8cb7a45db7e8b216686b475e2fd509905a36005e9f
+              imagePullPolicy: IfNotPresent
+              env:
+                - name: DISCORD_WEBHOOK_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: discord-cred
+                      key: DISCORD_URL
+              command: ["/bin/sh", "/scripts/pg-dump.sh"]
+              volumeMounts:
+                - name: localtime
+                  mountPath: /etc/localtime
+                  readOnly: true
+                - name: pg-dumps
+                  mountPath: /dumps
+                - name: postgres-creds
+                  mountPath: /etc/creds
+                  readOnly: true
+                - name: pg-dump-config
+                  mountPath: /scripts
           volumes:
-          - name: localtime
-            hostPath:
-              path: /etc/localtime
-              type: File
-          - name: pg-snapshot-config
-            configMap:
-              name: pg-snapshot-config
-              defaultMode: 0744
-          - name: pgdata
-            hostPath:
-              path: /mnt/cephfs/docker/harbor/postgres/data
-              type: Directory
-          - name: pg-snapshots
-            hostPath:
-              path: /mnt/cephfs/docker/harbor/postgres/backup/pg-snapshots
-              type: Directory
+            - name: pg-dump-config
+              configMap:
+                name: pg-dump-config
+                defaultMode: 0744
+            - name: localtime
+              hostPath:
+                path: /etc/localtime
+                type: File
+            - name: pg-dumps
+              hostPath:
+                path: /mnt/cephfs/docker/harbor/postgres/backup/pg-dumps
+                type: Directory
+            - name: postgres-creds
+              secret:
+                secretName: harbor-cred
+                items:
+                  - key: POSTGRESQL_USERNAME
+                    path: username
+                  - key: POSTGRESQL_PASSWORD
+                    path: password
+          restartPolicy: Never
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: harbor-pg-snapshots
+  namespace: harbor
+spec:
+  schedule: "55 0 * * *" # Daily at 00:50 UTC+7
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      # ttlSecondsAfterFinished: 600
+      template:
+        spec:
+          nodeSelector:
+            kubernetes.io/arch: amd64
+          containers:
+            - name: phostgres-snapshotter
+              image: reg.ygnv.my.id/docker/alpine:3.23.2
+              imagePullPolicy: IfNotPresent
+              env:
+                - name: DISCORD_WEBHOOK_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: discord-cred
+                      key: DISCORD_URL
+              command: ["/bin/sh", "/scripts/pg-snapshot.sh"]
+              volumeMounts:
+                - name: localtime
+                  mountPath: /etc/localtime
+                  readOnly: true
+                - name: pgdata
+                  mountPath: /pgdata
+                  readOnly: true
+                - name: pg-snapshots
+                  mountPath: /snapshots
+                - name: pg-snapshot-config
+                  mountPath: /scripts
+          volumes:
+            - name: localtime
+              hostPath:
+                path: /etc/localtime
+                type: File
+            - name: pg-snapshot-config
+              configMap:
+                name: pg-snapshot-config
+                defaultMode: 0744
+            - name: pgdata
+              hostPath:
+                path: /mnt/cephfs/docker/harbor/postgres/data
+                type: Directory
+            - name: pg-snapshots
+              hostPath:
+                path: /mnt/cephfs/docker/harbor/postgres/backup/pg-snapshots
+                type: Directory
           restartPolicy: Never

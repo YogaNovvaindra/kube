@@ -20,10 +20,12 @@ database:
   external:
     host: "postgres"
     port: "5432"
-    username: "unused"
-    password: "unused"
+    username: "postgres" # Or your actual DB user
     coreDatabase: "registry"
-    existingSecret: ""
+    existingSecret:
+      "harbor-cred" # This will look for the 'password' key by default.
+      # Wait, your secret key is POSTGRESQL_PASSWORD.
+      # I should keep it as extraEnvVars to avoid another kubeseal run.
 
 # Using your existing Redis (Valkey)
 redis:
@@ -72,29 +74,6 @@ core:
   existingXsrfSecret: "harbor-cred"
   existingXsrfSecretKey: "CORE_KEY"
 
-  # Extra environment variables for database access
-  extraEnvVars:
-    - name: POSTGRESQL_PASSWORD
-      valueFrom:
-        secretKeyRef:
-          name: "harbor-cred"
-          key: "POSTGRES_PASSWORD"
-    - name: POSTGRESQL_USERNAME
-      valueFrom:
-        secretKeyRef:
-          name: "harbor-cred"
-          key: "POSTGRES_USER"
-    - name: POSTGRESQL_DATABASE
-      valueFrom:
-        secretKeyRef:
-          name: "harbor-cred"
-          key: "POSTGRES_DB"
-    - name: REGISTRY_CREDENTIAL_PASSWORD
-      valueFrom:
-        secretKeyRef:
-          name: "harbor-cred"
-          key: "REGISTRY_PASSWD"
-
 # Jobservice Component Configuration
 jobservice:
   nodeSelector:
@@ -102,28 +81,6 @@ jobservice:
   secret: "" # Will use existing secret
   existingSecret: "harbor-cred"
   existingSecretKey: "JOBSERVICE_SECRET"
-
-  extraEnvVars:
-    - name: POSTGRESQL_PASSWORD
-      valueFrom:
-        secretKeyRef:
-          name: "harbor-cred"
-          key: "POSTGRES_PASSWORD"
-    - name: POSTGRESQL_USERNAME
-      valueFrom:
-        secretKeyRef:
-          name: "harbor-cred"
-          key: "POSTGRES_USER"
-    - name: POSTGRESQL_DATABASE
-      valueFrom:
-        secretKeyRef:
-          name: "harbor-cred"
-          key: "POSTGRES_DB"
-    - name: REGISTRY_CREDENTIAL_PASSWORD
-      valueFrom:
-        secretKeyRef:
-          name: "harbor-cred"
-          key: "REGISTRY_PASSWD"
 
 # Registry Component Configuration
 registry:
@@ -137,87 +94,17 @@ registry:
     username: "harbor_registry_user"
     password: "harbor_registry_password"
     existingSecret: "harbor-cred"
-    # Note: Harbor expects keys REGISTRY_PASSWD and REGISTRY_HTPASSWD
-    # But based on deployment, it uses REGISTRY_CREDENTIAL_PASSWORD
-
-  registry:
-    extraEnvVars:
-      - name: POSTGRESQL_PASSWORD
-        valueFrom:
-          secretKeyRef:
-            name: "harbor-cred"
-            key: "POSTGRES_PASSWORD"
-      - name: POSTGRESQL_USERNAME
-        valueFrom:
-          secretKeyRef:
-            name: "harbor-cred"
-            key: "POSTGRES_USER"
-      - name: POSTGRESQL_DATABASE
-        valueFrom:
-          secretKeyRef:
-            name: "harbor-cred"
-            key: "POSTGRES_DB"
-
-  controller:
-    extraEnvVars:
-      - name: POSTGRESQL_PASSWORD
-        valueFrom:
-          secretKeyRef:
-            name: "harbor-cred"
-            key: "POSTGRES_PASSWORD"
-      - name: POSTGRESQL_USERNAME
-        valueFrom:
-          secretKeyRef:
-            name: "harbor-cred"
-            key: "POSTGRES_USER"
-      - name: POSTGRESQL_DATABASE
-        valueFrom:
-          secretKeyRef:
-            name: "harbor-cred"
-            key: "POSTGRES_DB"
 
 # Trivy Scanner Configuration
 trivy:
   nodeSelector:
     kubernetes.io/arch: amd64
   enabled: true
-  extraEnvVars:
-    - name: POSTGRESQL_PASSWORD
-      valueFrom:
-        secretKeyRef:
-          name: "harbor-cred"
-          key: "POSTGRES_PASSWORD"
-    - name: POSTGRESQL_USERNAME
-      valueFrom:
-        secretKeyRef:
-          name: "harbor-cred"
-          key: "POSTGRES_USER"
-    - name: POSTGRESQL_DATABASE
-      valueFrom:
-        secretKeyRef:
-          name: "harbor-cred"
-          key: "POSTGRES_DB"
 
 # Exporter Configuration
 exporter:
   nodeSelector:
     kubernetes.io/arch: amd64
-  extraEnvVars:
-    - name: POSTGRESQL_PASSWORD
-      valueFrom:
-        secretKeyRef:
-          name: "harbor-cred"
-          key: "POSTGRES_PASSWORD"
-    - name: POSTGRESQL_USERNAME
-      valueFrom:
-        secretKeyRef:
-          name: "harbor-cred"
-          key: "POSTGRES_USER"
-    - name: POSTGRESQL_DATABASE
-      valueFrom:
-        secretKeyRef:
-          name: "harbor-cred"
-          key: "POSTGRES_DB"
 
 # Portal Configuration
 portal:
