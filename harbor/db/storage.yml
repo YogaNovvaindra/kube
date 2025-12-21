@@ -71,3 +71,17 @@ spec:
   hostPath:
     path: /mnt/cephfs/docker/harbor/trivy
     type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: harbor-trivy-pvc
+  namespace: harbor
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: manual
+  volumeName: harbor-trivy-pv

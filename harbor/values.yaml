@@ -9,8 +9,6 @@ expose:
   ingress:
     hosts:
       core: reg.ygnv.my.id
-    # We disable standard ingress because we use custom IngressRoute in nginx.yml
-    # Or we can let Helm manage it and delete nginx.yml
     annotations:
       kubernetes.io/ingress.class: traefik
 
@@ -21,20 +19,25 @@ database:
   type: external
   external:
     host: "postgres"
-    port: 5432
-    # existingSecret: "harbor-cred" -> Removed to prevent invalid env var generation
-    password: "dummy" # Dummy value, overridden by extraEnvVars
-    usernameKey: "POSTGRES_USER"
-    coreDatabaseKey: "POSTGRES_DB"
+    port: "5432"
+    username: "dummy" # Overridden by extraEnvVars
+    password: "dummy" # Overridden by extraEnvVars
+    coreDatabase: "registry"
+    existingSecret: "" # We handle this via extraEnvVars for more control
 
 # Using your existing Redis (Valkey)
 redis:
   type: external
   external:
     addr: "valkey:6379"
+    coreDatabaseIndex: "0"
+    jobserviceDatabaseIndex: "1"
+    registryDatabaseIndex: "2"
+    trivyAdapterIndex: "5"
 
 persistence:
   enabled: true
+  resourcePolicy: "keep"
   persistentVolumeClaim:
     registry:
       existingClaim: "harbor-registry-pvc"
@@ -42,32 +45,38 @@ persistence:
       jobLog:
         existingClaim: "harbor-jobservice-pvc"
     trivy:
-      storageClass: "manual"
-      subPath: ""
-      accessMode: ReadWriteOnce
-      size: 5Gi
+      existingClaim: "harbor-trivy-pvc"
 
-# Using harbor-cred secret for all credentials
-harborAdminPassword: "" # Will be set via existingSecret below
+# ============================================
+# SECRET MAPPINGS - Using harbor-cred
+# ============================================
 
+# Admin Password
 existingSecretAdminPassword: "harbor-cred"
 existingSecretAdminPasswordKey: "HARBOR_ADMIN_PASSWORD"
+harborAdminPassword: ""
 
+# Secret Key (16 chars) - Used for encryption
+secretKey: "not-a-secure-key" # Default, will be overridden
+existingSecretSecretKey: "harbor-cred"
+
+# Core Component Configuration
 core:
-  existingSecret: ""
+  # Core secret - needs harbor-core secret with key 'secret'
+  existingSecret: "harbor-core"
+
+  # XSRF/CSRF protection key
+  xsrfKey: "" # Will use existing secret
   existingXsrfSecret: "harbor-cred"
   existingXsrfSecretKey: "CORE_KEY"
+
+  # Extra environment variables for database access
   extraEnvVars:
     - name: POSTGRESQL_PASSWORD
       valueFrom:
         secretKeyRef:
           name: "harbor-cred"
           key: "POSTGRES_PASSWORD"
-    - name: REGISTRY_CREDENTIAL_PASSWORD
-      valueFrom:
-        secretKeyRef:
-          name: "harbor-cred"
-          key: "REGISTRY_CREDENTIAL_PASSWORD"
     - name: POSTGRESQL_USERNAME
       valueFrom:
         secretKeyRef:
@@ -78,39 +87,92 @@ core:
         secretKeyRef:
           name: "harbor-cred"
           key: "POSTGRES_DB"
+    - name: REGISTRY_CREDENTIAL_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: "harbor-cred"
+          key: "REGISTRY_CREDENTIAL_PASSWORD"
 
+# Jobservice Component Configuration
 jobservice:
+  secret: "" # Will use existing secret
   existingSecret: "harbor-cred"
-  secret: "JOBSERVICE_SECRET"
+  existingSecretKey: "JOBSERVICE_SECRET"
+
   extraEnvVars:
+    - name: POSTGRESQL_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: "harbor-cred"
+          key: "POSTGRES_PASSWORD"
+    - name: POSTGRESQL_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: "harbor-cred"
+          key: "POSTGRES_USER"
+    - name: POSTGRESQL_DATABASE
+      valueFrom:
+        secretKeyRef:
+          name: "harbor-cred"
+          key: "POSTGRES_DB"
     - name: REGISTRY_CREDENTIAL_PASSWORD
       valueFrom:
         secretKeyRef:
           name: "harbor-cred"
           key: "REGISTRY_CREDENTIAL_PASSWORD"
-    - name: POSTGRESQL_PASSWORD
-      valueFrom:
-        secretKeyRef:
-          name: "harbor-cred"
-          key: "POSTGRES_PASSWORD"
-    - name: POSTGRESQL_USERNAME
-      valueFrom:
-        secretKeyRef:
-          name: "harbor-cred"
-          key: "POSTGRES_USER"
-    - name: POSTGRESQL_DATABASE
-      valueFrom:
-        secretKeyRef:
-          name: "harbor-cred"
-          key: "POSTGRES_DB"
 
+# Registry Component Configuration
 registry:
-  existingSecret: ""
-  secret: "REGISTRY_HTTP_SECRET"
+  secret: "" # Will use existing secret
+  existingSecret: "harbor-cred"
+  existingSecretKey: "REGISTRY_HTTP_SECRET"
+
   credentials:
-    # existingSecret: "harbor-cred" -> Removed to prevent invalid env var generation
-    username: "REGISTRY_CREDENTIAL_USERNAME"
-    password: "REGISTRY_CREDENTIAL_PASSWORD"
+    username: "harbor_registry_user"
+    password: "harbor_registry_password"
+    existingSecret: "harbor-cred"
+    # Note: Harbor expects keys REGISTRY_PASSWD and REGISTRY_HTPASSWD
+    # But based on deployment, it uses REGISTRY_CREDENTIAL_PASSWORD
+
+  registry:
+    extraEnvVars:
+      - name: POSTGRESQL_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: "harbor-cred"
+            key: "POSTGRES_PASSWORD"
+      - name: POSTGRESQL_USERNAME
+        valueFrom:
+          secretKeyRef:
+            name: "harbor-cred"
+            key: "POSTGRES_USER"
+      - name: POSTGRESQL_DATABASE
+        valueFrom:
+          secretKeyRef:
+            name: "harbor-cred"
+            key: "POSTGRES_DB"
+
+  controller:
+    extraEnvVars:
+      - name: POSTGRESQL_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: "harbor-cred"
+            key: "POSTGRES_PASSWORD"
+      - name: POSTGRESQL_USERNAME
+        valueFrom:
+          secretKeyRef:
+            name: "harbor-cred"
+            key: "POSTGRES_USER"
+      - name: POSTGRESQL_DATABASE
+        valueFrom:
+          secretKeyRef:
+            name: "harbor-cred"
+            key: "POSTGRES_DB"
+
+# Trivy Scanner Configuration
+trivy:
+  enabled: true
   extraEnvVars:
     - name: POSTGRESQL_PASSWORD
       valueFrom:
@@ -128,9 +190,39 @@ registry:
           name: "harbor-cred"
           key: "POSTGRES_DB"
 
-# Disable components you might not need or manage manually
-trivy:
-  enabled: true # Your current core.yml says WITH_TRIVY=true
+# Exporter Configuration
+exporter:
+  extraEnvVars:
+    - name: POSTGRESQL_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: "harbor-cred"
+          key: "POSTGRES_PASSWORD"
+    - name: POSTGRESQL_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: "harbor-cred"
+          key: "POSTGRES_USER"
+    - name: POSTGRESQL_DATABASE
+      valueFrom:
+        secretKeyRef:
+          name: "harbor-cred"
+          key: "POSTGRES_DB"
 
+# Portal Configuration
+portal:
+  extraEnvVars: []
+
+# Nginx Configuration
+nginx:
+  extraEnvVars: []
+
+# Disable metrics
 metrics:
-  enabled: false
+  enabled: true
+
+# Log level
+logLevel: info
+
+# Image pull policy
+imagePullPolicy: IfNotPresent
