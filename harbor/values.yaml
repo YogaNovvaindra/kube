@@ -20,10 +20,10 @@ database:
   external:
     host: "postgres"
     port: "5432"
-    username: "dummy" # Overridden by extraEnvVars
-    password: "dummy" # Overridden by extraEnvVars
+    username: "unused"
+    password: "unused"
     coreDatabase: "registry"
-    existingSecret: "" # We handle this via extraEnvVars for more control
+    existingSecret: ""
 
 # Using your existing Redis (Valkey)
 redis:
@@ -91,7 +91,7 @@ core:
       valueFrom:
         secretKeyRef:
           name: "harbor-cred"
-          key: "REGISTRY_CREDENTIAL_PASSWORD"
+          key: "REGISTRY_PASSWD"
 
 # Jobservice Component Configuration
 jobservice:
@@ -119,7 +119,7 @@ jobservice:
       valueFrom:
         secretKeyRef:
           name: "harbor-cred"
-          key: "REGISTRY_CREDENTIAL_PASSWORD"
+          key: "REGISTRY_PASSWD"
 
 # Registry Component Configuration
 registry:
