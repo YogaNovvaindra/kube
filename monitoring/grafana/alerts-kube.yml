@@ -23,7 +23,7 @@ data:
                 datasourceUid: prometheus
                 model:
                   datasource: { type: prometheus, uid: prometheus }
-                  expr: 'increase(kube_pod_container_status_restarts_total[15m]) > 3'
+                  expr: 'round(increase(kube_pod_container_status_restarts_total[15m])) > 3'
                   refId: A
               - refId: B
                 datasourceUid: __expr__
