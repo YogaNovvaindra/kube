@@ -14,7 +14,7 @@ spec:
           serviceAccountName: default # Use default SA with RBAC permissions
           containers:
             - name: sealed-secrets-backup
-              image: reg.ygnv.my.id/docker/alpine/kubectl:1.34.2
+              image: reg.ygnv.my.id/docker/alpine/kubectl:1.35.0
               command:
                 - /bin/sh
                 - -c
