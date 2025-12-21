@@ -39,7 +39,13 @@ persistence:
     registry:
       existingClaim: "harbor-registry-pvc"
     jobservice:
-      existingClaim: "harbor-jobservice-pvc"
+      jobLog:
+        existingClaim: "harbor-jobservice-pvc"
+    trivy:
+      storageClass: "manual"
+      subPath: ""
+      accessMode: ReadWriteOnce
+      size: 5Gi
 
 # Using harbor-cred secret for all credentials
 harborAdminPassword: "" # Will be set via existingSecret below
@@ -49,12 +55,29 @@ existingSecretAdminPasswordKey: "HARBOR_ADMIN_PASSWORD"
 
 core:
   existingSecret: "harbor-cred"
-  secretName: "CORE_SECRET"
-  xsrfKey: "CORE_KEY"
+  existingXsrfSecret: "harbor-cred"
+  existingXsrfSecretKey: "CORE_KEY"
+  extraEnvVars:
+    - name: CORE_SECRET
+      valueFrom:
+        secretKeyRef:
+          name: "harbor-cred"
+          key: "CORE_SECRET"
 
 jobservice:
   existingSecret: "harbor-cred"
   secret: "JOBSERVICE_SECRET"
+  extraEnvVars:
+    - name: CORE_SECRET
+      valueFrom:
+        secretKeyRef:
+          name: "harbor-cred"
+          key: "CORE_SECRET"
+    - name: REGISTRY_CREDENTIAL_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: "harbor-cred"
+          key: "REGISTRY_CREDENTIAL_PASSWORD"
 
 registry:
   existingSecret: "harbor-cred"

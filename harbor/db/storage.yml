@@ -56,3 +56,18 @@ spec:
       storage: 1Gi
   storageClassName: manual
   volumeName: harbor-jobservice-pv
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: harbor-trivy-pv
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: manual
+  hostPath:
+    path: /mnt/cephfs/docker/harbor/trivy
+    type: DirectoryOrCreate
