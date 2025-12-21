@@ -25,6 +25,45 @@ data:
             target_label: __address__
             replacement: $1:9090
 
+      - job_name: loki
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: [monitoring]
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            action: keep
+            regex: loki
+          - source_labels: [__meta_kubernetes_pod_ip]
+            target_label: __address__
+            replacement: $1:3100
+
+      - job_name: tempo
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: [monitoring]
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            action: keep
+            regex: tempo
+          - source_labels: [__meta_kubernetes_pod_ip]
+            target_label: __address__
+            replacement: $1:3200
+
+      - job_name: grafana
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: [monitoring]
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            action: keep
+            regex: grafana
+          - source_labels: [__meta_kubernetes_pod_ip]
+            target_label: __address__
+            replacement: $1:3000
+
       # Proxmox VE monitoring
       - job_name: proxmox
 
@@ -127,6 +166,20 @@ data:
             action: keep
             regex: kubernetes;https
 
+      # Fluent-Bit monitoring
+      - job_name: fluent-bit
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: [monitoring]
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            action: keep
+            regex: fluent-(logs|events)
+          - source_labels: [__meta_kubernetes_pod_ip]
+            target_label: __address__
+            replacement: $1:2020
+
       # CoreDNS monitoring
       - job_name: kube-dns
         kubernetes_sd_configs:
@@ -181,6 +234,46 @@ data:
           regex: "(.+);(.+)"
           target_label: component
 
+      # ArgoCD monitoring
+      - job_name: argocd-server
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: [argocd]
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app_kubernetes_io_name]
+            action: keep
+            regex: argocd-server
+          - source_labels: [__meta_kubernetes_pod_ip]
+            target_label: __address__
+            replacement: $1:8083
+
+      - job_name: argocd-repo-server
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: [argocd]
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app_kubernetes_io_name]
+            action: keep
+            regex: argocd-repo-server
+          - source_labels: [__meta_kubernetes_pod_ip]
+            target_label: __address__
+            replacement: $1:8084
+
+      - job_name: argocd-application-controller
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: [argocd]
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app_kubernetes_io_name]
+            action: keep
+            regex: argocd-application-controller
+          - source_labels: [__meta_kubernetes_pod_ip]
+            target_label: __address__
+            replacement: $1:8082
+
       # Services monitoring
       - job_name: adguard
 
@@ -209,6 +302,32 @@ data:
           - source_labels: [__meta_kubernetes_pod_ip]
             target_label: __address__
             replacement: $1:9300
+
+      - job_name: gitea
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: [tools]
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            action: keep
+            regex: gitea
+          - source_labels: [__meta_kubernetes_pod_ip]
+            target_label: __address__
+            replacement: $1:3000
+
+      - job_name: cloudflared
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: [services]
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            action: keep
+            regex: cloudflared
+          - source_labels: [__meta_kubernetes_pod_ip]
+            target_label: __address__
+            replacement: $1:2000
 
       - job_name: traefik
 
