@@ -27,8 +27,8 @@ redis:
   external:
     addr: "valkey:6379"
     coreDatabaseIndex: "0"
-    jobserviceDatabaseIndex: "1"
-    registryDatabaseIndex: "2"
+    jobserviceDatabaseIndex: "2"
+    registryDatabaseIndex: "1"
     trivyAdapterIndex: "5"
 
 persistence:
@@ -97,8 +97,7 @@ registry:
       memory: 64Mi
 
   credentials:
-    username: "harbor_registry_user"
-    password: "harbor_registry_password"
+    username: "harbor"
     existingSecret: "harbor-cred"
 
 # Trivy Scanner Configuration
