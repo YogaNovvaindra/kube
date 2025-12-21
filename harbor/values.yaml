@@ -10,6 +10,7 @@ expose:
       core: reg.ygnv.my.id
     annotations:
       kubernetes.io/ingress.class: traefik
+    ingressClassName: traefik
 
 externalURL: https://reg.ygnv.my.id
 
