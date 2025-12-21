@@ -63,6 +63,11 @@ core:
         secretKeyRef:
           name: "harbor-cred"
           key: "POSTGRES_PASSWORD"
+    - name: REGISTRY_CREDENTIAL_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: "harbor-cred"
+          key: "REGISTRY_CREDENTIAL_PASSWORD"
 
 jobservice:
   existingSecret: ""
@@ -83,7 +88,7 @@ registry:
   existingSecret: ""
   secret: "REGISTRY_HTTP_SECRET"
   credentials:
-    existingSecret: "harbor-cred"
+    # existingSecret: "harbor-cred" -> Removed to prevent invalid env var generation
     username: "REGISTRY_CREDENTIAL_USERNAME"
     password: "REGISTRY_CREDENTIAL_PASSWORD"
   extraEnvVars:
