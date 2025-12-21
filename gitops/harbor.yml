@@ -29,25 +29,3 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-  ignoreDifferences:
-    - group: ""
-      kind: Secret
-      name: harbor-core
-      jqPathExpressions:
-        - .data
-        - .metadata.annotations
-        - .metadata.labels
-    - group: ""
-      kind: Secret
-      name: harbor-jobservice
-      jqPathExpressions:
-        - .data
-        - .metadata.annotations
-        - .metadata.labels
-    - group: ""
-      kind: Secret
-      name: harbor-registry
-      jqPathExpressions:
-        - .data
-        - .metadata.annotations
-        - .metadata.labels
