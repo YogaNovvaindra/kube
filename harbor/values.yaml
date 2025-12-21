@@ -2,16 +2,10 @@
 # Reference: https://github.com/goharbor/harbor-helm/blob/master/values.yaml
 
 expose:
-  type: ingress
+  type: clusterIP
   tls:
     enabled: true
     certSource: "none"
-  ingress:
-    hosts:
-      core: reg.ygnv.my.id
-    annotations:
-      kubernetes.io/ingress.class: traefik
-    className: traefik
 
 externalURL: https://reg.ygnv.my.id
 

@@ -20,6 +20,9 @@ spec:
     - repoURL: https://github.com/YogaNovvaindra/kube.git
       targetRevision: HEAD
       ref: local
+    - repoURL: https://github.com/YogaNovvaindra/kube.git
+      path: harbor/ingress.yml
+      targetRevision: HEAD
   destination:
     server: https://kubernetes.default.svc
     namespace: harbor
