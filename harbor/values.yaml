@@ -62,8 +62,8 @@ existingSecretSecretKey: "harbor-cred"
 
 # Core Component Configuration
 core:
-  # Core secret - needs harbor-core secret with key 'secret'
-  existingSecret: "harbor-core"
+  # Core secret - needs harbor-cred secret with key 'secret'
+  existingSecret: "harbor-cred"
 
   # XSRF/CSRF protection key
   xsrfKey: "" # Will use existing secret
