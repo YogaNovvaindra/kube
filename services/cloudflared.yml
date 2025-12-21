@@ -46,8 +46,6 @@ spec:
             - "--config"
             - "/etc/cloudflared/config.yml"
             - "run"
-            - "--metrics"
-            - "0.0.0.0:2000"
           ports:
             - containerPort: 2000
               name: metrics
