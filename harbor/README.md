@@ -2,16 +2,12 @@
 
 Harbor is an open-source trusted cloud native registry project that stores, signs, and scans content.
 
-## Components
+## Deployment
 
-- **`core.yml`**: Core Harbor service and API.
-- **`registry.yml`**: Container registry storage service.
-- **`harbor/db/postgres.yml`**: PostgreSQL database for Harbor.
-- **`harbor/db/valkey.yml`**: Valkey (Redis) for Harbor.
-- **`nginx.yml`**: Internal proxy for Harbor components.
-- **`jobservices.yml`**: Handles background tasks like replication and scanning.
-- **`trivy.yml`**: Integrated vulnerability scanner.
-- **`harbor/db/backup.yml`**: Automated backup jobs for the database.
+Harbor is deployed using the official Helm chart from `https://helm.goharbor.io`.
+
+- **Source**: [gitops/harbor.yml](file:///home/yoga/Documents/kube/gitops/harbor.yml)
+- **Configuration**: [values.yaml](file:///home/yoga/Documents/kube/harbor/values.yaml)
 
 ## Usage
 
