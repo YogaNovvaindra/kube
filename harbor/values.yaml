@@ -62,6 +62,8 @@ existingSecretSecretKey: "harbor-cred"
 
 # Core Component Configuration
 core:
+  nodeSelector:
+    kubernetes.io/arch: amd64
   # Core secret - needs harbor-cred secret with key 'secret'
   existingSecret: "harbor-cred"
 
@@ -95,6 +97,8 @@ core:
 
 # Jobservice Component Configuration
 jobservice:
+  nodeSelector:
+    kubernetes.io/arch: amd64
   secret: "" # Will use existing secret
   existingSecret: "harbor-cred"
   existingSecretKey: "JOBSERVICE_SECRET"
@@ -123,6 +127,8 @@ jobservice:
 
 # Registry Component Configuration
 registry:
+  nodeSelector:
+    kubernetes.io/arch: amd64
   secret: "" # Will use existing secret
   existingSecret: "harbor-cred"
   existingSecretKey: "REGISTRY_HTTP_SECRET"
@@ -172,6 +178,8 @@ registry:
 
 # Trivy Scanner Configuration
 trivy:
+  nodeSelector:
+    kubernetes.io/arch: amd64
   enabled: true
   extraEnvVars:
     - name: POSTGRESQL_PASSWORD
@@ -192,6 +200,8 @@ trivy:
 
 # Exporter Configuration
 exporter:
+  nodeSelector:
+    kubernetes.io/arch: amd64
   extraEnvVars:
     - name: POSTGRESQL_PASSWORD
       valueFrom:
@@ -211,10 +221,14 @@ exporter:
 
 # Portal Configuration
 portal:
+  nodeSelector:
+    kubernetes.io/arch: amd64
   extraEnvVars: []
 
 # Nginx Configuration
 nginx:
+  nodeSelector:
+    kubernetes.io/arch: amd64
   extraEnvVars: []
 
 # Disable metrics
