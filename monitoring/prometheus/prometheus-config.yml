@@ -235,8 +235,61 @@ data:
         basic_auth:
           password: ${UPTIME_KUMA_API_KEY}
 
-      - job_name: harbor
-        scrape_interval: 60s
+      - job_name: harbor-exporter
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: [harbor]
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_component]
+            action: keep
+            regex: exporter
+          - source_labels: [__meta_kubernetes_pod_ip]
+            action: replace
+            target_label: __address__
+            replacement: $1:8001
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+
+      - job_name: harbor-core
+        params:
+          comp: ['core']
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: [harbor]
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_component]
+            action: keep
+            regex: exporter
+          - source_labels: [__meta_kubernetes_pod_ip]
+            action: replace
+            target_label: __address__
+            replacement: $1:8001
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+
+      - job_name: harbor-registry
+        params:
+          comp: ['registry']
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: [harbor]
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_component]
+            action: keep
+            regex: exporter
+          - source_labels: [__meta_kubernetes_pod_ip]
+            action: replace
+            target_label: __address__
+            replacement: $1:8001
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+
+      - job_name: harbor-jobservice
+        params:
+          comp: ['jobservice']
         kubernetes_sd_configs:
           - role: pod
             namespaces:
