@@ -9,9 +9,9 @@ kind: ClusterRole
 metadata:
   name: loki
 rules:
-- apiGroups: [""]
-  resources: ["nodes/proxy"]
-  verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["nodes/proxy"]
+    verbs: ["get", "list", "watch"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -22,9 +22,9 @@ roleRef:
   kind: ClusterRole
   name: loki
 subjects:
-- kind: ServiceAccount
-  name: loki
-  namespace: monitoring
+  - kind: ServiceAccount
+    name: loki
+    namespace: monitoring
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -36,6 +36,8 @@ data:
     auth_enabled: false
     server:
       http_listen_port: 3100
+      grpc_server_max_recv_msg_size: 104857600 # 100MB
+      grpc_server_max_send_msg_size: 104857600 # 100MB
     common:
       path_prefix: /tmp/loki
       storage:
@@ -44,7 +46,6 @@ data:
           rules_directory: /tmp/loki/rules
       replication_factor: 1
       ring:
-        # instance_addr: 127.0.0.1
         kvstore:
           store: inmemory
     schema_config:
@@ -56,18 +57,38 @@ data:
         index:
           prefix: index_
           period: 24h
+    ingester:
+      chunk_target_size: 1572864 # 1.5MB
+      max_chunk_age: 2h
+      chunk_idle_period: 30m
+      wal:
+        enabled: true
+        dir: /tmp/loki/wal
     limits_config:
       volume_enabled: true
-      max_query_series: 10000
-      max_query_lookback: 168h  # 7d in hours
-      retention_period: 168h  # 7d in hours
+      max_query_series: 100000
+      max_query_lookback: 168h
+      retention_period: 168h
       reject_old_samples: true
-      # Oldest allowed sample age (adjust as needed)
       reject_old_samples_max_age: 168h
+      ingestion_rate_mb: 20
+      ingestion_burst_size_mb: 40
+      max_line_size: 512000 # 512KB
+      max_streams_per_user: 10000
+      max_query_parallelism: 32
+    querier:
+      max_concurrent: 16
+    query_range:
+      align_queries_with_step: true
+      max_retries: 5
+      parallelise_shardable_queries: true
+      cache_results: true
+    frontend:
+      max_outstanding_per_tenant: 4096
     compactor:
       working_directory: /tmp/loki/retention
       retention_enabled: true
-      compaction_interval: 5m
+      compaction_interval: 10m
       retention_delete_delay: 2h
       delete_request_store: filesystem
 ---
@@ -91,31 +112,35 @@ spec:
     spec:
       serviceAccountName: loki
       containers:
-      - name: loki
-        image: reg.ygnv.my.id/docker/grafana/loki:3.6.3
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            memory: 256Mi
-        args:
-        - -config.file=/etc/loki/loki.yml
-        - -log.level=warn
-        ports:
-        - containerPort: 3100
-          name: http
-        volumeMounts:
-        - name: config
-          mountPath: /etc/loki
-        - name: storage
-          mountPath: /tmp/loki
+        - name: loki
+          image: reg.ygnv.my.id/docker/grafana/loki:3.6.3
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: 200m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 2Gi
+          args:
+            - -config.file=/etc/loki/loki.yml
+            - -log.level=warn
+          ports:
+            - containerPort: 3100
+              name: http
+          volumeMounts:
+            - name: config
+              mountPath: /etc/loki
+            - name: storage
+              mountPath: /tmp/loki
       volumes:
-      - name: config
-        configMap:
-          name: loki-config
-      - name: storage
-        hostPath:
-          path: /mnt/cephfs/docker/monitoring/loki
-          type: Directory
+        - name: config
+          configMap:
+            name: loki-config
+        - name: storage
+          hostPath:
+            path: /mnt/cephfs/docker/monitoring/loki
+            type: Directory
 ---
 apiVersion: v1
 kind: Service
@@ -124,9 +149,9 @@ metadata:
   namespace: monitoring
 spec:
   ports:
-  - port: 3100
-    targetPort: http
-    name: http
+    - port: 3100
+      targetPort: http
+      name: http
   selector:
     app: loki
 ---
@@ -137,12 +162,12 @@ metadata:
   namespace: monitoring
 spec:
   entryPoints:
-  - http
-  - https
+    - http
+    - https
   routes:
-  - match: Host(`loki.ygnv.my.id`)
-    kind: Rule
-    services:
-    - name: loki
-      port: 3100
+    - match: Host(`loki.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: loki
+          port: 3100
   tls: {}
