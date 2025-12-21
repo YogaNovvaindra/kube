@@ -9,9 +9,9 @@ kind: ClusterRole
 metadata:
   name: fluent-bit
 rules:
-- apiGroups: [""]
-  resources: ["pods", "namespaces", "events", "nodes", "nodes/proxy"]
-  verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["pods", "namespaces", "events", "nodes", "nodes/proxy"]
+    verbs: ["get", "list", "watch"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -22,9 +22,9 @@ roleRef:
   kind: ClusterRole
   name: fluent-bit
 subjects:
-- kind: ServiceAccount
-  name: fluent-bit
-  namespace: monitoring
+  - kind: ServiceAccount
+    name: fluent-bit
+    namespace: monitoring
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -36,6 +36,9 @@ data:
     [SERVICE]
         flush           1
         log_level       info
+        http_server     on
+        http_listen     0.0.0.0
+        http_port       2020
 
     [INPUT]
         Name              tail
@@ -68,7 +71,7 @@ data:
         Labels          job=fluent-bit,source=kube-logs
         Label_Keys     $kubernetes['namespace_name'],$kubernetes['pod_name'],$kubernetes['container_name']
         auto_kubernetes_labels On
-        
+
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -80,6 +83,9 @@ data:
     [SERVICE]
         flush           1
         log_level       info
+        http_server     on
+        http_listen     0.0.0.0
+        http_port       2020
         
     [INPUT]
         name              kubernetes_events
@@ -115,26 +121,26 @@ spec:
     spec:
       serviceAccountName: fluent-bit
       containers:
-      - name: fluent-logs
-        image: reg.ygnv.my.id/docker/fluent/fluent-bit:4.2.1
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            memory: 32Mi
-        volumeMounts:
-        - name: config
-          mountPath: /fluent-bit/etc/fluent-bit.conf
-          subPath: fluent-bit.conf
-        - name: varlog
-          mountPath: /var/log
+        - name: fluent-logs
+          image: reg.ygnv.my.id/docker/fluent/fluent-bit:4.2.1
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 32Mi
+          volumeMounts:
+            - name: config
+              mountPath: /fluent-bit/etc/fluent-bit.conf
+              subPath: fluent-bit.conf
+            - name: varlog
+              mountPath: /var/log
       volumes:
-      - name: config
-        configMap:
-          name: fluent-logs-config
-      - name: varlog
-        hostPath:
-          path: /var/log
-          type: Directory
+        - name: config
+          configMap:
+            name: fluent-logs-config
+        - name: varlog
+          hostPath:
+            path: /var/log
+            type: Directory
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -156,17 +162,17 @@ spec:
     spec:
       serviceAccountName: fluent-bit
       containers:
-      - name: fluent-events
-        image: reg.ygnv.my.id/docker/fluent/fluent-bit:4.2.1
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            memory: 32Mi
-        volumeMounts:
-        - name: config
-          mountPath: /fluent-bit/etc/fluent-bit.conf
-          subPath: fluent-bit.conf
+        - name: fluent-events
+          image: reg.ygnv.my.id/docker/fluent/fluent-bit:4.2.1
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 32Mi
+          volumeMounts:
+            - name: config
+              mountPath: /fluent-bit/etc/fluent-bit.conf
+              subPath: fluent-bit.conf
       volumes:
-      - name: config
-        configMap:
-          name: fluent-events-config
+        - name: config
+          configMap:
+            name: fluent-events-config

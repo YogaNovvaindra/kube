@@ -20,61 +20,63 @@ spec:
         app: gitea
     spec:
       containers:
-      - name: gitea
-        image: reg.ygnv.my.id/docker/gitea/gitea:1.25.3
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            memory: 256Mi
-        env:
-        - name: USER_UID
-          value: "1000"
-        - name: USER_GID
-          value: "1000"
-        - name: GITEA__database__DB_TYPE
-          value: "mysql"
-        - name: GITEA__database__HOST
-          value: "mariadb:3306"
-        - name: GITEA__database__NAME
-          valueFrom:
-            secretKeyRef:
-              name: gitea-cred
-              key: dbname
-        - name: GITEA__database__USER
-          valueFrom:
-            secretKeyRef:
-              name: gitea-cred
-              key: dbuser
-        - name: GITEA__database__PASSWD
-          valueFrom:
-            secretKeyRef:
-              name: gitea-cred
-              key: dbpass
-        ports:
-        - containerPort: 3000
-        - containerPort: 22
-        volumeMounts:
-        - name: gitea-data
-          mountPath: /data
-        - name: timezone
-          mountPath: /etc/timezone
-          readOnly: true
-        - name: localtime
-          mountPath: /etc/localtime
-          readOnly: true
+        - name: gitea
+          image: reg.ygnv.my.id/docker/gitea/gitea:1.25.3
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 256Mi
+          env:
+            - name: USER_UID
+              value: "1000"
+            - name: USER_GID
+              value: "1000"
+            - name: GITEA__database__DB_TYPE
+              value: "mysql"
+            - name: GITEA__database__HOST
+              value: "mariadb:3306"
+            - name: GITEA__database__NAME
+              valueFrom:
+                secretKeyRef:
+                  name: gitea-cred
+                  key: dbname
+            - name: GITEA__database__USER
+              valueFrom:
+                secretKeyRef:
+                  name: gitea-cred
+                  key: dbuser
+            - name: GITEA__database__PASSWD
+              valueFrom:
+                secretKeyRef:
+                  name: gitea-cred
+                  key: dbpass
+            - name: GITEA__metrics__ENABLED
+              value: "true"
+          ports:
+            - containerPort: 3000
+            - containerPort: 22
+          volumeMounts:
+            - name: gitea-data
+              mountPath: /data
+            - name: timezone
+              mountPath: /etc/timezone
+              readOnly: true
+            - name: localtime
+              mountPath: /etc/localtime
+              readOnly: true
       volumes:
-      - name: gitea-data
-        hostPath:
-          path: /mnt/cephfs/docker/tools/gitea
-          type: Directory
-      - name: timezone
-        hostPath:
-          path: /etc/timezone
-          type: File
-      - name: localtime
-        hostPath:
-          path: /etc/localtime
-          type: File
+        - name: gitea-data
+          hostPath:
+            path: /mnt/cephfs/docker/tools/gitea
+            type: Directory
+        - name: timezone
+          hostPath:
+            path: /etc/timezone
+            type: File
+        - name: localtime
+          hostPath:
+            path: /etc/localtime
+            type: File
 ---
 apiVersion: v1
 kind: Service
@@ -87,9 +89,9 @@ spec:
   selector:
     app: gitea
   ports:
-  - name: http
-    port: 3000
-    targetPort: 3000
+    - name: http
+      port: 3000
+      targetPort: 3000
 ---
 apiVersion: v1
 kind: Service
@@ -102,9 +104,9 @@ spec:
   selector:
     app: gitea
   ports:
-  - name: ssh
-    port: 22
-    targetPort: 22
+    - name: ssh
+      port: 22
+      targetPort: 22
   type: ClusterIP
 ---
 apiVersion: traefik.io/v1alpha1
@@ -149,7 +151,7 @@ metadata:
     app: gitea-mirror
   annotations:
     keel.sh/policy: force
-    keel.sh/trigger: poll 
+    keel.sh/trigger: poll
     keel.sh/match-tag: "true"
     keel.sh/pollSchedule: "@every 6h"
 spec:
@@ -166,31 +168,31 @@ spec:
         app: gitea-mirror
     spec:
       containers:
-      - name: gitea-mirror
-        image: jaedle/mirror-to-gitea:latest
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            memory: 64Mi
-        env:
-        - name: GITHUB_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: gitea-cred
-              key: githubuser
-        - name: GITEA_URL
-          value: "http://gitea-http:3000"
-        - name: GITEA_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: gitea-cred
-              key: giteatoken
-        - name: GITHUB_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: gitea-cred
-              key: githubtoken
-        - name: MIRROR_PRIVATE_REPOSITORIES
-          value: "true"
-        - name: DELAY
-          value: "21600"
+        - name: gitea-mirror
+          image: jaedle/mirror-to-gitea:latest
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 64Mi
+          env:
+            - name: GITHUB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: gitea-cred
+                  key: githubuser
+            - name: GITEA_URL
+              value: "http://gitea-http:3000"
+            - name: GITEA_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: gitea-cred
+                  key: giteatoken
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: gitea-cred
+                  key: githubtoken
+            - name: MIRROR_PRIVATE_REPOSITORIES
+              value: "true"
+            - name: DELAY
+              value: "21600"
