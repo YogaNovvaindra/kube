@@ -68,9 +68,19 @@ core:
         secretKeyRef:
           name: "harbor-cred"
           key: "REGISTRY_CREDENTIAL_PASSWORD"
+    - name: POSTGRESQL_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: "harbor-cred"
+          key: "POSTGRES_USER"
+    - name: POSTGRESQL_DATABASE
+      valueFrom:
+        secretKeyRef:
+          name: "harbor-cred"
+          key: "POSTGRES_DB"
 
 jobservice:
-  existingSecret: ""
+  existingSecret: "harbor-cred"
   secret: "JOBSERVICE_SECRET"
   extraEnvVars:
     - name: REGISTRY_CREDENTIAL_PASSWORD
@@ -83,6 +93,16 @@ jobservice:
         secretKeyRef:
           name: "harbor-cred"
           key: "POSTGRES_PASSWORD"
+    - name: POSTGRESQL_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: "harbor-cred"
+          key: "POSTGRES_USER"
+    - name: POSTGRESQL_DATABASE
+      valueFrom:
+        secretKeyRef:
+          name: "harbor-cred"
+          key: "POSTGRES_DB"
 
 registry:
   existingSecret: ""
@@ -97,6 +117,16 @@ registry:
         secretKeyRef:
           name: "harbor-cred"
           key: "POSTGRES_PASSWORD"
+    - name: POSTGRESQL_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: "harbor-cred"
+          key: "POSTGRES_USER"
+    - name: POSTGRESQL_DATABASE
+      valueFrom:
+        secretKeyRef:
+          name: "harbor-cred"
+          key: "POSTGRES_DB"
 
 # Disable components you might not need or manage manually
 trivy:
