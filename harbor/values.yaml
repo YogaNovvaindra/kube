@@ -62,6 +62,9 @@ core:
     kubernetes.io/arch: amd64
   # Core secret - needs harbor-cred secret with key 'secret'
   existingSecret: "harbor-cred"
+  resources:
+    requests:
+      memory: 64Mi
 
   # TLS certificate and private key for token encryption/decryption.
   secretName: "harbor-token-cred"
@@ -78,6 +81,9 @@ jobservice:
   secret: "" # Will use existing secret
   existingSecret: "harbor-cred"
   existingSecretKey: "JOBSERVICE_SECRET"
+  resources:
+    requests:
+      memory: 64Mi
 
 # Registry Component Configuration
 registry:
@@ -86,6 +92,9 @@ registry:
   secret: "" # Will use existing secret
   existingSecret: "harbor-cred"
   existingSecretKey: "REGISTRY_HTTP_SECRET"
+  resources:
+    requests:
+      memory: 64Mi
 
   credentials:
     username: "harbor_registry_user"
@@ -97,22 +106,34 @@ trivy:
   nodeSelector:
     kubernetes.io/arch: amd64
   enabled: true
+  resources:
+    requests:
+      memory: 256Mi
 
 # Exporter Configuration
 exporter:
   nodeSelector:
     kubernetes.io/arch: amd64
+  resources:
+    requests:
+      memory: 32Mi
 
 # Portal Configuration
 portal:
   nodeSelector:
     kubernetes.io/arch: amd64
+  resources:
+    requests:
+      memory: 32Mi
   extraEnvVars: []
 
 # Nginx Configuration
 nginx:
   nodeSelector:
     kubernetes.io/arch: amd64
+  resources:
+    requests:
+      memory: 32Mi
   extraEnvVars: []
 
 # Disable metrics
