@@ -22,9 +22,9 @@ database:
   external:
     host: "postgres"
     port: 5432
-    existingSecret: "harbor-cred"
+    # existingSecret: "harbor-cred" -> Removed to prevent invalid env var generation
+    password: "dummy" # Dummy value, overridden by extraEnvVars
     usernameKey: "POSTGRES_USER"
-    passwordKey: "POSTGRES_PASSWORD"
     coreDatabaseKey: "POSTGRES_DB"
 
 # Using your existing Redis (Valkey)
