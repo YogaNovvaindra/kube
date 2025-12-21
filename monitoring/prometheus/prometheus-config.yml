@@ -13,12 +13,21 @@ data:
     scrape_configs:
       # Self-monitoring
       - job_name: prometheus
-        static_configs:
-          - targets: [localhost:9090]
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: [monitoring]
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            action: keep
+            regex: prometheus
+          - source_labels: [__meta_kubernetes_pod_ip]
+            target_label: __address__
+            replacement: $1:9090
 
       # Proxmox VE monitoring
       - job_name: proxmox
-        scrape_interval: 60s
+
         metrics_path: /pve
         params:
           module: [default]
@@ -174,21 +183,35 @@ data:
 
       # Services monitoring
       - job_name: adguard
-        scrape_interval: 60s
-        static_configs:
-          - targets: [adguard-exporter:9618]
-            labels:
-              instance: adguard-exporter
+
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: [monitoring]
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            action: keep
+            regex: adguard-exporter
+          - source_labels: [__meta_kubernetes_pod_ip]
+            target_label: __address__
+            replacement: $1:9618
 
       - job_name: authentik
-        scrape_interval: 60s
-        static_configs:
-          - targets: [authentik-server.tools.svc.cluster.local:9300]
-            labels:
-              instance: authentik-server
+
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: [tools]
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            action: keep
+            regex: authentik-server
+          - source_labels: [__meta_kubernetes_pod_ip]
+            target_label: __address__
+            replacement: $1:9300
 
       - job_name: traefik
-        scrape_interval: 60s
+
         kubernetes_sd_configs:
           - role: pod
             namespaces:
@@ -210,7 +233,7 @@ data:
             target_label: app
 
       - job_name: cert-manager
-        scrape_interval: 60s
+
         kubernetes_sd_configs:
           - role: pod
             namespaces:
@@ -228,10 +251,19 @@ data:
             target_label: pod
 
       - job_name: uptime-kuma
-        scrape_interval: 60s
+
         metrics_path: /metrics
-        static_configs:
-          - targets: ['uptime-kuma.monitoring.svc.cluster.local:3001']
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: [monitoring]
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            action: keep
+            regex: uptime-kuma
+          - source_labels: [__meta_kubernetes_pod_ip]
+            target_label: __address__
+            replacement: $1:3001
         basic_auth:
           password: ${UPTIME_KUMA_API_KEY}
 
@@ -316,10 +348,17 @@ data:
       # Network devices monitoring
       - job_name: mktxp
         honor_timestamps: false
-        static_configs:
-          - targets: [mktxp:49090]
-            labels:
-              instance: mikrotik-exporter
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: [monitoring]
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            action: keep
+            regex: mktxp
+          - source_labels: [__meta_kubernetes_pod_ip]
+            target_label: __address__
+            replacement: $1:49090
 
       - job_name: openwrt
         honor_timestamps: false
@@ -348,7 +387,6 @@ data:
 
       # Server infrastructure monitoring
       # - job_name: server-node
-      #   scrape_interval: 60s
       #   static_configs:
       #     - targets: [${DOCKER_ENDPOINT}]
       #       labels:
