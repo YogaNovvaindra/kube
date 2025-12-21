@@ -32,3 +32,19 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+  ignoreDifferences:
+    - group: ""
+      kind: Secret
+      name: harbor-core
+      jsonPointers:
+        - /data
+    - group: ""
+      kind: Secret
+      name: harbor-jobservice
+      jsonPointers:
+        - /data
+    - group: ""
+      kind: Secret
+      name: harbor-registry
+      jsonPointers:
+        - /data
