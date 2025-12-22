@@ -243,7 +243,7 @@ data:
           icon: https://Keel.sh/img/logo_small.png
           href: https://keel.ygnv.my.id
           description: Container image automation and management
-          siteMonitor: http://keel.keel:9300
+          siteMonitor: http://keel.cluster:9300
 
     - Monitoring and Analytics:
       - Grafana:
@@ -282,18 +282,18 @@ data:
             type: myspeed
             url: http://myspeed:5216
             password: ${MYSPEED_PASSWORD}
-      - Peekaping:
-          icon: 	https://peekaping.com/logo-mascot.webp
-          href: https://peekaping.ygnv.my.id
-          description: Real-time network latency monitoring
-          siteMonitor: http://peekaping-web.monitoring:80
+      # - Peekaping:
+      #     icon: 	https://peekaping.com/logo-mascot.webp
+      #     href: https://peekaping.ygnv.my.id
+      #     description: Real-time network latency monitoring
+      #     siteMonitor: http://peekaping-web.monitoring:80
 
     - Security:
       - Vaultwarden:
           icon: vaultwarden.png
           href: https://vaultwarden.ygnv.my.id
           description: Self-hosted password manager (Bitwarden compatible)
-          # siteMonitor: https://vaultwarden.ygnv.my.id
+          siteMonitor: http://vaultwarden.tools:80
       - Authentik:
           icon: authentik.png
           href: https://auth.ygnv.my.id
@@ -332,7 +332,7 @@ data:
           icon: harbor.svg
           href: https://reg.ygnv.my.id
           description: Container image registry and management platform
-          siteMonitor: http://nginx.harbor:8080
+          siteMonitor: http://harbor.harbor:80
       # - Ollama:
       #     icon: ollama.png
       #     href: https://ai.ygnv.my.id
