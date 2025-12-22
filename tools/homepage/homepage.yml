@@ -38,9 +38,9 @@ spec:
                 envsubst < "$file" > "/processed-config/$file";
               done;
           volumeMounts:
-            - name: config-templates  # Contains your raw ConfigMap templates
+            - name: config-templates # Contains your raw ConfigMap templates
               mountPath: /templates
-            - name: processed-config   # Stores processed config files
+            - name: processed-config # Stores processed config files
               mountPath: /processed-config
           envFrom:
             - secretRef:
@@ -61,23 +61,23 @@ spec:
             - secretRef:
                 name: homepage-cred
           volumeMounts:
-            - name: processed-config    # Mount processed config files
+            - name: processed-config # Mount processed config files
               mountPath: /app/config
             - name: logs
               mountPath: /app/config/logs
             - name: images
               mountPath: /app/public/images
       volumes:
-        - name: config-templates    # Holds your ConfigMap with templates
+        - name: config-templates # Holds your ConfigMap with templates
           configMap:
-            name: homepage          # Name of your existing ConfigMap
-        - name: processed-config    # Temporary storage for processed files
+            name: homepage # Name of your existing ConfigMap
+        - name: processed-config # Temporary storage for processed files
           emptyDir: {}
         - name: logs
           emptyDir: {}
         - name: images
           hostPath:
-            path: /mnt/cephfs/kube/homepage/images
+            path: /mnt/cephfs/kube//tools/homepage/images
             type: Directory
 ---
 apiVersion: v1
