@@ -61,6 +61,8 @@ spec:
               value: ""
             - name: IMMICH_MACHINE_LEARNING_URL
               value: "http://immich-machine-learning:3003"
+            - name: UPLOAD_LOCATION
+              value: "/photos"
           volumeMounts:
             - name: config-volume
               mountPath: /config
