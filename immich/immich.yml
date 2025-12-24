@@ -1,111 +1,181 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app
+  name: immich-server
   namespace: immich
   labels:
-    app: immich
+    app: immich-server
 spec:
   replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
-      app: immich
+      app: immich-server
   strategy:
     type: RollingUpdate
   template:
     metadata:
       labels:
-        app: immich
+        app: immich-server
+    spec:
+      nodeSelector:
+        kubernetes.io/arch: "amd64"
+      containers:
+        - name: immich-server
+          image: ghcr.io/immich-app/immich-server:v2.4.1
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 256Mi
+          ports:
+            - containerPort: 2283
+          env:
+            - name: TZ
+              value: "Asia/Jakarta"
+            - name: SERVER_PORT
+              value: "2283"
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-cred
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-cred
+                  key: password
+            - name: DB_DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-cred
+                  key: dbname
+            - name: DB_HOSTNAME
+              value: "immich-db"
+            - name: DB_PORT
+              value: "5432"
+            - name: REDIS_HOSTNAME
+              value: "immich-valkey"
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_PASSWORD
+              value: ""
+            - name: IMMICH_MACHINE_LEARNING_URL
+              value: "http://immich-machine-learning:3003"
+          volumeMounts:
+            - name: config-volume
+              mountPath: /config
+            - name: photos-volume
+              mountPath: /photos
+            - name: pictures-volume
+              mountPath: /pictures
+              readOnly: true
+            - name: libraries-volume
+              mountPath: /libraries
+            # Add device mounts
+            - mountPath: /dev/dri
+              name: dri-device
+            - mountPath: /dev/bus/usb
+              name: usb-devices
+          securityContext:
+            privileged: true
+      volumes:
+        - name: config-volume
+          hostPath:
+            path: /mnt/cephfs/docker/immich/config
+            type: Directory
+        - name: libraries-volume
+          hostPath:
+            path: /mnt/cephfs/docker/immich/libraries
+            type: Directory
+        - name: photos-volume
+          hostPath:
+            path: /mnt/cephfs/docker/immich/photos
+            type: Directory
+        - name: pictures-volume
+          hostPath:
+            path: /mnt/cephfs/data/Pictures
+            type: Directory
+        # Add device volumes
+        - name: dri-device
+          hostPath:
+            path: /dev/dri
+        - name: usb-devices
+          hostPath:
+            path: /dev/bus/usb
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: immich-machine-learning
+  namespace: immich
+  labels:
+    app: immich-machine-learning
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: immich-machine-learning
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: immich-machine-learning
     spec:
       nodeSelector:
         kubernetes.io/hostname: "kube-2"
       containers:
-      - name: immich
-        image: reg.ygnv.my.id/ghcr/imagegenius/immich:2.4.1
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            memory: 1Gi
-        ports:
-        - containerPort: 8080
-        env:
-        - name: TZ
-          value: "Asia/Jakarta"
-        - name: SERVER_PORT
-          value: "8080"
-        - name: DB_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: db-cred
-              key: username
-        - name: DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: db-cred
-              key: password
-        - name: DB_DATABASE_NAME
-          valueFrom:
-            secretKeyRef:
-              name: db-cred
-              key: dbname
-        - name: DB_HOSTNAME
-          value: "immich-db"
-        - name: DB_PORT
-          value: "5432"
-        - name: REDIS_HOSTNAME
-          value: "immich-valkey"
-        - name: REDIS_PORT
-          value: "6379"
-        - name: REDIS_PASSWORD
-          value: ""
-        - name: MACHINE_LEARNING_HOST
-          value: "0.0.0.0"
-        - name: MACHINE_LEARNING_PORT
-          value: "3003"
-        - name: MACHINE_LEARNING_WORKERS
-          value: "1"
-        - name: MACHINE_LEARNING_WORKER_TIMEOUT
-          value: "120"
-        volumeMounts:
-        - name: config-volume
-          mountPath: /config
-        - name: photos-volume
-          mountPath: /photos
-        - name: pictures-volume
-          mountPath: /pictures
-          readOnly: true
-        # Add device mounts
-        - mountPath: /dev/dri
-          name: dri-device
-        - mountPath: /dev/bus/usb
-          name: usb-devices
-        securityContext:
-          privileged: true
+        - name: immich-machine-learning
+          image: ghcr.io/immich-app/immich-machine-learning:v2.4.1-openvino
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 512Mi
+          ports:
+            - containerPort: 3003
+          env:
+            - name: TZ
+              value: "Asia/Jakarta"
+            - name: MACHINE_LEARNING_PORT
+              value: "3003"
+            - name: MACHINE_LEARNING_WORKERS
+              value: "1"
+            - name: MACHINE_LEARNING_WORKER_TIMEOUT
+              value: "120"
+            - name: DB_HOSTNAME
+              value: "immich-db"
+            - name: DB_username
+              valueFrom:
+                secretKeyRef:
+                  name: db-cred
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-cred
+                  key: password
+            - name: DB_DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-cred
+                  key: dbname
+          volumeMounts:
+            - name: config-volume
+              mountPath: /config
+            # Add device mounts for OpenVINO
+            - mountPath: /dev/dri
+              name: dri-device
+          securityContext:
+            privileged: true
       volumes:
-      - name: config-volume
-        hostPath:
-          path: /mnt/cephfs/docker/immich/config
-          type: Directory
-      - name: libraries-volume
-        hostPath:
-          path: /mnt/cephfs/docker/immich/libraries
-          type: Directory
-      - name: photos-volume
-        hostPath:
-          path: /mnt/cephfs/docker/immich/photos
-          type: Directory
-      - name: pictures-volume
-        hostPath:
-          path: /mnt/cephfs/data/Pictures
-          type: Directory
-      # Add device volumes
-      - name: dri-device
-        hostPath:
-          path: /dev/dri
-      - name: usb-devices
-        hostPath:
-          path: /dev/bus/usb
+        - name: config-volume
+          hostPath:
+            path: /mnt/cephfs/docker/immich/config
+            type: Directory
+        - name: dri-device
+          hostPath:
+            path: /dev/dri
 ---
 apiVersion: v1
 kind: Service
@@ -114,11 +184,24 @@ metadata:
   namespace: immich
 spec:
   selector:
-    app: immich
+    app: immich-server
   ports:
-  - protocol: TCP
-    port: 8080
-    targetPort: 8080
+    - protocol: TCP
+      port: 2283
+      targetPort: 2283
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: immich-machine-learning
+  namespace: immich
+spec:
+  selector:
+    app: immich-machine-learning
+  ports:
+    - protocol: TCP
+      port: 3003
+      targetPort: 3003
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
@@ -134,7 +217,7 @@ spec:
       kind: Rule
       services:
         - name: immich-svc
-          port: 8080
+          port: 2283
   tls: {}
 ---
 apiVersion: apps/v1
@@ -157,22 +240,22 @@ spec:
         app: valkey
     spec:
       containers:
-      - name: valkey
-        image: reg.ygnv.my.id/docker/valkey/valkey:9.0-alpine
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            memory: 32Mi
-        ports:
-        - containerPort: 6379
-        volumeMounts:
-        - name: valkey-data
-          mountPath: /data
+        - name: valkey
+          image: reg.ygnv.my.id/docker/valkey/valkey:9.0-alpine
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 32Mi
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - name: valkey-data
+              mountPath: /data
       volumes:
-      - name: valkey-data
-        hostPath:
-          path: /mnt/cephfs/docker/immich/valkey
-          type: Directory
+        - name: valkey-data
+          hostPath:
+            path: /mnt/cephfs/docker/immich/valkey
+            type: Directory
 ---
 apiVersion: v1
 kind: Service
@@ -183,9 +266,9 @@ spec:
   selector:
     app: valkey
   ports:
-  - protocol: TCP
-    port: 6379
-    targetPort: 6379
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -209,42 +292,42 @@ spec:
         kubernetes.io/hperf: "true"
       terminationGracePeriodSeconds: 10
       containers:
-      - name: db
-        image: reg.ygnv.my.id/ghcr/immich-app/postgres:16-vectorchord0.4.2-pgvectors0.3.0
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            memory: 512Mi
-        ports:
-        - containerPort: 5432
-        env:
-        - name: POSTGRES_USER
-          valueFrom:
-            secretKeyRef:
-              name: db-cred
-              key: username
-        - name: POSTGRES_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: db-cred
-              key: password
-        - name: POSTGRES_DB
-          valueFrom:
-            secretKeyRef:
-              name: db-cred
-              key: dbname
-        - name: POSTGRES_INITDB_ARGS
-          value: '--data-checksums'
-        - name: DB_STORAGE_TYPE
-          value: 'HDD'
-        volumeMounts:
-        - name: db-data
-          mountPath: /var/lib/postgresql/data
+        - name: db
+          image: reg.ygnv.my.id/ghcr/immich-app/postgres:16-vectorchord0.4.2-pgvectors0.3.0
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 512Mi
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-cred
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-cred
+                  key: password
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: db-cred
+                  key: dbname
+            - name: POSTGRES_INITDB_ARGS
+              value: "--data-checksums"
+            - name: DB_STORAGE_TYPE
+              value: "HDD"
+          volumeMounts:
+            - name: db-data
+              mountPath: /var/lib/postgresql/data
       volumes:
-      - name: db-data
-        hostPath:
-          path: /mnt/cephfs/docker/immich/postgres16
-          type: Directory
+        - name: db-data
+          hostPath:
+            path: /mnt/cephfs/docker/immich/postgres16
+            type: Directory
 ---
 apiVersion: v1
 kind: Service
@@ -255,6 +338,6 @@ spec:
   selector:
     app: db
   ports:
-  - protocol: TCP
-    port: 5432
-    targetPort: 5432
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
