@@ -22,7 +22,7 @@ spec:
         kubernetes.io/arch: "amd64"
       containers:
         - name: immich-server
-          image: ghcr.io/immich-app/immich-server:v2.4.1
+          image: reg.ygnv.my.id/ghcr/immich-app/immich-server:v2.4.1
           imagePullPolicy: IfNotPresent
           resources:
             requests:
@@ -127,7 +127,7 @@ spec:
         kubernetes.io/hostname: "kube-2"
       containers:
         - name: immich-machine-learning
-          image: ghcr.io/immich-app/immich-machine-learning:v2.4.1-openvino
+          image: reg.ygnv.my.id/ghcr/immich-app/immich-machine-learning:v2.4.1-openvino
           imagePullPolicy: IfNotPresent
           resources:
             requests:
