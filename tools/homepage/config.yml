@@ -603,10 +603,10 @@ data:
           icon: immich.png
           href: https://immich.ygnv.my.id
           description: Self-hosted photo and video backup solution
-          siteMonitor: http://immich-svc.immich:8080
+          siteMonitor: http://immich-svc.immich:2283
           widget:
             type: immich
-            url: http://immich-svc.immich:8080
+            url: http://immich-svc.immich:2283
             key: ${IMMICH_KEY}
             version: 2
 
