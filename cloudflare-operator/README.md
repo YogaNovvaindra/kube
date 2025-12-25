@@ -23,7 +23,9 @@ Replace the value in `cloudflare-secret.yml`.
 
 ### 2. Configure Tunnel
 
-Update `cloudflare-secret.yml` with your sealed Email and Account ID.
+Update `cluster-tunnel.yml` with your Cloudflare Account ID.
+
+Note: `accountId` must be in the YAML file as it is required by the operator schema and cannot be read from the secret for this resource type.
 
 **How to find Cloudflare Account ID:**
 

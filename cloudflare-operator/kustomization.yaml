@@ -7,5 +7,6 @@ resources:
   - https://github.com/adyanth/cloudflare-operator/config/default?ref=v0.13.1
   # Local resources
   - cloudflare-cred.yml
-  - cluster-tunnel.yml
+  - cluster-tunnel-ygnv.yml
+  - cluster-tunnel-yoganova.yml
   - tunnel-bindings.yml

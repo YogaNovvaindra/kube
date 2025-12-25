@@ -12,7 +12,7 @@ subjects:
       target: http://ghost.services.svc.cluster.local:2368
 tunnelRef:
   kind: ClusterTunnel
-  name: homelab-tunnel
+  name: homelab-tunnel-ygnv
 ---
 # Portfolio
 apiVersion: networking.cfargotunnel.com/v1alpha1
@@ -27,7 +27,7 @@ subjects:
       target: http://portfolio.services.svc.cluster.local:80
 tunnelRef:
   kind: ClusterTunnel
-  name: homelab-tunnel
+  name: homelab-tunnel-yoganova
 ---
 # Linear Next
 apiVersion: networking.cfargotunnel.com/v1alpha1
@@ -42,7 +42,7 @@ subjects:
       target: http://linear-next.services.svc.cluster.local:3000
 tunnelRef:
   kind: ClusterTunnel
-  name: homelab-tunnel
+  name: homelab-tunnel-yoganova
 ---
 # Tolonto
 apiVersion: networking.cfargotunnel.com/v1alpha1
@@ -57,7 +57,7 @@ subjects:
       target: http://tolonto.services.svc.cluster.local:80
 tunnelRef:
   kind: ClusterTunnel
-  name: homelab-tunnel
+  name: homelab-tunnel-yoganova
 ---
 # Ecoguardian
 apiVersion: networking.cfargotunnel.com/v1alpha1
@@ -72,4 +72,4 @@ subjects:
       target: http://ecoguardian.services.svc.cluster.local:3000
 tunnelRef:
   kind: ClusterTunnel
-  name: homelab-tunnel
+  name: homelab-tunnel-yoganova
