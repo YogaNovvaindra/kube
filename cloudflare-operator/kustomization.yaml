@@ -10,3 +10,6 @@ resources:
   - cluster-tunnel-ygnv.yml
   - cluster-tunnel-yoganova.yml
   - tunnel-bindings.yml
+
+patches:
+  - path: certificate-patch.yaml

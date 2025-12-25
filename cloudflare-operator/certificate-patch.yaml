@@ -1,0 +1,9 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cloudflare-operator-serving-cert
+  namespace: cloudflare-operator-system # Kustomize will match this
+spec:
+  dnsNames:
+    - cloudflare-operator-webhook-service.cloudflare-operator.svc
+    - cloudflare-operator-webhook-service.cloudflare-operator.svc.cluster.local
