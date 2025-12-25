@@ -1,0 +1,11 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sealed-secrets-controller
+spec:
+  template:
+    spec:
+      containers:
+        - resources:
+            requests:
+              memory: 32Mi

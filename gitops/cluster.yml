@@ -16,8 +16,7 @@ spec:
     path: cluster
     repoURL: https://github.com/YogaNovvaindra/kube.git
     targetRevision: HEAD
-    directory:
-      recurse: true
+    kustomize: {}
   sources: []
   project: default
   syncPolicy:
