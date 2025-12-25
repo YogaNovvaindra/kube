@@ -95,6 +95,24 @@
       ],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "adyanth/cloudflare-operator"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/kustomization\\.ya?ml$/"],
+      "matchStrings": [
+        "https://github\\.com/bitnami-labs/sealed-secrets/releases/download/(?<currentValue>v[0-9.]+)/controller\\.yaml"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "bitnami-labs/sealed-secrets"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/kustomization\\.ya?ml$/"],
+      "matchStrings": [
+        "https://raw\\.githubusercontent\\.com/stakater/Reloader/(?<currentValue>v[0-9.]+)/deployments/kubernetes/reloader\\.yaml"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "stakater/Reloader"
     }
   ]
 }

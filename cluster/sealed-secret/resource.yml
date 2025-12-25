@@ -6,6 +6,7 @@ spec:
   template:
     spec:
       containers:
-        - resources:
+        - name: sealed-secrets-controller
+          resources:
             requests:
               memory: 32Mi
