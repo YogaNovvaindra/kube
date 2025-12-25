@@ -60,7 +60,7 @@ spec:
             - name: REDIS_PASSWORD
               value: ""
             - name: IMMICH_MACHINE_LEARNING_URL
-              value: "http://immich-machine-learning:8080"
+              value: "http://immich-machine-learning:3003"
           volumeMounts:
             - name: config-volume
               mountPath: /config
@@ -111,6 +111,7 @@ metadata:
   labels:
     app: immich-machine-learning
 spec:
+  replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
@@ -195,12 +196,12 @@ metadata:
   name: immich-machine-learning
   namespace: immich
 spec:
-  type: ExternalName
-  externalName: keda-add-ons-http-interceptor-proxy.keda.svc.cluster.local
+  selector:
+    app: immich-machine-learning
   ports:
     - protocol: TCP
-      port: 8080
-      targetPort: 8080
+      port: 3003
+      targetPort: 3003
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
@@ -212,7 +213,6 @@ spec:
     - http
     - https
   routes:
-    - match: Host(`immich.ygnv.my.id`)
     - match: Host(`immich.ygnv.my.id`)
       kind: Rule
       services:
