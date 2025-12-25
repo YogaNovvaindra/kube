@@ -143,11 +143,11 @@ This cluster hosts a variety of self-managed applications and services.
 #### 🔐 Security & Authentication
 
 - [🔑 Authentik](file:///home/yoga/Documents/kube/tools/authentik): Centralized authentication and identity provider.
-- [🛡️ Vaultwarden](file:///home/yoga/Documents/kube/tools/vaultwarden.yml): Self-hosted password manager (Bitwarden compatible).
+- [🛡️ Vaultwarden](file:///home/yoga/Documents/kube/tools/security/vaultwarden.yml): Self-hosted password manager (Bitwarden compatible).
 
 #### 💻 Development & Code Management
 
-- [💻 Gitea](file:///home/yoga/Documents/kube/tools/gitea.yml): Self-hosted Git service and repository manager.
+- [💻 Gitea](file:///home/yoga/Documents/kube/tools/git/gitea.yml): Self-hosted Git service and repository manager.
 - [📊 Bytebase](file:///home/yoga/Documents/kube/tools/db/bytebase.yml): Database schema change and version control tool.
 - [📚 Outline](file:///home/yoga/Documents/kube/tools/editor/outline.yml): Collaborative knowledge base/wiki.
 - [⚙️ Semaphore](file:///home/yoga/Documents/kube/tools/cluster/semaphore.yml): UI for running Ansible playbooks.
@@ -168,14 +168,14 @@ This cluster hosts a variety of self-managed applications and services.
 
 - [🎨 Excalidraw](file:///home/yoga/Documents/kube/tools/editor/excalidraw.yml): Virtual collaborative whiteboard.
 - [🏠 Homepage](file:///home/yoga/Documents/kube/tools/homepage): Dashboard for managing and accessing all services.
-- [🔄 n8n](file:///home/yoga/Documents/kube/tools/n8n.yml): Workflow automation platform.
-- [🔍 Changedetection.io](file:///home/yoga/Documents/kube/tools/changedetection.yml): Self-hosted website change monitoring.
-- [🔧 IT-Tools](file:///home/yoga/Documents/kube/tools/it-tools.yml): Collection of handy online tools for developers.
+- [🔄 n8n](file:///home/yoga/Documents/kube/tools/automation/n8n.yml): Workflow automation platform.
+- [🔍 Changedetection.io](file:///home/yoga/Documents/kube/tools/automation/changedetection.yml): Self-hosted website change monitoring.
+- [🔧 IT-Tools](file:///home/yoga/Documents/kube/tools/utilities/it-tools.yml): Collection of handy online tools for developers.
 - [🌐 Netbird](file:///home/yoga/Documents/kube/tools/cluster/netbird.yml): Mesh VPN and P2P networking solution for secure access.
 - [♻️ Reloader](file:///home/yoga/Documents/kube/gitops/cluster.yml): Automatically restarts pods when ConfigMaps or Secrets are updated.
-- [💨 Speedtest](file:///home/yoga/Documents/kube/tools/speedtest.yml): Tool for checking internet connection speed.
+- [💨 Speedtest](file:///home/yoga/Documents/kube/tools/network/speedtest.yml): Tool for checking internet connection speed.
 - [🛡️ Vert](file:///home/yoga/Documents/kube/tools/editor/vert.yml): Clean and simple RSS feed reader.
-- [📦 Warrior](file:///home/yoga/Documents/kube/tools/warrior.yml): Archive Team Warrior for distributed archiving.
+- [📦 Warrior](file:///home/yoga/Documents/kube/tools/archiving/warrior.yml): Archive Team Warrior for distributed archiving.
 
 ### 📊 Observability & Monitoring
 
