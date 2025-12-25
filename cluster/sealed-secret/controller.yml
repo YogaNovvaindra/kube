@@ -32,6 +32,9 @@ spec:
           env: []
           image: bitnami/sealed-secrets-controller:0.34.0
           imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 32Mi
           livenessProbe:
             httpGet:
               path: /healthz
