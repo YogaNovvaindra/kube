@@ -1,6 +1,6 @@
 ---
 # Ghost blog at root domain
-apiVersion: networking.cfargotunnel.com/v1alpha2
+apiVersion: networking.cfargotunnel.com/v1alpha1
 kind: TunnelBinding
 metadata:
   name: ghost-binding
@@ -15,7 +15,7 @@ tunnelRef:
   name: homelab-tunnel-ygnv
 ---
 # Portfolio
-apiVersion: networking.cfargotunnel.com/v1alpha2
+apiVersion: networking.cfargotunnel.com/v1alpha1
 kind: TunnelBinding
 metadata:
   name: portfolio-binding
@@ -30,7 +30,7 @@ tunnelRef:
   name: homelab-tunnel-yoganova
 ---
 # Linear Next
-apiVersion: networking.cfargotunnel.com/v1alpha2
+apiVersion: networking.cfargotunnel.com/v1alpha1
 kind: TunnelBinding
 metadata:
   name: linear-binding
@@ -45,7 +45,7 @@ tunnelRef:
   name: homelab-tunnel-yoganova
 ---
 # Tolonto
-apiVersion: networking.cfargotunnel.com/v1alpha2
+apiVersion: networking.cfargotunnel.com/v1alpha1
 kind: TunnelBinding
 metadata:
   name: tolonto-binding
@@ -60,7 +60,7 @@ tunnelRef:
   name: homelab-tunnel-yoganova
 ---
 # Ecoguardian
-apiVersion: networking.cfargotunnel.com/v1alpha2
+apiVersion: networking.cfargotunnel.com/v1alpha1
 kind: TunnelBinding
 metadata:
   name: ecoguardian-binding

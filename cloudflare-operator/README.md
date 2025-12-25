@@ -16,7 +16,7 @@ Then seal it into `cloudflare-secret.yml`:
 
 ```bash
 # Replace YOUR_TOKEN with actual token
-echo -n "YOUR_TOKEN" | kubeseal --raw --scope cluster-wide --name cloudflare-secrets --namespace cloudflare-operator-system
+echo -n "YOUR_TOKEN" | kubeseal --raw --scope cluster-wide --name cloudflare-cred --namespace cloudflare-operator
 ```
 
 Replace the value in `cloudflare-secret.yml`.

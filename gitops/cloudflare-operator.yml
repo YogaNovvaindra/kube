@@ -10,7 +10,7 @@ metadata:
     notifications.argoproj.io/subscribe.on-sync-running.discord: ""
 spec:
   destination:
-    namespace: cloudflare-operator-system
+    namespace: cloudflare-operator
     server: https://kubernetes.default.svc
   source:
     path: cloudflare-operator
