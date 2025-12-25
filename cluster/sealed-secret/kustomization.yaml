@@ -8,4 +8,4 @@ resources:
   - backup.yml
 
 patches:
-  - path: resource.yaml
+  - path: resource.yml
