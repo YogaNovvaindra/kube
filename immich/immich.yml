@@ -111,7 +111,6 @@ metadata:
   labels:
     app: immich-machine-learning
 spec:
-  replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
