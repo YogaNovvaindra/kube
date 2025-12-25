@@ -17,5 +17,7 @@ spec:
     min: 0
     max: 1
   scalingMetric:
-    rate: 100
-    targetValue: 100
+    requestRate:
+      targetValue: 100
+      window: 1m
+      granularity: 1s
