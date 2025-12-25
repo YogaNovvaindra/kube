@@ -1,58 +1,32 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ],
+  "extends": ["config:recommended"],
   "kubernetes": {
-    "managerFilePatterns": [
-      "/\\.yaml$/",
-      "/\\.yml$/"
-    ]
+    "managerFilePatterns": ["/\\.yaml$/", "/\\.yml$/"]
   },
   "argocd": {
-    "fileMatch": [
-      "^gitops/.+\\.ya?ml$"
-    ]
+    "fileMatch": ["^gitops/.+\\.ya?ml$"]
   },
   "packageRules": [
     {
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchUpdateTypes": [
-        "major",
-        "minor",
-        "patch",
-        "digest"
-      ],
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["major", "minor", "patch", "digest"],
       "enabled": true
     },
     {
-      "matchPackageNames": [
-        "*"
-      ],
-      "matchManagers": [
-        "kubernetes"
-      ],
+      "matchPackageNames": ["*"],
+      "matchManagers": ["kubernetes"],
       "matchCurrentVersion": "/^\\d+\\.\\d+\\.\\d+$/",
       "rangeStrategy": "replace"
     },
     {
-      "matchPackageNames": [
-        "*"
-      ],
-      "matchManagers": [
-        "kubernetes"
-      ],
+      "matchPackageNames": ["*"],
+      "matchManagers": ["kubernetes"],
       "matchCurrentVersion": "latest",
       "pinDigests": true
     },
     {
-      "matchUpdateTypes": [
-        "minor",
-        "patch",
-        "digest"
-      ],
+      "matchUpdateTypes": ["minor", "patch", "digest"],
       "automerge": true,
       "automergeType": "pr",
       "ignoreTests": true
@@ -70,9 +44,7 @@
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": [
-        "/kustomization\\.ya?ml$/"
-      ],
+      "managerFilePatterns": ["/kustomization\\.ya?ml$/"],
       "matchStrings": [
         "https://github\\.com/cert-manager/cert-manager/releases/download/(?<currentValue>v[0-9.]+)/cert-manager\\.yaml"
       ],
@@ -81,9 +53,7 @@
     },
     {
       "customType": "regex",
-      "managerFilePatterns": [
-        "/kustomization\\.ya?ml$/"
-      ],
+      "managerFilePatterns": ["/kustomization\\.ya?ml$/"],
       "matchStrings": [
         "https://raw\\.githubusercontent\\.com/traefik/traefik/(?:refs/tags/)?(?<currentValue>v[0-9.]+)/docs/content/reference/dynamic-configuration/kubernetes-crd-(?:definition-v1|rbac)\\.yml"
       ],
@@ -92,9 +62,7 @@
     },
     {
       "customType": "regex",
-      "managerFilePatterns": [
-        "/kustomization\\.ya?ml$/"
-      ],
+      "managerFilePatterns": ["/kustomization\\.ya?ml$/"],
       "matchStrings": [
         "https://raw\\.githubusercontent\\.com/metallb/metallb/(?<currentValue>v[0-9.]+)/config/manifests/metallb-native\\.yaml"
       ],
@@ -103,9 +71,7 @@
     },
     {
       "customType": "regex",
-      "managerFilePatterns": [
-        "/kustomization\\.ya?ml$/"
-      ],
+      "managerFilePatterns": ["/kustomization\\.ya?ml$/"],
       "matchStrings": [
         "https://raw\\.githubusercontent\\.com/argoproj/argo-cd/(?<currentValue>v[0-9.]+|master)/manifests/install\\.yaml"
       ],
@@ -114,14 +80,21 @@
     },
     {
       "customType": "regex",
-      "managerFilePatterns": [
-        "/kustomization\\.ya?ml$/"
-      ],
+      "managerFilePatterns": ["/kustomization\\.ya?ml$/"],
       "matchStrings": [
         "https://raw\\.githubusercontent\\.com/aquasecurity/trivy-operator/(?<currentValue>v[0-9.]+)/deploy/static/trivy-operator\\.yaml"
       ],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "aquasecurity/trivy-operator"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/kustomization\\.ya?ml$/"],
+      "matchStrings": [
+        "https://github\\.com/adyanth/cloudflare-operator/config/default\\?ref=(?<currentValue>v[0-9.]+)"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "adyanth/cloudflare-operator"
     }
   ]
 }
