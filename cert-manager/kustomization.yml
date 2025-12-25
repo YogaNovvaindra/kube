@@ -6,3 +6,6 @@ resources:
   - cloudflare-secret.yml
   - cluster-issuer.yml
 namespace: cert-manager
+
+patches:
+  - path: resources.yml
