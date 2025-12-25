@@ -5,7 +5,8 @@ metadata:
 spec:
   newTunnel:
     name: homelab-tunnel-yoganova
-  size: 2
+  # v1alpha2 uses deployPatch for replicas instead of 'size'
+  deployPatch: '{"spec": {"replicas": 2}}'
   cloudflare:
     domain: yoganova.my.id
     accountId: 97f22b27260f3bf4326b76a3fcb0fb9f
