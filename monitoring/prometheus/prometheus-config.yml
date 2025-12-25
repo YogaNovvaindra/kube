@@ -306,14 +306,32 @@ data:
         kubernetes_sd_configs:
           - role: pod
             namespaces:
-              names: [services]
+              names: [cloudflare-operator-system]
         relabel_configs:
-          - source_labels: [__meta_kubernetes_pod_label_app]
+          - source_labels: [__meta_kubernetes_pod_label_cfargotunnel_com_app]
             action: keep
             regex: cloudflared
           - source_labels: [__meta_kubernetes_pod_ip]
             target_label: __address__
             replacement: $1:2000
+
+      - job_name: cloudflare-operator
+        scheme: https
+        tls_config:
+          insecure_skip_verify: true
+        authorization:
+          credentials_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: [cloudflare-operator-system]
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_control_plane]
+            action: keep
+            regex: controller-manager
+          - source_labels: [__meta_kubernetes_pod_ip]
+            target_label: __address__
+            replacement: $1:8443
 
       - job_name: traefik
 
