@@ -187,3 +187,18 @@ spec:
       port: 3306
       targetPort: 3306
   clusterIP: None
+---
+# Ghost blog at root domain
+apiVersion: networking.cfargotunnel.com/v1alpha1
+kind: TunnelBinding
+metadata:
+  name: ghost-binding
+  namespace: services
+subjects:
+  - name: ghost
+    spec:
+      fqdn: ygnv.my.id
+      target: http://ghost.services.svc.cluster.local:2368
+tunnelRef:
+  kind: ClusterTunnel
+  name: homelab-tunnel-ygnv

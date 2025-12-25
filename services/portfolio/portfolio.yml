@@ -65,3 +65,18 @@ spec:
         target:
           type: Utilization
           averageUtilization: 100
+---
+# Portfolio
+apiVersion: networking.cfargotunnel.com/v1alpha1
+kind: TunnelBinding
+metadata:
+  name: portfolio-binding
+  namespace: services
+subjects:
+  - name: portfolio
+    spec:
+      fqdn: yoganova.my.id
+      target: http://portfolio.services.svc.cluster.local:80
+tunnelRef:
+  kind: ClusterTunnel
+  name: homelab-tunnel-yoganova

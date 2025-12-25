@@ -9,4 +9,3 @@ resources:
   - cloudflare-cred.yml
   - cluster-tunnel-ygnv.yml
   - cluster-tunnel-yoganova.yml
-  - tunnel-bindings.yml

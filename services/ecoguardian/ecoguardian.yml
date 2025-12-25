@@ -72,3 +72,18 @@ spec:
     - name: ecoguardian
       port: 3000
       targetPort: 3000
+---
+# Ecoguardian
+apiVersion: networking.cfargotunnel.com/v1alpha1
+kind: TunnelBinding
+metadata:
+  name: ecoguardian-binding
+  namespace: services
+subjects:
+  - name: ecoguardian
+    spec:
+      fqdn: ecoguardian.yoganova.my.id
+      target: http://ecoguardian.services.svc.cluster.local:3000
+tunnelRef:
+  kind: ClusterTunnel
+  name: homelab-tunnel-yoganova

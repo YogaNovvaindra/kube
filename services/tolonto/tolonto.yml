@@ -1,0 +1,76 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tolonto
+  namespace: services
+  labels:
+    app: tolonto
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: tolonto
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: tolonto
+    spec:
+      nodeSelector:
+        kubernetes.io/arch: amd64
+        kubernetes.io/disk: hdd
+      containers:
+        - name: tolonto
+          image: reg.ygnv.my.id/docker/jakubboucek/lamp-devstack-php:8.5.1
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 32Mi
+          ports:
+            - containerPort: 80
+          env:
+            - name: TZ
+              value: "Asia/Jakarta"
+            - name: APACHE_DOCUMENT_ROOT
+              value: "/var/www/html"
+          volumeMounts:
+            - name: tolonto-data
+              mountPath: /var/www/html
+      volumes:
+        - name: tolonto-data
+          hostPath:
+            path: /mnt/cephfs/docker/services/tolonto
+            type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tolonto
+  namespace: services
+  labels:
+    app: tolonto
+spec:
+  selector:
+    app: tolonto
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 80
+---
+# Tolonto
+apiVersion: networking.cfargotunnel.com/v1alpha1
+kind: TunnelBinding
+metadata:
+  name: tolonto-binding
+  namespace: services
+subjects:
+  - name: tolonto
+    spec:
+      fqdn: tolonto.yoganova.my.id
+      target: http://tolonto.services.svc.cluster.local:80
+tunnelRef:
+  kind: ClusterTunnel
+  name: homelab-tunnel-yoganova

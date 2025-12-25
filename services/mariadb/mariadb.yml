@@ -1,0 +1,70 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mariadb
+  namespace: services
+  labels:
+    app: mariadb
+spec:
+  serviceName: mariadb
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: mariadb
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      nodeSelector:
+        kubernetes.io/hperf: "true"
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: mariadb
+          image: reg.ygnv.my.id/docker/mariadb:12.1.2
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 256Mi
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-cred
+                  key: password
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-cred
+                  key: username
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-cred
+                  key: password
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: mariadb-data
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mariadb-data
+          hostPath:
+            path: /mnt/cephfs/docker/services/mariadb/data
+            type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb
+  namespace: services
+  labels:
+    app: mariadb
+spec:
+  selector:
+    app: mariadb
+  ports:
+    - port: 3306
+      targetPort: 3306

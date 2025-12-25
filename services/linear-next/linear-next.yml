@@ -1,0 +1,86 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: linear-next
+  namespace: services
+  labels:
+    app: linear-next
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: linear-next
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: linear-next
+    spec:
+      nodeSelector:
+        kubernetes.io/arch: amd64
+        kubernetes.io/disk: hdd
+      containers:
+        - name: linear-next
+          image: yoganovaindra/linear-next:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: linear-cred
+                  key: db-url
+            - name: NEXTAUTH_URL
+              value: "https://linear.yoganova.my.id/"
+          resources:
+            requests:
+              memory: 256Mi
+            limits:
+              memory: 512Mi
+          volumeMounts:
+            - name: linear-data
+              mountPath: /app/upload
+      volumes:
+        - name: linear-data
+          hostPath:
+            path: /mnt/cephfs/docker/services/linear-next
+            type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: linear-next
+  namespace: services
+  labels:
+    app: linear-next
+spec:
+  selector:
+    app: linear-next
+  type: ClusterIP
+  ports:
+    - port: 3000
+      targetPort: 3000
+---
+# Linear Next
+apiVersion: networking.cfargotunnel.com/v1alpha1
+kind: TunnelBinding
+metadata:
+  name: linear-binding
+  namespace: services
+subjects:
+  - name: linear-next
+    spec:
+      fqdn: linear.yoganova.my.id
+      target: http://linear-next.services.svc.cluster.local:3000
+tunnelRef:
+  kind: ClusterTunnel
+  name: homelab-tunnel-yoganova
