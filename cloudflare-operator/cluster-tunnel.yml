@@ -1,0 +1,12 @@
+apiVersion: networking.cfargotunnel.com/v1alpha1
+kind: ClusterTunnel
+metadata:
+  name: homelab-tunnel
+spec:
+  newTunnel:
+    name: homelab-tunnel
+  size: 2
+  cloudflare:
+    domain: ygnv.my.id
+    # Email and Account ID are loaded from the secret
+    secret: cloudflare-cred
