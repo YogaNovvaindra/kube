@@ -6,17 +6,19 @@ This directory contains the configuration for the [adyanth/cloudflare-operator](
 
 ### 1. Cloudflare API Token
 
-You need a Create an API Token in Cloudflare Dashboard:
-
-- `Account > Cloudflare Tunnel > Edit`
-- `Account > Account Settings > Read`
-- `Zone > DNS > Edit`
+> [!IMPORTANT] > **Required API Token Permissions**
+>
+> Valid Cloudflare API Token permissions are required for the operator to function:
+>
+> - `Account > Cloudflare Tunnel > Edit`
+> - `Account > Account Settings > Read`
+> - `Zone > DNS > Edit`
 
 Then seal it into `cloudflare-secret.yml`:
 
 ```bash
 # Replace YOUR_TOKEN with actual token
-echo -n "YOUR_TOKEN" | kubeseal --raw --scope cluster-wide --name cloudflare-cred --namespace cloudflare-operator
+echo -n "YOUR_TOKEN" | kubeseal --raw --scope cluster-wide --name cloudflare-cred --namespace cloudflare-operator-system
 ```
 
 Replace the value in `cloudflare-secret.yml`.
