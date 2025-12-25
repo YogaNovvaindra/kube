@@ -7,9 +7,55 @@ spec:
     name: homelab-tunnel-yoganova
   # v1alpha2 uses deployPatch for replicas instead of 'size'
   # Inject Keel annotations to auto-update cloudflared image
-  deployPatch: '{"metadata": {"annotations": {"keel.sh/policy": "force", "keel.sh/trigger": "poll", "keel.sh/match-tag": "true", "keel.sh/pollSchedule": "@every 6h"}}, "spec": {"replicas": 2}}'
+  deployPatch: |
+    {
+      "metadata": {
+        "annotations": {
+          "keel.sh/policy": "force",
+          "keel.sh/trigger": "poll",
+          "keel.sh/match-tag": "true",
+          "keel.sh/pollSchedule": "@every 6h"
+        }
+      },
+      "spec": {
+        "template": {
+          "spec": {
+            "containers": [
+              {
+                "resources": {
+                  "requests": {
+                    "cpu": "200m",
+                    "memory": "32Mi"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
   cloudflare:
     domain: yoganova.my.id
     accountId: 97f22b27260f3bf4326b76a3fcb0fb9f
     email: yoga.november2000@gmail.com
     secret: cloudflare-cred
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: homelab-tunnel-yoganova
+  namespace: cloudflare-operator-system
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: homelab-tunnel-yoganova
+  minReplicas: 2
+  maxReplicas: 3
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 100

@@ -198,7 +198,7 @@ This cluster hosts a variety of self-managed applications and services.
 - [🖼️ Immich](file:///home/yoga/Documents/kube/immich/immich.yml): Self-hosted high-performance photo and video backup solution.
 - [💰 Money](file:///home/yoga/Documents/kube/money/money.yml): Personal finance management and budgeting application.
 - [🗄️ DB Backup](file:///home/yoga/Documents/kube/services/db-backup.yml): Automated multi-database backup service for cluster-wide reliability.
-- [☁️ Cloudflared](file:///home/yoga/Documents/kube/services/cloudflared.yml): Secure Cloudflare Tunnel orchestration for edge connectivity.
+- [☁️ Cloudflare Operator](file:///home/yoga/Documents/kube/cloudflare-operator): Kubernetes native controller for Cloudflare Tunnel management.
 - [🌿 Ecoguardian](file:///home/yoga/Documents/kube/services/ecoguardian.yml): Environmental monitoring and analytical service.
 - [✍️ Ghost](file:///home/yoga/Documents/kube/services/ghost.yml): Professional self-hosted publishing platform and blog.
 - [📊 Linear](file:///home/yoga/Documents/kube/services/linear-cred.yml): Streamlined issue tracking and project management suite.
@@ -227,7 +227,7 @@ This cluster hosts a variety of self-managed applications and services.
 - **🚦 Traefik**: TLS-terminating ingress controller with automatic Let's Encrypt certificates.
 - **📡 MetalLB**: Load balancer for bare-metal environments providing internal IP management.
 - **🌐 Netbird**: VPN mesh networking for secure remote access.
-- **☁️ Cloudflared**: Secure Cloudflare Tunnel integration for exposing services without public IPs or port forwarding.
+- **☁️ Cloudflare Operator**: Secure Cloudflare Tunnel integration for exposing services without public IPs or port forwarding.
 
 ### Storage
 
