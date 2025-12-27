@@ -41,7 +41,7 @@ spec:
           imagePullPolicy: Always
           resources:
             requests:
-              memory: 64Mi
+              memory: 128Mi
           envFrom:
             - secretRef:
                 name: esphome-credentials
