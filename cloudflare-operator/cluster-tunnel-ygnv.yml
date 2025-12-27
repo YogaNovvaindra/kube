@@ -23,6 +23,7 @@ spec:
           "spec": {
             "containers": [
               {
+                "name": "cloudflared",
                 "resources": {
                   "requests": {
                     "cpu": "200m",
