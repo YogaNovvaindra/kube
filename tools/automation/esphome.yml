@@ -1,0 +1,96 @@
+# ESPHOME
+apiVersion: v1
+kind: Secret
+metadata:
+  name: esphome-credentials
+  namespace: tools
+  labels:
+    app: esphome
+type: Opaque
+stringData:
+  USERNAME: yoga
+  PASSWORD: abogoboga
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: esphome
+  namespace: tools
+  labels:
+    app: esphome
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: esphome
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: esphome
+    spec:
+      nodeSelector:
+        kubernetes.io/hperf: "true"
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      containers:
+        - name: esphome
+          image: reg.ygnv.my.id/esphome/esphome:latest
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: 64Mi
+          envFrom:
+            - secretRef:
+                name: esphome-credentials
+          ports:
+            - containerPort: 6052
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: localtime
+              mountPath: /etc/localtime
+              readOnly: true
+      volumes:
+        - name: config
+          hostPath:
+            path: /mnt/cephfs/docker/tools/esphome
+            type: Directory
+        - name: localtime
+          hostPath:
+            path: /etc/localtime
+            type: File
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: esphome
+  namespace: tools
+spec:
+  selector:
+    app: esphome
+  ports:
+    - port: 6052
+      targetPort: 6052
+  type: ClusterIP
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: esphome
+  namespace: tools
+  labels:
+    app: esphome
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`esphome.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: esphome
+          port: 6052
+  tls: {}

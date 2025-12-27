@@ -1,0 +1,79 @@
+# HOMEASSISTANT
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homeassistant
+  namespace: tools
+  labels:
+    app: homeassistant
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: homeassistant
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: homeassistant
+    spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      containers:
+        - name: homeassistant
+          image: reg.ygnv.my.id/linuxserver/homeassistant:latest
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: 256Mi
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "Asia/Jakarta"
+          ports:
+            - containerPort: 8123
+          volumeMounts:
+            - name: config
+              mountPath: /config
+      volumes:
+        - name: config
+          hostPath:
+            path: /mnt/cephfs/docker/tools/homeassistant
+            type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: homeassistant
+  namespace: tools
+spec:
+  selector:
+    app: homeassistant
+  ports:
+    - port: 8123
+      targetPort: 8123
+  type: ClusterIP
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: homeassistant
+  namespace: tools
+  labels:
+    app: homeassistant
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`homeassistant.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: homeassistant
+          port: 8123
+  tls: {}
