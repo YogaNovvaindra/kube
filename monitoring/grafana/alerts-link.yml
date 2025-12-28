@@ -17,13 +17,11 @@ data:
             condition: C
             data:
               - refId: A
-                relativeTimeRange:
-                  from: 600
-                  to: 0
+                relativeTimeRange: { from: 600, to: 0 }
                 datasourceUid: prometheus
                 model:
                   datasource: { type: prometheus, uid: prometheus }
-                  expr: 'ubiquiti_snmp_airmax_signal'
+                  expr: 'ubntStaSignal'
                   refId: A
               - refId: B
                 datasourceUid: __expr__
@@ -46,25 +44,23 @@ data:
                       query: { params: [C] }
                       reducer: { params: [], type: last }
                       type: query
-            for: 10m
+            for: 5m
             annotations:
-              summary: "Ubiquiti Low Signal: {{ $labels.instance }}"
-              description: "Ubiquiti link {{ $labels.instance }} has low signal strength: {{ $values.B.Value }} dBm."
+              summary: "Ubiquiti Low Signal: {{ $labels.ubntStaName }}"
+              description: "Ubiquiti link {{ $labels.ubntStaName }} ({{ $labels.instance }}) has low signal strength: {{ $values.B.Value }} dBm."
             labels:
               severity: warning
 
-          - uid: isp_wan_saturation
-            title: ISP WAN Saturation
+          - uid: ubiquiti_low_ccq
+            title: Ubiquiti Low CCQ
             condition: C
             data:
               - refId: A
-                relativeTimeRange:
-                  from: 600
-                  to: 0
+                relativeTimeRange: { from: 600, to: 0 }
                 datasourceUid: prometheus
                 model:
                   datasource: { type: prometheus, uid: prometheus }
-                  expr: 'rate(ifHCOutOctets{ifName="WAN"}[5m]) * 8 / 1000000'
+                  expr: 'ubntStaCcq / 10'
                   refId: A
               - refId: B
                 datasourceUid: __expr__
@@ -82,14 +78,131 @@ data:
                   refId: C
                   type: threshold
                   conditions:
-                    - evaluator: { params: [90], type: gt }
+                    - evaluator: { params: [80], type: lt }
                       operator: { type: and }
                       query: { params: [C] }
                       reducer: { params: [], type: last }
                       type: query
             for: 5m
             annotations:
-              summary: "ISP WAN Near Saturation"
-              description: "ISP WAN link output traffic is high: {{ $values.B.Value | printf \"%.1f\" }} Mbps."
+              summary: "Ubiquiti Low CCQ: {{ $labels.ubntStaName }}"
+              description: "Ubiquiti link {{ $labels.ubntStaName }} CCQ is low: {{ $values.B.Value }}%."
+            labels:
+              severity: warning
+
+          - uid: ubiquiti_link_saturation
+            title: Ubiquiti Link Saturation
+            condition: C
+            data:
+              - refId: A
+                relativeTimeRange: { from: 600, to: 0 }
+                datasourceUid: prometheus
+                model:
+                  datasource: { type: prometheus, uid: prometheus }
+                  expr: '(rate(ubntStaTxBytes[5m]) * 8) / (ubntStaTxCapacity * 1000)'
+                  refId: A
+              - refId: B
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: A
+                  reducer: mean
+                  refId: B
+                  type: reduce
+              - refId: C
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: B
+                  refId: C
+                  type: threshold
+                  conditions:
+                    - evaluator: { params: [0.9], type: gt }
+                      operator: { type: and }
+                      query: { params: [C] }
+                      reducer: { params: [], type: last }
+                      type: query
+            for: 5m
+            annotations:
+              summary: "Ubiquiti Link Saturation: {{ $labels.ubntStaName }}"
+              description: "Ubiquiti link {{ $labels.ubntStaName }} output is near wireless capacity: {{ $values.B.Value | printf \"%.1f%%\" }}."
+            labels:
+              severity: warning
+
+          - uid: ubiquiti_high_noise
+            title: Ubiquiti High Noise Floor
+            condition: C
+            data:
+              - refId: A
+                relativeTimeRange: { from: 600, to: 0 }
+                datasourceUid: prometheus
+                model:
+                  datasource: { type: prometheus, uid: prometheus }
+                  expr: 'ubntStaNoiseFloor'
+                  refId: A
+              - refId: B
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: A
+                  reducer: mean
+                  refId: B
+                  type: reduce
+              - refId: C
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: B
+                  refId: C
+                  type: threshold
+                  conditions:
+                    - evaluator: { params: [-85], type: gt }
+                      operator: { type: and }
+                      query: { params: [C] }
+                      reducer: { params: [], type: last }
+                      type: query
+            for: 10m
+            annotations:
+              summary: "Ubiquiti High Noise: {{ $labels.ubntStaName }}"
+              description: "Ubiquiti link {{ $labels.ubntStaName }} noise floor is high: {{ $values.B.Value }} dBm."
             labels:
               severity: info
+
+          - uid: ubiquiti_high_cpu
+            title: Ubiquiti High CPU Load
+            condition: C
+            data:
+              - refId: A
+                relativeTimeRange: { from: 600, to: 0 }
+                datasourceUid: prometheus
+                model:
+                  datasource: { type: prometheus, uid: prometheus }
+                  expr: 'ubntHostCpuLoad'
+                  refId: A
+              - refId: B
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: A
+                  reducer: mean
+                  refId: B
+                  type: reduce
+              - refId: C
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: B
+                  refId: C
+                  type: threshold
+                  conditions:
+                    - evaluator: { params: [900], type: gt }
+                      operator: { type: and }
+                      query: { params: [C] }
+                      reducer: { params: [], type: last }
+                      type: query
+            for: 5m
+            annotations:
+              summary: "Ubiquiti High CPU: {{ $labels.instance }}"
+              description: "Ubiquiti host {{ $labels.instance }} CPU load is high: {{ $values.B.Value }}."
+            labels:
+              severity: warning
