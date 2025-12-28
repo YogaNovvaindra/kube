@@ -18,12 +18,12 @@ data:
             data:
               - refId: A
                 relativeTimeRange:
-                  from: 600
+                  from: 300
                   to: 0
                 datasourceUid: prometheus
                 model:
                   datasource: { type: prometheus, uid: prometheus }
-                  expr: 'up == 0'
+                  expr: 'up'
                   refId: A
               - refId: B
                 datasourceUid: __expr__
@@ -41,7 +41,7 @@ data:
                   refId: C
                   type: threshold
                   conditions:
-                    - evaluator: { params: [0], type: gt }
+                    - evaluator: { params: [1], type: lt }
                       operator: { type: and }
                       query: { params: [C] }
                       reducer: { params: [], type: last }
@@ -59,12 +59,12 @@ data:
             data:
               - refId: A
                 relativeTimeRange:
-                  from: 600
+                  from: 300
                   to: 0
                 datasourceUid: prometheus
                 model:
                   datasource: { type: prometheus, uid: prometheus }
-                  expr: 'sum(rate(traefik_entrypoint_requests_total{code=~"5.."}[5m])) / sum(rate(traefik_entrypoint_requests_total[5m])) * 100 > 5'
+                  expr: '(sum(rate(traefik_entrypoint_requests_total{code=~"5.."}[5m])) or vector(0)) / sum(rate(traefik_entrypoint_requests_total[5m])) * 100'
                   refId: A
               - refId: B
                 datasourceUid: __expr__
@@ -100,12 +100,12 @@ data:
             data:
               - refId: A
                 relativeTimeRange:
-                  from: 600
+                  from: 300
                   to: 0
                 datasourceUid: prometheus
                 model:
                   datasource: { type: prometheus, uid: prometheus }
-                  expr: 'absent(up{job="authentik"} == 1)'
+                  expr: 'sum(up{job="authentik"}) or vector(0)'
                   refId: A
               - refId: B
                 datasourceUid: __expr__
@@ -123,7 +123,7 @@ data:
                   refId: C
                   type: threshold
                   conditions:
-                    - evaluator: { params: [0], type: gt }
+                    - evaluator: { params: [1], type: lt }
                       operator: { type: and }
                       query: { params: [C] }
                       reducer: { params: [], type: last }
