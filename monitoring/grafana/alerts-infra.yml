@@ -10,7 +10,7 @@ data:
       - orgId: 1
         name: Infrastructure
         folder: Infra Alerts
-        interval: 1m
+        interval: 5m
         rules:
           - uid: target_down
             title: Monitoring Target Down
