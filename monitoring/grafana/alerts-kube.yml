@@ -18,12 +18,12 @@ data:
             data:
               - refId: A
                 relativeTimeRange:
-                  from: 600
+                  from: 300
                   to: 0
                 datasourceUid: prometheus
                 model:
                   datasource: { type: prometheus, uid: prometheus }
-                  expr: 'round(increase(kube_pod_container_status_restarts_total[15m])) > 3'
+                  expr: 'sum(increase(kube_pod_container_status_restarts_total[15m])) by (pod, namespace) or vector(0)'
                   refId: A
               - refId: B
                 datasourceUid: __expr__
@@ -59,12 +59,12 @@ data:
             data:
               - refId: A
                 relativeTimeRange:
-                  from: 600
+                  from: 300
                   to: 0
                 datasourceUid: prometheus
                 model:
                   datasource: { type: prometheus, uid: prometheus }
-                  expr: 'kube_deployment_status_replicas_ready != kube_deployment_status_replicas_desired'
+                  expr: 'abs(kube_deployment_status_replicas_ready - kube_deployment_status_replicas_desired) or vector(0)'
                   refId: A
               - refId: B
                 datasourceUid: __expr__
@@ -100,12 +100,12 @@ data:
             data:
               - refId: A
                 relativeTimeRange:
-                  from: 600
+                  from: 300
                   to: 0
                 datasourceUid: prometheus
                 model:
                   datasource: { type: prometheus, uid: prometheus }
-                  expr: 'kube_pod_container_status_terminated_reason{reason="OOMKilled"} > 0'
+                  expr: 'kube_pod_container_status_terminated_reason{reason="OOMKilled"} or vector(0)'
                   refId: A
               - refId: B
                 datasourceUid: __expr__
@@ -141,12 +141,12 @@ data:
             data:
               - refId: A
                 relativeTimeRange:
-                  from: 600
+                  from: 300
                   to: 0
                 datasourceUid: prometheus
                 model:
                   datasource: { type: prometheus, uid: prometheus }
-                  expr: 'kube_pod_container_status_waiting_reason{reason=~"ImagePullBackOff|ErrImagePull"} > 0'
+                  expr: 'kube_pod_container_status_waiting_reason{reason=~"ImagePullBackOff|ErrImagePull"} or vector(0)'
                   refId: A
               - refId: B
                 datasourceUid: __expr__
@@ -182,12 +182,12 @@ data:
             data:
               - refId: A
                 relativeTimeRange:
-                  from: 600
+                  from: 300
                   to: 0
                 datasourceUid: prometheus
                 model:
                   datasource: { type: prometheus, uid: prometheus }
-                  expr: 'kube_node_status_condition{condition="MemoryPressure", status="true"} > 0'
+                  expr: 'kube_node_status_condition{condition="MemoryPressure", status="true"} or vector(0)'
                   refId: A
               - refId: B
                 datasourceUid: __expr__
@@ -223,7 +223,7 @@ data:
             data:
               - refId: A
                 relativeTimeRange:
-                  from: 600
+                  from: 300
                   to: 0
                 datasourceUid: prometheus
                 model:
