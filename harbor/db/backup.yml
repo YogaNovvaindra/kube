@@ -161,7 +161,7 @@ spec:
             kubernetes.io/arch: amd64
           containers:
             - name: postgres-dumper
-              image: reg.ygnv.my.id/docker/pgautoupgrade/pgautoupgrade:latest@sha256:b440eb344035aa246f36ea8cb7a45db7e8b216686b475e2fd509905a36005e9f
+              image: reg.ygnv.my.id/docker/pgautoupgrade/pgautoupgrade:latest@sha256:2026b24db02154a5ac9e5c18e65245d15693bbfea07cd7d546920784998cae72
               imagePullPolicy: IfNotPresent
               env:
                 - name: DISCORD_WEBHOOK_URL
