@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: vaultwarden
-        image: reg.ygnv.my.id/docker/vaultwarden/server:1.34.3-alpine
+        image: reg.ygnv.my.id/docker/vaultwarden/server:1.35.0-alpine
         imagePullPolicy: IfNotPresent
         resources:
           requests:
