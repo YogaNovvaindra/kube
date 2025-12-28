@@ -489,6 +489,9 @@ data:
           - targets: [${OPENWRT_ENDPOINT}]
             labels:
               instance: mi4a-wrt
+        metric_relabel_configs:
+          - action: labeldrop
+            regex: "__timestamp__"
 
       - job_name: 'ubiquiti-snmp'
         metrics_path: /snmp
