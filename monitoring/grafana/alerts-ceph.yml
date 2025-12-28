@@ -17,20 +17,18 @@ data:
             condition: C
             data:
               - refId: A
-                relativeTimeRange:
-                  from: 600
-                  to: 0
+                relativeTimeRange: { from: 300, to: 0 }
                 datasourceUid: prometheus
                 model:
                   datasource: { type: prometheus, uid: prometheus }
-                  expr: 'ceph_health_status == 2'
+                  expr: 'ceph_health_status'
                   refId: A
               - refId: B
                 datasourceUid: __expr__
                 model:
                   datasource: { type: __expr__, uid: __expr__ }
                   expression: A
-                  reducer: mean
+                  reducer: last
                   refId: B
                   type: reduce
               - refId: C
@@ -41,7 +39,7 @@ data:
                   refId: C
                   type: threshold
                   conditions:
-                    - evaluator: { params: [0], type: gt }
+                    - evaluator: { params: [1.5], type: gt }
                       operator: { type: and }
                       query: { params: [C] }
                       reducer: { params: [], type: last }
@@ -58,20 +56,18 @@ data:
             condition: C
             data:
               - refId: A
-                relativeTimeRange:
-                  from: 600
-                  to: 0
+                relativeTimeRange: { from: 300, to: 0 }
                 datasourceUid: prometheus
                 model:
                   datasource: { type: prometheus, uid: prometheus }
-                  expr: 'ceph_health_status == 1'
+                  expr: 'ceph_health_status'
                   refId: A
               - refId: B
                 datasourceUid: __expr__
                 model:
                   datasource: { type: __expr__, uid: __expr__ }
                   expression: A
-                  reducer: mean
+                  reducer: last
                   refId: B
                   type: reduce
               - refId: C
@@ -82,7 +78,7 @@ data:
                   refId: C
                   type: threshold
                   conditions:
-                    - evaluator: { params: [0], type: gt }
+                    - evaluator: { params: [0.5, 1.5], type: within_range }
                       operator: { type: and }
                       query: { params: [C] }
                       reducer: { params: [], type: last }
@@ -99,20 +95,18 @@ data:
             condition: C
             data:
               - refId: A
-                relativeTimeRange:
-                  from: 600
-                  to: 0
+                relativeTimeRange: { from: 300, to: 0 }
                 datasourceUid: prometheus
                 model:
                   datasource: { type: prometheus, uid: prometheus }
-                  expr: 'ceph_osd_up == 0'
+                  expr: 'ceph_osd_up'
                   refId: A
               - refId: B
                 datasourceUid: __expr__
                 model:
                   datasource: { type: __expr__, uid: __expr__ }
                   expression: A
-                  reducer: mean
+                  reducer: last
                   refId: B
                   type: reduce
               - refId: C
@@ -123,7 +117,7 @@ data:
                   refId: C
                   type: threshold
                   conditions:
-                    - evaluator: { params: [0], type: gt }
+                    - evaluator: { params: [1], type: lt }
                       operator: { type: and }
                       query: { params: [C] }
                       reducer: { params: [], type: last }
@@ -140,20 +134,18 @@ data:
             condition: C
             data:
               - refId: A
-                relativeTimeRange:
-                  from: 600
-                  to: 0
+                relativeTimeRange: { from: 300, to: 0 }
                 datasourceUid: prometheus
                 model:
                   datasource: { type: prometheus, uid: prometheus }
-                  expr: 'ceph_mon_quorum_status == 0'
+                  expr: 'ceph_mon_quorum_status'
                   refId: A
               - refId: B
                 datasourceUid: __expr__
                 model:
                   datasource: { type: __expr__, uid: __expr__ }
                   expression: A
-                  reducer: mean
+                  reducer: last
                   refId: B
                   type: reduce
               - refId: C
@@ -164,7 +156,7 @@ data:
                   refId: C
                   type: threshold
                   conditions:
-                    - evaluator: { params: [0], type: gt }
+                    - evaluator: { params: [1], type: lt }
                       operator: { type: and }
                       query: { params: [C] }
                       reducer: { params: [], type: last }
@@ -181,20 +173,18 @@ data:
             condition: C
             data:
               - refId: A
-                relativeTimeRange:
-                  from: 600
-                  to: 0
+                relativeTimeRange: { from: 300, to: 0 }
                 datasourceUid: prometheus
                 model:
                   datasource: { type: prometheus, uid: prometheus }
-                  expr: 'sum(ceph_mgr_status) == 0'
+                  expr: 'sum(ceph_mgr_status)'
                   refId: A
               - refId: B
                 datasourceUid: __expr__
                 model:
                   datasource: { type: __expr__, uid: __expr__ }
                   expression: A
-                  reducer: mean
+                  reducer: last
                   refId: B
                   type: reduce
               - refId: C
@@ -205,7 +195,7 @@ data:
                   refId: C
                   type: threshold
                   conditions:
-                    - evaluator: { params: [0], type: gt }
+                    - evaluator: { params: [1], type: lt }
                       operator: { type: and }
                       query: { params: [C] }
                       reducer: { params: [], type: last }
@@ -222,20 +212,18 @@ data:
             condition: C
             data:
               - refId: A
-                relativeTimeRange:
-                  from: 600
-                  to: 0
+                relativeTimeRange: { from: 300, to: 0 }
                 datasourceUid: prometheus
                 model:
                   datasource: { type: prometheus, uid: prometheus }
-                  expr: 'ceph_healthcheck_slow_ops > 0'
+                  expr: 'ceph_healthcheck_slow_ops'
                   refId: A
               - refId: B
                 datasourceUid: __expr__
                 model:
                   datasource: { type: __expr__, uid: __expr__ }
                   expression: A
-                  reducer: mean
+                  reducer: last
                   refId: B
                   type: reduce
               - refId: C
@@ -263,20 +251,18 @@ data:
             condition: C
             data:
               - refId: A
-                relativeTimeRange:
-                  from: 600
-                  to: 0
+                relativeTimeRange: { from: 300, to: 0 }
                 datasourceUid: prometheus
                 model:
                   datasource: { type: prometheus, uid: prometheus }
-                  expr: 'ceph_health_detail == 1'
+                  expr: 'ceph_health_detail'
                   refId: A
               - refId: B
                 datasourceUid: __expr__
                 model:
                   datasource: { type: __expr__, uid: __expr__ }
                   expression: A
-                  reducer: mean
+                  reducer: last
                   refId: B
                   type: reduce
               - refId: C
@@ -304,9 +290,7 @@ data:
             condition: C
             data:
               - refId: A
-                relativeTimeRange:
-                  from: 600
-                  to: 0
+                relativeTimeRange: { from: 300, to: 0 }
                 datasourceUid: prometheus
                 model:
                   datasource: { type: prometheus, uid: prometheus }
@@ -345,9 +329,7 @@ data:
             condition: C
             data:
               - refId: A
-                relativeTimeRange:
-                  from: 600
-                  to: 0
+                relativeTimeRange: { from: 300, to: 0 }
                 datasourceUid: prometheus
                 model:
                   datasource: { type: prometheus, uid: prometheus }
@@ -386,9 +368,7 @@ data:
             condition: C
             data:
               - refId: A
-                relativeTimeRange:
-                  from: 600
-                  to: 0
+                relativeTimeRange: { from: 300, to: 0 }
                 datasourceUid: prometheus
                 model:
                   datasource: { type: prometheus, uid: prometheus }
@@ -427,9 +407,7 @@ data:
             condition: C
             data:
               - refId: A
-                relativeTimeRange:
-                  from: 600
-                  to: 0
+                relativeTimeRange: { from: 300, to: 0 }
                 datasourceUid: prometheus
                 model:
                   datasource: { type: prometheus, uid: prometheus }
@@ -468,9 +446,7 @@ data:
             condition: C
             data:
               - refId: A
-                relativeTimeRange:
-                  from: 600
-                  to: 0
+                relativeTimeRange: { from: 300, to: 0 }
                 datasourceUid: prometheus
                 model:
                   datasource: { type: prometheus, uid: prometheus }

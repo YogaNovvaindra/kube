@@ -17,7 +17,7 @@ data:
             condition: C
             data:
               - refId: A
-                relativeTimeRange: { from: 600, to: 0 }
+                relativeTimeRange: { from: 300, to: 0 }
                 datasourceUid: prometheus
                 model:
                   datasource: { type: prometheus, uid: prometheus }
@@ -56,7 +56,7 @@ data:
             condition: C
             data:
               - refId: A
-                relativeTimeRange: { from: 600, to: 0 }
+                relativeTimeRange: { from: 300, to: 0 }
                 datasourceUid: prometheus
                 model:
                   datasource: { type: prometheus, uid: prometheus }
@@ -95,7 +95,7 @@ data:
             condition: C
             data:
               - refId: A
-                relativeTimeRange: { from: 600, to: 0 }
+                relativeTimeRange: { from: 300, to: 0 }
                 datasourceUid: prometheus
                 model:
                   datasource: { type: prometheus, uid: prometheus }
@@ -134,7 +134,7 @@ data:
             condition: C
             data:
               - refId: A
-                relativeTimeRange: { from: 600, to: 0 }
+                relativeTimeRange: { from: 300, to: 0 }
                 datasourceUid: prometheus
                 model:
                   datasource: { type: prometheus, uid: prometheus }
@@ -173,11 +173,11 @@ data:
             condition: C
             data:
               - refId: A
-                relativeTimeRange: { from: 600, to: 0 }
+                relativeTimeRange: { from: 300, to: 0 }
                 datasourceUid: prometheus
                 model:
                   datasource: { type: prometheus, uid: prometheus }
-                  expr: 'ubntHostCpuLoad'
+                  expr: 'ubntHostCpuLoad / 100'
                   refId: A
               - refId: B
                 datasourceUid: __expr__
@@ -195,7 +195,7 @@ data:
                   refId: C
                   type: threshold
                   conditions:
-                    - evaluator: { params: [900], type: gt }
+                    - evaluator: { params: [80], type: gt }
                       operator: { type: and }
                       query: { params: [C] }
                       reducer: { params: [], type: last }
@@ -203,6 +203,6 @@ data:
             for: 5m
             annotations:
               summary: "Ubiquiti High CPU: {{ $labels.instance }}"
-              description: "Ubiquiti host {{ $labels.instance }} CPU load is high: {{ $values.B.Value }}."
+              description: "Ubiquiti host {{ $labels.instance }} CPU load is high: {{ $values.B.Value | printf \"%.1f\" }}%."
             labels:
               severity: warning
