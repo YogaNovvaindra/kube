@@ -105,7 +105,7 @@ data:
                 datasourceUid: prometheus
                 model:
                   datasource: { type: prometheus, uid: prometheus }
-                  expr: 'sum(up{job="authentik"}) or vector(0)'
+                  expr: 'sum(authentik_tasks_workers) or vector(0)'
                   refId: A
               - refId: B
                 datasourceUid: __expr__
@@ -130,7 +130,7 @@ data:
                       type: query
             for: 5m
             annotations:
-              summary: "Authentik Worker Absent"
-              description: "No active Authentik worker detected."
+              summary: "Authentik Workers: {{ $values.B.Value }}"
+              description: "Number of active Authentik workers is {{ $values.B.Value }}."
             labels:
               severity: critical

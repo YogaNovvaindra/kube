@@ -257,3 +257,276 @@ data:
               description: "Certificate {{ $labels.name }} in namespace {{ $labels.namespace }} will expire in {{ $values.B.Value | printf \"%.1f\" }} days."
             labels:
               severity: warning
+
+          - uid: node_not_ready
+            title: Kube Node Not Ready
+            condition: C
+            data:
+              - refId: A
+                relativeTimeRange: { from: 300, to: 0 }
+                datasourceUid: prometheus
+                model:
+                  datasource: { type: prometheus, uid: prometheus }
+                  expr: 'sum(1 - kube_node_status_condition{condition="Ready", status="true"}) or vector(0)'
+                  refId: A
+              - refId: B
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: A
+                  reducer: last
+                  refId: B
+                  type: reduce
+              - refId: C
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: B
+                  refId: C
+                  type: threshold
+                  conditions:
+                    - evaluator: { params: [0], type: gt }
+                      operator: { type: and }
+                      query: { params: [C] }
+                      reducer: { params: [], type: last }
+                      type: query
+            for: 5m
+            annotations:
+              summary: "Nodes Not Ready: {{ $values.B.Value }}"
+              description: "There are currently {{ $values.B.Value }} nodes not in the Ready state."
+            labels:
+              severity: critical
+
+          - uid: pod_stuck_pending
+            title: Kube Pod Stuck Pending
+            condition: C
+            data:
+              - refId: A
+                relativeTimeRange: { from: 300, to: 0 }
+                datasourceUid: prometheus
+                model:
+                  datasource: { type: prometheus, uid: prometheus }
+                  expr: 'sum(kube_pod_status_phase{phase="Pending"}) or vector(0)'
+                  refId: A
+              - refId: B
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: A
+                  reducer: last
+                  refId: B
+                  type: reduce
+              - refId: C
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: B
+                  refId: C
+                  type: threshold
+                  conditions:
+                    - evaluator: { params: [0], type: gt }
+                      operator: { type: and }
+                      query: { params: [C] }
+                      reducer: { params: [], type: last }
+                      type: query
+            for: 5m
+            annotations:
+              summary: "Pods Pending: {{ $values.B.Value }}"
+              description: "There are currently {{ $values.B.Value }} pods stuck in Pending state."
+            labels:
+              severity: warning
+
+          - uid: cluster_cpu_requests_high
+            title: Kube Cluster CPU Requests High
+            condition: C
+            data:
+              - refId: A
+                relativeTimeRange: { from: 300, to: 0 }
+                datasourceUid: prometheus
+                model:
+                  datasource: { type: prometheus, uid: prometheus }
+                  expr: '(sum(kube_pod_container_resource_requests{resource="cpu"}) / sum(kube_node_status_allocatable{resource="cpu"})) * 100 or vector(0)'
+                  refId: A
+              - refId: B
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: A
+                  reducer: mean
+                  refId: B
+                  type: reduce
+              - refId: C
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: B
+                  refId: C
+                  type: threshold
+                  conditions:
+                    - evaluator: { params: [85], type: gt }
+                      operator: { type: and }
+                      query: { params: [C] }
+                      reducer: { params: [], type: last }
+                      type: query
+            for: 10m
+            annotations:
+              summary: "Kube Cluster CPU Requests High"
+              description: "Cluster CPU requests are over 85% (Current: {{ $values.B.Value | printf \"%.2f\" }}%)."
+            labels:
+              severity: warning
+
+          - uid: cluster_memory_requests_high
+            title: Kube Cluster Memory Requests High
+            condition: C
+            data:
+              - refId: A
+                relativeTimeRange: { from: 300, to: 0 }
+                datasourceUid: prometheus
+                model:
+                  datasource: { type: prometheus, uid: prometheus }
+                  expr: '(sum(kube_pod_container_resource_requests{resource="memory"}) / sum(kube_node_status_allocatable{resource="memory"})) * 100 or vector(0)'
+                  refId: A
+              - refId: B
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: A
+                  reducer: mean
+                  refId: B
+                  type: reduce
+              - refId: C
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: B
+                  refId: C
+                  type: threshold
+                  conditions:
+                    - evaluator: { params: [85], type: gt }
+                      operator: { type: and }
+                      query: { params: [C] }
+                      reducer: { params: [], type: last }
+                      type: query
+            for: 10m
+            annotations:
+              summary: "Kube Cluster Memory Requests High"
+              description: "Cluster Memory requests are over 85% (Current: {{ $values.B.Value | printf \"%.2f\" }}%)."
+            labels:
+              severity: warning
+
+          - uid: node_pod_capacity_high
+            title: Kube Node Pod Capacity High
+            condition: C
+            data:
+              - refId: A
+                relativeTimeRange: { from: 300, to: 0 }
+                datasourceUid: prometheus
+                model:
+                  datasource: { type: prometheus, uid: prometheus }
+                  expr: '(count(kube_pod_info) by (node) / sum(kube_node_status_capacity{resource="pods"}) by (node)) * 100 or vector(0)'
+                  refId: A
+              - refId: B
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: A
+                  reducer: max
+                  refId: B
+                  type: reduce
+              - refId: C
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: B
+                  refId: C
+                  type: threshold
+                  conditions:
+                    - evaluator: { params: [90], type: gt }
+                      operator: { type: and }
+                      query: { params: [C] }
+                      reducer: { params: [], type: last }
+                      type: query
+            for: 10m
+            annotations:
+              summary: "Kube Node Pod Capacity High: {{ $labels.node }}"
+              description: "Node {{ $labels.node }} pod capacity usage is over 90% (Current: {{ $values.B.Value | printf \"%.2f\" }}%)."
+            labels:
+              severity: warning
+
+          - uid: job_failed
+            title: Kube Job Failed
+            condition: C
+            data:
+              - refId: A
+                relativeTimeRange: { from: 300, to: 0 }
+                datasourceUid: prometheus
+                model:
+                  datasource: { type: prometheus, uid: prometheus }
+                  expr: 'sum(kube_job_status_failed) by (job_name, namespace) or vector(0)'
+                  refId: A
+              - refId: B
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: A
+                  reducer: last
+                  refId: B
+                  type: reduce
+              - refId: C
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: B
+                  refId: C
+                  type: threshold
+                  conditions:
+                    - evaluator: { params: [0], type: gt }
+                      operator: { type: and }
+                      query: { params: [C] }
+                      reducer: { params: [], type: last }
+                      type: query
+            for: 5m
+            annotations:
+              summary: "Job Failures: {{ $values.B.Value }}"
+              description: "There are currently {{ $values.B.Value }} failed jobs in the cluster."
+            labels:
+              severity: warning
+
+          - uid: hpa_max_capacity
+            title: Kube HPA at Max Capacity
+            condition: C
+            data:
+              - refId: A
+                relativeTimeRange: { from: 300, to: 0 }
+                datasourceUid: prometheus
+                model:
+                  datasource: { type: prometheus, uid: prometheus }
+                  expr: '(kube_horizontalpodautoscaler_status_current_replicas / kube_horizontalpodautoscaler_spec_max_replicas) * 100 or vector(0)'
+                  refId: A
+              - refId: B
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: A
+                  reducer: max
+                  refId: B
+                  type: reduce
+              - refId: C
+                datasourceUid: __expr__
+                model:
+                  datasource: { type: __expr__, uid: __expr__ }
+                  expression: B
+                  refId: C
+                  type: threshold
+                  conditions:
+                    - evaluator: { params: [100], type: gt }
+                      operator: { type: and }
+                      query: { params: [C] }
+                      reducer: { params: [], type: last }
+                      type: query
+            for: 5m
+            annotations:
+              summary: "Kube HPA at Max Capacity: {{ $labels.horizontalpodautoscaler }}"
+              description: "HPA {{ $labels.horizontalpodautoscaler }} is at max capacity ({{ $values.B.Value }}%)."
+            labels:
+              severity: warning
