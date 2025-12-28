@@ -9,7 +9,7 @@ spec:
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: manual
+  storageClassName: cephfs
   hostPath:
     path: /mnt/cephfs/docker/harbor/data/registry
     type: Directory
@@ -25,7 +25,7 @@ spec:
   resources:
     requests:
       storage: 50Gi
-  storageClassName: manual
+  storageClassName: cephfs
   volumeName: harbor-registry-pv
 ---
 apiVersion: v1
@@ -38,7 +38,7 @@ spec:
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: manual
+  storageClassName: cephfs
   hostPath:
     path: /mnt/cephfs/docker/harbor/jobservice
     type: Directory
@@ -54,7 +54,7 @@ spec:
   resources:
     requests:
       storage: 1Gi
-  storageClassName: manual
+  storageClassName: cephfs
   volumeName: harbor-jobservice-pv
 ---
 apiVersion: v1
@@ -67,10 +67,10 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: manual
+  storageClassName: cephfs
   hostPath:
     path: /mnt/cephfs/docker/harbor/trivy
-    type: DirectoryOrCreate
+    type: Directory
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -83,5 +83,5 @@ spec:
   resources:
     requests:
       storage: 5Gi
-  storageClassName: manual
+  storageClassName: cephfs
   volumeName: harbor-trivy-pv
