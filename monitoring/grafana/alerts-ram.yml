@@ -71,7 +71,7 @@ data:
                   conditions:
                     - evaluator:
                         params:
-                          - 80
+                          - 85
                         type: gt
                       operator:
                         type: and
@@ -94,7 +94,7 @@ data:
             execErrState: Error
             annotations:
               description: |-
-                RAM usage is above 80% for the last 5 minutes.
+                RAM usage is above 85% for the last 5 minutes.
                   Current RAM Usage: {{ $values.B.Value | printf "%.2f" }}%
               summary: High RAM usage detected (instance {{ $labels.instance }}, job {{ $labels.job }})
             isPaused: false

@@ -130,7 +130,7 @@ data:
                       type: query
             for: 5m
             annotations:
-              summary: "Authentik Workers: {{ $values.B.Value }}"
-              description: "Number of active Authentik workers is {{ $values.B.Value }}."
+              summary: "Authentik Workers: {{ $values.B.Value | printf \"%.0f\" }}"
+              description: "Number of active Authentik workers is {{ $values.B.Value | printf \"%.0f\" }}."
             labels:
               severity: critical

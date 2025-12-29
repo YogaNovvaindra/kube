@@ -86,7 +86,7 @@ data:
             for: 10m
             annotations:
               summary: "Ceph Cluster Health: Warning"
-              description: "Ceph cluster health is WARNING. Current status value: {{ $values.B.Value }}."
+              description: "Ceph cluster health is WARNING. Current status value: {{ $values.B.Value | printf \"%.0f\" }}."
             labels:
               severity: warning
 

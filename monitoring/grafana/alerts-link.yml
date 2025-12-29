@@ -47,7 +47,7 @@ data:
             for: 5m
             annotations:
               summary: "Ubiquiti Low Signal: {{ $labels.ubntStaName }}"
-              description: "Ubiquiti link {{ $labels.ubntStaName }} ({{ $labels.instance }}) has low signal strength: {{ $values.B.Value }} dBm."
+              description: "Ubiquiti link {{ $labels.ubntStaName }} ({{ $labels.instance }}) has low signal strength: {{ $values.B.Value | printf \"%.0f\" }} dBm."
             labels:
               severity: warning
 
@@ -86,7 +86,7 @@ data:
             for: 5m
             annotations:
               summary: "Ubiquiti Low CCQ: {{ $labels.ubntStaName }}"
-              description: "Ubiquiti link {{ $labels.ubntStaName }} CCQ is low: {{ $values.B.Value }}%."
+              description: "Ubiquiti link {{ $labels.ubntStaName }} CCQ is low: {{ $values.B.Value | printf \"%.0f\" }}%."
             labels:
               severity: warning
 
@@ -164,7 +164,7 @@ data:
             for: 10m
             annotations:
               summary: "Ubiquiti High Noise: {{ $labels.ubntStaName }}"
-              description: "Ubiquiti link {{ $labels.ubntStaName }} noise floor is high: {{ $values.B.Value }} dBm."
+              description: "Ubiquiti link {{ $labels.ubntStaName }} noise floor is high: {{ $values.B.Value | printf \"%.0f\" }} dBm."
             labels:
               severity: info
 

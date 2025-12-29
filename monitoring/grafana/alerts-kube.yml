@@ -49,7 +49,7 @@ data:
             for: 5m
             annotations:
               summary: "Pod Crash Loop: {{ $labels.pod }}"
-              description: "Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} has restarted {{ $values.B.Value }} times in the last 15 minutes."
+              description: "Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} has restarted {{ $values.B.Value | printf \"%.0f\" }} times in the last 15 minutes."
             labels:
               severity: warning
 
@@ -292,8 +292,8 @@ data:
                       type: query
             for: 5m
             annotations:
-              summary: "Nodes Not Ready: {{ $values.B.Value }}"
-              description: "There are currently {{ $values.B.Value }} nodes not in the Ready state."
+              summary: "Nodes Not Ready: {{ $values.B.Value | printf \"%.0f\" }}"
+              description: "There are currently {{ $values.B.Value | printf \"%.0f\" }} nodes not in the Ready state."
             labels:
               severity: critical
 
@@ -331,8 +331,8 @@ data:
                       type: query
             for: 5m
             annotations:
-              summary: "Pods Pending: {{ $values.B.Value }}"
-              description: "There are currently {{ $values.B.Value }} pods stuck in Pending state."
+              summary: "Pods Pending: {{ $values.B.Value | printf \"%.0f\" }}"
+              description: "There are currently {{ $values.B.Value | printf \"%.0f\" }} pods stuck in Pending state."
             labels:
               severity: warning
 
@@ -487,8 +487,8 @@ data:
                       type: query
             for: 5m
             annotations:
-              summary: "Job Failures: {{ $values.B.Value }}"
-              description: "There are currently {{ $values.B.Value }} failed jobs in the cluster."
+              summary: "Job Failures: {{ $values.B.Value | printf \"%.0f\" }}"
+              description: "There are currently {{ $values.B.Value | printf \"%.0f\" }} failed jobs in the cluster."
             labels:
               severity: warning
 
@@ -527,6 +527,6 @@ data:
             for: 5m
             annotations:
               summary: "Kube HPA at Max Capacity: {{ $labels.horizontalpodautoscaler }}"
-              description: "HPA {{ $labels.horizontalpodautoscaler }} is at max capacity ({{ $values.B.Value }}%)."
+              description: "HPA {{ $labels.horizontalpodautoscaler }} is at max capacity ({{ $values.B.Value | printf \"%.0f\" }}%)."
             labels:
               severity: warning
