@@ -87,4 +87,4 @@ spec:
         - name: argocd-application-controller
           resources:
             requests:
-              memory: 64Mi
+              memory: 256Mi
