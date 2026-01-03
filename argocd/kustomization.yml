@@ -10,7 +10,7 @@ resources:
   - ingress.yml
   - argocd-notifications-secret.yml
   # OIDC SealedSecret (patches existing argocd-secret)
-  - argocd-secret.yml
+  - argocd-oidc-secret.yml
 
 patches:
   # Apply custom configurations to ConfigMaps
