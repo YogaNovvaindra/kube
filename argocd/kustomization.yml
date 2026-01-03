@@ -31,6 +31,9 @@ patches:
   - path: patches/resources.yml
   # Patch argocd-secret to allow SealedSecrets patching
   - path: patches/secret-oidc.yml
+    target:
+      kind: Secret
+      name: argocd-secret
 
 images:
   # Replace all Argo CD images with custom registry
