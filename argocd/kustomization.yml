@@ -29,6 +29,8 @@ patches:
   - path: patches/image-pull-policy.yml
   # Set resource requests for all containers
   - path: patches/resources.yml
+  # Patch argocd-secret to allow SealedSecrets patching
+  - path: patches/secret-oidc.yml
 
 images:
   # Replace all Argo CD images with custom registry
