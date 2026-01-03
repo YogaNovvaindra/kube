@@ -49,15 +49,15 @@ spec:
           readinessProbe:
             tcpSocket:
               port: 6379
-            initialDelaySeconds: 5
-            periodSeconds: 30
-            timeoutSeconds: 5
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3
           livenessProbe:
             tcpSocket:
               port: 6379
-            initialDelaySeconds: 10
-            periodSeconds: 30
-            timeoutSeconds: 5
+            initialDelaySeconds: 30
+            periodSeconds: 60
+            failureThreshold: 3
       volumes:
         - name: valkey-conf
           configMap:
@@ -105,43 +105,43 @@ spec:
         kubernetes.io/hperf: "true"
       terminationGracePeriodSeconds: 10
       containers:
-      - name: postgres
-        image: reg.ygnv.my.id/docker/pgautoupgrade/pgautoupgrade:latest@sha256:2026b24db02154a5ac9e5c18e65245d15693bbfea07cd7d546920784998cae72
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            memory: 128Mi
-        env:
-        - name: POSTGRES_USER
-          valueFrom:
-            secretKeyRef:
-              name: db-cred
-              key: username
-        - name: POSTGRES_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: db-cred
-              key: password
-        volumeMounts:
-        - name: postgres-data
-          mountPath: /var/lib/postgresql
-        readinessProbe:
-          exec:
-            command: ["pg_isready", "-d", "outline", "-U", "postgres"]
-          initialDelaySeconds: 30
-          periodSeconds: 60
-          timeoutSeconds: 60
-        livenessProbe:
-          exec:
-            command: ["pg_isready", "-d", "outline", "-U", "postgres"]
-          initialDelaySeconds: 60
-          periodSeconds: 60
-          timeoutSeconds: 60
+        - name: postgres
+          image: reg.ygnv.my.id/docker/pgautoupgrade/pgautoupgrade:latest@sha256:2026b24db02154a5ac9e5c18e65245d15693bbfea07cd7d546920784998cae72
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 128Mi
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-cred
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-cred
+                  key: password
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-d", "outline", "-U", "postgres"]
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 60
+          livenessProbe:
+            exec:
+              command: ["pg_isready", "-d", "outline", "-U", "postgres"]
+            initialDelaySeconds: 30
+            periodSeconds: 60
+            timeoutSeconds: 60
       volumes:
-      - name: postgres-data
-        hostPath:
-          path: /mnt/cephfs/docker/tools/postgres/data
-          type: Directory
+        - name: postgres-data
+          hostPath:
+            path: /mnt/cephfs/docker/tools/postgres/data
+            type: Directory
 ---
 apiVersion: v1
 kind: Service
@@ -154,8 +154,8 @@ spec:
   selector:
     app: postgres
   ports:
-  - port: 5432
-    targetPort: 5432
+    - port: 5432
+      targetPort: 5432
   type: ClusterIP
 ---
 apiVersion: apps/v1
@@ -181,38 +181,50 @@ spec:
         kubernetes.io/hperf: "true"
       terminationGracePeriodSeconds: 10
       containers:
-      - name: mariadb
-        image: reg.ygnv.my.id/docker/mariadb:12.1.2
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            memory: 256Mi
-        env:
-        - name: MYSQL_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mariadb-cred
-              key: password
-        - name: MYSQL_USER
-          valueFrom:
-            secretKeyRef:
-              name: mariadb-cred
-              key: username
-        - name: MYSQL_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mariadb-cred
-              key: password
-        ports:
-        - containerPort: 3306
-        volumeMounts:
-        - name: mariadb-data
-          mountPath: /var/lib/mysql
+        - name: mariadb
+          image: reg.ygnv.my.id/docker/mariadb:12.1.2
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 256Mi
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-cred
+                  key: password
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-cred
+                  key: username
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-cred
+                  key: password
+          livenessProbe:
+            tcpSocket:
+              port: 3306
+            initialDelaySeconds: 30
+            periodSeconds: 60
+            failureThreshold: 3
+          readinessProbe:
+            tcpSocket:
+              port: 3306
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: mariadb-data
+              mountPath: /var/lib/mysql
       volumes:
-      - name: mariadb-data
-        hostPath:
-          path: /mnt/cephfs/docker/tools/mariadb/data
-          type: Directory
+        - name: mariadb-data
+          hostPath:
+            path: /mnt/cephfs/docker/tools/mariadb/data
+            type: Directory
 ---
 apiVersion: v1
 kind: Service
@@ -225,5 +237,5 @@ spec:
   selector:
     app: mariadb
   ports:
-  - port: 3306
-    targetPort: 3306
+    - port: 3306
+      targetPort: 3306
