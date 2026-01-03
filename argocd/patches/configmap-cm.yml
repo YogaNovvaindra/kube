@@ -10,8 +10,8 @@ data:
   oidc.config: |
     name: Authentik
     issuer: https://auth.ygnv.my.id/application/o/argocd/
-    clientID: $oidc.authentik.clientID
-    clientSecret: $oidc.authentik.clientSecret
+    clientID: $argocd-oidc-secret:oidc.authentik.clientID
+    clientSecret: $argocd-oidc-secret:oidc.authentik.clientSecret
     requestedScopes:
       - openid
       - profile
