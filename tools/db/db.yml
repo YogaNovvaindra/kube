@@ -207,13 +207,23 @@ spec:
                   key: password
           livenessProbe:
             exec:
-              command: ["/usr/local/bin/healthcheck.sh"]
+              command:
+                [
+                  "/usr/local/bin/healthcheck.sh",
+                  "--connect",
+                  "--innodb_initialized",
+                ]
             initialDelaySeconds: 30
             periodSeconds: 60
             failureThreshold: 3
           readinessProbe:
             exec:
-              command: ["/usr/local/bin/healthcheck.sh"]
+              command:
+                [
+                  "/usr/local/bin/healthcheck.sh",
+                  "--connect",
+                  "--innodb_initialized",
+                ]
             initialDelaySeconds: 10
             periodSeconds: 10
             failureThreshold: 3
