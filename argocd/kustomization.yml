@@ -9,7 +9,7 @@ resources:
   # Custom Traefik IngressRoute
   - ingress.yml
   - argocd-notifications-secret.yml
-  # OIDC secret for Authentik integration
+  # OIDC SealedSecret (patches existing argocd-secret)
   - argocd-secret.yml
 
 patches:
