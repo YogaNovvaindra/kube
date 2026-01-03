@@ -29,6 +29,11 @@ patches:
   - path: patches/image-pull-policy.yml
   # Set resource requests for all containers
   - path: patches/resources.yml
+  # Add OIDC credentials to argocd-secret
+  - path: patches/secret-oidc.yml
+    target:
+      kind: Secret
+      name: argocd-secret
 
 images:
   # Replace all Argo CD images with custom registry
