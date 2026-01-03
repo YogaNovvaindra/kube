@@ -4,5 +4,8 @@ metadata:
   name: argocd-rbac-cm
 data:
   # Grant readonly role to homepage account
+  # Map Authentik groups to ArgoCD roles
   policy.csv: |
     g, homepage, role:readonly
+    g, ArgoCD Admins, role:admin
+  scopes: "[groups, email]"

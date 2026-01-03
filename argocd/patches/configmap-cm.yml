@@ -5,3 +5,15 @@ metadata:
 data:
   # Create homepage service account with API key
   accounts.homepage: apiKey
+  # Authentik OIDC Configuration
+  url: https://argocd.ygnv.my.id
+  oidc.config: |
+    name: Authentik
+    issuer: https://auth.ygnv.my.id/application/o/argocd/
+    clientID: $oidc.authentik.clientID
+    clientSecret: $oidc.authentik.clientSecret
+    requestedScopes:
+      - openid
+      - profile
+      - email
+      - groups
