@@ -10,7 +10,7 @@ resources:
   - ingress.yml
   - argocd-notifications-secret.yml
   # OIDC secret for Authentik integration
-  - oidc-secret.yml
+  - argocd-secret.yml
 
 patches:
   # Apply custom configurations to ConfigMaps
