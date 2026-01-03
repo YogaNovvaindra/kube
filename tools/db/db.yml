@@ -207,15 +207,13 @@ spec:
                   key: password
           livenessProbe:
             exec:
-              command:
-                ["sh", "-c", "mysqladmin ping -u root -p${MYSQL_ROOT_PASSWORD}"]
+              command: ["/usr/local/bin/healthcheck.sh"]
             initialDelaySeconds: 30
             periodSeconds: 60
             failureThreshold: 3
           readinessProbe:
             exec:
-              command:
-                ["sh", "-c", "mysqladmin ping -u root -p${MYSQL_ROOT_PASSWORD}"]
+              command: ["/usr/local/bin/healthcheck.sh"]
             initialDelaySeconds: 10
             periodSeconds: 10
             failureThreshold: 3
