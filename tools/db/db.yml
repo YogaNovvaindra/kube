@@ -198,6 +198,8 @@ spec:
                 secretKeyRef:
                   name: mariadb-cred
                   key: username
+            - name: MARIADB_AUTO_UPGRADE
+              value: "1"
             - name: MYSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
