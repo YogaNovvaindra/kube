@@ -204,14 +204,16 @@ spec:
                   name: mariadb-cred
                   key: password
           livenessProbe:
-            tcpSocket:
-              port: 3306
+            exec:
+              command:
+                ["sh", "-c", "mysqladmin ping -u root -p${MYSQL_ROOT_PASSWORD}"]
             initialDelaySeconds: 30
             periodSeconds: 60
             failureThreshold: 3
           readinessProbe:
-            tcpSocket:
-              port: 3306
+            exec:
+              command:
+                ["sh", "-c", "mysqladmin ping -u root -p${MYSQL_ROOT_PASSWORD}"]
             initialDelaySeconds: 10
             periodSeconds: 10
             failureThreshold: 3
