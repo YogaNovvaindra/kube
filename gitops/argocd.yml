@@ -19,6 +19,13 @@ spec:
     kustomize: {}
   sources: []
   project: default
+  ignoreDifferences:
+    - group: ""
+      kind: Secret
+      name: argocd-secret
+      jsonPointers:
+        - /data/oidc.authentik.clientID
+        - /data/oidc.authentik.clientSecret
   syncPolicy:
     automated:
       prune: true
