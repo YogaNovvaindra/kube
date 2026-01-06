@@ -37,7 +37,7 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet
       containers:
         - name: esphome
-          image: reg.ygnv.my.id/ghcr/esphome/esphome:2025.12.4
+          image: reg.ygnv.my.id/ghcr/esphome/esphome:2025.12.5
           imagePullPolicy: Always
           resources:
             requests:
