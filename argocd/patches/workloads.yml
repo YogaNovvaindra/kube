@@ -41,9 +41,9 @@ spec:
               memory: 64Mi
 ---
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
-  name: argocd-redis-ha-server
+  name: argocd-redis
 spec:
   template:
     spec:
