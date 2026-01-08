@@ -73,7 +73,7 @@
       "customType": "regex",
       "managerFilePatterns": ["/kustomization\\.ya?ml$/"],
       "matchStrings": [
-        "https://raw\\.githubusercontent\\.com/argoproj/argo-cd/(?<currentValue>v[0-9.]+|master)/manifests/(?:ha/)?install\\.yaml"
+        "https://raw\\.githubusercontent\\.com/argoproj/argo-cd/(?<currentValue>v[0-9.]+|master)/manifests/install\\.yaml"
       ],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "argoproj/argo-cd"
