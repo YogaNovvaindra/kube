@@ -4,8 +4,8 @@ kind: Kustomization
 namespace: argocd
 
 resources:
-  # Official Argo CD installation manifest - stable release
-  - https://raw.githubusercontent.com/argoproj/argo-cd/v3.2.3/manifests/install.yaml
+  # Official Argo CD installation manifest - stable release (HA)
+  - https://raw.githubusercontent.com/argoproj/argo-cd/v3.2.3/manifests/ha/install.yaml
   # Custom Traefik IngressRoute
   - ingress.yml
   - argocd-notifications-secret.yml
@@ -25,10 +25,8 @@ patches:
     target:
       kind: ConfigMap
       name: argocd-notifications-cm
-  # Set imagePullPolicy to IfNotPresent for all deployments
-  - path: patches/image-pull-policy.yml
-  # Set resource requests for all containers
-  - path: patches/resources.yml
+  # Set imagePullPolicy and resource requests for all workloads
+  - path: patches/workloads.yml
   # Add OIDC credentials to argocd-secret
   - path: patches/secret-oidc.yml
     target:

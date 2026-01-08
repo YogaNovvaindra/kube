@@ -7,6 +7,7 @@ spec:
     spec:
       containers:
         - name: argocd-applicationset-controller
+          imagePullPolicy: IfNotPresent
           resources:
             requests:
               memory: 64Mi
@@ -20,6 +21,7 @@ spec:
     spec:
       containers:
         - name: dex
+          imagePullPolicy: IfNotPresent
           resources:
             requests:
               memory: 64Mi
@@ -33,22 +35,38 @@ spec:
     spec:
       containers:
         - name: argocd-notifications-controller
+          imagePullPolicy: IfNotPresent
           resources:
             requests:
               memory: 64Mi
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: argocd-redis
+  name: argocd-redis-ha-server
 spec:
   template:
     spec:
       containers:
         - name: redis
+          imagePullPolicy: IfNotPresent
           resources:
             requests:
               memory: 16Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argocd-redis-ha-haproxy
+spec:
+  template:
+    spec:
+      containers:
+        - name: haproxy
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 64Mi
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -57,8 +75,12 @@ metadata:
 spec:
   template:
     spec:
+      initContainers:
+        - name: copyutil
+          imagePullPolicy: IfNotPresent
       containers:
         - name: argocd-repo-server
+          imagePullPolicy: IfNotPresent
           resources:
             requests:
               memory: 64Mi
@@ -72,6 +94,7 @@ spec:
     spec:
       containers:
         - name: argocd-server
+          imagePullPolicy: IfNotPresent
           resources:
             requests:
               memory: 64Mi
@@ -85,6 +108,7 @@ spec:
     spec:
       containers:
         - name: argocd-application-controller
+          imagePullPolicy: IfNotPresent
           resources:
             requests:
               memory: 256Mi
