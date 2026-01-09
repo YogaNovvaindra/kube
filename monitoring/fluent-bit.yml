@@ -45,6 +45,7 @@ data:
     [INPUT]
         Name                      tail
         Tag                       kube.*
+        storage.type              filesystem
         Path                      /var/log/containers/*.log
         multiline.parser          docker, cri
         DB                        /var/log/flb_kube.db
@@ -83,27 +84,33 @@ metadata:
 data:
   fluent-bit.conf: |
     [SERVICE]
-        Flush                   1
-        Log_Level               info
+        Flush                     1
+        Log_Level                 info
+        Parsers_File              parsers.conf
+        storage.path              /var/log/flb-storage/
+        storage.sync              normal
+        storage.checksum          off
+        storage.backlog.mem_limit 5M
 
     [INPUT]
-        Name                    kubernetes_events
-        Tag                     k8s_events
-        DB                      /var/log/flb_kube_events.db
-        Mem_Buf_Limit           32MB
+        Name                      kubernetes_events
+        Tag                       k8s_events
+        storage.type              filesystem
+        DB                        /var/log/flb_kube_events.db
+        Mem_Buf_Limit             32MB
 
     [FILTER]
-        Name                    modify
-        Match                   k8s_events
-        Rename                  kubernetes.host       hostname
+        Name                      modify
+        Match                     k8s_events
+        Rename                    kubernetes.host       hostname
 
     [OUTPUT]
-        Name                    loki
-        Match                   k8s_events
-        Host                    loki.monitoring
-        Port                    3100
-        Labels                  source=fluent-bit,job=kube-events
-        auto_kubernetes_labels  On
+        Name                      loki
+        Match                     k8s_events
+        Host                      loki.monitoring
+        Port                      3100
+        Labels                    source=fluent-bit,job=kube-events
+        auto_kubernetes_labels    On
 ---
 apiVersion: apps/v1
 kind: DaemonSet
@@ -182,4 +189,4 @@ spec:
         - name: varlog
           hostPath:
             path: /mnt/cephfs/docker/monitoring/fluent-events
-            type: DirectoryOrCreate
+            type: Directory
