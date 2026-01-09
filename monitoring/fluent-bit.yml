@@ -34,40 +34,45 @@ metadata:
 data:
   fluent-bit.conf: |
     [SERVICE]
-        flush           1
-        log_level       info
+        Flush                     1
+        Log_Level                 info
+        Parsers_File              parsers.conf
+        storage.path              /var/log/flb-storage/
+        storage.sync              normal
+        storage.checksum          off
+        storage.backlog.mem_limit 5M
 
     [INPUT]
-        Name              tail
-        Tag               kube.*
-        Path              /var/log/containers/*.log
-        multiline.parser  docker, cri
-        DB                /var/log/flb_kube.db
-        Mem_Buf_Limit     64MB
-        Skip_Long_Lines   On
+        Name                      tail
+        Tag                       kube.*
+        Path                      /var/log/containers/*.log
+        multiline.parser          docker, cri
+        DB                        /var/log/flb_kube.db
+        Mem_Buf_Limit             32MB
+        Skip_Long_Lines           On
 
     [FILTER]
-        Name             kubernetes
-        Match            kube.*
-        Kube_URL         https://kubernetes.default.svc:443
-        Kube_CA_File     /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-        Kube_Token_File  /var/run/secrets/kubernetes.io/serviceaccount/token
-        Kube_Tag_Prefix  kube.var.log.containers.
-        Merge_Log        On
-        Merge_Log_Key    log_processed
-        Keep_Log         On
-        labels            On
-        Annotations       Off
-        Use_Tag_For_Meta  On
+        Name                      kubernetes
+        Match                     kube.*
+        Kube_URL                  https://kubernetes.default.svc:443
+        Kube_CA_File              /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        Kube_Token_File           /var/run/secrets/kubernetes.io/serviceaccount/token
+        Kube_Tag_Prefix           kube.var.log.containers.
+        Merge_Log                 On
+        Merge_Log_Key             log_processed
+        Keep_Log                  On
+        labels                    On
+        Annotations               Off
+        Use_Tag_For_Meta          On
 
     [OUTPUT]
-        Name            loki
-        Match           kube.*
-        Host            loki.monitoring
-        Port            3100
-        Labels          job=fluent-bit,source=kube-logs
-        Label_Keys     $kubernetes['namespace_name'],$kubernetes['pod_name'],$kubernetes['container_name']
-        auto_kubernetes_labels On
+        Name                      loki
+        Match                     kube.*
+        Host                      loki.monitoring
+        Port                      3100
+        Labels                    job=kube-logs,source=fluent-bit
+        Label_Keys                $kubernetes['namespace_name'],$kubernetes['pod_name'],$kubernetes['container_name']
+        auto_kubernetes_labels    On
 
 ---
 apiVersion: v1
@@ -78,25 +83,25 @@ metadata:
 data:
   fluent-bit.conf: |
     [SERVICE]
-        flush           1
-        log_level       info
-        
+        Flush                   1
+        Log_Level               info
+
     [INPUT]
-        name              kubernetes_events
-        tag               k8s_events
+        Name                    kubernetes_events
+        Tag                     k8s_events
 
     [FILTER]
-        Name             modify
-        Match            k8s_events
-        Rename           kubernetes.host       hostname
+        Name                    modify
+        Match                   k8s_events
+        Rename                  kubernetes.host       hostname
 
     [OUTPUT]
-        Name            loki
-        Match           k8s_events
-        Host            loki.monitoring
-        Port            3100
-        Labels          job=fluent-bit,source=kube-events
-        auto_kubernetes_labels On
+        Name                    loki
+        Match                   k8s_events
+        Host                    loki.monitoring
+        Port                    3100
+        Labels                  job=kube-events,source=fluent-bit
+        auto_kubernetes_labels  On
 ---
 apiVersion: apps/v1
 kind: DaemonSet
