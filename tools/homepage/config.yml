@@ -345,16 +345,11 @@ data:
           href: https://pgadmin.ygnv.my.id
           description: PostgreSQL database management
           siteMonitor: http://pgadmin:80
-      - phpMyAdmin Tools:
+      - phpMyAdmin:
           icon: phpmyadmin.png
           href: https://phpmyadmin-tools.ygnv.my.id
-          description: MySQL database management (tools environment)
+          description: MySQL database management
           siteMonitor: http://phpmyadmin:80
-      - phpMyAdmin Services:
-          icon: phpmyadmin.png
-          href: https://phpmyadmin-services.ygnv.my.id
-          description: MySQL database management (services environment)
-          siteMonitor: http://phpmyadmin.services:80
       - Bytebase:
           icon: https://www.bytebase.com/favicon/favicon.png
           href: https://bytebase.ygnv.my.id

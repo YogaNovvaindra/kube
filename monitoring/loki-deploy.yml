@@ -119,9 +119,6 @@ spec:
             requests:
               cpu: 200m
               memory: 512Mi
-            limits:
-              cpu: 1000m
-              memory: 2Gi
           args:
             - -config.file=/etc/loki/loki.yml
             - -log.level=warn
