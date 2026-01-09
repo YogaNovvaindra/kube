@@ -70,7 +70,7 @@ data:
         Match                     kube.*
         Host                      loki.monitoring
         Port                      3100
-        Labels                    job=kube-logs,source=fluent-bit
+        Labels                    source=fluent-bit,job=kube-logs
         Label_Keys                $kubernetes['namespace_name'],$kubernetes['pod_name'],$kubernetes['container_name']
         auto_kubernetes_labels    On
 
@@ -89,6 +89,8 @@ data:
     [INPUT]
         Name                    kubernetes_events
         Tag                     k8s_events
+        DB                      /var/log/flb_kube_events.db
+        Mem_Buf_Limit           32MB
 
     [FILTER]
         Name                    modify
@@ -100,7 +102,7 @@ data:
         Match                   k8s_events
         Host                    loki.monitoring
         Port                    3100
-        Labels                  job=kube-events,source=fluent-bit
+        Labels                  source=fluent-bit,job=kube-events
         auto_kubernetes_labels  On
 ---
 apiVersion: apps/v1
@@ -171,7 +173,13 @@ spec:
             - name: config
               mountPath: /fluent-bit/etc/fluent-bit.conf
               subPath: fluent-bit.conf
+            - name: varlog
+              mountPath: /var/log
       volumes:
         - name: config
           configMap:
             name: fluent-events-config
+        - name: varlog
+          hostPath:
+            path: /mnt/cephfs/docker/monitoring/fluent-events
+            type: DirectoryOrCreate
