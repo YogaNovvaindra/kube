@@ -73,7 +73,7 @@ data:
         Host                      loki.monitoring
         Port                      3100
         Labels                    source=fluent_bit,job=kube_logs
-        Label_Keys                $kubernetes['namespace_name'],$kubernetes['pod_name'],$kubernetes['container_name']
+        Label_Keys                $kubernetes['namespace_name'],$kubernetes['pod_name'],$kubernetes['container_name'],$kubernetes['labels']['app']
         auto_kubernetes_labels    On
 
 ---
