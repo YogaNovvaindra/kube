@@ -55,7 +55,7 @@ spec:
         - name: qbittorrent-config
           hostPath:
             path: /mnt/cephfs/docker/media/download/qbittorrent
-            type: DirectoryOrCreate
+            type: Directory
         - name: downloads
           hostPath:
             path: /mnt/cephfs/data/downloads
@@ -139,7 +139,7 @@ spec:
           imagePullPolicy: IfNotPresent
           resources:
             requests:
-              memory: 64Mi
+              memory: 128Mi
           ports:
             - containerPort: 7476
               name: http
@@ -150,7 +150,7 @@ spec:
         - name: qui-config
           hostPath:
             path: /mnt/cephfs/docker/media/download/qui
-            type: DirectoryOrCreate
+            type: Directory
 ---
 # Qui Service
 apiVersion: v1

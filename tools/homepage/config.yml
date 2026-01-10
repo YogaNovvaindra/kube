@@ -566,7 +566,7 @@ data:
             username: ${QBITTORRENT_USERNAME}
             password: ${QBITTORRENT_PASSWORD}
       - Qui:
-          icon: https://raw.githubusercontent.com/autobrr/qui/main/web/public/favicon.svg
+          icon: https://getqui.com/img/qui.png
           href: https://qui.ygnv.my.id
           description: Multi-instance qBittorrent Web UI manager
           siteMonitor: http://qui.media:7476
