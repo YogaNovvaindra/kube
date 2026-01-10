@@ -27,10 +27,12 @@ spec:
           env:
             - name: NB_HOSTNAME
               value: "microk8s"
+            - name: NB_LOG_LEVEL
+              value: "warning"
           volumeMounts:
             - name: netbird-agent
               mountPath: /var/lib/netbird
-          resources: 
+          resources:
             requests:
               memory: "64Mi"
             limits:

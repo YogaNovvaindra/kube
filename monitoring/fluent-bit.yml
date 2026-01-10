@@ -39,8 +39,8 @@ data:
         Parsers_File              parsers.conf
         storage.path              /var/log/flb-storage/
         storage.sync              normal
-        storage.checksum          off
-        storage.backlog.mem_limit 5M
+        storage.checksum          on
+        storage.backlog.mem_limit 16M
 
     [INPUT]
         Name                      tail
@@ -61,7 +61,8 @@ data:
         Kube_Tag_Prefix           kube.var.log.containers.
         Merge_Log                 On
         Merge_Log_Key             log_processed
-        Keep_Log                  On
+        Merge_Log_Trim            On
+        Keep_Log                  off
         labels                    On
         Annotations               Off
         Use_Tag_For_Meta          On
@@ -89,8 +90,8 @@ data:
         Parsers_File              parsers.conf
         storage.path              /var/log/flb-storage/
         storage.sync              normal
-        storage.checksum          off
-        storage.backlog.mem_limit 5M
+        storage.checksum          on
+        storage.backlog.mem_limit 16M
 
     [INPUT]
         Name                      kubernetes_events
