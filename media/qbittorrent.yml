@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: qbittorrent
-          image: reg.ygnv.my.id/docker/linuxserver/qbittorrent:5.1.4
+          image: reg.ygnv.my.id/docker/linuxserver/qbittorrent:20.04.1
           imagePullPolicy: IfNotPresent
           resources:
             requests:
