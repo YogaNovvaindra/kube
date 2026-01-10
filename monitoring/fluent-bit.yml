@@ -62,7 +62,7 @@ data:
         Merge_Log                 On
         Merge_Log_Key             log_processed
         Merge_Log_Trim            On
-        Keep_Log                  off
+        Keep_Log                  on
         labels                    On
         Annotations               Off
         Use_Tag_For_Meta          On
