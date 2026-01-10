@@ -210,7 +210,8 @@ This cluster hosts a variety of self-managed applications and services.
 - [🎬 Plex Media Server](file:///home/yoga/Documents/kube/media/player.yml): 4K transcoding capable media server and player suite.
 - [📺 Arr Suite](file:///home/yoga/Documents/kube/media/arr.yml): Radarr/Sonarr/Bazarr stack for automated media management.
 - [📥 Transmission & Aria2](file:///home/yoga/Documents/kube/media/download.yml): Torrent and general download clients.
-- [📊 Tautulli](file:///home/yoga/Documents/kube/media/player.yml): Plex usage monitoring and analytics.
+- [� qBittorrent & Qui](file:///home/yoga/Documents/kube/media/qbittorrent.yml): Feature-rich torrent client with multi-instance Web UI.
+- [�📊 Tautulli](file:///home/yoga/Documents/kube/media/player.yml): Plex usage monitoring and analytics.
 - [📂 Overseerr](file:///home/yoga/Documents/kube/media/arr.yml): Media request management and discovery.
 - [🔧 FlareSolverr](file:///home/yoga/Documents/kube/media/arr.yml): Proxy server to bypass Cloudflare protection.
 

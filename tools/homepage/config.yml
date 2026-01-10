@@ -555,6 +555,21 @@ data:
             username: ${TRANSMISSION_USERNAME}
             password: ${TRANSMISSION_PASSWORD}
             rpcUrl: /transmission/ # Optional. Matches the value of "rpc-url" in your Transmission's settings.json file
+      - qBittorrent:
+          icon: qbittorrent.png
+          href: https://qbittorrent.ygnv.my.id
+          description: Feature-rich BitTorrent client
+          siteMonitor: http://qbittorrent.media:8080
+          widget:
+            type: qbittorrent
+            url: http://qbittorrent.media:8080
+            username: ${QBITTORRENT_USERNAME}
+            password: ${QBITTORRENT_PASSWORD}
+      - Qui:
+          icon: https://raw.githubusercontent.com/autobrr/qui/main/web/public/favicon.svg
+          href: https://qui.ygnv.my.id
+          description: Multi-instance qBittorrent Web UI manager
+          siteMonitor: http://qui.media:7476
       - IT-Tools:
           icon: it-tools-light.svg
           href: https://tools.ygnv.my.id
