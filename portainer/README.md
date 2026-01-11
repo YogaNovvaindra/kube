@@ -4,7 +4,7 @@ Portainer is a container management platform that simplifies the management of D
 
 ## Components
 
-- **[`portainer.yml`](file:///home/yoga/Documents/kube/portainer/portainer.yml)**: Deployment manifest for the Portainer Agent.
+- **[`portainer.yml`](portainer/portainer.yml)**: Deployment manifest for the Portainer Agent.
 
 ## Usage
 

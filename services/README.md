@@ -4,12 +4,12 @@ This directory contains various application services and their configurations.
 
 ## Featured Services
 
-- **[Ghost](file:///home/yoga/Documents/kube/services/ghost.yml)**: Professional publishing platform.
-- **[Portfolio](file:///home/yoga/Documents/kube/services/portfolio.yml)**: Personal project showcase.
-- **[EcoGuardian](file:///home/yoga/Documents/kube/services/ecoguardian.yml)**: Environmental monitoring.
-- **[Linear](file:///home/yoga/Documents/kube/services/linear-cred.yml)**: Issue tracking.
-- **[Cloudflared](file:///home/yoga/Documents/kube/services/cloudflared.yml)**: Secure tunneling to the web.
-- **[Project](file:///home/yoga/Documents/kube/services/project.yml)**: Personal projects.
+- **[Ghost](services/ghost.yml)**: Professional publishing platform.
+- **[Portfolio](services/portfolio.yml)**: Personal project showcase.
+- **[EcoGuardian](services/ecoguardian.yml)**: Environmental monitoring.
+- **[Linear](services/linear-cred.yml)**: Issue tracking.
+- **[Cloudflared](services/cloudflared.yml)**: Secure tunneling to the web.
+- **[Project](services/project.yml)**: Personal projects.
 
 ## Shared Resources
 

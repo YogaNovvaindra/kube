@@ -6,8 +6,8 @@ Harbor is an open-source trusted cloud native registry project that stores, sign
 
 Harbor is deployed using the official Helm chart from `https://helm.goharbor.io`.
 
-- **Source**: [gitops/harbor.yml](file:///home/yoga/Documents/kube/gitops/harbor.yml)
-- **Configuration**: [values.yaml](file:///home/yoga/Documents/kube/harbor/values.yaml)
+- **Source**: [gitops/harbor.yml](gitops/harbor.yml)
+- **Configuration**: [values.yaml](harbor/values.yaml)
 
 ## Usage
 

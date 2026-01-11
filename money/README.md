@@ -4,8 +4,8 @@ Money is a personal finance management application for tracking expenses, budget
 
 ## Components
 
-- **[`money.yml`](file:///home/yoga/Documents/kube/money/money.yml)**: Deployment manifest for the core application.
-- **[`money-cred.yml`](file:///home/yoga/Documents/kube/money/money-cred.yml)**: Sealed credentials for the application database.
+- **[`money.yml`](./money/money.yml)**: Deployment manifest for the core application.
+- **[`money-cred.yml`](./money/money-cred.yml)**: Sealed credentials for the application database.
 
 ## Deployment
 

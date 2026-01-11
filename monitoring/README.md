@@ -4,12 +4,12 @@ The observability stack provides metrics, logging, and uptime monitoring for the
 
 ## Components
 
-- **[Prometheus](file:///home/yoga/Documents/kube/monitoring/prometheus-deploy.yml)**: Metrics collection engine.
-- **[Grafana](file:///home/yoga/Documents/kube/monitoring/grafana.yml)**: Dashboard visualization.
-- **[Loki](file:///home/yoga/Documents/kube/monitoring/loki-deploy.yml)**: Log aggregation.
-- **[Fluent-bit](file:///home/yoga/Documents/kube/monitoring/fluent-bit.yml)**: Log forwarding.
-- **[Tempo](file:///home/yoga/Documents/kube/monitoring/tempo.yml)**: Distributed tracing backend.
-- **[Uptime Kuma](file:///home/yoga/Documents/kube/monitoring/uptime/uptime-kuma.yml)**: External service monitoring.
+- **[Prometheus](monitoring/prometheus-deploy.yml)**: Metrics collection engine.
+- **[Grafana](monitoring/grafana.yml)**: Dashboard visualization.
+- **[Loki](monitoring/loki-deploy.yml)**: Log aggregation.
+- **[Fluent-bit](monitoring/fluent-bit.yml)**: Log forwarding.
+- **[Tempo](monitoring/tempo.yml)**: Distributed tracing backend.
+- **[Uptime Kuma](monitoring/uptime/uptime-kuma.yml)**: External service monitoring.
 
 ## Exporters
 
