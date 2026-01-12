@@ -17,15 +17,11 @@ spec:
     spec:
       containers:
         - name: bytebase
-          # image: reg.ygnv.my.id/docker/bytebase/bytebase:3.13.1
-          image: reg.ygnv.my.id/docker/bytebase/bytebase:9.9-doesnotexist
+          image: reg.ygnv.my.id/docker/bytebase/bytebase:3.13.1
           imagePullPolicy: IfNotPresent
-          thisFieldDoesNotExist: "this will cause sync error"
           resources:
             requests:
               memory: 384Mi
-          # Configure external PostgreSQL following the guide:
-          # https://www.bytebase.com/docs/get-started/self-host/external-postgres
           envFrom:
             - secretRef:
                 name: bytebase-cred

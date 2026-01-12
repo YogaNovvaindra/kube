@@ -6,6 +6,11 @@ metadata:
   namespace: media
   labels:
     app: qbittorrent
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
 spec:
   replicas: 1
   revisionHistoryLimit: 3
@@ -21,7 +26,7 @@ spec:
     spec:
       containers:
         - name: qbittorrent
-          image: reg.ygnv.my.id/docker/linuxserver/qbittorrent:5.1.4
+          image: reg.ygnv.my.id/docker/linuxserver/qbittorrent:latest
           imagePullPolicy: IfNotPresent
           resources:
             requests:
