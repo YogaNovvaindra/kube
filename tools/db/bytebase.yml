@@ -20,6 +20,7 @@ spec:
           # image: reg.ygnv.my.id/docker/bytebase/bytebase:3.13.1
           image: reg.ygnv.my.id/docker/bytebase/bytebase:9.9-doesnotexist
           imagePullPolicy: IfNotPresent
+          thisFieldDoesNotExist: "this will cause sync error"
           resources:
             requests:
               memory: 384Mi
