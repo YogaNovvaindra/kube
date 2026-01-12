@@ -115,7 +115,7 @@ data:
                   },
                   {
                     "name": "Error",
-                    "value": "```{{ if .app.status.operationState.message }}{{ .app.status.operationState.message }}{{ else if .app.status.operationState.syncResult }}{{ range .app.status.operationState.syncResult.resources }}{{ if not (eq .status \"Synced\") }}{{ .name }}: {{ .message }}\\n{{ end }}{{ end }}{{ else }}Unknown Sync Error{{ end }}```",
+                    "value": "```{{ if .app.status.operationState.message }}{{ .app.status.operationState.message }}{{ else if .app.status.operationState.syncResult }}{{ range .app.status.operationState.syncResult.resources }}{{ if not (eq .status "Synced") }}{{ .name }}: {{ .message }}\\n{{ end }}{{ end }}{{ else }}Unknown Sync Error{{ end }}```",
                     "inline": false
                   }
                 ],
