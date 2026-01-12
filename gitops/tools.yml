@@ -8,6 +8,7 @@ metadata:
     notifications.argoproj.io/subscribe.on-sync-failed.discord: ""
     notifications.argoproj.io/subscribe.on-health-degraded.discord: ""
     notifications.argoproj.io/subscribe.on-sync-running.discord: ""
+    notifications.argoproj.io/subscribe.on-app-error.discord: ""
 spec:
   destination:
     namespace: tools

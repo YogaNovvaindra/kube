@@ -115,7 +115,7 @@ data:
                   },
                   {
                     "name": "Error",
-                    "value": "```{{ if .app.status.operationState.message }}{{ .app.status.operationState.message }}{{ else }}{{ range .app.status.operationState.syncResult.resources }}{{ if not (eq .status "Synced") }}{{ .name }}: {{ .message }}\\n{{ end }}{{ end }}{{ end }}```",
+                    "value": "```{{ if .app.status.operationState.message }}{{ .app.status.operationState.message }}{{ else if .app.status.operationState.syncResult }}{{ range .app.status.operationState.syncResult.resources }}{{ if not (eq .status \"Synced\") }}{{ .name }}: {{ .message }}\\n{{ end }}{{ end }}{{ else }}Unknown Sync Error{{ end }}```",
                     "inline": false
                   }
                 ],
@@ -222,6 +222,46 @@ data:
             ]
           }
 
+  # Template for application error (comparison error, etc)
+  template.app-error: |
+    webhook:
+      discord:
+        method: POST
+        body: |
+          {
+            "username": "ArgoCD",
+            "avatar_url": "https://raw.githubusercontent.com/argoproj/argo-cd/master/docs/assets/logo.png",
+            "embeds": [
+              {
+                "title": "🚨 Application Error",
+                "url": "https://argocd.ygnv.my.id/applications/{{.app.metadata.name}}",
+                "color": 15548997,
+                "description": "**{{.app.metadata.name}}** has an application error.",
+                "fields": [
+                  {
+                    "name": "Sync Status",
+                    "value": "{{.app.status.sync.status}}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Health Status",
+                    "value": "{{.app.status.health.status}}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Error Conditions",
+                    "value": "```{{ range .app.status.conditions }}{{ .type }}: {{ .message }}\\n{{ end }}```",
+                    "inline": false
+                  }
+                ],
+                "footer": {
+                  "text": "ArgoCD Notification"
+                },
+                "timestamp": "{{.app.metadata.creationTimestamp}}"
+              }
+            ]
+          }
+
   # Trigger for sync succeeded
   trigger.on-sync-succeeded: |
     - when: app.status.operationState.phase in ['Succeeded']
@@ -241,3 +281,8 @@ data:
   trigger.on-sync-running: |
     - when: app.status.operationState.phase in ['Running']
       send: [app-sync-running]
+
+  # Trigger for application error
+  trigger.on-app-error: |
+    - when: app.status.conditions != nil and len(app.status.conditions) > 0
+      send: [app-error]
