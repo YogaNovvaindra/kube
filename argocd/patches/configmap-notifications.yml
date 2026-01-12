@@ -229,7 +229,7 @@ data:
 
   # Trigger for sync failed
   trigger.on-sync-failed: |
-    - when: app.status.operationState.phase in ['Error', 'Failed']
+    - when: app.status.operationState.phase in ['Error', 'Failed', 'SyncFailed']
       send: [app-sync-failed]
 
   # Trigger for health degraded
