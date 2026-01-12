@@ -17,7 +17,8 @@ spec:
     spec:
       containers:
         - name: bytebase
-          image: reg.ygnv.my.id/docker/bytebase/bytebase:3.13.1
+          # image: reg.ygnv.my.id/docker/bytebase/bytebase:3.13.1
+          image: reg.ygnv.my.id/docker/bytebase/bytebase:9.9-doesnotexist
           imagePullPolicy: IfNotPresent
           resources:
             requests:
@@ -27,11 +28,7 @@ spec:
           envFrom:
             - secretRef:
                 name: bytebase-cred
-          args:
-            [
-              '--port',
-              '8080',
-            ]
+          args: ["--port", "8080"]
           ports:
             - containerPort: 8080
           livenessProbe:
