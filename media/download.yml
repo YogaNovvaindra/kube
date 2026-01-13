@@ -25,58 +25,57 @@ spec:
         app: transmission
     spec:
       containers:
-      - name: transmission
-        image: linuxserver/transmission:latest
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            memory: 128Mi
-        ports:
-        - containerPort: 9091
-          name: http
-        - containerPort: 51413
-          name: torrent-tcp
-          protocol: TCP
-        - containerPort: 51413
-          name: torrent-udp
-          protocol: UDP
-        env:
-        - name: PUID
-          value: "1000"
-        - name: PGID
-          value: "1000"
-        - name: USER
-          valueFrom:
-            secretKeyRef:
-              name: download-cred
-              key: user
-        - name: PASS
-          valueFrom:
-            secretKeyRef:
-              name: download-cred
-              key: pass
-        - name: DOCKER_MODS
-          value: "linuxserver/mods:transmission-floodui"
-        volumeMounts:
-        - name: transmission-config
-          mountPath: /config
-        - name: downloads
-          mountPath: /downloads
-        - name: torrent-watch
-          mountPath: /watch
+        - name: transmission
+          image: linuxserver/transmission:latest
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 128Mi
+          ports:
+            - containerPort: 9091
+              name: http
+            - containerPort: 51413
+              name: torrent-tcp
+              protocol: TCP
+            - containerPort: 51413
+              name: torrent-udp
+              protocol: UDP
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: USER
+              valueFrom:
+                secretKeyRef:
+                  name: download-cred
+                  key: user
+            - name: PASS
+              valueFrom:
+                secretKeyRef:
+                  name: download-cred
+                  key: pass
+            - name: DOCKER_MODS
+              value: "linuxserver/mods:transmission-floodui"
+          volumeMounts:
+            - name: transmission-config
+              mountPath: /config
+            - name: downloads
+              mountPath: /downloads
+            - name: torrent-watch
+              mountPath: /watch
       volumes:
-      - name: transmission-config
-        hostPath:
-          path: /mnt/cephfs/docker/media/download/transmission
-          type: Directory
-      - name: downloads
-        hostPath:
-          path: /mnt/cephfs/data/downloads
-          type: Directory
-      - name: torrent-watch
-        hostPath:
-          path: /mnt/cephfs/data/downloads/torrent
-          type: Directory
+        - name: transmission-config
+          persistentVolumeClaim:
+            claimName: media-transmission-pvc
+        - name: downloads
+          hostPath:
+            path: /mnt/cephfs/data/downloads
+            type: Directory
+        - name: torrent-watch
+          hostPath:
+            path: /mnt/cephfs/data/downloads/torrent
+            type: Directory
 ---
 # Transmission Service
 apiVersion: v1
@@ -95,18 +94,18 @@ spec:
   type: LoadBalancer
   loadBalancerIP: 10.1.1.53
   ports:
-  - name: http
-    protocol: TCP
-    port: 9091
-    targetPort: 9091
-  - name: torrent-tcp
-    protocol: TCP
-    port: 51413
-    targetPort: 51413
-  - name: torrent-udp
-    protocol: UDP
-    port: 51413
-    targetPort: 51413
+    - name: http
+      protocol: TCP
+      port: 9091
+      targetPort: 9091
+    - name: torrent-tcp
+      protocol: TCP
+      port: 51413
+      targetPort: 51413
+    - name: torrent-udp
+      protocol: UDP
+      port: 51413
+      targetPort: 51413
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
@@ -152,61 +151,60 @@ spec:
         app: aria2
     spec:
       containers:
-      - name: aria2
-        image: p3terx/aria2-pro:latest
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            memory: 32Mi
-        ports:
-        - containerPort: 6800
-          name: rpc
-        - containerPort: 6888
-          name: listen-tcp
-          protocol: TCP
-        - containerPort: 6888
-          name: listen-udp
-          protocol: UDP
-        env:
-        - name: PUID
-          value: "65534"
-        - name: PGID
-          value: "65534"
-        - name: UMASK_SET
-          value: "022"
-        - name: RPC_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: download-cred
-              key: pass
-        - name: RPC_PORT
-          value: "6800"
-        - name: LISTEN_PORT
-          value: "6888"
-        - name: DISK_CACHE
-          value: "128M"
-        - name: IPV6_MODE
-          value: "false"
-        - name: UPDATE_TRACKERS
-          value: "true"
-        - name: CUSTOM_TRACKER_URL
-          value: ""
-        - name: TZ
-          value: "Asia/Jakarta"
-        volumeMounts:
-        - name: aria2-config
-          mountPath: /config
-        - name: downloads
-          mountPath: /downloads
+        - name: aria2
+          image: p3terx/aria2-pro:latest
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 32Mi
+          ports:
+            - containerPort: 6800
+              name: rpc
+            - containerPort: 6888
+              name: listen-tcp
+              protocol: TCP
+            - containerPort: 6888
+              name: listen-udp
+              protocol: UDP
+          env:
+            - name: PUID
+              value: "65534"
+            - name: PGID
+              value: "65534"
+            - name: UMASK_SET
+              value: "022"
+            - name: RPC_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: download-cred
+                  key: pass
+            - name: RPC_PORT
+              value: "6800"
+            - name: LISTEN_PORT
+              value: "6888"
+            - name: DISK_CACHE
+              value: "128M"
+            - name: IPV6_MODE
+              value: "false"
+            - name: UPDATE_TRACKERS
+              value: "true"
+            - name: CUSTOM_TRACKER_URL
+              value: ""
+            - name: TZ
+              value: "Asia/Jakarta"
+          volumeMounts:
+            - name: aria2-config
+              mountPath: /config
+            - name: downloads
+              mountPath: /downloads
       volumes:
-      - name: aria2-config
-        hostPath:
-          path: /mnt/cephfs/docker/media/download/aria2
-          type: Directory
-      - name: downloads
-        hostPath:
-          path: /mnt/cephfs/data/downloads
-          type: Directory
+        - name: aria2-config
+          persistentVolumeClaim:
+            claimName: media-aria2-pvc
+        - name: downloads
+          hostPath:
+            path: /mnt/cephfs/data/downloads
+            type: Directory
 ---
 # Aria2 Service
 apiVersion: v1
@@ -225,15 +223,15 @@ spec:
   type: LoadBalancer
   loadBalancerIP: 10.1.1.53
   ports:
-  - name: rpc
-    protocol: TCP
-    port: 6800
-    targetPort: 6800
-  - name: listen-tcp
-    protocol: TCP
-    port: 6888
-    targetPort: 6888
-  - name: listen-udp
-    protocol: UDP
-    port: 6888
-    targetPort: 6888
+    - name: rpc
+      protocol: TCP
+      port: 6800
+      targetPort: 6800
+    - name: listen-tcp
+      protocol: TCP
+      port: 6888
+      targetPort: 6888
+    - name: listen-udp
+      protocol: UDP
+      port: 6888
+      targetPort: 6888

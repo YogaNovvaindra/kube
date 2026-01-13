@@ -5,7 +5,7 @@ metadata:
   name: harbor-registry-pv
 spec:
   capacity:
-    storage: 50Gi # Adjust based on your Cephfs size
+    storage: 20Gi
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
@@ -24,7 +24,7 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 50Gi
+      storage: 20Gi
   storageClassName: cephfs
   volumeName: harbor-registry-pv
 ---
@@ -34,7 +34,7 @@ metadata:
   name: harbor-jobservice-pv
 spec:
   capacity:
-    storage: 1Gi
+    storage: 512Mi
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
@@ -53,7 +53,7 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 1Gi
+      storage: 512Mi
   storageClassName: cephfs
   volumeName: harbor-jobservice-pv
 ---
@@ -63,7 +63,7 @@ metadata:
   name: harbor-trivy-pv
 spec:
   capacity:
-    storage: 5Gi
+    storage: 1Gi
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
@@ -82,6 +82,6 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 5Gi
+      storage: 1Gi
   storageClassName: cephfs
   volumeName: harbor-trivy-pv

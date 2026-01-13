@@ -1,4 +1,3 @@
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -26,49 +25,48 @@ spec:
       #     - 44   # GID for video group
       #     - 109  # GID for render group
       containers:
-      - name: plex
-        image: reg.ygnv.my.id/docker/linuxserver/plex:1.42.2
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            memory: 256Mi
-        ports:
-        - containerPort: 32400
-        env:
-        - name: PUID
-          value: "1000"
-        - name: PGID
-          value: "1000"
-        - name: VERSION
-          value: "docker"
-        volumeMounts:
-        - name: dev-dri
-          mountPath: /dev/dri
-        - name: plex-config
-          mountPath: /config
-        - name: plex-tv
-          mountPath: /tv
-        - name: plex-movies
-          mountPath: /movies
-        securityContext:
-          privileged: false
+        - name: plex
+          image: reg.ygnv.my.id/docker/linuxserver/plex:1.42.2
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 256Mi
+          ports:
+            - containerPort: 32400
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: VERSION
+              value: "docker"
+          volumeMounts:
+            - name: dev-dri
+              mountPath: /dev/dri
+            - name: plex-config
+              mountPath: /config
+            - name: plex-tv
+              mountPath: /tv
+            - name: plex-movies
+              mountPath: /movies
+          securityContext:
+            privileged: false
       volumes:
-      - name: dev-dri
-        hostPath:
-          path: /dev/dri
-          type: Directory
-      - name: plex-config
-        hostPath:
-          path: /mnt/cephfs/docker/media/plex
-          type: Directory
-      - name: plex-tv
-        hostPath:
-          path: /mnt/cephfs/data/Videos/TV
-          type: Directory
-      - name: plex-movies
-        hostPath:
-          path: /mnt/cephfs/data/Videos/Movies
-          type: Directory
+        - name: dev-dri
+          hostPath:
+            path: /dev/dri
+            type: Directory
+        - name: plex-config
+          persistentVolumeClaim:
+            claimName: media-plex-pvc
+        - name: plex-tv
+          hostPath:
+            path: /mnt/cephfs/data/Videos/TV
+            type: Directory
+        - name: plex-movies
+          hostPath:
+            path: /mnt/cephfs/data/Videos/Movies
+            type: Directory
 ---
 # Plex Service
 apiVersion: v1
@@ -137,51 +135,49 @@ spec:
       #     - 44   # GID for video group
       #     - 109  # GID for render group
       containers:
-      - name: jellyfin
-        image: reg.ygnv.my.id/ghcr/jellyfin/jellyfin:10.11.5
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            memory: 256Mi
-        ports:
-        - containerPort: 8096
-        env:
-        - name: TZ
-          value: "Asia/Jakarta"
-        volumeMounts:
-        - name: dev-dri
-          mountPath: /dev/dri
-        - name: jellyfin-config
-          mountPath: /config
-        - name: jellyfin-cache
-          mountPath: /cache
-        - name: jellyfin-tvshows
-          mountPath: /data/tvshows
-        - name: jellyfin-movies
-          mountPath: /data/movies
-        securityContext:
-          privileged: true
+        - name: jellyfin
+          image: reg.ygnv.my.id/ghcr/jellyfin/jellyfin:10.11.5
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 256Mi
+          ports:
+            - containerPort: 8096
+          env:
+            - name: TZ
+              value: "Asia/Jakarta"
+          volumeMounts:
+            - name: dev-dri
+              mountPath: /dev/dri
+            - name: jellyfin-config
+              mountPath: /config
+            - name: jellyfin-cache
+              mountPath: /cache
+            - name: jellyfin-tvshows
+              mountPath: /data/tvshows
+            - name: jellyfin-movies
+              mountPath: /data/movies
+          securityContext:
+            privileged: true
       volumes:
-      - name: dev-dri
-        hostPath:
-          path: /dev/dri
-          type: Directory
-      - name: jellyfin-config
-        hostPath:
-          path: /mnt/cephfs/docker/media/jellyfin
-          type: Directory
-      - name: jellyfin-cache
-        hostPath:
-          path: /mnt/cephfs/docker/media/jellyfin/cache
-          type: Directory
-      - name: jellyfin-tvshows
-        hostPath:
-          path: /mnt/cephfs/data/Videos/TV
-          type: Directory
-      - name: jellyfin-movies
-        hostPath:
-          path: /mnt/cephfs/data/Videos/Movies
-          type: Directory
+        - name: dev-dri
+          hostPath:
+            path: /dev/dri
+            type: Directory
+        - name: jellyfin-config
+          persistentVolumeClaim:
+            claimName: media-jellyfin-config-pvc
+        - name: jellyfin-cache
+          persistentVolumeClaim:
+            claimName: media-jellyfin-cache-pvc
+        - name: jellyfin-tvshows
+          hostPath:
+            path: /mnt/cephfs/data/Videos/TV
+            type: Directory
+        - name: jellyfin-movies
+          hostPath:
+            path: /mnt/cephfs/data/Videos/Movies
+            type: Directory
 ---
 # Jellyfin Service
 apiVersion: v1

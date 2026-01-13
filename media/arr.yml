@@ -1,4 +1,3 @@
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -22,31 +21,31 @@ spec:
       nodeSelector:
         kubernetes.io/hperf: "true"
       containers:
-      - name: flaresolverr
-        image: reg.ygnv.my.id/ghcr/flaresolverr/flaresolverr:v3.4.6
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            memory: 256Mi
-          # limits:
-          #   memory: 2Gi
-        ports:
-        - containerPort: 8191
-        env:
-        - name: LOG_LEVEL
-          value: "info"
-        - name: TZ
-          value: "Asia/Jakarta"
-        # livenessProbe:
-        #   exec:
-        #     command:
-        #       - sh
-        #       - -c
-        #       - 'curl -X POST -f http://localhost:8191/v1 -d "{\"maxTimeout\":120000,\"cmd\":\"request.get\",\"url\":\"https://prowlarr.servarr.com/v1/ping\",\"proxy\":{}}" -H "Content-Type: application/json"'
-        #   initialDelaySeconds: 120
-        #   periodSeconds: 600
-        #   timeoutSeconds: 60
-        #   failureThreshold: 3
+        - name: flaresolverr
+          image: reg.ygnv.my.id/ghcr/flaresolverr/flaresolverr:v3.4.6
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 256Mi
+            # limits:
+            #   memory: 2Gi
+          ports:
+            - containerPort: 8191
+          env:
+            - name: LOG_LEVEL
+              value: "info"
+            - name: TZ
+              value: "Asia/Jakarta"
+          # livenessProbe:
+          #   exec:
+          #     command:
+          #       - sh
+          #       - -c
+          #       - 'curl -X POST -f http://localhost:8191/v1 -d "{\"maxTimeout\":120000,\"cmd\":\"request.get\",\"url\":\"https://prowlarr.servarr.com/v1/ping\",\"proxy\":{}}" -H "Content-Type: application/json"'
+          #   initialDelaySeconds: 120
+          #   periodSeconds: 600
+          #   timeoutSeconds: 60
+          #   failureThreshold: 3
 ---
 # Flaresolverr Service
 apiVersion: v1
@@ -61,9 +60,9 @@ spec:
   selector:
     app: flaresolverr
   ports:
-  - protocol: TCP
-    port: 8191
-    targetPort: 8191
+    - protocol: TCP
+      port: 8191
+      targetPort: 8191
 ---
 # Prowlarr Deployment
 apiVersion: apps/v1
@@ -87,29 +86,28 @@ spec:
         app: prowlarr
     spec:
       containers:
-      - name: prowlarr
-        image: reg.ygnv.my.id/docker/linuxserver/prowlarr:2.3.0
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            memory: 256Mi
-        ports:
-        - containerPort: 9696
-        env:
-        - name: PUID
-          value: "1000"
-        - name: PGID
-          value: "1000"
-        - name: TZ
-          value: "Asia/Jakarta"
-        volumeMounts:
-        - name: prowlarr-config
-          mountPath: /config
+        - name: prowlarr
+          image: reg.ygnv.my.id/docker/linuxserver/prowlarr:2.3.0
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 256Mi
+          ports:
+            - containerPort: 9696
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "Asia/Jakarta"
+          volumeMounts:
+            - name: prowlarr-config
+              mountPath: /config
       volumes:
-      - name: prowlarr-config
-        hostPath:
-          path: /mnt/cephfs/docker/media/prowlarr
-          type: Directory
+        - name: prowlarr-config
+          persistentVolumeClaim:
+            claimName: media-prowlarr-pvc
 ---
 # Prowlarr Service
 apiVersion: v1
@@ -123,9 +121,9 @@ spec:
   selector:
     app: prowlarr
   ports:
-  - protocol: TCP
-    port: 9696
-    targetPort: 9696
+    - protocol: TCP
+      port: 9696
+      targetPort: 9696
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
@@ -168,41 +166,40 @@ spec:
       nodeSelector:
         kubernetes.io/hperf: "true"
       containers:
-      - name: radarr
-        image: reg.ygnv.my.id/docker/linuxserver/radarr:6.0.4
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            memory: 256Mi
-        ports:
-        - containerPort: 7878
-        env:
-        - name: PUID
-          value: "1000"
-        - name: PGID
-          value: "1000"
-        - name: TZ
-          value: "Asia/Jakarta"
-        volumeMounts:
-        - name: radarr-config
-          mountPath: /config
-        - name: radarr-movies
-          mountPath: /movies
-        - name: radarr-downloads
-          mountPath: /downloads
+        - name: radarr
+          image: reg.ygnv.my.id/docker/linuxserver/radarr:6.0.4
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 256Mi
+          ports:
+            - containerPort: 7878
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "Asia/Jakarta"
+          volumeMounts:
+            - name: radarr-config
+              mountPath: /config
+            - name: radarr-movies
+              mountPath: /movies
+            - name: radarr-downloads
+              mountPath: /downloads
       volumes:
-      - name: radarr-config
-        hostPath:
-          path: /mnt/cephfs/docker/media/radarr
-          type: Directory
-      - name: radarr-movies
-        hostPath:
-          path: /mnt/cephfs/data/Videos/Movies
-          type: Directory
-      - name: radarr-downloads
-        hostPath:
-          path: /mnt/cephfs/data/downloads
-          type: Directory
+        - name: radarr-config
+          persistentVolumeClaim:
+            claimName: media-radarr-pvc
+        - name: radarr-movies
+          hostPath:
+            path: /mnt/cephfs/data/Videos/Movies
+            type: Directory
+        - name: radarr-downloads
+          hostPath:
+            path: /mnt/cephfs/data/downloads
+            type: Directory
 ---
 # Radarr Service
 apiVersion: v1
@@ -216,9 +213,9 @@ spec:
   selector:
     app: radarr
   ports:
-  - protocol: TCP
-    port: 7878
-    targetPort: 7878
+    - protocol: TCP
+      port: 7878
+      targetPort: 7878
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
@@ -261,41 +258,40 @@ spec:
       nodeSelector:
         kubernetes.io/hperf: "true"
       containers:
-      - name: sonarr
-        image: reg.ygnv.my.id/docker/linuxserver/sonarr:4.0.16
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            memory: 256Mi
-        ports:
-        - containerPort: 8989
-        env:
-        - name: PUID
-          value: "1000"
-        - name: PGID
-          value: "1000"
-        - name: TZ
-          value: "Asia/Jakarta"
-        volumeMounts:
-        - name: sonarr-config
-          mountPath: /config
-        - name: sonarr-tv
-          mountPath: /tv
-        - name: sonarr-downloads
-          mountPath: /downloads
+        - name: sonarr
+          image: reg.ygnv.my.id/docker/linuxserver/sonarr:4.0.16
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 256Mi
+          ports:
+            - containerPort: 8989
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "Asia/Jakarta"
+          volumeMounts:
+            - name: sonarr-config
+              mountPath: /config
+            - name: sonarr-tv
+              mountPath: /tv
+            - name: sonarr-downloads
+              mountPath: /downloads
       volumes:
-      - name: sonarr-config
-        hostPath:
-          path: /mnt/cephfs/docker/media/sonarr
-          type: Directory
-      - name: sonarr-tv
-        hostPath:
-          path: /mnt/cephfs/data/Videos/TV
-          type: Directory
-      - name: sonarr-downloads
-        hostPath:
-          path: /mnt/cephfs/data/downloads
-          type: Directory
+        - name: sonarr-config
+          persistentVolumeClaim:
+            claimName: media-sonarr-pvc
+        - name: sonarr-tv
+          hostPath:
+            path: /mnt/cephfs/data/Videos/TV
+            type: Directory
+        - name: sonarr-downloads
+          hostPath:
+            path: /mnt/cephfs/data/downloads
+            type: Directory
 ---
 # Sonarr Service
 apiVersion: v1
@@ -309,9 +305,9 @@ spec:
   selector:
     app: sonarr
   ports:
-  - protocol: TCP
-    port: 8989
-    targetPort: 8989
+    - protocol: TCP
+      port: 8989
+      targetPort: 8989
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
@@ -352,41 +348,40 @@ spec:
         app: bazarr
     spec:
       containers:
-      - name: bazarr
-        image: reg.ygnv.my.id/docker/linuxserver/bazarr:1.5.4
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            memory: 256Mi
-        ports:
-        - containerPort: 6767
-        env:
-        - name: PUID
-          value: "1000"
-        - name: PGID
-          value: "1000"
-        - name: TZ
-          value: "Asia/Jakarta"
-        volumeMounts:
-        - name: bazarr-config
-          mountPath: /config
-        - name: bazarr-movies
-          mountPath: /movies
-        - name: bazarr-tv
-          mountPath: /tv
+        - name: bazarr
+          image: reg.ygnv.my.id/docker/linuxserver/bazarr:1.5.4
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 256Mi
+          ports:
+            - containerPort: 6767
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "Asia/Jakarta"
+          volumeMounts:
+            - name: bazarr-config
+              mountPath: /config
+            - name: bazarr-movies
+              mountPath: /movies
+            - name: bazarr-tv
+              mountPath: /tv
       volumes:
-      - name: bazarr-config
-        hostPath:
-          path: /mnt/cephfs/docker/media/bazarr
-          type: Directory
-      - name: bazarr-movies
-        hostPath:
-          path: /mnt/cephfs/data/Videos/Movies
-          type: Directory
-      - name: bazarr-tv
-        hostPath:
-          path: /mnt/cephfs/data/Videos/TV
-          type: Directory
+        - name: bazarr-config
+          persistentVolumeClaim:
+            claimName: media-bazarr-pvc
+        - name: bazarr-movies
+          hostPath:
+            path: /mnt/cephfs/data/Videos/Movies
+            type: Directory
+        - name: bazarr-tv
+          hostPath:
+            path: /mnt/cephfs/data/Videos/TV
+            type: Directory
 ---
 # Bazarr Service
 apiVersion: v1
@@ -400,9 +395,9 @@ spec:
   selector:
     app: bazarr
   ports:
-  - protocol: TCP
-    port: 6767
-    targetPort: 6767
+    - protocol: TCP
+      port: 6767
+      targetPort: 6767
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
@@ -443,27 +438,26 @@ spec:
         app: overseerr
     spec:
       containers:
-      - name: overseerr
-        image: reg.ygnv.my.id/docker/sctx/overseerr:1.34.0
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            memory: 256Mi
-        ports:
-        - containerPort: 5055
-        env:
-        - name: LOG_LEVEL
-          value: info
-        - name: TZ
-          value: "Asia/Jakarta"
-        volumeMounts:
-        - name: overseerr-config
-          mountPath: /app/config
+        - name: overseerr
+          image: reg.ygnv.my.id/docker/sctx/overseerr:1.34.0
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 256Mi
+          ports:
+            - containerPort: 5055
+          env:
+            - name: LOG_LEVEL
+              value: info
+            - name: TZ
+              value: "Asia/Jakarta"
+          volumeMounts:
+            - name: overseerr-config
+              mountPath: /app/config
       volumes:
-      - name: overseerr-config
-        hostPath:
-          path: /mnt/cephfs/docker/media/overseerr
-          type: Directory
+        - name: overseerr-config
+          persistentVolumeClaim:
+            claimName: media-overseerr-pvc
 ---
 # Overseerr Service
 apiVersion: v1
@@ -477,9 +471,9 @@ spec:
   selector:
     app: overseerr
   ports:
-  - protocol: TCP
-    port: 5055
-    targetPort: 5055
+    - protocol: TCP
+      port: 5055
+      targetPort: 5055
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
@@ -568,7 +562,7 @@ spec:
 #   routes:
 #     - match: Host(`suggestarr.ygnv.my.id`)
 #       kind: Rule
-#       services: 
+#       services:
 #         - name: suggestarr
 #           port: 5000
 #   tls:
@@ -596,29 +590,28 @@ spec:
         app: tautulli
     spec:
       containers:
-      - name: tautulli
-        image: reg.ygnv.my.id/ghcr/tautulli/tautulli:v2.16.0
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            memory: 128Mi
-        ports:
-        - containerPort: 8181
-        env:
-        - name: PUID
-          value: "1000"
-        - name: PGID
-          value: "1000"
-        - name: TZ
-          value: "Asia/Jakarta"
-        volumeMounts:
-        - name: tautulli-config
-          mountPath: /config
+        - name: tautulli
+          image: reg.ygnv.my.id/ghcr/tautulli/tautulli:v2.16.0
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 128Mi
+          ports:
+            - containerPort: 8181
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "Asia/Jakarta"
+          volumeMounts:
+            - name: tautulli-config
+              mountPath: /config
       volumes:
-      - name: tautulli-config
-        hostPath:
-          path: /mnt/cephfs/docker/media/tautulli
-          type: Directory
+        - name: tautulli-config
+          persistentVolumeClaim:
+            claimName: media-tautulli-pvc
 ---
 # Tautulli Service
 apiVersion: v1
@@ -632,9 +625,9 @@ spec:
   selector:
     app: tautulli
   ports:
-  - protocol: TCP
-    port: 8181
-    targetPort: 8181
+    - protocol: TCP
+      port: 8181
+      targetPort: 8181
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
@@ -675,25 +668,24 @@ spec:
         app: maintainerr
     spec:
       containers:
-      - name: maintainerr
-        image: reg.ygnv.my.id/ghcr/maintainerr/maintainerr:2.26.0
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            memory: 128Mi
-        ports:
-        - containerPort: 6246
-        env:
-        - name: TZ
-          value: "Asia/Jakarta"
-        volumeMounts:
-        - name: maintainerr-data
-          mountPath: /opt/data
+        - name: maintainerr
+          image: reg.ygnv.my.id/ghcr/maintainerr/maintainerr:2.26.0
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 128Mi
+          ports:
+            - containerPort: 6246
+          env:
+            - name: TZ
+              value: "Asia/Jakarta"
+          volumeMounts:
+            - name: maintainerr-data
+              mountPath: /opt/data
       volumes:
-      - name: maintainerr-data
-        hostPath:
-          path: /mnt/cephfs/docker/media/maintainerr
-          type: Directory
+        - name: maintainerr-data
+          persistentVolumeClaim:
+            claimName: media-maintainerr-pvc
 ---
 # Maintainerr Service
 apiVersion: v1
@@ -707,9 +699,9 @@ spec:
   selector:
     app: maintainerr
   ports:
-  - protocol: TCP
-    port: 6246
-    targetPort: 6246
+    - protocol: TCP
+      port: 6246
+      targetPort: 6246
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
@@ -728,3 +720,4 @@ spec:
           port: 6246
   tls: {}
 ---
+

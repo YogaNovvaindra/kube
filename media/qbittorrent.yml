@@ -58,9 +58,8 @@ spec:
             #   mountPath: /watch
       volumes:
         - name: qbittorrent-config
-          hostPath:
-            path: /mnt/cephfs/docker/media/download/qbittorrent
-            type: Directory
+          persistentVolumeClaim:
+            claimName: media-qbittorrent-pvc
         - name: downloads
           hostPath:
             path: /mnt/cephfs/data/downloads
@@ -153,9 +152,8 @@ spec:
               mountPath: /config
       volumes:
         - name: qui-config
-          hostPath:
-            path: /mnt/cephfs/docker/media/download/qui
-            type: Directory
+          persistentVolumeClaim:
+            claimName: media-qui-pvc
 ---
 # Qui Service
 apiVersion: v1
