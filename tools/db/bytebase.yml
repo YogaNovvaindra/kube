@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: bytebase
-          image: reg.ygnv.my.id/docker/bytebase/bytebase:3.13.1
+          image: reg.ygnv.my.id/docker/bytebase/bytebase:3.14.0
           imagePullPolicy: IfNotPresent
           resources:
             requests:
