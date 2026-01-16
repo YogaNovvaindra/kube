@@ -80,17 +80,14 @@ spec:
             privileged: true
       volumes:
         - name: config-volume
-          hostPath:
-            path: /mnt/cephfs/docker/immich/config
-            type: Directory
+          persistentVolumeClaim:
+            claimName: immich-config-pvc
         - name: libraries-volume
-          hostPath:
-            path: /mnt/cephfs/docker/immich/libraries
-            type: Directory
+          persistentVolumeClaim:
+            claimName: immich-libraries-pvc
         - name: photos-volume
-          hostPath:
-            path: /mnt/cephfs/docker/immich/photos
-            type: Directory
+          persistentVolumeClaim:
+            claimName: immich-photos-pvc
         - name: pictures-volume
           hostPath:
             path: /mnt/cephfs/data/Pictures
@@ -170,9 +167,8 @@ spec:
             privileged: true
       volumes:
         - name: config-volume
-          hostPath:
-            path: /mnt/cephfs/docker/immich/config
-            type: Directory
+          persistentVolumeClaim:
+            claimName: immich-config-pvc
         - name: dri-device
           hostPath:
             path: /dev/dri
@@ -253,9 +249,8 @@ spec:
               mountPath: /data
       volumes:
         - name: valkey-data
-          hostPath:
-            path: /mnt/cephfs/docker/immich/valkey
-            type: Directory
+          persistentVolumeClaim:
+            claimName: immich-valkey-pvc
 ---
 apiVersion: v1
 kind: Service
@@ -325,9 +320,8 @@ spec:
               mountPath: /var/lib/postgresql/data
       volumes:
         - name: db-data
-          hostPath:
-            path: /mnt/cephfs/docker/immich/postgres16
-            type: Directory
+          persistentVolumeClaim:
+            claimName: immich-postgres-pvc
 ---
 apiVersion: v1
 kind: Service

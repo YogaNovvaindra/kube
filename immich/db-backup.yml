@@ -61,7 +61,7 @@ metadata:
   name: immich-pg-snapshots
   namespace: immich
 spec:
-  schedule: "30 0 * * *"  # Daily at 00:30
+  schedule: "30 0 * * *" # Daily at 00:30
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
@@ -74,42 +74,40 @@ spec:
           nodeSelector:
             kubernetes.io/arch: amd64
           containers:
-          - name: phostgres-snapshotter
-            image: reg.ygnv.my.id/docker/alpine:3.23.2
-            imagePullPolicy: IfNotPresent
-            env:
-            - name: DISCORD_WEBHOOK_URL
-              valueFrom:
-                secretKeyRef:
-                  name: discord-cred
-                  key: DISCORD_URL
-            command: ["/bin/sh", "/scripts/pg-snapshot.sh"]
-            volumeMounts:
-            - name: localtime
-              mountPath: /etc/localtime
-              readOnly: true
-            - name: pgdata
-              mountPath: /pgdata
-              readOnly: true
-            - name: pg-snapshots
-              mountPath: /snapshots
-            - name: pg-snapshot-config
-              mountPath: /scripts
+            - name: phostgres-snapshotter
+              image: reg.ygnv.my.id/docker/alpine:3.23.2
+              imagePullPolicy: IfNotPresent
+              env:
+                - name: DISCORD_WEBHOOK_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: discord-cred
+                      key: DISCORD_URL
+              command: ["/bin/sh", "/scripts/pg-snapshot.sh"]
+              volumeMounts:
+                - name: localtime
+                  mountPath: /etc/localtime
+                  readOnly: true
+                - name: pgdata
+                  mountPath: /pgdata
+                  readOnly: true
+                - name: pg-snapshots
+                  mountPath: /snapshots
+                - name: pg-snapshot-config
+                  mountPath: /scripts
           volumes:
-          - name: localtime
-            hostPath:
-              path: /etc/localtime
-              type: File
-          - name: pg-snapshot-config
-            configMap:
-              name: pg-snapshot-config
-              defaultMode: 0744
-          - name: pgdata
-            hostPath:
-              path: /mnt/cephfs/docker/immich/postgres16
-              type: Directory
-          - name: pg-snapshots
-            hostPath:
-              path: /mnt/cephfs/docker/immich/postgres-backup
-              type: Directory
+            - name: localtime
+              hostPath:
+                path: /etc/localtime
+                type: File
+            - name: pg-snapshot-config
+              configMap:
+                name: pg-snapshot-config
+                defaultMode: 0744
+            - name: pgdata
+              persistentVolumeClaim:
+                claimName: immich-postgres-pvc
+            - name: pg-snapshots
+              persistentVolumeClaim:
+                claimName: immich-postgres-backup-pvc
           restartPolicy: Never

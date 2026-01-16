@@ -1,0 +1,173 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: immich-config-pv
+spec:
+  capacity:
+    storage: 256Mi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: cephfs
+  hostPath:
+    path: /mnt/cephfs/docker/immich/config
+    type: Directory
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: immich-config-pvc
+  namespace: immich
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 256Mi
+  storageClassName: cephfs
+  volumeName: immich-config-pv
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: immich-libraries-pv
+spec:
+  capacity:
+    storage: 64Mi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: cephfs
+  hostPath:
+    path: /mnt/cephfs/docker/immich/libraries
+    type: Directory
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: immich-libraries-pvc
+  namespace: immich
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 64Mi
+  storageClassName: cephfs
+  volumeName: immich-libraries-pv
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: immich-photos-pv
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: cephfs
+  hostPath:
+    path: /mnt/cephfs/docker/immich/photos
+    type: Directory
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: immich-photos-pvc
+  namespace: immich
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: cephfs
+  volumeName: immich-photos-pv
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: immich-valkey-pv
+spec:
+  capacity:
+    storage: 64Mi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: cephfs
+  hostPath:
+    path: /mnt/cephfs/docker/immich/valkey
+    type: Directory
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: immich-valkey-pvc
+  namespace: immich
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 64Mi
+  storageClassName: cephfs
+  volumeName: immich-valkey-pv
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: immich-postgres-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: cephfs
+  hostPath:
+    path: /mnt/cephfs/docker/immich/postgres16
+    type: Directory
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: immich-postgres-pvc
+  namespace: immich
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: cephfs
+  volumeName: immich-postgres-pv
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: immich-postgres-backup-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: cephfs
+  hostPath:
+    path: /mnt/cephfs/docker/immich/postgres-backup
+    type: Directory
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: immich-postgres-backup-pvc
+  namespace: immich
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: cephfs
+  volumeName: immich-postgres-backup-pv
