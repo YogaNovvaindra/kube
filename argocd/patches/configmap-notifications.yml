@@ -14,7 +14,7 @@ data:
 
   subscriptions: |
     - recipients:
-      - discord:
+      - discord
       triggers:
       - on-sync-succeeded
       - on-sync-failed
@@ -126,6 +126,11 @@ data:
                    {
                     "name": "Changes",
                     "value": "{{ with $c := call .repo.GetCommitMetadata .app.status.sync.revision }}{{ $c.Message }} - {{ $c.Author }}{{ end }}",
+                    "inline": false
+                  },
+                  {
+                    "name": "Updated Resources",
+                    "value": "```{{ range .app.status.operationState.syncResult.resources }}{{ .kind }}/{{ .name }}: {{ .status }}\\n{{ end }}```",
                     "inline": false
                   },
                   {
