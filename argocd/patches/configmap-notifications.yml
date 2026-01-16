@@ -134,11 +134,6 @@ data:
                     "inline": false
                   },
                   {
-                    "name": "Updated Resources",
-                    "value": "```{{ range .app.status.operationState.syncResult.resources }}{{ .kind }}/{{ .name }}: {{ .status }}\\n{{ end }}```",
-                    "inline": false
-                  },
-                  {
                     "name": "Error",
                     "value": {{ if .app.status.operationState.message }}{{ printf "```%s```" .app.status.operationState.message | toJson }}{{ else if .app.status.operationState.syncResult }}{{ range .app.status.operationState.syncResult.resources }}{{ if not (eq .status "Synced") }}{{ printf "```%s: %s```" .name .message | toJson }}{{ end }}{{ end }}{{ else }}"Unknown Sync Error"{{ end }},
                     "inline": false
