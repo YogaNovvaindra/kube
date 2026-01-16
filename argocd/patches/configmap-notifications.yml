@@ -130,7 +130,7 @@ data:
                   },
                   {
                     "name": "Updated Resources",
-                    "value": "```{{ range .app.status.operationState.syncResult.resources }}{{ .kind }}/{{ .name }}: {{ .status }}\\n{{ end }}```",
+                    "value": "```{{ range .app.status.operationState.syncResult.resources }}{{ printf \"%s/%s: %s\\n\" .kind .name .status }}{{ end }}```",
                     "inline": false
                   },
                   {
@@ -185,7 +185,7 @@ data:
                   },
                   {
                     "name": "Degraded Resources",
-                    "value": "```{{ range .app.status.resources }}{{ if .health }}{{ if ne .health.status \"Healthy\" }}{{ .kind }}/{{ .name }}: {{ .health.status }}\\n{{ end }}{{ end }}{{ end }}```",
+                    "value": "```{{ range .app.status.resources }}{{ if .health }}{{ if ne .health.status \"Healthy\" }}{{ printf \"%s/%s: %s\\n\" .kind .name .health.status }}{{ end }}{{ end }}{{ end }}```",
                     "inline": false
                   },
                   {
