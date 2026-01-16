@@ -206,11 +206,6 @@ data:
       #     href: http://10.1.1.254
       #     description: Tenda home Access Point
       #     siteMonitor: http://10.1.1.254
-      - Desa AP:
-          icon: google-wifi.png
-          href: http://10.0.0.254
-          description: TotoLink Access Point for Desa network
-          siteMonitor: http://10.0.0.254
 
     - Server Management:
       - Proxmox:
@@ -659,36 +654,41 @@ data:
         #     key: ${ESPHOME_KEY}
 
     - Client Devices:
+      - Desa AP:
+          icon: google-wifi.png
+          href: http://10.1.1.240
+          description: TotoLink Access Point for Desa network
+          siteMonitor: http://10.1.1.240
       - Desa Station:
           icon: google-wifi.png
-          href: http://10.0.0.253
+          href: http://10.1.1.241
           description: TotoLink client device for Desa network
-          siteMonitor: http://10.0.0.253
+          siteMonitor: http://10.1.1.241
+      - Client Ipal:
+          icon: google-wifi.png
+          href: http://10.1.1.242
+          description: Personal client device (Ipal)
+          siteMonitor: http://10.1.1.242
       - Client Winda:
           icon: google-wifi.png
-          href: http://10.0.0.2:8080
+          href: http://10.1.1.243:8080
           description: Personal client device (Winda)
-          siteMonitor: http://10.0.0.2:8080
-      - Client Enggal:
-          icon: google-wifi.png
-          href: http://10.0.0.3
-          description: Personal client device (Enggal)
-          siteMonitor: http://10.0.0.3
-      - Client Yolan:
+          siteMonitor: http://10.1.1.243:8080
+      - Client Yessika:
           icon: tp-link.png
-          href: http://10.0.0.5:8080
-          description: Personal client device (Yolan)
-          siteMonitor: http://10.0.0.5:8080
+          href: http://10.1.1.244:8080
+          description: Personal client device (Yessika)
+          siteMonitor: http://10.1.1.244:8080
       - Client Domo:
           icon: tp-link.png
-          href: http://10.0.0.7:8080
+          href: http://10.1.1.245:8080
           description: Personal client device (Domo)
-          siteMonitor: http://10.0.0.7:8080
+          siteMonitor: http://10.1.1.245:8080
       - Client Brian:
           icon: tp-link.png
-          href: http://10.0.0.8:8080
+          href: http://10.1.1.246:8080
           description: Personal client device (Brian)
-          siteMonitor: http://10.0.0.8:8080
+          siteMonitor: http://10.1.1.246:8080
       - Rossa Station:
           icon: google-wifi.png
           href: http://10.1.2.254
