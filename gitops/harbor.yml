@@ -3,12 +3,6 @@ kind: Application
 metadata:
   name: harbor
   namespace: argocd
-  annotations:
-    notifications.argoproj.io/subscribe.on-sync-succeeded.discord: ""
-    notifications.argoproj.io/subscribe.on-sync-failed.discord: ""
-    notifications.argoproj.io/subscribe.on-health-degraded.discord: ""
-    notifications.argoproj.io/subscribe.on-sync-running.discord: ""
-    notifications.argoproj.io/subscribe.on-app-error.discord: ""
 spec:
   project: default
   sources:

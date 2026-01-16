@@ -12,6 +12,16 @@ data:
       - name: Content-Type
         value: application/json
 
+  subscriptions: |
+    - recipients:
+      - discord:
+      triggers:
+      - on-sync-succeeded
+      - on-sync-failed
+      - on-health-degraded
+      - on-sync-running
+      - on-app-error
+
   # Template for successful sync
   template.app-sync-succeeded: |
     webhook:
@@ -62,6 +72,11 @@ data:
                     "name": "Changes",
                     "value": "{{ with $c := call .repo.GetCommitMetadata .app.status.sync.revision }}{{ $c.Message }} - {{ $c.Author }}{{ end }}",
                     "inline": false
+                  },
+                  {
+                    "name": "Updated Resources",
+                    "value": "```{{ range .app.status.operationState.syncResult.resources }}{{ .kind }}/{{ .name }}: {{ .status }}\\n{{ end }}```",
+                    "inline": false
                   }
                 ],
                 "footer": {
@@ -111,6 +126,11 @@ data:
                    {
                     "name": "Changes",
                     "value": "{{ with $c := call .repo.GetCommitMetadata .app.status.sync.revision }}{{ $c.Message }} - {{ $c.Author }}{{ end }}",
+                    "inline": false
+                  },
+                  {
+                    "name": "Updated Resources",
+                    "value": "```{{ range .app.status.operationState.syncResult.resources }}{{ .kind }}/{{ .name }}: {{ .status }}\\n{{ end }}```",
                     "inline": false
                   },
                   {
@@ -264,12 +284,14 @@ data:
 
   # Trigger for sync succeeded
   trigger.on-sync-succeeded: |
-    - when: app.status.operationState.phase in ['Succeeded']
+    - oncePer: app.status.operationState.syncResult.revision
+      when: app.status.operationState.phase in ['Succeeded']
       send: [app-sync-succeeded]
 
   # Trigger for sync failed
   trigger.on-sync-failed: |
-    - when: app.status.operationState.phase in ['Error', 'Failed', 'SyncFailed']
+    - oncePer: app.status.operationState.syncResult.revision
+      when: app.status.operationState.phase in ['Error', 'Failed', 'SyncFailed']
       send: [app-sync-failed]
 
   # Trigger for health degraded
@@ -279,7 +301,8 @@ data:
 
   # Trigger for sync running
   trigger.on-sync-running: |
-    - when: app.status.operationState.phase in ['Running']
+    - oncePer: app.status.operationState.syncResult.revision
+      when: app.status.operationState.phase in ['Running']
       send: [app-sync-running]
 
   # Trigger for application error
