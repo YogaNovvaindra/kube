@@ -75,7 +75,7 @@ data:
                   },
                   {
                     "name": "Updated Resources",
-                    "value": "```{{ range .app.status.operationState.syncResult.resources }}{{ printf \"%s/%s: %s\\n\" .kind .name .status }}{{ end }}```",
+                    "value": "```{{ range .app.status.operationState.syncResult.resources }}{{ printf \"%s/%s: %s\" .kind .name .status }}{{ end }}```",
                     "inline": false
                   }
                 ],
@@ -130,7 +130,7 @@ data:
                   },
                   {
                     "name": "Updated Resources",
-                    "value": "```{{ range .app.status.operationState.syncResult.resources }}{{ printf \"%s/%s: %s\\n\" .kind .name .status }}{{ end }}```",
+                    "value": "```{{ range .app.status.operationState.syncResult.resources }}{{ printf \"%s/%s: %s\" .kind .name .status }}{{ end }}```",
                     "inline": false
                   },
                   {
@@ -185,12 +185,12 @@ data:
                   },
                   {
                     "name": "Degraded Resources",
-                    "value": "```{{ range .app.status.resources }}{{ if .health }}{{ if ne .health.status \"Healthy\" }}{{ printf \"%s/%s: %s\\n\" .kind .name .health.status }}{{ end }}{{ end }}{{ end }}```",
+                    "value": "```{{ range .app.status.resources }}{{ if .health }}{{ if ne .health.status \"Healthy\" }}{{ printf \"%s/%s: %s\" .kind .name .health.status }}{{ end }}{{ end }}{{ end }}```",
                     "inline": false
                   },
                   {
                     "name": "Reason",
-                    "value": "{{ if .app.status.health.message }}{{ .app.status.health.message }}{{ else }}{{ $found := false }}{{ range .app.status.resources }}{{ if .health }}{{ if ne .health.status "Healthy" }}{{ .name }}: {{ .health.status }}{{ if .health.message }} ({{ .health.message }}){{ end }}\\n{{ $found = true }}{{ end }}{{ end }}{{ end }}{{ if not $found }}Application is Degraded. Specific resource health details may be omitted from the Application status (Review in ArgoCD UI for full details).{{ end }}{{ end }}",
+                    "value": "{{ if .app.status.health.message }}{{ .app.status.health.message }}{{ else }}{{ $found := false }}{{ range .app.status.resources }}{{ if .health }}{{ if ne .health.status \"Healthy\" }}{{ .name }}: {{ .health.status }}{{ if .health.message }} ({{ .health.message }}){{ end }}{{ $found = true }}{{ end }}{{ end }}{{ end }}{{ if not $found }}Application is Degraded. Specific resource health details may be omitted from the Application status (Review in ArgoCD UI for full details).{{ end }}{{ end }}",
                     "inline": false
                   }
                 ],
@@ -275,7 +275,7 @@ data:
                   },
                   {
                     "name": "Error Conditions",
-                    "value": "```{{ range .app.status.conditions }}{{ .type }}: {{ .message }}\\n{{ end }}```",
+                    "value": "```{{ range .app.status.conditions }}{{ .type }}: {{ .message }}{{ end }}```",
                     "inline": false
                   }
                 ],
