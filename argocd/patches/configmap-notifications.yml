@@ -189,6 +189,11 @@ data:
                     "inline": false
                   },
                   {
+                    "name": "Degraded Resources",
+                    "value": "```{{ range .app.status.resources }}{{ if .health }}{{ if ne .health.status \"Healthy\" }}{{ .kind }}/{{ .name }}: {{ .health.status }}\\n{{ end }}{{ end }}{{ end }}```",
+                    "inline": false
+                  },
+                  {
                     "name": "Reason",
                     "value": "{{ if .app.status.health.message }}{{ .app.status.health.message }}{{ else }}{{ $found := false }}{{ range .app.status.resources }}{{ if .health }}{{ if ne .health.status "Healthy" }}{{ .name }}: {{ .health.status }}{{ if .health.message }} ({{ .health.message }}){{ end }}\\n{{ $found = true }}{{ end }}{{ end }}{{ end }}{{ if not $found }}Application is Degraded. Specific resource health details may be omitted from the Application status (Review in ArgoCD UI for full details).{{ end }}{{ end }}",
                     "inline": false
