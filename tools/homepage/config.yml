@@ -637,16 +637,12 @@ data:
               - state: sensor.esp_dht11_temperature
                 label: Outdoor Temp
                 value: "{state}°C"
-                format:
-                  maximumFractionDigits: 1
               - state: sensor.esp_dht22_humidity
                 label: Bedroom Humidity
                 value: "{state}%"
               - state: sensor.esp_dht22_temperature
                 label: Bedroom Temp
                 value: "{state}°C"
-                format:
-                  maximumFractionDigits: 1
       - ESPHome:
           icon: esphome.png
           href: https://esphome.ygnv.my.id
