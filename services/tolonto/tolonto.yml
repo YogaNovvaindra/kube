@@ -24,7 +24,7 @@ spec:
         kubernetes.io/disk: hdd
       containers:
         - name: tolonto
-          image: reg.ygnv.my.id/docker/jakubboucek/lamp-devstack-php:8.5.1
+          image: reg.ygnv.my.id/docker/jakubboucek/lamp-devstack-php:8.5.2
           imagePullPolicy: IfNotPresent
           resources:
             requests:
