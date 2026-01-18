@@ -112,6 +112,8 @@ data:
             regex: "true"
           - action: labelmap
             regex: __meta_kubernetes_service_label_(.+)
+          - target_label: cluster
+            replacement: kube_cluster
 
       # Kubernetes core components
       - job_name: kube_cadvisor
@@ -152,6 +154,8 @@ data:
             target_label: __address__
           - source_labels: [__meta_kubernetes_node_name]
             target_label: node
+          - target_label: cluster
+            replacement: kube_cluster
 
       - job_name: kube_apiservers
         kubernetes_sd_configs:
@@ -169,6 +173,8 @@ data:
                __meta_kubernetes_endpointslice_port_name]
             action: keep
             regex: kubernetes;https
+          - target_label: cluster
+            replacement: kube_cluster
 
       # CoreDNS monitoring
       - job_name: kube_dns
@@ -183,6 +189,8 @@ data:
           - source_labels: [__meta_kubernetes_pod_ip]
             target_label: __address__
             replacement: $1:9153
+          - target_label: cluster
+            replacement: kube_cluster
 
       # MetalLB monitoring
       - job_name: metallb
