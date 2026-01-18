@@ -46,8 +46,8 @@ data:
                       type: query
             for: 5m
             annotations:
-              summary: "Ubiquiti Low Signal: {{ $labels.ubntStaName }}"
-              description: "Ubiquiti link {{ $labels.ubntStaName }} ({{ $labels.instance }}) has low signal strength: {{ $values.B.Value | printf \"%.0f\" }} dBm."
+              summary: "Ubiquiti Low Signal: {{ or $labels.ubntStaName $labels.instance $labels.ubntStaMac }}"
+              description: "Ubiquiti link {{ or $labels.ubntStaName $labels.instance $labels.ubntStaMac }} ({{ $labels.instance }}) has low signal strength: {{ $values.B.Value | printf \"%.0f\" }} dBm."
             labels:
               severity: warning
 
@@ -85,8 +85,8 @@ data:
                       type: query
             for: 5m
             annotations:
-              summary: "Ubiquiti Low CCQ: {{ $labels.ubntStaName }}"
-              description: "Ubiquiti link {{ $labels.ubntStaName }} CCQ is low: {{ $values.B.Value | printf \"%.0f\" }}%."
+              summary: "Ubiquiti Low CCQ: {{ or $labels.ubntStaName $labels.instance $labels.ubntStaMac }}"
+              description: "Ubiquiti link {{ or $labels.ubntStaName $labels.instance $labels.ubntStaMac }} CCQ is low: {{ $values.B.Value | printf \"%.0f\" }}%."
             labels:
               severity: warning
 
@@ -124,8 +124,8 @@ data:
                       type: query
             for: 5m
             annotations:
-              summary: "Ubiquiti Link Saturation: {{ $labels.ubntStaName }}"
-              description: "Ubiquiti link {{ $labels.ubntStaName }} output is near wireless capacity: {{ $values.B.Value | printf \"%.1f%%\" }}."
+              summary: "Ubiquiti Link Saturation: {{ or $labels.ubntStaName $labels.instance $labels.ubntStaMac }}"
+              description: "Ubiquiti link {{ or $labels.ubntStaName $labels.instance $labels.ubntStaMac }} output is near wireless capacity: {{ $values.B.Value | printf \"%.1f%%\" }}."
             labels:
               severity: warning
 
@@ -163,8 +163,8 @@ data:
                       type: query
             for: 10m
             annotations:
-              summary: "Ubiquiti High Noise: {{ $labels.ubntStaName }}"
-              description: "Ubiquiti link {{ $labels.ubntStaName }} noise floor is high: {{ $values.B.Value | printf \"%.0f\" }} dBm."
+              summary: "Ubiquiti High Noise: {{ or $labels.ubntStaName $labels.instance $labels.ubntStaMac }}"
+              description: "Ubiquiti link {{ or $labels.ubntStaName $labels.instance $labels.ubntStaMac }} noise floor is high: {{ $values.B.Value | printf \"%.0f\" }} dBm."
             labels:
               severity: info
 
