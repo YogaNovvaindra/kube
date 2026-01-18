@@ -88,7 +88,7 @@ data:
             replacement: pve-exporter:9221
 
       # Kubernetes Node Exporter
-      - job_name: kube-node
+      - job_name: kube_node
         kubernetes_sd_configs:
           - role: pod
         relabel_configs:
@@ -97,9 +97,11 @@ data:
             regex: monitoring;node-exporter
           - source_labels: [__meta_kubernetes_pod_node_name]
             target_label: instance
+          - target_label: cluster
+            replacement: kube_cluster
 
       # Kube State Metrics
-      - job_name: kube-state-metrics
+      - job_name: kube_state_metrics
         kubernetes_sd_configs:
           - role: endpointslice
             namespaces:
@@ -112,7 +114,7 @@ data:
             regex: __meta_kubernetes_service_label_(.+)
 
       # Kubernetes core components
-      - job_name: kube-cadvisor
+      - job_name: kube_cadvisor
         scheme: https
         tls_config:
           insecure_skip_verify: true
@@ -130,8 +132,10 @@ data:
             target_label: __address__
           - source_labels: [__meta_kubernetes_node_name]
             target_label: node
+          - target_label: cluster
+            replacement: kube_cluster
 
-      - job_name: kube-kubelet
+      - job_name: kube_kubelet
         scheme: https
         tls_config:
           insecure_skip_verify: true
@@ -149,7 +153,7 @@ data:
           - source_labels: [__meta_kubernetes_node_name]
             target_label: node
 
-      - job_name: kube-apiservers
+      - job_name: kube_apiservers
         kubernetes_sd_configs:
           - role: endpointslice
             namespaces:
@@ -167,7 +171,7 @@ data:
             regex: kubernetes;https
 
       # CoreDNS monitoring
-      - job_name: kube-dns
+      - job_name: kube_dns
         kubernetes_sd_configs:
           - role: pod
             namespaces:
@@ -221,7 +225,7 @@ data:
           target_label: component
 
       # ArgoCD monitoring
-      - job_name: argocd-server
+      - job_name: argocd_server
         kubernetes_sd_configs:
           - role: pod
             namespaces:
@@ -234,7 +238,7 @@ data:
             target_label: __address__
             replacement: $1:8083
 
-      - job_name: argocd-repo-server
+      - job_name: argocd_repo_server
         kubernetes_sd_configs:
           - role: pod
             namespaces:
@@ -247,7 +251,7 @@ data:
             target_label: __address__
             replacement: $1:8084
 
-      - job_name: argocd-application-controller
+      - job_name: argocd_application_controller
         kubernetes_sd_configs:
           - role: pod
             namespaces:
@@ -315,7 +319,7 @@ data:
             target_label: __address__
             replacement: $1:2000
 
-      - job_name: cloudflare-operator
+      - job_name: cloudflare_operator
         scheme: https
         tls_config:
           insecure_skip_verify: true
@@ -355,7 +359,7 @@ data:
           - source_labels: [__meta_kubernetes_pod_label_app]
             target_label: app
 
-      - job_name: cert-manager
+      - job_name: cert_manager
 
         kubernetes_sd_configs:
           - role: pod
@@ -373,7 +377,7 @@ data:
           - source_labels: [__meta_kubernetes_pod_name]
             target_label: pod
 
-      - job_name: uptime-kuma
+      - job_name: uptime_kuma
 
         metrics_path: /metrics
         kubernetes_sd_configs:
@@ -390,7 +394,7 @@ data:
         basic_auth:
           password: ${UPTIME_KUMA_API_KEY}
 
-      - job_name: harbor-exporter
+      - job_name: harbor_exporter
         kubernetes_sd_configs:
           - role: pod
             namespaces:
@@ -406,7 +410,7 @@ data:
           - source_labels: [__meta_kubernetes_pod_name]
             target_label: pod
 
-      - job_name: harbor-core
+      - job_name: harbor_core
         params:
           comp: ['core']
         kubernetes_sd_configs:
@@ -424,7 +428,7 @@ data:
           - source_labels: [__meta_kubernetes_pod_name]
             target_label: pod
 
-      - job_name: harbor-registry
+      - job_name: harbor_registry
         params:
           comp: ['registry']
         kubernetes_sd_configs:
@@ -442,7 +446,7 @@ data:
           - source_labels: [__meta_kubernetes_pod_name]
             target_label: pod
 
-      - job_name: harbor-jobservice
+      - job_name: harbor_jobservice
         params:
           comp: ['jobservice']
         kubernetes_sd_configs:
@@ -461,7 +465,7 @@ data:
             target_label: pod
 
       # Storage monitoring
-      - job_name: proxmox-ceph
+      - job_name: proxmox_ceph
         static_configs:
           - targets:
               - ${CEPH_ENDPOINT_1}
@@ -488,12 +492,12 @@ data:
         static_configs:
           - targets: [${OPENWRT_ENDPOINT}]
             labels:
-              instance: mi4a-wrt
+              instance: mi4a_wrt
         metric_relabel_configs:
           - action: labeldrop
             regex: "__timestamp__"
 
-      - job_name: 'ubiquiti-snmp'
+      - job_name: 'ubiquiti_snmp'
         metrics_path: /snmp
         params:
           module: [ubiquiti_airmax]
@@ -501,10 +505,10 @@ data:
         static_configs:
           - targets: ['${LB_ENDPOINT}']
             labels:
-              instance: 'lb5-ac'
+              instance: 'lb5_ac'
           - targets: ['${LBAP_ENDPOINT}']
             labels:
-              instance: 'lb5-ac-ap'
+              instance: 'lb5_ac_ap'
         relabel_configs:
           - source_labels: [__address__]
             target_label: __param_target

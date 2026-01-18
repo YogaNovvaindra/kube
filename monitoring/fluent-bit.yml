@@ -72,7 +72,7 @@ data:
         Match                     kube.*
         Host                      loki.monitoring
         Port                      3100
-        Labels                    source=fluent_bit,job=kube_logs
+        Labels                    source=fluent_bit,job=kube_logs,cluster=kube_cluster
         Label_Keys                $kubernetes['namespace_name'],$kubernetes['pod_name'],$kubernetes['container_name'],$kubernetes['labels']['app']
         auto_kubernetes_labels    On
 
@@ -110,7 +110,7 @@ data:
         Match                     k8s_events
         Host                      loki.monitoring
         Port                      3100
-        Labels                    source=fluent_bit,job=kube_events
+        Labels                    source=fluent_bit,job=kube_events,cluster=kube_cluster
         auto_kubernetes_labels    On
 ---
 apiVersion: apps/v1
