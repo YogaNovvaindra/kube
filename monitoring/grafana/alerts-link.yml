@@ -47,7 +47,7 @@ data:
             for: 5m
             annotations:
               summary: "Ubiquiti Low Signal: {{ or $labels.ubntStaName $labels.instance $labels.ubntStaMac }}"
-              description: "Ubiquiti link {{ or $labels.ubntStaName $labels.instance $labels.ubntStaMac }} ({{ $labels.instance }}) has low signal strength: {{ $values.B.Value | printf \"%.0f\" }} dBm."
+              description: "Ubiquiti link {{ or $labels.ubntStaName $labels.instance $labels.ubntStaMac }} has low signal strength: {{ $values.B.Value | printf \"%.0f\" }} dBm."
             labels:
               severity: warning
 

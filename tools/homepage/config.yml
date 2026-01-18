@@ -541,7 +541,7 @@ data:
     - Productivity Tools:
       - Openspeedtest:
           icon: openspeedtest.png
-          href: https://speedtest.ygnv.my.id
+          href: https://speed.ygnv.my.id
           description: Self-hosted network speed testing tool
           siteMonitor: http://openspeedtest:3000
       - Transmission:
