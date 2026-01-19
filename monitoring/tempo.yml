@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: tempo
-          image: reg.ygnv.my.id/docker/grafana/tempo:2.9.0
+          image: reg.ygnv.my.id/docker/grafana/tempo:2.9.1
           imagePullPolicy: IfNotPresent
           args:
             - "-config.file=/etc/tempo/tempo.yml"
