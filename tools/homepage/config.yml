@@ -350,11 +350,11 @@ data:
           href: https://phpmyadmin-tools.ygnv.my.id
           description: MySQL database management
           siteMonitor: http://phpmyadmin:80
-      - Bytebase:
-          icon: https://www.bytebase.com/favicon/favicon.png
-          href: https://bytebase.ygnv.my.id
-          description: Database schema change and version control
-          siteMonitor: http://bytebase:80
+      # - Bytebase:
+      #     icon: https://www.bytebase.com/favicon/favicon.png
+      #     href: https://bytebase.ygnv.my.id
+      #     description: Database schema change and version control
+      #     siteMonitor: http://bytebase:80
 
     - Web Hosting:
       - YGNV Hosting:
@@ -523,15 +523,15 @@ data:
           href: https://n8n.ygnv.my.id
           description: Workflow automation and integration platform
           siteMonitor: http://n8n.tools:5678
-      - Change Detection:
-          icon: changedetection.svg
-          href: https://changedetection.ygnv.my.id
-          description: Website change detection and monitoring
-          siteMonitor: http://changedetection.tools:5000
-          widget:
-            type: changedetectionio
-            url: http://changedetection.tools:5000
-            key: ${CHANGEDETECTION_KEY}
+      # - Change Detection:
+      #     icon: changedetection.svg
+      #     href: https://changedetection.ygnv.my.id
+      #     description: Website change detection and monitoring
+      #     siteMonitor: http://changedetection.tools:5000
+      #     widget:
+      #       type: changedetectionio
+      #       url: http://changedetection.tools:5000
+      #       key: ${CHANGEDETECTION_KEY}
       # - Iventoy:
       #     icon: netboot.svg
       #     href: https://iventoy.ygnv.my.id
