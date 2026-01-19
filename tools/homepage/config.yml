@@ -544,17 +544,17 @@ data:
           href: https://speed.ygnv.my.id
           description: Self-hosted network speed testing tool
           siteMonitor: http://openspeedtest:3000
-      - Transmission:
-          icon: transmission.png
-          href: https://transmission.ygnv.my.id
-          description: BitTorrent client for downloading
-          siteMonitor: http://transmission.media:9091
-          widget:
-            type: transmission
-            url: http://transmission.media:9091
-            username: ${TRANSMISSION_USERNAME}
-            password: ${TRANSMISSION_PASSWORD}
-            rpcUrl: /transmission/ # Optional. Matches the value of "rpc-url" in your Transmission's settings.json file
+      # - Transmission:
+      #     icon: transmission.png
+      #     href: https://transmission.ygnv.my.id
+      #     description: BitTorrent client for downloading
+      #     siteMonitor: http://transmission.media:9091
+      #     widget:
+      #       type: transmission
+      #       url: http://transmission.media:9091
+      #       username: ${TRANSMISSION_USERNAME}
+      #       password: ${TRANSMISSION_PASSWORD}
+      #       rpcUrl: /transmission/ # Optional. Matches the value of "rpc-url" in your Transmission's settings.json file
       - qBittorrent:
           icon: qbittorrent.png
           href: https://qbittorrent.ygnv.my.id
