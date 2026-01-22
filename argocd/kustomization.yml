@@ -5,7 +5,7 @@ namespace: argocd
 
 resources:
   # Official Argo CD installation manifest - stable release
-  - https://raw.githubusercontent.com/argoproj/argo-cd/v3.2.5/manifests/install.yaml
+  - https://raw.githubusercontent.com/argoproj/argo-cd/v3.2.6/manifests/install.yaml
   # Custom Traefik IngressRoute
   - ingress.yml
   - argocd-notifications-secret.yml
