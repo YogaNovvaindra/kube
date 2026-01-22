@@ -399,9 +399,9 @@ data:
           siteMonitor: http://10.1.1.21:8384
       - Syncthing 8Labs:
           icon: syncthing.png
-          href: http://192.168.192.4:8384
+          href: http://10.0.1.176:8384
           description: File synchronization for 8Labs devices
-          siteMonitor: http://192.168.192.4:8384
+          siteMonitor: http://10.0.1.176:8384
       - File Browser:
           icon: filebrowser.png
           href: https://file.ygnv.my.id
