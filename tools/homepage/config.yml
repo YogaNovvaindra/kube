@@ -307,7 +307,7 @@ data:
           icon: wazuh.svg
           href: https://wazuh.ygnv.my.id
           description: Security information and event management (SIEM)
-          ping: 192.168.192.4
+          ping: 10.0.1.176
 
     - Development and DevOps:
       - Gitea:
@@ -544,32 +544,32 @@ data:
           href: https://speed.ygnv.my.id
           description: Self-hosted network speed testing tool
           siteMonitor: http://openspeedtest:3000
-      # - Transmission:
-      #     icon: transmission.png
-      #     href: https://transmission.ygnv.my.id
-      #     description: BitTorrent client for downloading
-      #     siteMonitor: http://transmission.media:9091
-      #     widget:
-      #       type: transmission
-      #       url: http://transmission.media:9091
-      #       username: ${TRANSMISSION_USERNAME}
-      #       password: ${TRANSMISSION_PASSWORD}
-      #       rpcUrl: /transmission/ # Optional. Matches the value of "rpc-url" in your Transmission's settings.json file
-      - qBittorrent:
-          icon: qbittorrent.png
-          href: https://qbittorrent.ygnv.my.id
-          description: Feature-rich BitTorrent client
-          siteMonitor: http://qbittorrent.media:8080
+      - Transmission:
+          icon: transmission.png
+          href: https://transmission.ygnv.my.id
+          description: BitTorrent client for downloading
+          siteMonitor: http://transmission.media:9091
           widget:
-            type: qbittorrent
-            url: http://qbittorrent.media:8080
-            username: ${QBITTORRENT_USERNAME}
-            password: ${QBITTORRENT_PASSWORD}
-      - Qui:
-          icon: https://getqui.com/img/qui.png
-          href: https://qui.ygnv.my.id
-          description: Multi-instance qBittorrent Web UI manager
-          siteMonitor: http://qui.media:7476
+            type: transmission
+            url: http://transmission.media:9091
+            username: ${TRANSMISSION_USERNAME}
+            password: ${TRANSMISSION_PASSWORD}
+            rpcUrl: /transmission/ # Optional. Matches the value of "rpc-url" in your Transmission's settings.json file
+      # - qBittorrent:
+      #     icon: qbittorrent.png
+      #     href: https://qbittorrent.ygnv.my.id
+      #     description: Feature-rich BitTorrent client
+      #     siteMonitor: http://qbittorrent.media:8080
+      #     widget:
+      #       type: qbittorrent
+      #       url: http://qbittorrent.media:8080
+      #       username: ${QBITTORRENT_USERNAME}
+      #       password: ${QBITTORRENT_PASSWORD}
+      # - Qui:
+      #     icon: https://getqui.com/img/qui.png
+      #     href: https://qui.ygnv.my.id
+      #     description: Multi-instance qBittorrent Web UI manager
+      #     siteMonitor: http://qui.media:7476
       - IT-Tools:
           icon: it-tools-light.svg
           href: https://tools.ygnv.my.id
