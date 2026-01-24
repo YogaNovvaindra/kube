@@ -53,7 +53,7 @@ spec:
               containerPort: 8080
             - name: wazuh-agent
               containerPort: 1514
-            - name: wazuh-enrollment
+            - name: wazuh-enroll
               containerPort: 1515
             - name: metrics
               containerPort: 8899
@@ -111,9 +111,9 @@ spec:
     - name: wazuh-agent
       port: 1514
       targetPort: wazuh-agent
-    - name: wazuh-enrollment
+    - name: wazuh-enroll
       port: 1515
-      targetPort: wazuh-enrollment
+      targetPort: wazuh-enroll
     - name: metrics
       port: 8899
       targetPort: metrics
