@@ -51,10 +51,12 @@ spec:
               containerPort: 443
             - name: dashboard
               containerPort: 8080
-            - name: metrics
-              containerPort: 8899
             - name: wazuh-agent
               containerPort: 1514
+            - name: wazuh-enrollment
+              containerPort: 1515
+            - name: metrics
+              containerPort: 8899
           # env:
           #   - name: CF_API_EMAIL
           #     valueFrom:
@@ -106,12 +108,15 @@ spec:
     - name: dashboard
       port: 8080
       targetPort: dashboard
-    - name: metrics
-      port: 8899
-      targetPort: metrics
     - name: wazuh-agent
       port: 1514
       targetPort: wazuh-agent
+    - name: wazuh-enrollment
+      port: 1515
+      targetPort: wazuh-enrollment
+    - name: metrics
+      port: 8899
+      targetPort: metrics
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute

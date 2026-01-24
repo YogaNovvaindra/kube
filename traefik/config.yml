@@ -70,6 +70,8 @@ data:
         address: ":22"
       wazuh-agent:
         address: ":1514"
+      wazuh-enrollment:
+        address: ":1515"
       metrics:
         address: ":8899"
 
