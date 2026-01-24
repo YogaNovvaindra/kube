@@ -417,7 +417,7 @@ spec:
   storageClassName: cephfs
   hostPath:
     path: /mnt/cephfs/docker/media/crosswatch
-    type: DirectoryOrCreate
+    type: Directory
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

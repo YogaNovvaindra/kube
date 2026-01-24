@@ -68,6 +68,8 @@ data:
 
       ssh:
         address: ":22"
+      wazuh-agent:
+        address: ":1514"
       metrics:
         address: ":8899"
 
