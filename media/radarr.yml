@@ -1,0 +1,91 @@
+# Radarr Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: radarr
+  namespace: media
+  labels:
+    app: radarr
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: radarr
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: radarr
+    spec:
+      nodeSelector:
+        kubernetes.io/hperf: "true"
+      containers:
+        - name: radarr
+          image: reg.ygnv.my.id/docker/linuxserver/radarr:6.0.4
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 256Mi
+          ports:
+            - containerPort: 7878
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "Asia/Jakarta"
+          volumeMounts:
+            - name: radarr-config
+              mountPath: /config
+            - name: radarr-movies
+              mountPath: /movies
+            - name: radarr-downloads
+              mountPath: /downloads
+      volumes:
+        - name: radarr-config
+          persistentVolumeClaim:
+            claimName: media-radarr-pvc
+        - name: radarr-movies
+          hostPath:
+            path: /mnt/cephfs/data/Videos/Movies
+            type: Directory
+        - name: radarr-downloads
+          hostPath:
+            path: /mnt/cephfs/data/downloads
+            type: Directory
+---
+# Radarr Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: radarr
+  namespace: media
+  labels:
+    app: radarr
+spec:
+  selector:
+    app: radarr
+  ports:
+    - protocol: TCP
+      port: 7878
+      targetPort: 7878
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: radarr
+  namespace: media
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`radarr.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: radarr
+          port: 7878
+  tls: {}

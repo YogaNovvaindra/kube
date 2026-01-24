@@ -403,3 +403,32 @@ spec:
       storage: 5Gi
   storageClassName: cephfs
   volumeName: media-jellyfin-cache-pv
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: media-crosswatch-pv
+spec:
+  capacity:
+    storage: 256Mi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: cephfs
+  hostPath:
+    path: /mnt/cephfs/docker/media/crosswatch
+    type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-crosswatch-pvc
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 256Mi
+  storageClassName: cephfs
+  volumeName: media-crosswatch-pv

@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flaresolverr
+  namespace: media
+  labels:
+    app: flaresolverr
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: flaresolverr
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: flaresolverr
+    spec:
+      nodeSelector:
+        kubernetes.io/hperf: "true"
+      containers:
+        - name: flaresolverr
+          image: reg.ygnv.my.id/ghcr/flaresolverr/flaresolverr:v3.4.6
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 256Mi
+            # limits:
+            #   memory: 2Gi
+          ports:
+            - containerPort: 8191
+          env:
+            - name: LOG_LEVEL
+              value: "info"
+            - name: TZ
+              value: "Asia/Jakarta"
+          # livenessProbe:
+          #   exec:
+          #     command:
+          #       - sh
+          #       - -c
+          #       - 'curl -X POST -f http://localhost:8191/v1 -d "{\"maxTimeout\":120000,\"cmd\":\"request.get\",\"url\":\"https://prowlarr.servarr.com/v1/ping\",\"proxy\":{}}" -H "Content-Type: application/json"'
+          #   initialDelaySeconds: 120
+          #   periodSeconds: 600
+          #   timeoutSeconds: 60
+          #   failureThreshold: 3
+---
+# Flaresolverr Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: flaresolverr
+  namespace: media
+  labels:
+    app: flaresolverr
+spec:
+  type: ClusterIP
+  selector:
+    app: flaresolverr
+  ports:
+    - protocol: TCP
+      port: 8191
+      targetPort: 8191

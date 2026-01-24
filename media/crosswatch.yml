@@ -1,0 +1,73 @@
+# Crosswatch Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crosswatch
+  namespace: media
+  labels:
+    app: crosswatch
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: crosswatch
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: crosswatch
+    spec:
+      containers:
+        - name: crosswatch
+          image: reg.ygnv.my.id/ghcr/cenodude/crosswatch:latest
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 128Mi
+          ports:
+            - containerPort: 8787
+          env:
+            - name: TZ
+              value: "Asia/Jakarta"
+          volumeMounts:
+            - name: crosswatch-config
+              mountPath: /config
+      volumes:
+        - name: crosswatch-config
+          persistentVolumeClaim:
+            claimName: media-crosswatch-pvc
+---
+# Crosswatch Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: crosswatch
+  namespace: media
+  labels:
+    app: crosswatch
+spec:
+  selector:
+    app: crosswatch
+  ports:
+    - protocol: TCP
+      port: 8787
+      targetPort: 8787
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: crosswatch
+  namespace: media
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`crosswatch.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: crosswatch
+          port: 8787
+  tls: {}
