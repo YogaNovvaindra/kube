@@ -76,10 +76,10 @@ metadata:
     app: syncthing
   annotations:
     metallb.io/address-pool: "main-pool"
-    metallb.io/allow-shared-ip: "traefik"
+    # metallb.io/allow-shared-ip: "traefik"
 spec:
   type: LoadBalancer
-  loadBalancerIP: 10.1.1.55
+  loadBalancerIP: 10.1.1.54
   selector:
     app: syncthing
   ports:
