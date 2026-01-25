@@ -379,9 +379,9 @@ data:
     - File Management:
       - Syncthing Kube:
           icon: syncthing.png
-          href: http://10.1.1.55:8384
+          href: http://10.1.1.54:8384
           description: File synchronization for Kubernetes cluster
-          siteMonitor: http://10.1.1.55:8384
+          siteMonitor: http://10.1.1.54:8384
       - Syncthing Arm:
           icon: syncthing.png
           href: http://10.1.1.6:8384
@@ -516,6 +516,11 @@ data:
           href: https://maintainerr.ygnv.my.id
           description: Automation tool for maintaining Plex libraries
           siteMonitor: http://maintainerr.media:6246
+      - CrossWatch:
+          icon: https://crosswatch.media/static/favicon.png
+          href: https://crosswatch.ygnv.my.id
+          description: Cross-platform media watch status tracker
+          siteMonitor: http://crosswatch.media:8787
 
     - Automation:
       - N8n:
