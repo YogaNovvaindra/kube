@@ -675,10 +675,10 @@ data:
           description: Personal client device (Ipal)
           siteMonitor: http://10.1.1.242
       - Client Winda:
-          icon: google-wifi.png
-          href: http://10.1.1.243:8080
+          icon: tp-link.png
+          href: http://10.1.1.243
           description: Personal client device (Winda)
-          siteMonitor: http://10.1.1.243:8080
+          siteMonitor: http://10.1.1.243
       - Client Yessika:
           icon: tp-link.png
           href: http://10.1.1.244:8080
