@@ -75,7 +75,7 @@ spec:
             kubernetes.io/arch: amd64
           containers:
             - name: phostgres-snapshotter
-              image: reg.ygnv.my.id/docker/alpine:3.23.2
+              image: reg.ygnv.my.id/docker/alpine:3.23.3
               imagePullPolicy: IfNotPresent
               env:
                 - name: DISCORD_WEBHOOK_URL
