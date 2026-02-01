@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: bazarr
-          image: reg.ygnv.my.id/docker/linuxserver/bazarr:1.5.4
+          image: reg.ygnv.my.id/docker/linuxserver/bazarr:1.5.5
           imagePullPolicy: IfNotPresent
           resources:
             requests:
