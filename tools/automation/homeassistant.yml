@@ -23,7 +23,7 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet
       containers:
         - name: homeassistant
-          image: reg.ygnv.my.id/docker/linuxserver/homeassistant:2026.1.3
+          image: reg.ygnv.my.id/docker/linuxserver/homeassistant:2026.2.0
           imagePullPolicy: Always
           securityContext:
             capabilities:
