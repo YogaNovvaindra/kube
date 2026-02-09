@@ -18,8 +18,6 @@ database:
     coreDatabase: "registry"
     existingSecret:
       "harbor-cred" # This will look for the 'password' key by default.
-      # Wait, your secret key is POSTGRESQL_PASSWORD.
-      # I should keep it as extraEnvVars to avoid another kubeseal run.
 
 # Using your existing Redis (Valkey)
 redis:
