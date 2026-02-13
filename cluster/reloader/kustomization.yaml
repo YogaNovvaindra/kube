@@ -4,7 +4,7 @@ kind: Kustomization
 namespace: cluster
 
 resources:
-  - https://raw.githubusercontent.com/stakater/Reloader/v1.4.12/deployments/kubernetes/reloader.yaml
+  - https://raw.githubusercontent.com/stakater/Reloader/v1.4.13/deployments/kubernetes/reloader.yaml
 
 patches:
   - path: reloader.yml
