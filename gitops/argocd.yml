@@ -21,6 +21,7 @@ spec:
     syncOptions:
       - ApplyOutOfSyncOnly=true
       - PrunePropagationPolicy=foreground
+      - ServerSideApply=true
     retry:
       limit: 5
       backoff:
