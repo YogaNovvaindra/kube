@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: samba
+  namespace: tools
+  labels:
+    app: samba
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: samba
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: samba
+    spec:
+      containers:
+        - name: samba
+          image: dockurr/samba:4.22.6
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 128Mi
+            limits:
+              memory: 512Mi
+          ports:
+            - containerPort: 445
+              name: smb
+          env:
+            - name: USER
+              valueFrom:
+                secretKeyRef:
+                  name: samba-cred
+                  key: username
+            - name: PASS
+              valueFrom:
+                secretKeyRef:
+                  name: samba-cred
+                  key: password
+            - name: NAME
+              valueFrom:
+                secretKeyRef:
+                  name: samba-cred
+                  key: sharename
+          volumeMounts:
+            - name: storage
+              mountPath: /storage
+      volumes:
+        - name: storage
+          hostPath:
+            path: /mnt/cephfs
+            type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: samba
+  namespace: tools
+  labels:
+    app: samba
+  annotations:
+    metallb.io/address-pool: "main-pool"
+    # metallb.io/allow-shared-ip: "samba"
+spec:
+  selector:
+    app: samba
+  ports:
+    - port: 445
+      targetPort: 445
+      name: smb
+  type: LoadBalancer
+  loadBalancerIP: 10.1.1.56
