@@ -22,6 +22,9 @@ spec:
         - name: samba
           image: dockurr/samba:4.22.6
           imagePullPolicy: IfNotPresent
+          # securityContext:
+          #   runAsUser: 0
+          #   runAsGroup: 0
           resources:
             requests:
               memory: 128Mi
@@ -31,6 +34,10 @@ spec:
             - containerPort: 445
               name: smb
           env:
+            - name: PUID
+              value: "0"
+            - name: PGID
+              value: "0"
             - name: USER
               valueFrom:
                 secretKeyRef:
