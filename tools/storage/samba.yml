@@ -22,9 +22,9 @@ spec:
         - name: samba
           image: dockurr/samba:4.22.6
           imagePullPolicy: IfNotPresent
-          # securityContext:
-          #   runAsUser: 0
-          #   runAsGroup: 0
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
           resources:
             requests:
               memory: 128Mi
