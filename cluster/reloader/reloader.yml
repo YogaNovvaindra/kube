@@ -7,7 +7,7 @@ spec:
     spec:
       containers:
         - name: reloader-reloader
-          image: reg.ygnv.my.id/ghcr/stakater/reloader:v1.4.12
+          image: reg.ygnv.my.id/ghcr/stakater/reloader:v1.4.13
           args:
             - "--auto-reload-all=true"
             - "--reload-on-create=true"
