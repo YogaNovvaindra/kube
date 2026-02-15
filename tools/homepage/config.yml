@@ -678,7 +678,7 @@ data:
           icon: tp-link.png
           href: http://10.1.1.243
           description: Personal client device (Winda)
-          siteMonitor: http://10.1.1.243
+          siteMonitor: http://10.1.1.243:8080
       - Client Yessika:
           icon: tp-link.png
           href: http://10.1.1.244:8080
