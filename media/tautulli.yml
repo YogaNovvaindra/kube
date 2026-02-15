@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: tautulli
-          image: reg.ygnv.my.id/ghcr/tautulli/tautulli:v2.16.0
+          image: reg.ygnv.my.id/ghcr/tautulli/tautulli:v2.16.1
           imagePullPolicy: IfNotPresent
           resources:
             requests:
