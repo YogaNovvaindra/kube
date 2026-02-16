@@ -432,3 +432,32 @@ spec:
       storage: 256Mi
   storageClassName: cephfs
   volumeName: media-crosswatch-pv
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: media-seerr-pv
+spec:
+  capacity:
+    storage: 256Mi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: cephfs
+  hostPath:
+    path: /mnt/cephfs/docker/media/seerr
+    type: Directory
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-seerr-pvc
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 256Mi
+  storageClassName: cephfs
+  volumeName: media-seerr-pv

@@ -490,14 +490,14 @@ data:
             type: bazarr
             url: http://bazarr.media:6767
             key: ${BAZARR_KEY}
-      - Overseerr:
+      - Seerr:
           icon: overseerr.png
-          href: https://overseerr.ygnv.my.id
+          href: https://seerr.ygnv.my.id
           description: Request management and media discovery for Plex
-          siteMonitor: http://overseerr.media:5055
+          siteMonitor: http://seerr.media:5055
           widget:
             type: overseerr
-            url: http://overseerr.media:5055
+            url: http://seerr.media:5055
             key: ${OVERSEERR_KEY}
       - Tautulli:
           icon: tautulli.png
@@ -676,7 +676,7 @@ data:
           siteMonitor: http://10.1.1.242
       - Client Winda:
           icon: tp-link.png
-          href: http://10.1.1.243
+          href: http://10.1.1.243:8080
           description: Personal client device (Winda)
           siteMonitor: http://10.1.1.243:8080
       - Client Yessika:
