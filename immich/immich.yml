@@ -288,7 +288,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
         - name: db
-          image: reg.ygnv.my.id/ghcr/immich-app/postgres:16-vectorchord0.4.2-pgvectors0.3.0
+          image: reg.ygnv.my.id/ghcr/immich-app/postgres:17-vectorchord0.4.2-pgvectors0.3.0
           imagePullPolicy: IfNotPresent
           resources:
             requests:
