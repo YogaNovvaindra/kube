@@ -517,7 +517,7 @@ data:
           description: Automation tool for maintaining Plex libraries
           siteMonitor: http://maintainerr.media:6246
       - CrossWatch:
-          icon: https://crosswatch.media/static/favicon.png
+          icon: https://raw.githubusercontent.com/cenodude/CrossWatch/refs/heads/main/images/CrossWatch-icon-only.png
           href: https://crosswatch.ygnv.my.id
           description: Cross-platform media watch status tracker
           siteMonitor: http://crosswatch.media:8787
