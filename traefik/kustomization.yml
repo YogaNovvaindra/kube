@@ -4,8 +4,8 @@ namespace: traefik
 
 resources:
   # CRD from upstream
-  - https://raw.githubusercontent.com/traefik/traefik/refs/tags/v3.6.8/docs/content/reference/dynamic-configuration/kubernetes-crd-definition-v1.yml
-  - https://raw.githubusercontent.com/traefik/traefik/refs/tags/v3.6.8/docs/content/reference/dynamic-configuration/kubernetes-crd-rbac.yml
+  - https://raw.githubusercontent.com/traefik/traefik/refs/tags/v3.6.9/docs/content/reference/dynamic-configuration/kubernetes-crd-definition-v1.yml
+  - https://raw.githubusercontent.com/traefik/traefik/refs/tags/v3.6.9/docs/content/reference/dynamic-configuration/kubernetes-crd-rbac.yml
   # Local resources
   - valkey.yml
   - config.yml
