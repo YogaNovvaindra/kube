@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: crosswatch
-          image: reg.ygnv.my.id/ghcr/cenodude/crosswatch:0.9.7
+          image: reg.ygnv.my.id/ghcr/cenodude/crosswatch:0.9.8
           imagePullPolicy: IfNotPresent
           resources:
             requests:
