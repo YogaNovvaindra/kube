@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: seerr
-          image: reg.ygnv.my.id/ghcr/seerr-team/seerr:v3.0.1
+          image: reg.ygnv.my.id/ghcr/seerr-team/seerr:v3.1.0
           imagePullPolicy: IfNotPresent
           resources:
             requests:
