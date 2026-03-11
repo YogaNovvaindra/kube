@@ -4,7 +4,7 @@ metadata:
   name: uptime-kuma
   namespace: monitoring
 spec:
-  replicas: 0
+  replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
@@ -18,24 +18,40 @@ spec:
     spec:
       containers:
         - name: uptime-kuma
-          image: reg.ygnv.my.id/docker/louislam/uptime-kuma:2.2.1
+          image: reg.ygnv.my.id/docker/louislam/uptime-kuma:2.2.1-slim
           imagePullPolicy: IfNotPresent
           resources:
             requests:
               memory: 256Mi
           ports:
             - containerPort: 3001
-          volumeMounts:
-            - name: data
-              mountPath: /app/data
-          # env:
-          #   - name: UPTIME_KUMA_PORT
-          #     value: "3001"
-      volumes:
-        - name: data
-          hostPath:
-            path: /mnt/cephfs/docker/monitoring/uptime-kuma
-            type: Directory
+          # volumeMounts:
+          #   - name: data
+          #     mountPath: /app/data
+          env:
+            - name: UPTIME_KUMA_DB_TYPE
+              value: "mariadb"
+            - name: UPTIME_KUMA_DB_HOSTNAME
+              value: "mariadb.tools"
+            - name: UPTIME_KUMA_DB_PORT
+              value: "3306"
+            - name: UPTIME_KUMA_DB_NAME
+              value: "uptimekuma"
+            - name: UPTIME_KUMA_DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: uptime-kuma-cred
+                  key: username
+            - name: UPTIME_KUMA_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: uptime-kuma-cred
+                  key: password
+      # volumes:
+      #   - name: data
+      #     hostPath:
+      #       path: /mnt/cephfs/docker/monitoring/uptime-kuma
+      #       type: Directory
 ---
 apiVersion: v1
 kind: Service
