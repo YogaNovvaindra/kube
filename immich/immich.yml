@@ -237,7 +237,7 @@ spec:
     spec:
       containers:
         - name: valkey
-          image: reg.ygnv.my.id/docker/valkey/valkey:9.0-alpine
+          image: reg.ygnv.my.id/docker/valkey/valkey:9.1-alpine
           imagePullPolicy: IfNotPresent
           resources:
             requests:
