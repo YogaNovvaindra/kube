@@ -136,7 +136,7 @@ spec:
       #     - 109  # GID for render group
       containers:
         - name: jellyfin
-          image: reg.ygnv.my.id/ghcr/jellyfin/jellyfin:10.11.7
+          image: reg.ygnv.my.id/ghcr/jellyfin/jellyfin:10.11.8
           imagePullPolicy: IfNotPresent
           resources:
             requests:
