@@ -303,6 +303,7 @@ data:
             type: authentik
             url: http://authentik-server:9000
             key: ${AUTHENTIK_KEY}
+            version: 2
       - Wazuh: 
           icon: wazuh.svg
           href: https://wazuh.ygnv.my.id
