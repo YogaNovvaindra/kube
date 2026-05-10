@@ -13,6 +13,8 @@ data:
   GF_AUTH_GENERIC_OAUTH_API_URL: "https://auth.ygnv.my.id/application/o/userinfo/"
   GF_AUTH_SIGNOUT_REDIRECT_URL: "https://auth.ygnv.my.id/application/o/grafana/end-session/"
   GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH: "contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer'"
+  GF_RENDERING_SERVER_URL: "http://localhost:8081/render"
+  GF_RENDERING_CALLBACK_URL: "http://localhost:3000/"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -55,6 +57,11 @@ spec:
               mountPath: /etc/grafana/provisioning/alerting
             - name: grafana-data
               mountPath: /var/lib/grafana
+        - name: renderer
+          image: reg.ygnv.my.id/docker/grafana/grafana-image-renderer:v5.8.3
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8081
       volumes:
         - name: grafana-datasources
           configMap:
