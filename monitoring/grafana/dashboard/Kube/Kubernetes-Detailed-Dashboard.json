@@ -1,0 +1,1752 @@
+{
+  "meta": {
+    "type": "db",
+    "canSave": true,
+    "canEdit": true,
+    "canAdmin": true,
+    "canStar": true,
+    "canDelete": true,
+    "slug": "kubernetes3a-detailed-dashboard",
+    "url": "/d/kube-cluster/kubernetes3a-detailed-dashboard",
+    "expires": "0001-01-01T00:00:00Z",
+    "created": "2025-05-28T13:12:49Z",
+    "updated": "2026-01-18T02:04:38Z",
+    "updatedBy": "yoga.november2000@gmail.com",
+    "createdBy": "yoga.november2000@gmail.com",
+    "version": 61,
+    "hasAcl": false,
+    "isFolder": false,
+    "apiVersion": "v0alpha1",
+    "folderId": 48,
+    "folderUid": "ceo7iyuq2tcsgc",
+    "folderTitle": "Kube",
+    "folderUrl": "/dashboards/f/ceo7iyuq2tcsgc/kube",
+    "provisioned": false,
+    "provisionedExternalId": "",
+    "annotationsPermissions": {
+      "dashboard": {
+        "canAdd": true,
+        "canEdit": true,
+        "canDelete": true
+      },
+      "organization": {
+        "canAdd": true,
+        "canEdit": true,
+        "canDelete": true
+      }
+    }
+  },
+  "dashboard": {
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": {
+            "type": "loki",
+            "uid": "${datasource}"
+          },
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "target": {
+            "editor": {
+              "format": "json"
+            },
+            "exemplar": false,
+            "expr": "",
+            "instant": false,
+            "range": false
+          },
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 1,
+    "id": 40,
+    "links": [],
+    "panels": [
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${prometheus_ds}"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "#32ac2df7",
+              "mode": "thresholds"
+            },
+            "custom": {
+              "align": "auto",
+              "cellOptions": {
+                "type": "auto"
+              },
+              "filterable": false,
+              "footer": {
+                "reducers": []
+              },
+              "inspect": false,
+              "minWidth": 50,
+              "wrapText": false
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "#32ac2df7",
+                  "value": 0
+                }
+              ]
+            }
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Node"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 85
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "CPU Usage"
+              },
+              "properties": [
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "mode": "gradient",
+                    "type": "gauge",
+                    "valueDisplayMode": "text"
+                  }
+                },
+                {
+                  "id": "unit",
+                  "value": "short"
+                },
+                {
+                  "id": "min",
+                  "value": 0
+                },
+                {
+                  "id": "color",
+                  "value": {
+                    "mode": "continuous-GrYlRd"
+                  }
+                },
+                {
+                  "id": "fieldMinMax",
+                  "value": true
+                },
+                {
+                  "id": "custom.minWidth",
+                  "value": 150
+                },
+                {
+                  "id": "decimals",
+                  "value": 3
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "RAM Usage"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "decbytes"
+                },
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "mode": "gradient",
+                    "type": "gauge",
+                    "valueDisplayMode": "text"
+                  }
+                },
+                {
+                  "id": "fieldMinMax",
+                  "value": true
+                },
+                {
+                  "id": "color",
+                  "value": {
+                    "mode": "continuous-GrYlRd"
+                  }
+                },
+                {
+                  "id": "min",
+                  "value": 0
+                },
+                {
+                  "id": "custom.minWidth",
+                  "value": 147
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Download"
+              },
+              "properties": [
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "mode": "gradient",
+                    "type": "color-background"
+                  }
+                },
+                {
+                  "id": "unit",
+                  "value": "decbytes"
+                },
+                {
+                  "id": "custom.width",
+                  "value": 75
+                },
+                {
+                  "id": "thresholds",
+                  "value": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "#32ac2df7",
+                        "value": 0
+                      },
+                      {
+                        "color": "#ed8128e3",
+                        "value": 10485760
+                      },
+                      {
+                        "color": "#f53636e6",
+                        "value": 20485760
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "custom.align",
+                  "value": "center"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Upload"
+              },
+              "properties": [
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "mode": "gradient",
+                    "type": "color-background"
+                  }
+                },
+                {
+                  "id": "unit",
+                  "value": "decbytes"
+                },
+                {
+                  "id": "custom.width",
+                  "value": 75
+                },
+                {
+                  "id": "thresholds",
+                  "value": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "#32ac2df7",
+                        "value": 0
+                      },
+                      {
+                        "color": "#ed8128e3",
+                        "value": 10485760
+                      },
+                      {
+                        "color": "#f53636e6",
+                        "value": 20485760
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "custom.align",
+                  "value": "center"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byRegexp",
+                "options": "/.*Disk.*/"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 75
+                },
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "type": "color-background"
+                  }
+                },
+                {
+                  "id": "unit",
+                  "value": "decbytes"
+                },
+                {
+                  "id": "thresholds",
+                  "value": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "#32ac2df7",
+                        "value": 0
+                      },
+                      {
+                        "color": "#ed8128e3",
+                        "value": 10485760
+                      },
+                      {
+                        "color": "#f53636e6",
+                        "value": 20485760
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "custom.align",
+                  "value": "center"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Age"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "s"
+                },
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "type": "color-background"
+                  }
+                },
+                {
+                  "id": "thresholds",
+                  "value": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "#f53636e6",
+                        "value": 0
+                      },
+                      {
+                        "color": "#ed8128e3",
+                        "value": 3600
+                      },
+                      {
+                        "color": "#32ac2df7",
+                        "value": 21600
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "custom.width",
+                  "value": 85
+                },
+                {
+                  "id": "decimals",
+                  "value": 1
+                },
+                {
+                  "id": "custom.align",
+                  "value": "center"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Restart"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 65
+                },
+                {
+                  "id": "custom.align",
+                  "value": "center"
+                },
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "type": "color-background"
+                  }
+                },
+                {
+                  "id": "unit",
+                  "value": "short"
+                },
+                {
+                  "id": "thresholds",
+                  "value": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "#32ac2df7",
+                        "value": 0
+                      },
+                      {
+                        "color": "#ed8128e3",
+                        "value": 1
+                      },
+                      {
+                        "color": "#f53636e6",
+                        "value": 3
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Container"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 200
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Namespace"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 120
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byNames",
+                "options": {
+                  "mode": "include",
+                  "names": [
+                    "Value #A",
+                    "Value #B",
+                    "Value #F",
+                    "Value #E",
+                    "Value #C",
+                    "Value #D"
+                  ]
+                }
+              },
+              "properties": [
+                {
+                  "id": "custom.footer.reducers",
+                  "value": [
+                    "sum"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 9,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        },
+        "id": 21,
+        "links": [
+          {
+            "targetBlank": false,
+            "title": "Show Pod Resource Usage",
+            "url": "https://grafana.ygnv.my.id/d/GlXkUBGiz/kubernetes3a-pod-overview?orgId=1&from=now-6h&to=now&timezone=browser&${namespace:queryparam}&${pod:queryparam}&${container:queryparam}&refresh=1m"
+          }
+        ],
+        "options": {
+          "cellHeight": "sm",
+          "enablePagination": false,
+          "showHeader": true,
+          "sortBy": [
+            {
+              "desc": true,
+              "displayName": "RAM Usage"
+            }
+          ]
+        },
+        "pluginVersion": "12.3.1",
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${prometheus_ds}"
+            },
+            "editorMode": "code",
+            "exemplar": false,
+            "expr": "sum(rate(container_cpu_usage_seconds_total{cluster=~\"$cluster\",pod=~\"$pod\",container =~\"$container\",container !=\"\",container!=\"POD\",namespace=~\"$namespace\"}[5m])) by (container,pod,node,namespace)",
+            "format": "table",
+            "hide": false,
+            "instant": true,
+            "legendFormat": "",
+            "range": false,
+            "refId": "A"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${prometheus_ds}"
+            },
+            "editorMode": "code",
+            "exemplar": false,
+            "expr": "sum(container_memory_working_set_bytes{cluster=~\"$cluster\",namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", container !=\"\",container!=\"POD\"}) by (container,pod,node,namespace)",
+            "format": "table",
+            "hide": false,
+            "instant": true,
+            "legendFormat": "",
+            "range": false,
+            "refId": "B"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${prometheus_ds}"
+            },
+            "editorMode": "code",
+            "exemplar": false,
+            "expr": "sum(sum(rate(container_network_receive_bytes_total{cluster=~\"$cluster\",pod=~\"$pod\",namespace=~\"$namespace\"}[5m])) by (pod)* on(pod) group_right kube_pod_container_info{cluster=~\"$cluster\",pod=~\"$pod\",namespace=~\"$namespace\",container =~\"$container\"}) by(pod) *8",
+            "format": "table",
+            "hide": false,
+            "instant": true,
+            "legendFormat": "__auto",
+            "range": false,
+            "refId": "C"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${prometheus_ds}"
+            },
+            "editorMode": "code",
+            "exemplar": false,
+            "expr": "sum(sum(rate(container_network_transmit_bytes_total{cluster=~\"$cluster\",pod=~\"$pod\",namespace=~\"$namespace\"}[5m])) by (pod)* on(pod) group_right kube_pod_container_info{cluster=~\"$cluster\",pod=~\"$pod\",namespace=~\"$namespace\",container =~\"$container\"}) by(pod) *8",
+            "format": "table",
+            "hide": false,
+            "instant": true,
+            "legendFormat": "__auto",
+            "range": false,
+            "refId": "D"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${prometheus_ds}"
+            },
+            "editorMode": "code",
+            "exemplar": false,
+            "expr": "sum(rate(container_fs_reads_bytes_total{cluster=~\"$cluster\",pod=~\"$pod\",container =~\"$container\",container !=\"\",container!=\"POD\",namespace=~\"$namespace\"}[5m])) by (container,pod,node,namespace)",
+            "format": "table",
+            "hide": false,
+            "instant": true,
+            "legendFormat": "__auto",
+            "range": false,
+            "refId": "E"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${prometheus_ds}"
+            },
+            "editorMode": "code",
+            "exemplar": false,
+            "expr": "sum(rate(container_fs_writes_bytes_total{cluster=~\"$cluster\",pod=~\"$pod\",container =~\"$container\",container !=\"\",container!=\"POD\",namespace=~\"$namespace\"}[5m])) by (container,pod,node,namespace)",
+            "format": "table",
+            "hide": false,
+            "instant": true,
+            "legendFormat": "__auto",
+            "range": false,
+            "refId": "F"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${prometheus_ds}"
+            },
+            "editorMode": "code",
+            "exemplar": false,
+            "expr": "time() - \n  kube_pod_created{cluster=~\"$cluster\",pod=~\"$pod\", namespace=~\"$namespace\"} \n  * on (pod, namespace) group_right(container) \n  kube_pod_container_info{cluster=~\"$cluster\",\n    pod=~\"$pod\", \n    namespace=~\"$namespace\", \n    container=~\"$container\"\n  }",
+            "format": "table",
+            "hide": false,
+            "instant": true,
+            "legendFormat": "__auto",
+            "range": false,
+            "refId": "G"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${prometheus_ds}"
+            },
+            "editorMode": "code",
+            "exemplar": false,
+            "expr": "kube_pod_container_status_restarts_total{cluster=~\"$cluster\",\n  pod=~\"$pod\", \n  container=~\"$container\", \n  container!=\"\", \n  container!=\"POD\", \n  namespace=~\"$namespace\"\n} \n* on (pod, namespace) group_left(node) \nkube_pod_info{cluster=~\"$cluster\",\n  pod=~\"$pod\", \n  namespace=~\"$namespace\"\n}",
+            "format": "table",
+            "hide": false,
+            "instant": true,
+            "interval": "",
+            "legendFormat": "",
+            "range": false,
+            "refId": "H"
+          }
+        ],
+        "title": "Pod Info",
+        "transformations": [
+          {
+            "id": "merge",
+            "options": {}
+          },
+          {
+            "id": "organize",
+            "options": {
+              "excludeByName": {},
+              "includeByName": {},
+              "indexByName": {
+                "Time": 0,
+                "Value #A": 5,
+                "Value #B": 6,
+                "Value #C": 11,
+                "Value #D": 12,
+                "Value #E": 10,
+                "Value #F": 9,
+                "Value #G": 7,
+                "Value #H": 8,
+                "app_kubernetes_io_component": 13,
+                "app_kubernetes_io_name": 14,
+                "app_kubernetes_io_version": 15,
+                "container": 3,
+                "container_id": 16,
+                "image": 17,
+                "image_id": 18,
+                "image_spec": 19,
+                "instance": 20,
+                "job": 21,
+                "namespace": 2,
+                "node": 1,
+                "pod": 4,
+                "uid": 22
+              },
+              "renameByName": {
+                "Value #A": "CPU Usage",
+                "Value #B": "RAM Usage",
+                "Value #C": "Download",
+                "Value #D": "Upload",
+                "Value #E": "Disk R",
+                "Value #F": "Disk W",
+                "Value #G": "Age",
+                "Value #H": "Restart",
+                "argocd-application-controller CPU": "",
+                "container": "Container",
+                "namespace": "Namespace",
+                "node": "Node",
+                "pod": "Pod"
+              }
+            }
+          },
+          {
+            "id": "filterFieldsByName",
+            "options": {
+              "include": {
+                "names": [
+                  "Node",
+                  "Container",
+                  "Pod",
+                  "CPU Usage",
+                  "RAM Usage",
+                  "Age",
+                  "Restart",
+                  "Disk W",
+                  "Disk R",
+                  "Download",
+                  "Upload",
+                  "Namespace"
+                ]
+              }
+            }
+          }
+        ],
+        "type": "table"
+      },
+      {
+        "datasource": {
+          "type": "loki",
+          "uid": "${datasource}"
+        },
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [
+              {
+                "options": {
+                  "match": "null",
+                  "result": {
+                    "index": 0,
+                    "text": "0"
+                  }
+                },
+                "type": "special"
+              }
+            ],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "light-green",
+                  "value": 0
+                }
+              ]
+            },
+            "unit": "sishort"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 3,
+          "x": 0,
+          "y": 9
+        },
+        "id": 24,
+        "options": {
+          "colorMode": "background",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "percentChangeColorMode": "standard",
+          "reduceOptions": {
+            "calcs": [],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "auto",
+          "wideLayout": true
+        },
+        "pluginVersion": "12.3.1",
+        "targets": [
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "${datasource}"
+            },
+            "direction": "backward",
+            "editorMode": "code",
+            "expr": "sum by(source) (\n  count_over_time(\n    {source=\"fluent_bit\", job=\"kube_events\", cluster=~\"$cluster\"} \n    | json\n    | type=\"Normal\"\n    | metadata_namespace=~\"$namespace\"\n    [$__range]\n  ) > 0\n)",
+            "queryType": "instant",
+            "refId": "A"
+          }
+        ],
+        "title": "Normal Event Lines",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "loki",
+          "uid": "${datasource}"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisBorderShow": false,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "barWidthFactor": 0.6,
+              "drawStyle": "line",
+              "fillOpacity": 20,
+              "gradientMode": "opacity",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "insertNulls": false,
+              "lineInterpolation": "linear",
+              "lineStyle": {
+                "fill": "solid"
+              },
+              "lineWidth": 2,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "auto",
+              "showValues": false,
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": 0
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Normal"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "green",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Warning"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "orange",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 6,
+          "x": 3,
+          "y": 9
+        },
+        "id": 26,
+        "options": {
+          "legend": {
+            "calcs": [
+              "max",
+              "lastNotNull"
+            ],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "hideZeros": false,
+            "mode": "single",
+            "sort": "none"
+          }
+        },
+        "pluginVersion": "12.3.1",
+        "targets": [
+          {
+            "direction": "backward",
+            "editorMode": "code",
+            "expr": "sum by (type) (count_over_time(\n  {source=\"fluent_bit\", job=\"kube_events\", cluster=~\"$cluster\"}\n  | json\n  | metadata_namespace=~`$namespace` \n[5m]\n))",
+            "hide": false,
+            "legendFormat": "{{type}}",
+            "queryType": "range",
+            "range": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Event Volume by  Type",
+        "transformations": [
+          {
+            "id": "filterFieldsByName",
+            "options": {
+              "byVariable": false,
+              "include": {
+                "names": [
+                  "Time",
+                  "Normal",
+                  "Warning"
+                ]
+              }
+            }
+          }
+        ],
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "loki",
+          "uid": "${datasource}"
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 15,
+          "x": 9,
+          "y": 9
+        },
+        "id": 23,
+        "options": {
+          "dedupStrategy": "exact",
+          "detailsMode": "sidebar",
+          "enableInfiniteScrolling": true,
+          "enableLogDetails": false,
+          "fontSize": "small",
+          "prettifyLogMessage": false,
+          "showCommonLabels": false,
+          "showControls": false,
+          "showLabels": false,
+          "showTime": true,
+          "sortOrder": "Descending",
+          "syntaxHighlighting": false,
+          "wrapLogMessage": false
+        },
+        "pluginVersion": "12.3.1",
+        "targets": [
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "${datasource}"
+            },
+            "direction": "backward",
+            "editorMode": "code",
+            "expr": "{source=\"fluent_bit\", job=\"kube_events\", cluster=~\"$cluster\"} \n  | json  \n  | metadata_namespace=~`$namespace` \n  | line_format `{{if eq .type \"Normal\"}}✅{{else}}⚠️{{end}} {{.type}} | 📦 Object: {{.involvedObject_kind}}/{{.involvedObject_name}} ({{.involvedObject_namespace}}) -> {{.reason}} \n🛠️ Source: {{.source_component}} {{if ne .source_host \"\"}}🌐 Host: {{.source_host}} {{end}}\n📝 Message: {{.message | trim}}`",
+            "queryType": "range",
+            "refId": "A"
+          }
+        ],
+        "title": "Cluster Events",
+        "type": "logs"
+      },
+      {
+        "datasource": {
+          "type": "loki",
+          "uid": "${datasource}"
+        },
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [
+              {
+                "options": {
+                  "match": "null",
+                  "result": {
+                    "index": 0,
+                    "text": "0"
+                  }
+                },
+                "type": "special"
+              }
+            ],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "orange",
+                  "value": 0
+                }
+              ]
+            },
+            "unit": "sishort"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 3,
+          "x": 0,
+          "y": 13
+        },
+        "id": 25,
+        "options": {
+          "colorMode": "background",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "percentChangeColorMode": "standard",
+          "reduceOptions": {
+            "calcs": [],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "auto",
+          "wideLayout": true
+        },
+        "pluginVersion": "12.3.1",
+        "targets": [
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "${datasource}"
+            },
+            "direction": "backward",
+            "editorMode": "code",
+            "expr": "sum by(source) (count_over_time({source=\"fluent_bit\", job=\"kube_events\", cluster=~\"$cluster\"}\r\n | json\r\n | metadata_namespace=~\"$namespace\"\r\n | type = `Warning`\r\n  [$__range])>0)",
+            "queryType": "instant",
+            "refId": "A"
+          }
+        ],
+        "title": "Warning Event Lines",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "loki",
+          "uid": "${datasource}"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              }
+            },
+            "mappings": [],
+            "unit": "sishort"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 7,
+          "w": 6,
+          "x": 0,
+          "y": 17
+        },
+        "id": 4,
+        "options": {
+          "displayLabels": [],
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "right",
+            "showLegend": true,
+            "values": []
+          },
+          "pieType": "pie",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "sort": "desc",
+          "tooltip": {
+            "hideZeros": false,
+            "mode": "single",
+            "sort": "none"
+          }
+        },
+        "pluginVersion": "12.3.1",
+        "targets": [
+          {
+            "direction": "backward",
+            "editorMode": "code",
+            "expr": "sum by (kubernetes_namespace_name) (count_over_time(\n  {source=\"fluent_bit\", job=\"kube_logs\", cluster=~\"$cluster\"}\n  | json\n  | __error__=\"\"\n[$__range]\n))",
+            "hide": false,
+            "legendFormat": "{{kubernetes_namespace_name}}",
+            "queryType": "range",
+            "refId": "A"
+          }
+        ],
+        "title": "Logs by Namespace",
+        "type": "piechart"
+      },
+      {
+        "datasource": {
+          "type": "loki",
+          "uid": "${datasource}"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "red",
+              "mode": "fixed"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": 0
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "short"
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Value #A"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "green",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Value #B"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "#c7c7c7",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Value #C"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "orange",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Value #E"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "blue",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Value #F"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "purple",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 7,
+          "w": 6,
+          "x": 6,
+          "y": 17
+        },
+        "id": 22,
+        "options": {
+          "displayMode": "gradient",
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": false
+          },
+          "maxVizHeight": 300,
+          "minVizHeight": 16,
+          "minVizWidth": 8,
+          "namePlacement": "auto",
+          "orientation": "horizontal",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": true
+          },
+          "showUnfilled": true,
+          "sizing": "auto",
+          "valueMode": "color"
+        },
+        "pluginVersion": "12.3.1",
+        "targets": [
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "${datasource}"
+            },
+            "direction": "backward",
+            "editorMode": "code",
+            "expr": "sum by (detected_level) (\r\n  count_over_time(\r\n    {source=\"fluent_bit\", job=\"kube_logs\", cluster=~\"$cluster\", kubernetes_namespace_name=~\"$namespace\", kubernetes_container_name=~\"$container\", kubernetes_pod_name=~\"$pod\"} \r\n      | json \r\n      | __error__=\"\"\r\n      | detected_level = \"info\" [$__range]\r\n  )\r\n)",
+            "hide": false,
+            "legendFormat": "Info",
+            "queryType": "instant",
+            "refId": "A"
+          },
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "${datasource}"
+            },
+            "direction": "backward",
+            "editorMode": "code",
+            "expr": "sum by (detected_level) (\r\n  count_over_time(\r\n    {source=\"fluent_bit\", job=\"kube_logs\", cluster=~\"$cluster\", kubernetes_namespace_name=~\"$namespace\", kubernetes_container_name=~\"$container\", kubernetes_pod_name=~\"$pod\"} \r\n      | json \r\n      | __error__=\"\"\r\n      | detected_level = \"unknown\" [$__range]\r\n  )\r\n)",
+            "hide": false,
+            "legendFormat": "Unknown",
+            "queryType": "instant",
+            "refId": "B"
+          },
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "${datasource}"
+            },
+            "direction": "backward",
+            "editorMode": "code",
+            "expr": "sum by (detected_level) (\n  count_over_time(\n    {source=\"fluent_bit\", job=\"kube_logs\", cluster=~\"$cluster\", kubernetes_namespace_name=~\"$namespace\", kubernetes_container_name=~\"$container\", kubernetes_pod_name=~\"$pod\"} \n      | json \n      | __error__=\"\"\n      | detected_level = \"warn\" [$__range]\n  )\n)",
+            "legendFormat": "Warn",
+            "queryType": "instant",
+            "refId": "C"
+          },
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "${datasource}"
+            },
+            "direction": "backward",
+            "editorMode": "code",
+            "expr": "sum by (detected_level) (\r\n  count_over_time(\r\n    {source=\"fluent_bit\", job=\"kube_logs\", cluster=~\"$cluster\", kubernetes_namespace_name=~\"$namespace\", kubernetes_container_name=~\"$container\", kubernetes_pod_name=~\"$pod\"} \r\n      | json \r\n      | __error__=\"\"\r\n      | detected_level = \"error\" [$__range]\r\n  )\r\n)",
+            "hide": false,
+            "legendFormat": "Error",
+            "queryType": "instant",
+            "refId": "D"
+          },
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "${datasource}"
+            },
+            "direction": "backward",
+            "editorMode": "code",
+            "expr": "sum by (detected_level) (\r\n  count_over_time(\r\n    {source=\"fluent_bit\", job=\"kube_logs\", cluster=~\"$cluster\", kubernetes_namespace_name=~\"$namespace\", kubernetes_container_name=~\"$container\", kubernetes_pod_name=~\"$pod\"} \r\n      | json \r\n      | __error__=\"\"\r\n      | detected_level = \"debug\" [$__range]\r\n  )\r\n)",
+            "hide": false,
+            "legendFormat": "Debug",
+            "queryType": "instant",
+            "refId": "E"
+          },
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "${datasource}"
+            },
+            "direction": "backward",
+            "editorMode": "code",
+            "expr": "sum by (detected_level) (\r\n  count_over_time(\r\n    {source=\"fluent_bit\", job=\"kube_logs\", cluster=~\"$cluster\", kubernetes_namespace_name=~\"$namespace\", kubernetes_container_name=~\"$container\", kubernetes_pod_name=~\"$pod\"} \r\n      | json \r\n      | __error__=\"\"\r\n      | detected_level = \"critical\" [$__range]\r\n  )\r\n)",
+            "hide": false,
+            "legendFormat": "Critical",
+            "queryType": "instant",
+            "refId": "F"
+          }
+        ],
+        "title": "Logs by Level",
+        "type": "bargauge"
+      },
+      {
+        "datasource": {
+          "type": "loki",
+          "uid": "${datasource}"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisBorderShow": false,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "barWidthFactor": 0.6,
+              "drawStyle": "line",
+              "fillOpacity": 20,
+              "gradientMode": "opacity",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "insertNulls": false,
+              "lineInterpolation": "linear",
+              "lineStyle": {
+                "fill": "solid"
+              },
+              "lineWidth": 2,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "auto",
+              "showValues": false,
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": 0
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "sishort"
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "error"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "red",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "info"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "green",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "unknown"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "#d9d9d9",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "warn"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "orange",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "critical"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "purple",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "debug"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "blue",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 7,
+          "w": 12,
+          "x": 12,
+          "y": 17
+        },
+        "id": 2,
+        "options": {
+          "legend": {
+            "calcs": [
+              "max",
+              "lastNotNull"
+            ],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "hideZeros": false,
+            "mode": "single",
+            "sort": "none"
+          }
+        },
+        "pluginVersion": "12.3.1",
+        "targets": [
+          {
+            "direction": "backward",
+            "editorMode": "code",
+            "expr": "sum by (detected_level) (count_over_time(\n  {source=\"fluent_bit\", job=\"kube_logs\", cluster=~\"$cluster\", kubernetes_namespace_name=~\"$namespace\", kubernetes_container_name=~\"$container\", kubernetes_pod_name=~\"$pod\"}\n  | json\n  | detected_level != \"\"\n[5m]\n))",
+            "hide": false,
+            "legendFormat": "{{detected_level}}",
+            "queryType": "range",
+            "range": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Log Volume by Level",
+        "transformations": [
+          {
+            "disabled": true,
+            "id": "filterFieldsByName",
+            "options": {
+              "byVariable": false,
+              "include": {}
+            }
+          }
+        ],
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "loki",
+          "uid": "${datasource}"
+        },
+        "gridPos": {
+          "h": 10,
+          "w": 24,
+          "x": 0,
+          "y": 24
+        },
+        "id": 3,
+        "options": {
+          "dedupStrategy": "exact",
+          "enableInfiniteScrolling": true,
+          "enableLogDetails": true,
+          "fontSize": "small",
+          "prettifyLogMessage": false,
+          "showCommonLabels": false,
+          "showControls": false,
+          "showLabels": false,
+          "showTime": true,
+          "sortOrder": "Descending",
+          "wrapLogMessage": false
+        },
+        "pluginVersion": "12.3.1",
+        "targets": [
+          {
+            "direction": "backward",
+            "editorMode": "code",
+            "expr": "{source=\"fluent_bit\", job=\"kube_logs\", cluster=~\"$cluster\", kubernetes_namespace_name=~\"$namespace\", kubernetes_container_name=~\"$container\", kubernetes_pod_name=~\"$pod\" }\n  | json\n  | regexp `\\[(?P<level>[A-Z]+)\\]`\n  | line_format \"{{.kubernetes_pod_name}} ➡️ {{.log}}\"",
+            "hide": false,
+            "queryType": "range",
+            "refId": "A"
+          }
+        ],
+        "title": "Recent Logs",
+        "type": "logs"
+      }
+    ],
+    "preload": false,
+    "refresh": "1m",
+    "schemaVersion": 42,
+    "tags": [
+      "kubernetes",
+      "loki",
+      "prometheus",
+      "metrics",
+      "logs"
+    ],
+    "templating": {
+      "list": [
+        {
+          "current": {
+            "text": "Loki",
+            "value": "loki"
+          },
+          "label": "loki-ds",
+          "name": "datasource",
+          "options": [],
+          "query": "loki",
+          "refresh": 1,
+          "regex": "",
+          "type": "datasource"
+        },
+        {
+          "current": {
+            "text": "Prometheus",
+            "value": "prometheus"
+          },
+          "label": "prom-ds",
+          "name": "prometheus_ds",
+          "options": [],
+          "query": "prometheus",
+          "refresh": 1,
+          "regex": "",
+          "type": "datasource"
+        },
+        {
+          "current": {
+            "text": "kube_cluster",
+            "value": "kube_cluster"
+          },
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${prometheus_ds}"
+          },
+          "definition": "label_values(up{job=\"kube_node\"}, cluster)",
+          "hide": 0,
+          "includeAll": false,
+          "label": "Cluster",
+          "multi": false,
+          "name": "cluster",
+          "options": [],
+          "query": {
+            "qryType": 1,
+            "query": "label_values(up{job=\"kube_node\"}, cluster)",
+            "refId": "PrometheusVariableQueryEditor-VariableQuery"
+          },
+          "refresh": 1,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 1,
+          "type": "query"
+        },
+        {
+          "allowCustomValue": false,
+          "current": {
+            "text": "All",
+            "value": "$__all"
+          },
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${prometheus_ds}"
+          },
+          "definition": "label_values(kube_pod_info{cluster=~\"$cluster\"},namespace)",
+          "includeAll": true,
+          "label": "Namespace",
+          "name": "namespace",
+          "options": [],
+          "query": {
+            "qryType": 1,
+            "query": "label_values(kube_pod_info{cluster=~\"$cluster\"},namespace)",
+            "refId": "PrometheusVariableQueryEditor-VariableQuery"
+          },
+          "refresh": 1,
+          "regex": "",
+          "sort": 5,
+          "type": "query"
+        },
+        {
+          "allValue": ".*",
+          "current": {
+            "text": "All",
+            "value": "$__all"
+          },
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${prometheus_ds}"
+          },
+          "definition": "label_values(kube_pod_container_info{cluster=~\"$cluster\",namespace=~\"$namespace\"},container)",
+          "includeAll": true,
+          "label": "Container",
+          "name": "container",
+          "options": [],
+          "query": {
+            "qryType": 1,
+            "query": "label_values(kube_pod_container_info{cluster=~\"$cluster\",namespace=~\"$namespace\"},container)",
+            "refId": "PrometheusVariableQueryEditor-VariableQuery"
+          },
+          "refresh": 1,
+          "regex": "",
+          "sort": 1,
+          "type": "query"
+        },
+        {
+          "allValue": ".*",
+          "current": {
+            "text": "All",
+            "value": [
+              "$__all"
+            ]
+          },
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${prometheus_ds}"
+          },
+          "definition": "label_values(kube_pod_container_info{cluster=~\"$cluster\",namespace=~\"$namespace\", container=~\"$container\"},pod)",
+          "includeAll": true,
+          "label": "Pod",
+          "multi": true,
+          "name": "pod",
+          "options": [],
+          "query": {
+            "qryType": 1,
+            "query": "label_values(kube_pod_container_info{cluster=~\"$cluster\",namespace=~\"$namespace\", container=~\"$container\"},pod)",
+            "refId": "PrometheusVariableQueryEditor-VariableQuery"
+          },
+          "refresh": 1,
+          "regex": "",
+          "sort": 1,
+          "type": "query"
+        },
+        {
+          "baseFilters": [],
+          "datasource": {
+            "type": "loki",
+            "uid": "${datasource}"
+          },
+          "filters": [],
+          "name": "Filters",
+          "type": "adhoc"
+        }
+      ]
+    },
+    "time": {
+      "from": "now-6h",
+      "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "",
+    "title": "Kubernetes: Detailed Dashboard",
+    "uid": "kube-cluster",
+    "version": 61,
+    "weekStart": ""
+  }
+}
