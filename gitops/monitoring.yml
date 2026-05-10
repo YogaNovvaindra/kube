@@ -13,6 +13,7 @@ spec:
     targetRevision: HEAD
     directory:
       recurse: true
+      exclude: 'grafana/dashboard/**'
   sources: []
   project: default
   syncPolicy:
