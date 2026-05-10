@@ -5,7 +5,8 @@ metadata:
   namespace: tools
 data:
   SEMAPHORE_PORT: ":3000"
-  SEMAPHORE_DB_DIALECT: "bolt"
+  SEMAPHORE_DB_DIALECT: "postgres"
+  SEMAPHORE_MIGRATE_FROM_BOLTDB: "/var/lib/semaphore/database.boltdb"
   TZ: "Asia/Jakarta"
 ---
 apiVersion: apps/v1
