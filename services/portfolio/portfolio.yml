@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: portfolio
-          image: reg.ygnv.my.id/ghcr/yoganovvaindra/portfolio:v0.4.10
+          image: reg.ygnv.my.id/ghcr/yoganovvaindra/portfolio:v0.4.11
           imagePullPolicy: IfNotPresent
           resources:
             requests:
