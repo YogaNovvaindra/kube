@@ -19,14 +19,14 @@ spec:
     spec:
       containers:
         - name: portfolio
-          image: reg.ygnv.my.id/ghcr/yoganovvaindra/portfolio:v0.5.5
+          image: reg.ygnv.my.id/ghcr/yoganovvaindra/portfolio:v0.6.0
           imagePullPolicy: IfNotPresent
           resources:
             requests:
               cpu: 50m
               memory: 32Mi
           ports:
-            - containerPort: 80
+            - containerPort: 3000
           env:
             - name: TZ
               value: Asia/Jakarta
@@ -43,8 +43,8 @@ spec:
   selector:
     app: portfolio
   ports:
-    - port: 80
-      targetPort: 80
+    - port: 3000
+      targetPort: 3000
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
@@ -76,7 +76,7 @@ subjects:
   - name: portfolio
     spec:
       fqdn: yoganova.my.id
-      target: http://portfolio.services.svc.cluster.local:80
+      target: http://portfolio.services.svc.cluster.local:3000
 tunnelRef:
   kind: ClusterTunnel
   name: homelab-tunnel-yoganova
