@@ -181,6 +181,7 @@ spec:
       labels:
         app: antgain
     spec:
+      hostname: antgain-kube
       containers:
       - name: antgain
         image: pinors/antgain-cli:latest
