@@ -170,7 +170,7 @@ metadata:
     keel.sh/pollSchedule: "@every 6h"
 spec:
   nodeSelector:
-    node.kubernetes.io/arch: "amd64"
+    kubernetes.io/arch: "amd64"
   replicas: 1
   revisionHistoryLimit: 3
   selector:
