@@ -169,8 +169,6 @@ metadata:
     keel.sh/match-tag: "true"
     keel.sh/pollSchedule: "@every 6h"
 spec:
-  nodeSelector:
-    kubernetes.io/arch: "amd64"
   replicas: 1
   revisionHistoryLimit: 3
   selector:
@@ -183,6 +181,8 @@ spec:
       labels:
         app: antgain
     spec:
+      nodeSelector:
+        kubernetes.io/arch: amd64
       hostname: antgain-kube
       containers:
       - name: antgain
