@@ -155,3 +155,42 @@ spec:
         - "-device-id=kube"
         - "-accept-tos"
 
+---
+apiVersion: v1
+kind: Deployment
+metadata:
+  name: antgain
+  namespace: money
+  labels:
+    app: antgain
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: antgain
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: antgain
+    spec:
+      containers:
+      - name: antgain
+        image: pinors/antgain-cli:latest
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            memory: 32Mi
+        env:
+        - name: ANTGAIN_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: money-cred
+              key: antgainkey
