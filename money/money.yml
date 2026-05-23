@@ -169,6 +169,8 @@ metadata:
     keel.sh/match-tag: "true"
     keel.sh/pollSchedule: "@every 6h"
 spec:
+  nodeSelector:
+    node.kubernetes.io/arch: "amd64"
   replicas: 1
   revisionHistoryLimit: 3
   selector:
@@ -195,3 +197,51 @@ spec:
             secretKeyRef:
               name: money-cred
               key: antgainkey
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: proxyrack-pop
+  namespace: money
+  labels:
+    app: proxyrack-pop
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: proxyrack-pop
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: proxyrack-pop
+    spec:
+      hostname: proxyrack-pop-kube
+      containers:
+      - name: proxyrack-pop
+        image: proxyrack/pop:latest
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            memory: 32Mi
+        env:
+        - name: UUID
+          valueFrom:
+            secretKeyRef:
+              name: money-cred
+              key: proxyrackuuid
+        - name: API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: money-cred
+              key: proxyrackkey
+        - name: DEVICE_NAME
+          value: "proxyrack-pop-kube"
