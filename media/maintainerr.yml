@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: maintainerr
-          image: reg.ygnv.my.id/ghcr/maintainerr/maintainerr:3.11.2
+          image: reg.ygnv.my.id/ghcr/maintainerr/maintainerr:3.12.1
           imagePullPolicy: IfNotPresent
           resources:
             requests:
