@@ -388,21 +388,21 @@ data:
           href: http://10.1.1.20:8384
           description: File synchronization for Docker-based devices
           siteMonitor: http://10.1.1.20:8384
-      # - Syncthing Azure:
+      # - Syncthing Panel:
       #     icon: syncthing.png
-      #     href: http://192.168.192.252:8384
-      #     description: File synchronization for cloud storage
-      #     siteMonitor: http://192.168.192.252:8384
-      - Syncthing Panel:
-          icon: syncthing.png
-          href: http://10.1.1.21:8384
-          description: File synchronization management panel
-          siteMonitor: http://10.1.1.21:8384
-      - Syncthing 8Labs:
+      #     href: http://10.1.1.21:8384
+      #     description: File synchronization management panel
+      #     siteMonitor: http://10.1.1.21:8384
+      - Syncthing 8Labs-3:
           icon: syncthing.png
           href: http://10.0.1.176:8384
-          description: File synchronization for 8Labs devices
+          description: File synchronization for 8Labs devices (3rd instance)
           siteMonitor: http://10.0.1.176:8384
+      - Syncthing 8Labs-4:
+          icon: syncthing.png
+          href: http://10.0.1.178:8384
+          description: File synchronization for 8Labs devices (4th instance)
+          siteMonitor: http://10.0.1.178:8384
       - File Browser:
           icon: filebrowser.png
           href: https://file.ygnv.my.id
