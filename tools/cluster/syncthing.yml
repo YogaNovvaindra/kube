@@ -51,8 +51,8 @@ spec:
               mountPath: /config
             - name: cephfs-volume
               mountPath: /cephfs
-            # - name: data-volume
-            #   mountPath: /data
+            - name: data-volume
+              mountPath: /backup
       volumes:
         - name: config-volume
           hostPath:
@@ -62,10 +62,10 @@ spec:
           hostPath:
             path: /mnt/cephfs
             type: Directory
-        # - name: data-volume
-        #   hostPath:
-        #     path: /mnt/Data
-        #     type: Directory
+        - name: data-volume
+          hostPath:
+            path: /mnt/backup
+            type: Directory
 ---
 apiVersion: v1
 kind: Service
