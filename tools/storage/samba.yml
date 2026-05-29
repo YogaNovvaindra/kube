@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: samba
-          image: dockurr/samba:4.23.7
+          image: dockurr/samba:4.23.8
           imagePullPolicy: IfNotPresent
           securityContext:
             runAsUser: 0
