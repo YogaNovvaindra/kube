@@ -40,24 +40,32 @@ data:
         ssl_certificate_verify = False  # turns SSL certificate verification on / off   
         plaintext_login = True          # for legacy RouterOS versions below 6.43 use False
 
+        routerboard = False             # RouterBOARD inventory / firmware metrics
+        health = True                   # System Health metrics
         installed_packages = True       # Installed packages
         dhcp = True                     # DHCP general metrics
         dhcp_lease = True               # DHCP lease metrics
 
         connections = True              # IP connections metrics
-        connection_stats = False        # Open IP connections metrics 
+        connection_stats = True         # Open IP connections metrics
+        connection_stats_destinations = True   # Set to True to track individual destination IPs/ports (Warning: High Cardinality)
 
         interface = True                # Interfaces traffic metrics
-        
+        wireguard_peers = False         # Wireguard peers metrics
+        bridge_vlan = False             # Bridge VLAN metrics
+
         route = True                    # IPv4 Routes metrics
         pool = True                     # IPv4 Pool metrics
         firewall = True                 # IPv4 Firewall rules traffic metrics
         neighbor = True                 # IPv4 Reachable Neighbors
+        address_list = None             # Firewall Address List metrics, a comma-separated list of names
+        dns = True                     # DNS stats
 
         ipv6_route = False              # IPv6 Routes metrics    
         ipv6_pool = False               # IPv6 Pool metrics
         ipv6_firewall = False           # IPv6 Firewall rules traffic metrics
         ipv6_neighbor = False           # IPv6 Reachable Neighbors
+        ipv6_address_list = None        # IPv6 Firewall Address List metrics, a comma-separated list of names
 
         poe = True                      # POE metrics
         monitor = True                  # Interface monitor metrics
@@ -65,8 +73,9 @@ data:
         public_ip = True                # Public IP metrics
         wireless = True                 # WLAN general metrics
         wireless_clients = True         # WLAN clients metrics
-        capsman = True                  # CAPsMAN general metrics
-        capsman_clients = True          # CAPsMAN clients metrics
+        capsman = False                 # CAPsMAN general metrics
+        capsman_clients = False         # CAPsMAN clients metrics
+        w60g = False                    # W60G metrics
 
         lte = False                     # LTE signal and status metrics
         ipsec = False                   # IPSec active peer metrics
@@ -77,12 +86,20 @@ data:
         user = True                     # Active Users metrics
         queue = True                    # Queues metrics
 
+        bfd = False                     # BFD sessions metrics
         bgp = False                     # BGP sessions metrics
+        routing_stats = False           # Routing process stats
+        certificate = False             # Certificates metrics
+
+        container = False               # Containers metrics
         
         remote_dhcp_entry = None        # An MKTXP entry to provide for remote DHCP info / resolution
         remote_capsman_entry = None     # An MKTXP entry to provide for remote capsman info 
 
-        use_comments_over_names = True  # when available, forces using comments over the interfaces names
+        interface_name_format = combined    # Format to use for interface / resource names, allowed values: 'name', 'comment', or 'combined'
+                                        # 'name': use interface name only (e.g. 'ether1')
+                                        # 'comment': use comment if available, fallback to name if not
+                                        # 'combined': use both (e.g. 'ether1 (Office Switch)')
         check_for_updates = False       # check for available ROS updates
 
 ---
