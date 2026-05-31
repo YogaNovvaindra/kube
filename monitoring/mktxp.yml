@@ -18,7 +18,7 @@ data:
     ## GNU General Public License for more details.
 
 
-    [RB750R2]
+    [E50UG]
         # for specific configuration on the router level, change here the defaults values from below
         hostname = ${RB750R2}
 
@@ -67,7 +67,7 @@ data:
         ipv6_neighbor = False           # IPv6 Reachable Neighbors
         ipv6_address_list = None        # IPv6 Firewall Address List metrics, a comma-separated list of names
 
-        poe = True                      # POE metrics
+        poe = False                     # POE metrics
         monitor = True                  # Interface monitor metrics
         netwatch = True                 # Netwatch metrics
         public_ip = True                # Public IP metrics
