@@ -22,7 +22,6 @@ spec:
           imagePullPolicy: IfNotPresent
           args:
             - "-config.file=/etc/tempo/tempo.yml"
-            - "-mem-ballast-size-mbs=1024"
           ports:
             - containerPort: 3200 # http
             - containerPort: 4317 # otlp grpc
