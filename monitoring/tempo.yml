@@ -24,7 +24,7 @@ spec:
             - "-config.file=/etc/tempo/tempo.yml"
             - "-mem-ballast-size-mbs=1024"
           ports:
-            - containerPort: 3200 # compactor
+            - containerPort: 3200 # http
             - containerPort: 4317 # otlp grpc
             - containerPort: 4318 # otlp http
             - containerPort: 14268 # jaeger ingest
@@ -73,18 +73,6 @@ data:
             grpc:
         zipkin:
 
-    ingester:
-      trace_idle_period: 10s
-      max_block_bytes: 1_000_000
-      max_block_duration: 5m
-
-    compactor:
-      compaction:
-        compaction_window: 1h
-        max_block_bytes: 100_000_000
-        block_retention: 360h
-        compacted_block_retention: 1h
-
     storage:
       trace:
         backend: local
@@ -94,7 +82,9 @@ data:
           path: /var/tempo/wal
 
     overrides:
-      metrics_generator_processors: [service-graphs, span-metrics]
+      defaults:
+        metrics_generator:
+          processors: [service-graphs, span-metrics]
 ---
 apiVersion: v1
 kind: Service
