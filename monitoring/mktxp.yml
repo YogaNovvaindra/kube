@@ -20,7 +20,7 @@ data:
 
     [E50UG]
         # for specific configuration on the router level, change here the defaults values from below
-        hostname = ${RB750R2}
+        hostname = ${E50UG}
 
     [SXT5HPnD]
         hostname = ${SXT5HPnD}

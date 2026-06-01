@@ -146,11 +146,16 @@ data:
           href: http://192.168.1.1
           description: Main network modem
           ping: 192.168.1.1
-      - RB750R2:
+      - E50UG:
           icon: https://cdn.jsdelivr.net/gh/PapirusDevelopmentTeam/papirus_icons/src/apps_mikrotik.svg
           href: http://192.168.1.2
           description: MikroTik RouterBoard for advanced networking
           siteMonitor: http://192.168.1.2
+          widget:
+            type: mikrotik
+            url: http://192.168.1.2
+            username: ${MIKROTIK_USERNAME}
+            password: ${MIKROTIK_PASSWORD}
       - Mi OpenWRT:
           icon: openwrt.svg
           href: http://10.1.1.253
@@ -582,7 +587,7 @@ data:
           description: Collection of useful IT utilities and tools
           siteMonitor: http://it-tools.tools:80
       - ArchiveTeam Warrior:
-          icon: https://wiki.archiveteam.org/images/thumb/f/f3/Archive_team.png/587px-Archive_team.png
+          icon: https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnnWsvG9FeXS4Y3P-zGT2L4MsOzP9_itgwbw&s
           href: https://warrior.ygnv.my.id
           description: Tool for archiving and preserving web pages
           siteMonitor: http://warrior:8001
