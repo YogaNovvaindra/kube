@@ -161,16 +161,16 @@ spec:
                 secretKeyRef:
                   name: mktxp-cred
                   key: password
-            - name: RB750R2
+            - name: E50UG
               valueFrom:
                 secretKeyRef:
                   name: mktxp-cred
-                  key: rb750r2
+                  key: e50ug
             - name: SXT5HPnD
               valueFrom:
                 secretKeyRef:
                   name: mktxp-cred
-                  key: sxt5hpd
+                  key: sxt5hpnd
       volumes:
         - name: mktxp-volume
           emptyDir: {}
