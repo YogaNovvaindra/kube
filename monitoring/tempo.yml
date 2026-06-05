@@ -61,6 +61,7 @@ data:
       http_listen_port: 3200
 
     distributor:
+      receiver_address: "0.0.0.0"
       receivers:
         otlp:
           protocols:
