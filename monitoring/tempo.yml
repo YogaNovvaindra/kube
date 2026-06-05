@@ -61,17 +61,21 @@ data:
       http_listen_port: 3200
 
     distributor:
-      receiver_address: "0.0.0.0"
       receivers:
         otlp:
           protocols:
             grpc:
+              endpoint: "0.0.0.0:4317"
             http:
+              endpoint: "0.0.0.0:4318"
         jaeger:
           protocols:
             thrift_http:
+              endpoint: "0.0.0.0:14268"
             grpc:
+              endpoint: "0.0.0.0:14250"
         zipkin:
+          endpoint: "0.0.0.0:9411"
 
     storage:
       trace:
