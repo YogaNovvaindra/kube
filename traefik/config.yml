@@ -31,8 +31,19 @@ data:
         addServicesLabels: true
         entryPoint: "metrics"
 
+    tracing:
+      serviceName: traefik
+      otlp:
+        grpc:
+          endpoint: "tempo.monitoring.svc.cluster.local:4317"
+          insecure: true
+
     accessLog:
       format: json
+      fields:
+        defaultMode: keep
+        names:
+          traceID: keep
 
     entryPoints:
       http:

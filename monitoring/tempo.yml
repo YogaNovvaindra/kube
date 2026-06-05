@@ -80,6 +80,17 @@ data:
         wal:
           path: /var/tempo/wal
 
+    metrics_generator:
+      registry:
+        external_labels:
+          source: tempo
+          cluster: k8s
+      storage:
+        path: /var/tempo/generator/wal
+        remote_write:
+          - url: http://prometheus.monitoring.svc.cluster.local:9090/api/v1/write
+            send_exemplars: true
+
     overrides:
       defaults:
         metrics_generator:
