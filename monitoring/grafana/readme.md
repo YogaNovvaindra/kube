@@ -1,13 +1,13 @@
-# How to Manually Delete Provisioned Alerts from Grafana Database
+# 📊 How to Manually Delete Provisioned Alerts from Grafana Database
 
 If alerts are "stuck" in the Grafana UI labeled as **Provisioned** even after the YAML source file is removed, they are orphaned in the internal database. This guide explains how to purge them.
 
-## 1. Prerequisites
+## 1️⃣ Prerequisites
 
 - Access to the `grafana.db` file (SQLite).
 - `sqlite3` CLI installed on your machine.
 
-## 2. Identify the Target UIDs
+## 2️⃣ Identify the Target UIDs
 
 List all alerts with their UIDs to find the ones you want to delete:
 
@@ -15,7 +15,7 @@ List all alerts with their UIDs to find the ones you want to delete:
 sqlite3 grafana.db "SELECT uid, title FROM alert_rule;"
 ```
 
-## 3. Verify Provenance
+## 3️⃣ Verify Provenance
 
 Provisioned alerts are usually locked with a `file` provenance, which prevents deletion via the API.
 

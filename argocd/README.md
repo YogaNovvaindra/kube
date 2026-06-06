@@ -1,8 +1,8 @@
-# Argo CD Deployment
+# 🚀 Argo CD Deployment
 
 This directory contains a Kustomize-based deployment of Argo CD using the official installation manifest as a remote base with custom overlays.
 
-## Structure
+## 📂 Structure
 
 ```
 argocd/
@@ -16,14 +16,14 @@ argocd/
     └── resources.yml              # Memory resource requests
 ```
 
-## Customizations
+## ⚙️ Customizations
 
 - **Base**: Official Argo CD install.yaml from GitHub
 - **Namespace**: `argocd`
-- **Images**: All images pulled from `reg.ygnv.my.id` registry with explicit tags for Renovate
-  - Argo CD: `reg.ygnv.my.id/quay/argoproj/argocd:v3.4.0`
-  - Dex: `reg.ygnv.my.id/ghcr/dexidp/dex:v2.44.0`
-  - Redis: `reg.ygnv.my.id/docker/redis:8.4.0-alpine`
+- **Images**: All images pulled from `reg.ygnv.my.id` registry
+  - Argo CD
+  - Dex
+  - Redis
 - **Image Pull Policy**: `IfNotPresent` for all containers
 - **Resource Requests**: 
   - Most containers: `memory: 64Mi`

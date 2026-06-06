@@ -42,7 +42,7 @@ Welcome to my HomeLab Kubernetes Cluster! This repository contains the configura
 
 - **Total Applications**: 60+ services across 15+ namespaces
 - **Storage Solutions**: CephFS (distributed) + RustFS (S3-compatible)
-- **Monitoring Stack**: Full observability with 12+ exporters and Prometheus/Grafana
+- **Monitoring Stack**: Full observability with 13+ exporters and Prometheus/Grafana/Tempo/Loki
 - **Security Tools**: Sealed Secrets, Trivy, Authentik SSO, Network Policies
 - **Automation**: GitOps with ArgoCD, Keel for auto-updates, Renovate for dependency management
 
@@ -62,10 +62,11 @@ The Kubernetes cluster follows **declarative infrastructure management** princip
 - **🆕 Continuous Updates**:
   - `Keel`: Automatic rolling updates for latest container images
   - `Renovate`: Semantic versioning maintenance for container images
-- **📊 Observability Stack**: Prometheus/Grafana monitoring with alert integration
+- **📊 Observability Stack**: Prometheus/Grafana metrics, Loki logs, and Tempo tracing with alert integration
 - **🗄 Persistent Storage**: CephFS provisioner with automated volume management, plus RustFS for S3-compatible object storage
 - **🔒 Zero-Trust Security**: Authentik SSO integration and network policies
 - **📡 Load Balancing**: MetalLB for bare-metal load balancing
+- **🛡️ Secure Tunnels**: Cloudflare Operator for zero-trust tunnel routing
 
 ## 📋 Prerequisites
 
@@ -81,8 +82,8 @@ Before deploying this infrastructure, ensure you have:
 - **Sealed Secrets**: Sealed Secrets controller installed and configured
 - **Container Registry**: Access to container images (Harbor or public registries)
 - **Hardware**:
-  - Sufficient resources for 50+ applications
-  - GPU support for media transcoding (optional)
+  - Sufficient resources for 60+ applications
+  - GPU support for media transcoding (Intel QuickSync supported)
   - Network-attached storage for persistent volumes
 
 ## 🚀 Quick Start
@@ -132,7 +133,7 @@ This cluster hosts a variety of self-managed applications and services.
 
 - **🔄 ArgoCD**: GitOps deployment controller.
 - **🐋 Keel**: Automated image updates for latest tags (located in [cluster.yml](./gitops/cluster.yml)).
-- **[🕵️ Portainer Agent](./portainer/portainer.yml)**: Connects to a Portainer instance for cluster management.
+- **[🕵️ Portainer Agent](./portainer/portainer-agent.yml)**: Connects to a Portainer instance for cluster management.
 - **🔏 Sealed Secrets**: Manages encrypted secrets in Git (located in [cluster.yml](./gitops/cluster.yml)).
 - **♻️ Reloader**: Automatically restarts pods when ConfigMaps or Secrets are updated (located in [cluster.yml](./gitops/cluster.yml)).
 - **🚦 Traefik**: TLS-terminating ingress controller (mentioned in Infrastructure).
@@ -156,7 +157,8 @@ This cluster hosts a variety of self-managed applications and services.
 
 - [📄 BentoPDF](./tools/editor/bentopdf.yml): Self-hosted PDF manipulation and conversion tool suite.
 - [📂 FileBrowser](./tools/storage/filebrowser.yml): Web-based file management interface for remote access.
-- [🔗 Syncthing](./tools/storage/syncthing.yml): Continuous file synchronization across devices.
+- [📁 Samba](./tools/storage/samba.yml): SMB/CIFS file sharing server for native network mounts.
+- [🔗 Syncthing](./tools/cluster/syncthing.yml): Continuous file synchronization across devices.
 
 #### 🗄️ Storage & Databases
 
@@ -169,10 +171,11 @@ This cluster hosts a variety of self-managed applications and services.
 - [🎨 Excalidraw](./tools/editor/excalidraw.yml): Virtual collaborative whiteboard.
 - [🏠 Homepage](./tools/homepage): Dashboard for managing and accessing all services.
 - [🔄 n8n](./tools/automation/n8n.yml): Workflow automation platform.
+- [🏡 Home Assistant](./tools/automation/homeassistant.yml): Open-source home automation platform.
+- [🔌 ESPHome](./tools/automation/esphome.yml): Management for ESP boards.
 - [🔍 Changedetection.io](./tools/automation/changedetection.yml): Self-hosted website change monitoring.
 - [🔧 IT-Tools](./tools/utilities/it-tools.yml): Collection of handy online tools for developers.
 - [🌐 Netbird](./tools/cluster/netbird.yml): Mesh VPN and P2P networking solution for secure access.
-- [♻️ Reloader](./gitops/cluster.yml): Automatically restarts pods when ConfigMaps or Secrets are updated.
 - [💨 Speedtest](./tools/network/speedtest.yml): Tool for checking internet connection speed.
 - [🛡️ Vert](./tools/editor/vert.yml): Clean and simple RSS feed reader.
 - [📦 Warrior](./tools/archiving/warrior.yml): Archive Team Warrior for distributed archiving.
@@ -180,13 +183,13 @@ This cluster hosts a variety of self-managed applications and services.
 ### 📊 Observability & Monitoring
 
 - [🛡️ AdGuard Exporter](./monitoring/adguard-exporter.yml): Exports AdGuard DNS metrics to Prometheus.
-- [📜 Fluent-bit](./monitoring/fluent-bit.yml): Lightweight log processor and forwarder.
-- [📊 Grafana](./monitoring/grafana/grafana.yml): Dashboards for visualizing metrics and logs.
+- [📜 Fluent-bit](./monitoring/fluent-bit.yml): Dual setup for processing and forwarding container logs and Kubernetes events.
+- [📊 Grafana](./monitoring/grafana/grafana.yml): Dashboards for visualizing metrics and logs, powered by image renderer sidecar.
 - [☸️ Kube State Metrics](./monitoring/kube-state-metrics.yml): Exposes cluster-level metrics.
 - [✍️ Loki](./monitoring/loki-deploy.yml): Horizontally-scalable, multi-tenant log aggregation system.
 - [📡 MKTXP](./monitoring/mktxp.yml): Exporter for MikroTik router metrics.
-- [💻 Node Exporter](./monitoring/node-exporter.yml): Hardware and OS metrics exporter for \*NIX kernels.
-- [📈 Prometheus](./monitoring/prometheus-deploy.yml): Metrics collection and alerting toolkit.
+- [💻 Node Exporter](./monitoring/node-exporter.yml): Hardware and OS metrics exporter for *NIX kernels.
+- [📈 Prometheus](./monitoring/prometheus/prometheus-deploy.yml): Metrics collection and alerting toolkit.
 - [🖥️ PVE Exporter](./monitoring/pve-exporter.yml): Exporter for Proxmox VE host and guest metrics.
 - [📡 SNMP Exporter](./monitoring/snmp-exporter.yml): Exporter for metrics from SNMP-enabled devices.
 - [🕵️ Tempo](./monitoring/tempo.yml): Horizontally-scalable, multi-tenant distributed tracing system.
@@ -197,23 +200,26 @@ This cluster hosts a variety of self-managed applications and services.
 - [🐳 Harbor](./harbor/): Enterprise-grade cloud native container registry.
 - [🖼️ Immich](./immich/immich.yml): Self-hosted high-performance photo and video backup solution.
 - [💰 Money](./money/money.yml): Personal finance management and budgeting application.
-- [🗄️ DB Backup](./services/db-backup.yml): Automated multi-database backup service for cluster-wide reliability.
-- [☁️ Cloudflare Operator](./cloudflare-operator): Kubernetes native controller for Cloudflare Tunnel management.
-- [🌿 Ecoguardian](./services/ecoguardian.yml): Environmental monitoring and analytical service.
-- [✍️ Ghost](./services/ghost.yml): Professional self-hosted publishing platform and blog.
-- [📊 Linear](./services/linear-cred.yml): Streamlined issue tracking and project management suite.
-- [🖼️ Portfolio](./services/portfolio.yml): Personal showcase application for projects and professional work.
-- [📋 Project](./services/project.yml): Centralized management for personal development projects.
+- [🗄️ DB Backup](./services/db-backup/db-backup.yml): Automated multi-database backup cronjob.
+- [☁️ Cloudflare Operator](./cloudflare-operator): Kubernetes native controller for zero-trust Cloudflare Tunnels.
+- [🌿 EcoGuardian](./services/ecoguardian/ecoguardian.yml): Environmental monitoring and analytical service.
+- [✍️ Ghost](./services/ghost/ghost.yml): Professional self-hosted publishing platform and blog.
+- [📊 Linear Next](./services/linear-next/linear-next.yml): Streamlined issue tracking and project management suite.
+- [🐘 Tolonto](./services/tolonto/tolonto.yml): PHP LAMP development stack.
+- [🖼️ Portfolio](./services/portfolio/portfolio.yml): Personal showcase application with auto-scaling capabilities.
 
 ### 🎬 Media
 
-- [🎬 Plex Media Server](./media/player.yml): 4K transcoding capable media server and player suite.
-- [📺 Arr Suite](./media/arr.yml): Radarr/Sonarr/Bazarr stack for automated media management.
-- [📥 Transmission & Aria2](./media/download.yml): Torrent and general download clients.
-- [� qBittorrent & Qui](./media/qbittorrent.yml): Feature-rich torrent client with multi-instance Web UI.
-- [�📊 Tautulli](./media/player.yml): Plex usage monitoring and analytics.
-- [📂 Overseerr](./media/arr.yml): Media request management and discovery.
-- [🔧 FlareSolverr](./media/arr.yml): Proxy server to bypass Cloudflare protection.
+- [🎬 Plex Media Server](./media/player.yml): 4K hardware transcoding capable media server.
+- [🎬 Jellyfin](./media/player.yml): Open-source alternative media server.
+- [📺 Arr Suite](./media): Radarr, Sonarr, Bazarr, Prowlarr stack for automated media management.
+- [📥 Transmission](./media/download.yml): Torrent client powered by Flood UI.
+- [📥 qBittorrent & Qui](./media/qbittorrent.yml): Feature-rich torrent client with multi-instance Web UI.
+- [📊 Tautulli](./media/tautulli.yml): Plex usage monitoring and analytics.
+- [📂 Seerr](./media/seerr.yml): Media request management and discovery.
+- [🧹 Maintainerr](./media/maintainerr.yml): Rule-based automated media library cleanup.
+- [🔄 Crosswatch](./media/crosswatch.yml): Media watch progress synchronization across platforms.
+- [🔧 FlareSolverr](./media/flaresolverr.yml): Proxy server to bypass Cloudflare protection for indexers.
 
 ## 🛠 Infrastructure
 
@@ -228,7 +234,7 @@ This cluster hosts a variety of self-managed applications and services.
 - **🚦 Traefik**: TLS-terminating ingress controller with automatic Let's Encrypt certificates.
 - **📡 MetalLB**: Load balancer for bare-metal environments providing internal IP management.
 - **🌐 Netbird**: VPN mesh networking for secure remote access.
-- **☁️ Cloudflare Operator**: Secure Cloudflare Tunnel integration for exposing services without public IPs or port forwarding.
+- **☁️ Cloudflare Operator**: Secure Cloudflare Tunnel CRDs for exposing services without public IPs or port forwarding.
 
 ### Storage
 

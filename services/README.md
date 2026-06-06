@@ -1,66 +1,42 @@
-# Services
+# 🚀 Application Services
 
-This directory contains various application services and their configurations.
+This directory contains various personal and application services running in the cluster.
 
-## Featured Services
+## 🌟 Featured Services
 
-- **[Ghost](services/ghost.yml)**: Professional publishing platform.
-- **[Portfolio](services/portfolio.yml)**: Personal project showcase.
-- **[EcoGuardian](services/ecoguardian.yml)**: Environmental monitoring.
-- **[Linear](services/linear-cred.yml)**: Issue tracking.
-- **[Cloudflared](services/cloudflared.yml)**: Secure tunneling to the web.
-- **[Project](services/project.yml)**: Personal projects.
+| Service | File | Description |
+|---------|------|-------------|
+| **Ghost** | [`ghost/ghost.yml`](ghost/ghost.yml) | Professional publishing platform and blog |
+| **Portfolio** | [`portfolio/portfolio.yml`](portfolio/portfolio.yml) | Personal project showcase (Auto-scales via HPA) |
+| **Linear Next** | [`linear-next/linear-next.yml`](linear-next/linear-next.yml) | Issue tracking and project management |
+| **EcoGuardian** | [`ecoguardian/ecoguardian.yml`](ecoguardian/ecoguardian.yml) | Environmental monitoring service |
+| **Tolonto** | [`tolonto/tolonto.yml`](tolonto/tolonto.yml) | PHP LAMP development stack |
 
-## Shared Resources
+## 🔗 Shared Resources & Utilities
 
-- **`db-backup.yml`**: Generic database backup configuration for services.
-- **`discord-cred.yml`**: Notification credentials for service alerts.
-- **`mariadb-cred.yml`**: Database credentials.
+- **[`db-backup/db-backup.yml`](db-backup/db-backup.yml)**: Generic, automated multi-database backup CronJob configuration (backs up MySQL, PostgreSQL).
+- **[`discord/discord-cred.yml`](discord/discord-cred.yml)**: Shared Discord webhook credentials for service alerts.
 
-## Cloudflare Tunnel Management
+## ☁️ Cloudflare Tunnel Routing
 
-This service runs a `cloudflared` tunnel in **Local Management** mode. Configuration is defined in Kubernetes manifests, not the Cloudflare Dashboard.
+This cluster uses the **Cloudflare Operator** (`ClusterTunnel` and `TunnelBinding` CRDs) to securely expose services to the internet, rather than running a manual `cloudflared` deployment. 
 
-### Adding a New Route
+Most services in this directory (e.g., Portfolio, Linear Next, Tolonto) have a `TunnelBinding` resource defined in their YAML file that automatically routes their `fqdn` to their internal Kubernetes Service.
 
-1.  **Update Config**: Edit `cloudflared-config.yml` to map the hostname to the Kubernetes service.
-    ```yaml
-    ingress:
-      - hostname: "new-service.yoganova.my.id"
-        service: http://service-name.namespace.svc.cluster.local:port
-    ```
-2.  **Add DNS Record**: Log in to the CLI and create the CNAME record.
-    ```bash
-    cloudflared tunnel route dns kube-tunnel new-service.yoganova.my.id
-    ```
-3.  **Deploy**: Apply the config change and restart the pods.
-    ```bash
-    kubectl apply -f cloudflared-config.yml
-    kubectl rollout restart deployment cloudflared -n services
-    ```
+### Example TunnelBinding:
 
-### Managing Credentials
-
-If you need to rotate the tunnel token or update credentials:
-
-1.  **Get New Token**:
-    ```bash
-    cloudflared tunnel token kube-tunnel
-    ```
-2.  **Seal & Update Secret**:
-
-    ```bash
-    kubectl create secret generic cloudflared-cred \
-      --from-literal=TUNNEL_TOKEN='<NEW_TOKEN_STRING>' \
-      --namespace services \
-      --dry-run=client -o yaml | \
-      kubeseal --cert ../sealed-secret/public-key.pem --format yaml > cloudflared-cred.yml
-
-    kubectl apply -f cloudflared-cred.yml
-    kubectl rollout restart deployment cloudflared -n services
-    ```
-
-### Troubleshooting
-
-- **Check Status**: `kubectl get pods -n services -l app=cloudflared`
-- **View Logs**: `kubectl logs -n services -l app=cloudflared --tail=20`
+```yaml
+apiVersion: networking.cfargotunnel.com/v1alpha1
+kind: TunnelBinding
+metadata:
+  name: example-binding
+  namespace: services
+subjects:
+  - name: example-service
+    spec:
+      fqdn: app.yoganova.my.id
+      target: http://example-service.services.svc.cluster.local:80
+tunnelRef:
+  kind: ClusterTunnel
+  name: homelab-tunnel-yoganova
+```

@@ -287,11 +287,7 @@ data:
             type: myspeed
             url: http://myspeed:5216
             password: ${MYSPEED_PASSWORD}
-      # - Peekaping:
-      #     icon: 	https://peekaping.com/logo-mascot.webp
-      #     href: https://peekaping.ygnv.my.id
-      #     description: Real-time network latency monitoring
-      #     siteMonitor: http://peekaping-web.monitoring:80
+
 
     - Security:
       - Vaultwarden:

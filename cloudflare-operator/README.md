@@ -1,8 +1,8 @@
-# Cloudflare Operator Integration
+# ☁️ Cloudflare Operator Integration
 
 This directory contains the configuration for the [adyanth/cloudflare-operator](https://github.com/adyanth/cloudflare-operator).
 
-## Setup Instructions
+## 🚀 Setup Instructions
 
 ### 1. Cloudflare API Token
 
