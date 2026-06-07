@@ -194,6 +194,9 @@ data:
 
       # MetalLB monitoring
       - job_name: metallb
+        scheme: https
+        tls_config:
+          insecure_skip_verify: true
         kubernetes_sd_configs:
           - role: pod
             namespaces:
