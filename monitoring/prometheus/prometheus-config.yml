@@ -197,6 +197,8 @@ data:
         scheme: https
         tls_config:
           insecure_skip_verify: true
+        authorization:
+          credentials_file: /var/run/secrets/kubernetes.io/serviceaccount/token
         kubernetes_sd_configs:
           - role: pod
             namespaces:
