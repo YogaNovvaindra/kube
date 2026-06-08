@@ -38,9 +38,6 @@ spec:
             requests:
               memory: 512Mi
               cpu: 100m
-            limits:
-              memory: 2Gi
-              cpu: 1
       volumes:
         - name: tempo-config
           configMap:
@@ -84,6 +81,10 @@ data:
           path: /var/tempo
         wal:
           path: /var/tempo/wal
+
+    compactor:
+      compaction:
+        block_retention: 720h
 
     metrics_generator:
       registry:
