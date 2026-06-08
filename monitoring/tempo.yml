@@ -82,9 +82,8 @@ data:
         wal:
           path: /var/tempo/wal
 
-    compactor:
-      compaction:
-        block_retention: 720h
+    compaction:
+      block_retention: 720h
 
     metrics_generator:
       registry:
