@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: portfolio
-          image: reg.ygnv.my.id/ghcr/yoganovvaindra/portfolio:v0.6.9
+          image: reg.ygnv.my.id/ghcr/yoganovvaindra/portfolio:v0.6.10
           imagePullPolicy: IfNotPresent
           resources:
             requests:
@@ -30,6 +30,12 @@ spec:
           env:
             - name: TZ
               value: Asia/Jakarta
+            - name: OTLP_ENABLE
+              value: 1
+            - name: OTLP_EXPORTER_ENDPOINT
+              value: http://tempo.monitoring:4318/v1/traces
+            - name: OTLP_SERVICE_NAME
+              value: portfolio
 ---
 apiVersion: v1
 kind: Service
