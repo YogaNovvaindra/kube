@@ -31,7 +31,7 @@ spec:
             - name: TZ
               value: Asia/Jakarta
             - name: OTLP_ENABLE
-              value: 1
+              value: "true"
             - name: OTLP_EXPORTER_ENDPOINT
               value: http://tempo.monitoring:4318/v1/traces
             - name: OTLP_SERVICE_NAME
