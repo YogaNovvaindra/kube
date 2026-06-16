@@ -58,7 +58,7 @@ spec:
             - name: grafana-data
               mountPath: /var/lib/grafana
         - name: renderer
-          image: reg.ygnv.my.id/docker/grafana/grafana-image-renderer:v5.8.9
+          image: reg.ygnv.my.id/docker/grafana/grafana-image-renderer:v5.8.10
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8081
