@@ -49,7 +49,6 @@ data:
       defaults:
         compaction:
           block_retention: 720h
-          compacted_block_retention: 1h
         metrics_generator:
           processors: [service-graphs, span-metrics]
 ---
