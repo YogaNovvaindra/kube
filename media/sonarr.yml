@@ -23,7 +23,7 @@ spec:
         kubernetes.io/hperf: "true"
       containers:
         - name: sonarr
-          image: reg.ygnv.my.id/docker/linuxserver/sonarr:4.0.18
+          image: reg.ygnv.my.id/docker/linuxserver/sonarr:4.0.19
           imagePullPolicy: IfNotPresent
           resources:
             requests:
