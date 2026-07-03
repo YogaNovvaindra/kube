@@ -4,7 +4,7 @@ kind: Kustomization
 namespace: cluster
 
 resources:
-  - https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.38.2/controller.yaml
+  - https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.38.4/controller.yaml
   - backup.yml
 
 patches:
