@@ -47,8 +47,8 @@ data:
 
     overrides:
       defaults:
-        compaction:
-          block_retention: 720h
+        # compaction:
+        #   block_retention: 720h
         metrics_generator:
           processors: [service-graphs, span-metrics]
 ---
