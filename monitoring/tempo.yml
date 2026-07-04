@@ -28,9 +28,13 @@ data:
 
     storage:
       trace:
-        backend: local
-        local:
-          path: /var/tempo
+        backend: s3
+        s3:
+          bucket: tempos3
+          endpoint: s3.eu-central-003.backblazeb2.com
+          # Credentials are injected via AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY env vars
+          forcepathstyle: true
+          insecure: false
         wal:
           path: /var/tempo/wal
 
@@ -51,6 +55,7 @@ data:
         #   block_retention: 720h
         metrics_generator:
           processors: [service-graphs, span-metrics]
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -82,11 +87,14 @@ spec:
             - containerPort: 14268 # jaeger ingest
             - containerPort: 14250 # jaeger grpc
             - containerPort: 9411 # zipkin
+          envFrom:
+            - secretRef:
+                name: tempo-cred
           volumeMounts:
             - mountPath: /etc/tempo
               name: tempo-config
             - mountPath: /var/tempo
-              name: tempo-storage
+              name: tempo-wal
           resources:
             requests:
               memory: 512Mi
@@ -95,7 +103,7 @@ spec:
         - name: tempo-config
           configMap:
             name: tempo-config
-        - name: tempo-storage
+        - name: tempo-wal
           hostPath:
             path: /mnt/cephfs/docker/monitoring/tempo
             type: Directory
