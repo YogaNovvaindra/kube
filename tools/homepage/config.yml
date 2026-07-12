@@ -404,6 +404,11 @@ data:
           href: http://10.0.1.178:8384
           description: File synchronization for 8Labs devices (4th instance)
           siteMonitor: http://10.0.1.178:8384
+      - Syncthing Azure:
+          icon: syncthing.png
+          href: http://100.97.193.167:8384
+          description: File synchronization for Azure devices
+          siteMonitor: http://100.97.193.167:8384
       - File Browser:
           icon: filebrowser.png
           href: https://file.ygnv.my.id
@@ -413,7 +418,7 @@ data:
           icon: https://rustfs.com/images/rustfs-github.png
           href: https://rustfs.ygnv.my.id/rustfs/console
           description: S3-compatible object storage service
-          siteMonitor: http://rustfs:9000
+          siteMonitor: http://100.97.193.167:9000
           
     - Media:
       - "":
