@@ -41,9 +41,12 @@ data:
     common:
       path_prefix: /tmp/loki
       storage:
-        filesystem:
-          chunks_directory: /tmp/loki/chunks
-          rules_directory: /tmp/loki/rules
+        s3:
+          endpoint: rustfs.ygnv.my.id
+          bucketnames: loki
+          # Credentials via secret
+          s3forcepathstyle: true
+          insecure: false
       replication_factor: 1
       ring:
         kvstore:
@@ -52,7 +55,7 @@ data:
       configs:
       - from: 2025-05-18
         store: tsdb
-        object_store: filesystem
+        object_store: s3
         schema: v13
         index:
           prefix: index_
@@ -90,7 +93,7 @@ data:
       retention_enabled: true
       compaction_interval: 10m
       retention_delete_delay: 2h
-      delete_request_store: filesystem
+      delete_request_store: s3
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -115,6 +118,9 @@ spec:
         - name: loki
           image: reg.ygnv.my.id/docker/grafana/loki:3.7.3
           imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef:
+                name: loki-cred
           resources:
             requests:
               cpu: 200m
