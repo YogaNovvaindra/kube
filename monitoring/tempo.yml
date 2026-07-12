@@ -31,7 +31,7 @@ data:
         backend: s3
         s3:
           bucket: tempos3
-          endpoint: s3.eu-central-003.backblazeb2.com
+          endpoint: rustfs.ygnv.my.id
           # Credentials are injected via AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY env vars
           forcepathstyle: true
           insecure: false
