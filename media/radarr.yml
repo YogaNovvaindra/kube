@@ -23,7 +23,7 @@ spec:
         kubernetes.io/hperf: "true"
       containers:
         - name: radarr
-          image: reg.ygnv.my.id/docker/linuxserver/radarr:6.2.1
+          image: reg.ygnv.my.id/docker/linuxserver/radarr:6.3.0
           imagePullPolicy: IfNotPresent
           resources:
             requests:
