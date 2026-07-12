@@ -106,7 +106,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
         - name: postgres
-          image: reg.ygnv.my.id/docker/pgautoupgrade/pgautoupgrade:latest@sha256:e72d6eac43919fa63ee6cbdcdaf1df19f167d4728755b16115c83b7933693655
+          image: reg.ygnv.my.id/docker/pgautoupgrade/pgautoupgrade:latest@sha256:60db5a593b78b04719d0bc6970870905c2d9fedc40cd103815d43b925781f298
           imagePullPolicy: IfNotPresent
           resources:
             requests:
