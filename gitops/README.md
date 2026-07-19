@@ -9,6 +9,7 @@ Each file here defines an application (or a group of applications) that Argo CD 
 - **`monitoring.yml`**: Manages the observability stack.
 - **`services.yml`**: Manages application services.
 - **`tools.yml`**: Manages general utilities and tools.
+- **`db.yml`**: Manages database definitions.
 - And others for specific components like `harbor`, `immich`, `media`, etc.
 
 ## ⚙️ How it Works

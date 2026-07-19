@@ -24,11 +24,6 @@ A collection of utility tools, development environments, automation platforms, a
 - **[BentoPDF](editor/bentopdf.yml)**: Self-hosted PDF manipulation tools
 - **[Vert](editor/vert.yml)**: Clean and simple RSS feed reader
 
-### 🗃️ Database Tools (`db/`)
-- **[pgAdmin](db/pgadmin.yml)**: PostgreSQL administration
-- **[phpMyAdmin](db/phpmyadmin.yml)**: MySQL/MariaDB administration
-- **[Bytebase](db/bytebase.yml)**: Database schema change and version control
-
 ### 🌐 Cluster & Networking (`cluster/`, `network/`)
 - **[Semaphore](cluster/semaphore.yml)**: UI for running Ansible playbooks
 - **[Netbird](cluster/netbird.yml)**: Mesh VPN and P2P networking

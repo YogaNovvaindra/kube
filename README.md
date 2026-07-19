@@ -149,7 +149,6 @@ This cluster hosts a variety of self-managed applications and services.
 #### 💻 Development & Code Management
 
 - [💻 Gitea](./tools/git/gitea.yml): Self-hosted Git service and repository manager.
-- [📊 Bytebase](./tools/db/bytebase.yml): Database schema change and version control tool.
 - [📚 Outline](./tools/editor/outline.yml): Collaborative knowledge base/wiki.
 - [⚙️ Semaphore](./tools/cluster/semaphore.yml): UI for running Ansible playbooks.
 
@@ -163,8 +162,8 @@ This cluster hosts a variety of self-managed applications and services.
 #### 🗄️ Storage & Databases
 
 - [🗄️ RustFS](./tools/storage/rustfs.yml): S3-compatible object storage solution.
-- [🐘 pgAdmin](./tools/db/pgadmin.yml): PostgreSQL administration and development platform.
-- [🐬 phpMyAdmin](./tools/db/phpmyadmin.yml): Web-based administration tool for MySQL and MariaDB.
+- [🐘 pgAdmin](./db/pgadmin.yml): PostgreSQL administration and development platform.
+- [🐬 phpMyAdmin](./db/phpmyadmin.yml): Web-based administration tool for MySQL and MariaDB.
 
 #### 🎨 Collaboration & Productivity
 
