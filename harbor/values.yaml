@@ -12,10 +12,10 @@ externalURL: https://reg.ygnv.my.id
 database:
   type: external
   external:
-    host: "postgres"
+    host: "postgres.db.svc.cluster.local"
     port: "5432"
     username: "postgres" # Or your actual DB user
-    coreDatabase: "registry"
+    coreDatabase: "harbor"
     existingSecret:
       "harbor-cred" # This will look for the 'password' key by default.
 
@@ -23,7 +23,7 @@ database:
 redis:
   type: external
   external:
-    addr: "valkey:6379"
+    addr: "valkey.db.svc.cluster.local:6379"
     coreDatabaseIndex: "0"
     jobserviceDatabaseIndex: "2"
     registryDatabaseIndex: "1"
