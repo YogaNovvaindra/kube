@@ -62,6 +62,18 @@ spec:
           volumeMounts:
             - name: mariadb-data
               mountPath: /var/lib/mysql
+        - name: mysqld-exporter
+          image: reg.ygnv.my.id/quay/prometheus/mysqld-exporter:v0.19.0
+          ports:
+            - containerPort: 9104
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-cred
+                  key: password
+            - name: DATA_SOURCE_NAME
+              value: "root:$(MYSQL_ROOT_PASSWORD)@(localhost:3306)/"
       volumes:
         - name: mariadb-data
           hostPath:
@@ -79,6 +91,10 @@ spec:
   selector:
     app: mariadb
   ports:
-    - port: 3306
+    - name: mysql
+      port: 3306
       targetPort: 3306
+    - name: metrics
+      port: 9104
+      targetPort: 9104
   type: ClusterIP

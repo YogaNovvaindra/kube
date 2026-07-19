@@ -53,6 +53,23 @@ spec:
             initialDelaySeconds: 30
             periodSeconds: 60
             timeoutSeconds: 60
+        - name: postgres-exporter
+          image: reg.ygnv.my.id/quay/prometheuscommunity/postgres-exporter:v0.20.1
+          ports:
+            - containerPort: 9187
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: pg-cred
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pg-cred
+                  key: password
+            - name: DATA_SOURCE_NAME
+              value: "postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@localhost:5432/postgres?sslmode=disable"
       volumes:
         - name: postgres-data
           hostPath:
@@ -70,6 +87,10 @@ spec:
   selector:
     app: postgres
   ports:
-    - port: 5432
+    - name: postgres
+      port: 5432
       targetPort: 5432
+    - name: metrics
+      port: 9187
+      targetPort: 9187
   type: ClusterIP

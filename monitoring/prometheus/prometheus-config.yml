@@ -278,6 +278,36 @@ data:
             replacement: $1:8082
 
       # Services monitoring
+      - job_name: mariadb
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: [db]
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            action: keep
+            regex: mariadb
+          - source_labels: [__meta_kubernetes_pod_ip]
+            target_label: __address__
+            replacement: $1:9104
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: instance
+
+      - job_name: postgres
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: [db]
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            action: keep
+            regex: postgres
+          - source_labels: [__meta_kubernetes_pod_ip]
+            target_label: __address__
+            replacement: $1:9187
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: instance
+
       - job_name: adguard
 
         kubernetes_sd_configs:
