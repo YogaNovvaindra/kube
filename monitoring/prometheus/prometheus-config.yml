@@ -292,6 +292,7 @@ data:
             replacement: $1:9104
           - source_labels: [__meta_kubernetes_pod_name]
             target_label: instance
+            
       - job_name: mariadb
         kubernetes_sd_configs:
           - role: pod
@@ -323,7 +324,6 @@ data:
             target_label: instance
 
       - job_name: adguard
-
         kubernetes_sd_configs:
           - role: pod
             namespaces:
