@@ -6,7 +6,7 @@ metadata:
 data:
   NODE_ENV: "production"
   PGSSLMODE: "disable"
-  REDIS_URL: "redis://valkey:6379"
+  REDIS_URL: "redis://valkey.db.svc.cluster.local:6379"
   URL: "https://outline.ygnv.my.id"
   PORT: "3000"
   FILE_STORAGE: "local"

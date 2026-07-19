@@ -5,7 +5,7 @@ metadata:
   namespace: tools
 data:
   AUTHENTIK_POSTGRESQL__HOST: "postgres.db.svc.cluster.local"
-  AUTHENTIK_REDIS__HOST: "valkey"
+  AUTHENTIK_REDIS__HOST: "valkey.db.svc.cluster.local"
 ---
 apiVersion: apps/v1
 kind: Deployment
