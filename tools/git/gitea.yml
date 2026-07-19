@@ -34,7 +34,7 @@ spec:
             - name: GITEA__database__DB_TYPE
               value: "mysql"
             - name: GITEA__database__HOST
-              value: "mariadb:3306"
+              value: "mariadb.db.svc.cluster.local:3306"
             - name: GITEA__database__NAME
               valueFrom:
                 secretKeyRef:

@@ -4,7 +4,7 @@ metadata:
   name: authentik-env
   namespace: tools
 data:
-  AUTHENTIK_POSTGRESQL__HOST: "postgres"
+  AUTHENTIK_POSTGRESQL__HOST: "postgres.db.svc.cluster.local"
   AUTHENTIK_REDIS__HOST: "valkey"
 ---
 apiVersion: apps/v1
