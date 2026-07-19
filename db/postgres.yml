@@ -54,7 +54,7 @@ spec:
             periodSeconds: 60
             timeoutSeconds: 60
         - name: postgres-exporter
-          image: reg.ygnv.my.id/quay/prometheuscommunity/postgres-exporter:v0.20.1
+          image: reg.ygnv.my.id/docker/prom/postgres-exporter:v0.20.1
           ports:
             - containerPort: 9187
           env:
