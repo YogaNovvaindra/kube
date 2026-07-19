@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mariadb
+  namespace: db
+  labels:
+    app: mariadb
+spec:
+  serviceName: mariadb
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: mariadb
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      nodeSelector:
+        kubernetes.io/hperf: "true"
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: mariadb
+          image: reg.ygnv.my.id/docker/mariadb:12.3.2
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 256Mi
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-cred
+                  key: password
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-cred
+                  key: username
+            - name: MARIADB_AUTO_UPGRADE
+              value: "1"
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-cred
+                  key: password
+          livenessProbe:
+            exec:
+              command: ["sh", "-c", "mariadb-admin ping -u root -p${MYSQL_ROOT_PASSWORD} --protocol=socket"]
+            initialDelaySeconds: 30
+            periodSeconds: 60
+            failureThreshold: 3
+          readinessProbe:
+            exec:
+              command: ["sh", "-c", "mariadb-admin ping -u root -p${MYSQL_ROOT_PASSWORD} --protocol=socket"]
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: mariadb-data
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mariadb-data
+          hostPath:
+            path: /mnt/cephfs/docker/db/mariadb/data
+            type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb
+  namespace: db
+  labels:
+    app: mariadb
+spec:
+  selector:
+    app: mariadb
+  ports:
+    - port: 3306
+      targetPort: 3306
+  type: ClusterIP

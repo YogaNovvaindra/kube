@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  namespace: db
+  labels:
+    app: postgres
+spec:
+  serviceName: postgres
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      nodeSelector:
+        kubernetes.io/hperf: "true"
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: postgres
+          image: reg.ygnv.my.id/docker/pgautoupgrade/pgautoupgrade:latest@sha256:60db5a593b78b04719d0bc6970870905c2d9fedc40cd103815d43b925781f298
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 128Mi
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-cred
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-cred
+                  key: password
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-U", "postgres"]
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 60
+          livenessProbe:
+            exec:
+              command: ["pg_isready", "-U", "postgres"]
+            initialDelaySeconds: 30
+            periodSeconds: 60
+            timeoutSeconds: 60
+      volumes:
+        - name: postgres-data
+          hostPath:
+            path: /mnt/cephfs/docker/db/postgres/data
+            type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: db
+  labels:
+    app: postgres
+spec:
+  selector:
+    app: postgres
+  ports:
+    - port: 5432
+      targetPort: 5432
+  type: ClusterIP
