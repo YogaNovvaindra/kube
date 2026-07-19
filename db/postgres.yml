@@ -31,12 +31,12 @@ spec:
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: db-cred
+                  name: pg-cred
                   key: username
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: db-cred
+                  name: pg-cred
                   key: password
           volumeMounts:
             - name: postgres-data
