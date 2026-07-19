@@ -64,16 +64,22 @@ spec:
               mountPath: /var/lib/mysql
         - name: mysqld-exporter
           image: prom/mysqld-exporter:v0.19.0
+          args:
+            - "--mysqld.username=$(MYSQL_USER)"
+            - "--mysqld.address=localhost:3306"
           ports:
             - containerPort: 9104
           env:
-            - name: MYSQL_ROOT_PASSWORD
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-cred
+                  key: username
+            - name: MYSQLD_EXPORTER_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: mariadb-cred
                   key: password
-            - name: DATA_SOURCE_NAME
-              value: "root:$(MYSQL_ROOT_PASSWORD)@(localhost:3306)/"
       volumes:
         - name: mariadb-data
           hostPath:
