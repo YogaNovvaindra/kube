@@ -346,12 +346,12 @@ data:
           icon: sh-postgresql.svg
           href: https://pgadmin.ygnv.my.id
           description: PostgreSQL database management
-          siteMonitor: http://pgadmin:80
+          siteMonitor: http://pgadmin.db:80
       - phpMyAdmin:
           icon: phpmyadmin.png
-          href: https://phpmyadmin-tools.ygnv.my.id
+          href: https://phpmyadmin.ygnv.my.id
           description: MySQL database management
-          siteMonitor: http://phpmyadmin:80
+          siteMonitor: http://phpmyadmin.db:80
       # - Bytebase:
       #     icon: https://www.bytebase.com/favicon/favicon.png
       #     href: https://bytebase.ygnv.my.id
