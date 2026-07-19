@@ -2,7 +2,7 @@
 
 A collection of utility tools, development environments, automation platforms, and storage solutions.
 
-## 📂 Categories
+## 📂 Structure
 
 ### 🤖 Automation (`automation/`)
 - **[n8n](automation/n8n.yml)**: Workflow automation platform

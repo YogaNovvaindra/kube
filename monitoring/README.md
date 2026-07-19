@@ -31,7 +31,7 @@ graph TD
     FluentBit --> Loki
 ```
 
-## 📦 Core Stack Components
+## 📂 Structure
 
 | Component | File | Description |
 |-----------|------|-------------|
@@ -56,7 +56,7 @@ Metrics are collected from various sources using dedicated exporters:
 | **SNMP Exporter** | [`snmp-exporter.yml`](snmp-exporter.yml) | — | Network device metrics via SNMP |
 | **AdGuard Exporter** | [`adguard-exporter.yml`](adguard-exporter.yml) | `9618` | AdGuard DNS server metrics |
 
-## ⚙️ Key Configuration Details
+## ⚙️ Configuration
 
 ### Tempo — Distributed Tracing
 - **Image**: `grafana/tempo:3.0.0`

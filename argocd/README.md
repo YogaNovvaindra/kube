@@ -4,17 +4,14 @@ This directory contains a Kustomize-based deployment of Argo CD using the offici
 
 ## 📂 Structure
 
-```
-argocd/
-├── kustomization.yml              # Main kustomization file
-├── ingress.yml                     # Traefik IngressRoute
-└── patches/
-    ├── configmap-cmd-params.yml   # Server insecure mode for Traefik
-    ├── configmap-cm.yml           # Homepage account configuration
-    ├── configmap-rbac.yml         # RBAC for homepage account
-    ├── image-pull-policy.yml      # Set imagePullPolicy to IfNotPresent
-    └── resources.yml              # Memory resource requests
-```
+- **`kustomization.yml`**: Main kustomization file
+- **`ingress.yml`**: Traefik IngressRoute
+- **`patches/`**: Directory containing patches:
+  - **`configmap-cmd-params.yml`**: Server insecure mode for Traefik
+  - **`configmap-cm.yml`**: Homepage account configuration
+  - **`configmap-rbac.yml`**: RBAC for homepage account
+  - **`image-pull-policy.yml`**: Set imagePullPolicy to IfNotPresent
+  - **`resources.yml`**: Memory resource requests
 
 ## ⚙️ Customizations
 

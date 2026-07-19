@@ -2,6 +2,15 @@
 
 Traefik is the edge router for this cluster, handling TLS termination and routing for all incoming traffic.
 
+## 📂 Structure
+
+- **`traefik.yml`**: Main Traefik deployment and service.
+- **`config.yml`**: Static and dynamic configuration parameters.
+- **`kustomization.yml`**: Kustomize entrypoint for deployment.
+- **`certificate.yml`**, **`tls-store.yml`**: TLS configuration resources.
+- **`service-account.yml`**: RBAC permissions for Traefik.
+- **`ingress.yml`**: Entrypoint routing for the Traefik dashboard.
+
 ## ⚙️ CRD Maintenance
 
 It is important to refresh the Traefik CRDs during minor updates to ensure compatibility with your current Traefik version.

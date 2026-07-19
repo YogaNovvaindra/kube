@@ -1,13 +1,12 @@
-# Infisical Secret Operator
+# 🔐 Infisical Secret Operator
 
 Kubernetes operator that syncs secrets from the off-cluster Infisical instance.
 
-## Prerequisites
+## 📂 Structure
 
-1. Infisical running (see [../infisical/](../infisical/))
-2. Machine Identity created in Infisical with Universal Auth
+- *(This directory currently only contains documentation. The deployment is managed via `gitops/infisical-operator.yml`.)*
 
-## Setup
+## ⚙️ Configuration (Setup)
 
 ### 1. Create Machine Identity in Infisical
 
@@ -32,7 +31,7 @@ kubectl apply -f credentials-sealed.yaml
 
 The operator is deployed via `gitops/infisical-operator.yml`.
 
-## Usage
+## 🚀 Deployment / Usage
 
 Create an `InfisicalSecret` to sync secrets:
 

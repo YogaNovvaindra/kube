@@ -1,8 +1,8 @@
-# Cluster Infrastructure
+# ⚙️ Cluster Infrastructure
 
 This directory contains core infrastructure utilities and cluster-wide management tools. These services are deployed in the `cluster` namespace to maintain clear separation from application workloads and core Kubernetes system components.
 
-## 📦 Components
+## 📂 Structure
 
 ### [♻️ Cluster Reloader](reloader/reloader.yml)
 

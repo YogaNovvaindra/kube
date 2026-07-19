@@ -2,7 +2,7 @@
 
 Money is a personal finance management application for tracking expenses, budgets, and accounts.
 
-## 📦 Components
+## 📂 Structure
 
 - **[`money.yml`](./money/money.yml)**: Deployment manifest for the core application.
 - **[`money-cred.yml`](./money/money-cred.yml)**: Sealed credentials for the application database.

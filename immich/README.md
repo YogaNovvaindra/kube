@@ -2,7 +2,7 @@
 
 Immich is a self-hosted high-performance backup solution for photos and videos, with a focus on mobile device sync.
 
-## 📦 Components
+## 📂 Structure
 
 - **[`immich.yml`](immich.yml)**: The core Immich application, migrated to the official microservices architecture:
   - **`immich-server`**: Main application logic.

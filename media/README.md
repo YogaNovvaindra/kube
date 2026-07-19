@@ -2,7 +2,7 @@
 
 The media stack provides automated media management, downloading, streaming, and content discovery capabilities across two media servers.
 
-## 📦 Components
+## 📂 Structure
 
 | Component | File | Description |
 |-----------|------|-------------|

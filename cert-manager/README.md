@@ -2,7 +2,7 @@
 
 This directory handles the automated management and issuance of TLS certificates from various issuing sources, including Let's Encrypt.
 
-## 📦 Components
+## 📂 Structure
 
 - **`cluster-issuer.yml`**: Defines the `ClusterIssuer` for Let's Encrypt using HTTP01 or DNS01 challenges.
 - **`cloudflare-secret.yml`**: Sealed secret containing the Cloudflare API token for DNS01 challenges.

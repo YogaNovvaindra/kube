@@ -2,6 +2,12 @@
 
 Harbor is an open-source trusted cloud native registry project that stores, signs, and scans content.
 
+## 📂 Structure
+
+- **`values.yaml`**: Helm chart configuration values.
+- **`values-full.yaml`**: Complete reference Helm chart values.
+- **`config/`**: Directory containing Harbor configuration files and credentials.
+
 ## 🚀 Deployment
 
 Harbor is deployed using the official Helm chart from `https://helm.goharbor.io`.

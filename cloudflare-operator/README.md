@@ -2,6 +2,12 @@
 
 This directory contains the configuration for the [adyanth/cloudflare-operator](https://github.com/adyanth/cloudflare-operator).
 
+## 📂 Structure
+
+- **`cloudflare-cred.yml`**: Sealed secret containing the Cloudflare API token.
+- **`cluster-tunnel-*.yml`**: Definitions for Cloudflare Tunnels (e.g., ygnv, yoganova).
+- **`kustomization.yaml`**: Orchestrates the deployment of the operator and resources.
+
 ## 🚀 Setup Instructions
 
 ### 1. Cloudflare API Token
