@@ -93,6 +93,8 @@ metadata:
   namespace: db
   labels:
     app: mariadb
+  annotations:
+    metallb.io/allow-shared-ip: "db"
 spec:
   selector:
     app: mariadb
@@ -103,4 +105,5 @@ spec:
     - name: metrics
       port: 9104
       targetPort: 9104
-  type: ClusterIP
+  type: LoadBalancer
+  loadBalancerIP: 10.1.1.57

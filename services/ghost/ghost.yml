@@ -44,7 +44,7 @@ spec:
             - name: database__connection__host
               value: "ghostdb"
             - name: database__connection__port
-              value: "3306"
+              value: "3307"
             - name: database__connection__user
               valueFrom:
                 secretKeyRef:
@@ -161,6 +161,24 @@ spec:
             - name: ghostdb-config
               mountPath: /etc/mysql/conf.d/my.cnf
               subPath: my.cnf
+        - name: mysqld-exporter
+          image: reg.ygnv.my.id/quay/prom/mysqld-exporter:v0.19.0
+          args:
+            - "--mysqld.username=$(MYSQL_USER)"
+            - "--mysqld.address=localhost:3306"
+          ports:
+            - containerPort: 9104
+          env:
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: ghost-cred
+                  key: dbuser
+            - name: MYSQLD_EXPORTER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ghost-cred
+                  key: dbpass
       volumes:
         - name: ghostdb-data
           hostPath:
@@ -179,14 +197,20 @@ kind: Service
 metadata:
   name: ghostdb
   namespace: services
+  annotations:
+    metallb.io/allow-shared-ip: "db"
 spec:
   selector:
     app: ghostdb
+  type: LoadBalancer
+  loadBalancerIP: 10.1.1.57
   ports:
     - name: mysql
-      port: 3306
+      port: 3307
       targetPort: 3306
-  clusterIP: None
+    - name: metrics
+      port: 9105
+      targetPort: 9104
 ---
 # Ghost blog at root domain
 apiVersion: networking.cfargotunnel.com/v1alpha1

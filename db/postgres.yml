@@ -83,6 +83,8 @@ metadata:
   namespace: db
   labels:
     app: postgres
+  annotations:
+    metallb.io/allow-shared-ip: "db"
 spec:
   selector:
     app: postgres
@@ -93,4 +95,5 @@ spec:
     - name: metrics
       port: 9187
       targetPort: 9187
-  type: ClusterIP
+  type: LoadBalancer
+  loadBalancerIP: 10.1.1.57
