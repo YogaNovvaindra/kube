@@ -47,7 +47,7 @@ spec:
                 command:
                   - "sh"
                   - "-c"
-                  - 'until [ -f "$PGDATA/pg_hba.conf" ]; do sleep 1; done; grep -q "host replication all 0.0.0.0/0 md5" "$PGDATA/pg_hba.conf" || echo "host replication all 0.0.0.0/0 md5" >> "$PGDATA/pg_hba.conf"; su - postgres -c "pg_ctl reload -D $PGDATA" || true'
+                  - 'until HBA=$(find /var/lib/postgresql -name pg_hba.conf 2>/dev/null | head -n 1) && [ -n "$HBA" ]; do sleep 2; done; grep -q "host replication all 0.0.0.0/0 scram-sha-256" "$HBA" || echo "host replication all 0.0.0.0/0 scram-sha-256" >> "$HBA"; su - postgres -c "pg_ctl reload -D $(dirname $HBA)" || true'
           readinessProbe:
             exec:
               command: ["pg_isready", "-U", "postgres"]
