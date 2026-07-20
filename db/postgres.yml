@@ -41,6 +41,13 @@ spec:
           volumeMounts:
             - name: postgres-data
               mountPath: /var/lib/postgresql
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - "sh"
+                  - "-c"
+                  - 'until [ -f "$PGDATA/pg_hba.conf" ]; do sleep 1; done; grep -q "host replication all 0.0.0.0/0 md5" "$PGDATA/pg_hba.conf" || echo "host replication all 0.0.0.0/0 md5" >> "$PGDATA/pg_hba.conf"; su - postgres -c "pg_ctl reload -D $PGDATA" || true'
           readinessProbe:
             exec:
               command: ["pg_isready", "-U", "postgres"]
