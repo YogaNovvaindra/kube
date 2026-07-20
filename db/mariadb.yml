@@ -24,6 +24,9 @@ spec:
         - name: mariadb
           image: mariadb:12.3.2
           imagePullPolicy: IfNotPresent
+          args:
+            - "--log-bin=mariadb-bin"
+            - "--server-id=1"
           resources:
             requests:
               memory: 256Mi

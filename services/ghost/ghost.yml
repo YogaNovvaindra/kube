@@ -8,6 +8,12 @@ data:
     [mysqld]
     # Insert your MySQL configuration settings here
     performance_schema = off
+    # Enable binary logging for replication
+    log_bin = mysql-bin
+    server-id = 1
+    # Explicitly disable GTID as requested
+    gtid_mode = OFF
+    enforce_gtid_consistency = OFF
 ---
 apiVersion: apps/v1
 kind: Deployment
