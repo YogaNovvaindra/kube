@@ -26,34 +26,35 @@ data:
     export MYSQL_PWD=$(cat /etc/creds/password)
     USER=$(cat /etc/creds/username)
     HOST=ghostdb
+    PORT=${GHOSTDB_SERVICE_PORT:-3307}
 
     fail() {
       TS_FAIL=$(date +"%Y-%m-%d %H:%M:%S")
       DURATION=$(( $(date +%s) - $(date -d "$TS_INIT" +%s) ))
       discord_notify "FAILED" "🚨 Dump FAILED" \
-        "**Host:** $HOSTNAME\n**Time:** $TS_FAIL\n**Duration:** ${DURATION}s\n**Error:** Check logs."
+        "**Host:** $HOSTNAME\n**Port:** $PORT\n**Time:** $TS_FAIL\n**Duration:** ${DURATION}s\n**Error:** Check logs."
       exit 1
     }
     trap fail ERR
 
     # Starting notification
     discord_notify "SUCCESS" "🔔 Backup Starting" \
-      "**Host:** $HOSTNAME\n**Time:** $TS_INIT\n**Action:** Starting logical backups"
+      "**Host:** $HOSTNAME\n**Port:** $PORT\n**Time:** $TS_INIT\n**Action:** Starting logical backups"
 
     mkdir -p "$BACKUP_ROOT"
 
-    DBS=$(mysql --ssl-mode=DISABLED -h $HOST -u $USER -sN -e \
+    DBS=$(mysql --ssl-mode=DISABLED -h $HOST -P "$PORT" -u $USER -sN -e \
       "SHOW DATABASES WHERE \`Database\` NOT IN ('information_schema','performance_schema','mysql','sys');")
 
     SUMMARY=""; COUNT=0
     for db in $DBS; do
       COUNT=$((COUNT+1))
-      SIZE=$(mysql --ssl-mode=DISABLED -h $HOST -u $USER -sN \
+      SIZE=$(mysql --ssl-mode=DISABLED -h $HOST -P "$PORT" -u $USER -sN \
         -e "SELECT CONCAT(ROUND(SUM(data_length+index_length)/1024/1024,2),' MB') \
             FROM information_schema.TABLES WHERE table_schema='$db';")
       TIMESTAMP=$(date +%H%M%S)
       OUT="$BACKUP_ROOT/${db}_${TIMESTAMP}.sql.gz"
-      mysqldump --ssl-mode=DISABLED -h $HOST -u $USER --single-transaction --routines --triggers "$db" \
+      mysqldump --ssl-mode=DISABLED -h $HOST -P "$PORT" -u $USER --single-transaction --routines --triggers "$db" \
         | gzip > "$OUT"
       FILESIZE=$(du -h "$OUT" | cut -f1)
       sha256sum "$OUT" >> "$BACKUP_ROOT/checksums.sha256"
@@ -66,7 +67,7 @@ data:
     # Success notification
     TS_END=$(date +"%Y-%m-%d %H:%M:%S")
     DURATION=$(( $(date +%s) - $(date -d "$TS_INIT" +%s) ))
-    FINAL_DESC="**Host:** $HOSTNAME\n**Time:** $TS_END\n**Duration:** ${DURATION}s\n\n"
+    FINAL_DESC="**Host:** $HOSTNAME\n**Port:** $PORT\n**Time:** $TS_END\n**Duration:** ${DURATION}s\n\n"
     FINAL_DESC="${FINAL_DESC}${SUMMARY}\n**Total databases:** $COUNT"
     discord_notify "SUCCESS" "✅ All Backups Succeeded" "$FINAL_DESC"
     echo "✅ All done!"
