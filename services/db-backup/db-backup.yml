@@ -11,7 +11,9 @@ data:
     set -eo pipefail
     set -o errtrace
 
-    microdnf install -y curl gzip
+    if ! command -v curl >/dev/null 2>&1 || ! command -v gzip >/dev/null 2>&1; then
+      microdnf install -y curl gzip || true
+    fi
 
     discord_notify() {
       local status="$1"; local title="$2"; local description="$3"
@@ -250,7 +252,9 @@ data:
     set -euo pipefail
     
     # Install required tools if missing
-    microdnf install -y curl gzip mysql || true
+    if ! command -v curl >/dev/null 2>&1 || ! command -v gzip >/dev/null 2>&1; then
+      microdnf install -y curl gzip || true
+    fi
     
     discord_notify() {
       local status="$1"; local title="$2"; local description="$3"
@@ -275,14 +279,13 @@ data:
     mkdir -p "${OUTPUT_DIR}"
     echo "==> [GhostDB] Taking snapshot from ${MASTER_HOST}:${MASTER_PORT}"
     
+    DBS=$(mysql -h "${MASTER_HOST}" -P "${MASTER_PORT}" -u "${REPLICATION_USER}" -sN -e "SHOW DATABASES WHERE \`Database\` NOT IN ('information_schema', 'performance_schema', 'sys')")
+    
     if ! mysqldump \
       -h "${MASTER_HOST}" \
       -P "${MASTER_PORT}" \
       -u "${REPLICATION_USER}" \
-      --all-databases \
-      --ignore-database=information_schema \
-      --ignore-database=performance_schema \
-      --ignore-database=sys \
+      --databases $DBS \
       --single-transaction \
       --source-data=2 \
       --set-gtid-purged=OFF \
