@@ -142,6 +142,7 @@ spec:
         app: ghostdb
     spec:
       nodeSelector:
+        kubernetes.io/hperf: "true"
         kubernetes.io/arch: amd64
       terminationGracePeriodSeconds: 10
       containers:
