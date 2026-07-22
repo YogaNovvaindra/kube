@@ -29,6 +29,8 @@ spec:
       labels:
         app: valkey
     spec:
+      nodeSelector:
+        kubernetes.io/hperf: "true"
       terminationGracePeriodSeconds: 10
       containers:
         - name: valkey
