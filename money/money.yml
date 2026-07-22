@@ -224,6 +224,8 @@ spec:
       labels:
         app: proxyrack-pop
     spec:
+      nodeSelector:
+        kubernetes.io/arch: amd64
       hostname: proxyrack-pop-kube
       containers:
       - name: proxyrack-pop
