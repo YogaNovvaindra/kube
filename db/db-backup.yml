@@ -573,7 +573,7 @@ data:
     fi
     
     TEMP_HEADER=$(mktemp)
-    gzip -cd "${DUMP_FILE}" | head -n 100 > "${TEMP_HEADER}"
+    (set +e +o pipefail; gzip -cd "${DUMP_FILE}" | head -n 100 > "${TEMP_HEADER}")
     MASTER_LOG_FILE=$(grep -m1 'CHANGE MASTER TO' "${TEMP_HEADER}" \
       | sed "s/.*MASTER_LOG_FILE='\([^']*\)'.*/\1/")
     MASTER_LOG_POS=$(grep -m1 'CHANGE MASTER TO' "${TEMP_HEADER}" \
