@@ -553,8 +553,6 @@ data:
     mkdir -p "${OUTPUT_DIR}"
     echo "==> [MariaDB] Taking snapshot from ${MASTER_HOST}:${MASTER_PORT}"
     
-    TEMP_HEADER=$(mktemp)
-    
     if ! mariadb-dump \
       -h "${MASTER_HOST}" \
       -P "${MASTER_PORT}" \
@@ -568,13 +566,14 @@ data:
       --triggers \
       --routines \
       --events \
-      | tee >(head -n 50 > "${TEMP_HEADER}") \
       | gzip > "${DUMP_FILE}"; then
       TS_FAIL=$(date +"%Y-%m-%d %H:%M:%S")
       discord_notify "FAILED" "🚨 Snapshot FAILED" "**Host:** ${HOSTNAME}\n**Time:** ${TS_FAIL}\n**Error:** mariadb-dump failed"
       exit 1
     fi
     
+    TEMP_HEADER=$(mktemp)
+    gzip -cd "${DUMP_FILE}" | head -n 100 > "${TEMP_HEADER}"
     MASTER_LOG_FILE=$(grep -m1 'CHANGE MASTER TO' "${TEMP_HEADER}" \
       | sed "s/.*MASTER_LOG_FILE='\([^']*\)'.*/\1/")
     MASTER_LOG_POS=$(grep -m1 'CHANGE MASTER TO' "${TEMP_HEADER}" \

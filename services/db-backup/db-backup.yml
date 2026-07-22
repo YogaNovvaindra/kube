@@ -275,8 +275,6 @@ data:
     mkdir -p "${OUTPUT_DIR}"
     echo "==> [GhostDB] Taking snapshot from ${MASTER_HOST}:${MASTER_PORT}"
     
-    TEMP_HEADER=$(mktemp)
-    
     if ! mysqldump \
       -h "${MASTER_HOST}" \
       -P "${MASTER_PORT}" \
@@ -291,13 +289,14 @@ data:
       --triggers \
       --routines \
       --events \
-      | tee >(head -n 50 > "${TEMP_HEADER}") \
       | gzip > "${DUMP_FILE}"; then
       TS_FAIL=$(date +"%Y-%m-%d %H:%M:%S")
       discord_notify "FAILED" "🚨 Snapshot FAILED" "**Host:** ${HOSTNAME}\n**Time:** ${TS_FAIL}\n**Error:** mysqldump failed"
       exit 1
     fi
     
+    TEMP_HEADER=$(mktemp)
+    gzip -cd "${DUMP_FILE}" | head -n 100 > "${TEMP_HEADER}"
     SOURCE_LOG_FILE=$(grep -m1 'CHANGE REPLICATION SOURCE TO' "${TEMP_HEADER}" \
       | sed "s/.*SOURCE_LOG_FILE='\([^']*\)'.*/\1/")
     SOURCE_LOG_POS=$(grep -m1 'CHANGE REPLICATION SOURCE TO' "${TEMP_HEADER}" \
