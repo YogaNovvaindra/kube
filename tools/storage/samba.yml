@@ -60,7 +60,7 @@ spec:
         - name: storage
           hostPath:
             path: /mnt/cephfs
-            type: DirectoryOrCreate
+            type: Directory
 ---
 apiVersion: v1
 kind: Service

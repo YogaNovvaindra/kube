@@ -330,6 +330,7 @@ data:
     SUMMARY="${SUMMARY}**Binlog:** ${SOURCE_LOG_FILE} @ ${SOURCE_LOG_POS}"
     
     discord_notify "SUCCESS" "✅ Replica Snapshot Succeeded" "$SUMMARY"
+    echo "✅ Snapshot completed successfully!"
 ---
 apiVersion: batch/v1
 kind: CronJob
@@ -382,7 +383,7 @@ spec:
           - name: ghostdb-snapshots
             hostPath:
               path: /mnt/cephfs/docker/services/ghost/mysql-backup/replica-snapshots
-              type: DirectoryOrCreate
+              type: Directory
           - name: db-creds
             secret:
               secretName: ghost-cred

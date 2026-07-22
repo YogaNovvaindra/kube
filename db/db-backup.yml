@@ -607,6 +607,7 @@ data:
     SUMMARY="${SUMMARY}**Binlog:** ${MASTER_LOG_FILE} @ ${MASTER_LOG_POS}"
     
     discord_notify "SUCCESS" "✅ Replica Snapshot Succeeded" "$SUMMARY"
+    echo "✅ Snapshot completed successfully!"
 ---
 apiVersion: batch/v1
 kind: CronJob
@@ -659,7 +660,7 @@ spec:
           - name: mariadb-snapshots
             hostPath:
               path: /mnt/cephfs/docker/db/mariadb/backup/replica-snapshots
-              type: DirectoryOrCreate
+              type: Directory
           - name: db-creds
             secret:
               secretName: mariadb-cred

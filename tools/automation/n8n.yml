@@ -105,7 +105,7 @@ spec:
         - name: n8n-data
           hostPath:
             path: /mnt/cephfs/docker/tools/n8n/
-            type: DirectoryOrCreate
+            type: Directory
 ---
 apiVersion: v1
 kind: Service
