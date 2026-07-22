@@ -238,3 +238,158 @@ spec:
               path: /mnt/cephfs/docker/services/ghost/mysql-backup/snapshots
               type: Directory
           restartPolicy: Never
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ghostdb-replica-snapshot-config
+  namespace: services
+data:
+  ghostdb-take-snapshot.sh: |
+    #!/bin/sh
+    set -euo pipefail
+    
+    # Install required tools if missing
+    microdnf install -y curl gzip mysql || true
+    
+    discord_notify() {
+      local status="$1"; local title="$2"; local description="$3"
+      local color=$([ "$status" = "SUCCESS" ] && echo 3066993 || echo 15158332)
+      curl -sSL -H "Content-Type: application/json" \
+        -X POST "$DISCORD_WEBHOOK_URL" \
+        -d "{\"embeds\":[{\"title\":\"$title\",\"description\":\"$description\",\"color\":$color}]}"
+    }
+
+    MASTER_HOST="ghostdb"
+    MASTER_PORT=${GHOSTDB_SERVICE_PORT:-3307}
+    REPLICATION_USER=$(cat /etc/creds/username)
+    export MYSQL_PWD=$(cat /etc/creds/password)
+    OUTPUT_DIR="/snapshots"
+    TIMESTAMP=$(date +%Y%m%d%H%M%S)
+    DUMP_FILE="${OUTPUT_DIR}/ghostdb_snapshot_${TIMESTAMP}.sql.gz"
+    ENV_FILE="${OUTPUT_DIR}/ghostdb_binlog_pos_${TIMESTAMP}.env"
+    
+    TS_INIT=$(date +"%Y-%m-%d %H:%M:%S")
+    discord_notify "SUCCESS" "🔔 Replica Snapshot Starting" "**Host:** ${HOSTNAME}\n**Time:** ${TS_INIT}\n**Action:** Taking logical snapshot with binlog position"
+    
+    mkdir -p "${OUTPUT_DIR}"
+    echo "==> [GhostDB] Taking snapshot from ${MASTER_HOST}:${MASTER_PORT}"
+    
+    TEMP_HEADER=$(mktemp)
+    
+    if ! mysqldump \
+      -h "${MASTER_HOST}" \
+      -P "${MASTER_PORT}" \
+      -u "${REPLICATION_USER}" \
+      --all-databases \
+      --ignore-database=information_schema \
+      --ignore-database=performance_schema \
+      --ignore-database=sys \
+      --single-transaction \
+      --source-data=2 \
+      --set-gtid-purged=OFF \
+      --triggers \
+      --routines \
+      --events \
+      | tee >(head -n 50 > "${TEMP_HEADER}") \
+      | gzip > "${DUMP_FILE}"; then
+      TS_FAIL=$(date +"%Y-%m-%d %H:%M:%S")
+      discord_notify "FAILED" "🚨 Snapshot FAILED" "**Host:** ${HOSTNAME}\n**Time:** ${TS_FAIL}\n**Error:** mysqldump failed"
+      exit 1
+    fi
+    
+    SOURCE_LOG_FILE=$(grep -m1 'CHANGE REPLICATION SOURCE TO' "${TEMP_HEADER}" \
+      | sed "s/.*SOURCE_LOG_FILE='\([^']*\)'.*/\1/")
+    SOURCE_LOG_POS=$(grep -m1 'CHANGE REPLICATION SOURCE TO' "${TEMP_HEADER}" \
+      | sed "s/.*SOURCE_LOG_POS=\([0-9]*\).*/\1/")
+    rm -f "${TEMP_HEADER}"
+    
+    if [ -z "${SOURCE_LOG_FILE}" ] || [ -z "${SOURCE_LOG_POS}" ]; then
+      TS_FAIL=$(date +"%Y-%m-%d %H:%M:%S")
+      discord_notify "FAILED" "🚨 Snapshot FAILED" "**Host:** ${HOSTNAME}\n**Time:** ${TS_FAIL}\n**Error:** Could not parse binlog position. Ensure binary logging is enabled."
+      exit 1
+    fi
+    
+    cat > "${ENV_FILE}" <<EOF
+    # MySQL snapshot taken: ${TIMESTAMP}
+    # Master: ${MASTER_HOST}:${MASTER_PORT}
+    SOURCE_LOG_FILE=${SOURCE_LOG_FILE}
+    SOURCE_LOG_POS=${SOURCE_LOG_POS}
+    EOF
+    
+    # Cleanup old backups
+    find /snapshots -type f \( -name '*_snapshot_*.sql.gz' -o -name '*_binlog_pos_*.env' \) -mtime +7 -print -delete
+    find /snapshots -type d -empty -print -delete 2>/dev/null || true
+    
+    TS_END=$(date +"%Y-%m-%d %H:%M:%S")
+    FILE_NAME=$(basename "$DUMP_FILE")
+    FILE_SIZE=$(du -h "$DUMP_FILE" | cut -f1)
+    
+    SUMMARY="**Host:** ${HOSTNAME}\n**Time:** ${TS_END}\n"
+    SUMMARY="${SUMMARY}**Duration:** $(( $(date +%s) - $(date -d "$TS_INIT" +%s) )) seconds\n"
+    SUMMARY="${SUMMARY}**Dump:** ${FILE_NAME} (${FILE_SIZE})\n"
+    SUMMARY="${SUMMARY}**Binlog:** ${SOURCE_LOG_FILE} @ ${SOURCE_LOG_POS}"
+    
+    discord_notify "SUCCESS" "✅ Replica Snapshot Succeeded" "$SUMMARY"
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: services-ghostdb-replica-snapshots
+  namespace: services
+spec:
+  schedule: "45 0 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          nodeSelector:
+            kubernetes.io/arch: amd64
+          containers:
+          - name: ghostdb-replica-snapshotter
+            image: reg.ygnv.my.id/docker/mysql:9.7.1
+            imagePullPolicy: IfNotPresent
+            env:
+            - name: DISCORD_WEBHOOK_URL
+              valueFrom:
+                secretKeyRef:
+                  name: discord-cred
+                  key: DISCORD_URL
+            command: ["/bin/sh", "/scripts/ghostdb-take-snapshot.sh"]
+            volumeMounts:
+            - name: localtime
+              mountPath: /etc/localtime
+              readOnly: true
+            - name: ghostdb-snapshots
+              mountPath: /snapshots
+            - name: db-creds
+              mountPath: /etc/creds
+              readOnly: true
+            - name: ghostdb-replica-snapshot-config
+              mountPath: /scripts
+          volumes:
+          - name: ghostdb-replica-snapshot-config
+            configMap:
+              name: ghostdb-replica-snapshot-config
+              defaultMode: 0744
+          - name: localtime
+            hostPath:
+              path: /etc/localtime
+              type: File
+          - name: ghostdb-snapshots
+            hostPath:
+              path: /mnt/cephfs/docker/services/ghost/mysql-backup/replica-snapshots
+              type: DirectoryOrCreate
+          - name: db-creds
+            secret:
+              secretName: ghost-cred
+              items:
+              - key: dbuser
+                path: username
+              - key: dbpass
+                path: password
+          restartPolicy: Never
