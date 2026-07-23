@@ -24,6 +24,9 @@ spec:
         - name: postgres
           image: pgautoupgrade/pgautoupgrade:latest@sha256:60db5a593b78b04719d0bc6970870905c2d9fedc40cd103815d43b925781f298
           imagePullPolicy: IfNotPresent
+          args:
+            - "-c"
+            - "shared_preload_libraries=pg_stat_statements"
           resources:
             requests:
               memory: 128Mi
