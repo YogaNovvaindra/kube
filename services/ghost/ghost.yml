@@ -173,6 +173,7 @@ spec:
           args:
             - "--mysqld.username=$(MYSQL_USER)"
             - "--mysqld.address=localhost:3306"
+            - "--collect.perf_schema.eventsstatements"
           ports:
             - containerPort: 9104
           env:

@@ -278,7 +278,7 @@ data:
             replacement: $1:8082
 
       # Services monitoring
-      - job_name: ghostdb
+      - job_name: mysql
         kubernetes_sd_configs:
           - role: pod
             namespaces:
