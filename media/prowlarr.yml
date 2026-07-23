@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: prowlarr
-          image: reg.ygnv.my.id/docker/linuxserver/prowlarr:2.4.0
+          image: reg.ygnv.my.id/docker/linuxserver/prowlarr:2.5.2
           imagePullPolicy: IfNotPresent
           resources:
             requests:
