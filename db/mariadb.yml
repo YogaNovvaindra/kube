@@ -27,6 +27,7 @@ spec:
           args:
             - "--log-bin=mariadb-bin"
             - "--server-id=1"
+            - "--performance-schema=ON"
           resources:
             requests:
               memory: 256Mi

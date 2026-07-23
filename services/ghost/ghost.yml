@@ -7,7 +7,7 @@ data:
   my.cnf: |
     [mysqld]
     # Insert your MySQL configuration settings here
-    performance_schema = off
+    performance_schema = ON
     # Enable binary logging for replication
     log_bin = mysql-bin
     server-id = 1
