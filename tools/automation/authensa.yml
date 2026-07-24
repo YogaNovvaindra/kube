@@ -23,15 +23,6 @@ spec:
       labels:
         app: authensa
     spec:
-      initContainers:
-      - name: init-permissions
-        image: reg.ygnv.my.id/docker/alpine:3.24.1
-        command: ["sh", "-c", "mkdir -p /app/data /app/workspace/projects && chmod -R 777 /app/data /app/workspace"]
-        volumeMounts:
-        - name: authensa-data
-          mountPath: /app/data
-        - name: authensa-workspace
-          mountPath: /app/workspace
       containers:
       - name: authensa
         image: reg.ygnv.my.id/ghcr/crshdn/mission-control:latest
@@ -72,11 +63,11 @@ spec:
       - name: authensa-data
         hostPath:
           path: /mnt/cephfs/docker/tools/authensa/data
-          type: DirectoryOrCreate
+          type: Directory
       - name: authensa-workspace
         hostPath:
           path: /mnt/cephfs/docker/tools/authensa/workspace
-          type: DirectoryOrCreate
+          type: Directory
 ---
 apiVersion: v1
 kind: Service
