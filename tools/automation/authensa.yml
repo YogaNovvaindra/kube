@@ -23,6 +23,15 @@ spec:
       labels:
         app: authensa
     spec:
+      initContainers:
+      - name: init-permissions
+        image: reg.ygnv.my.id/docker/alpine:3.24.1
+        command: ["sh", "-c", "mkdir -p /app/data /app/workspace/projects && chmod -R 777 /app/data /app/workspace"]
+        volumeMounts:
+        - name: authensa-data
+          mountPath: /app/data
+        - name: authensa-workspace
+          mountPath: /app/workspace
       containers:
       - name: authensa
         image: reg.ygnv.my.id/ghcr/crshdn/mission-control:latest
@@ -45,6 +54,8 @@ spec:
           value: "/app/data/mission-control.db"
         - name: WORKSPACE_BASE_PATH
           value: "/app/workspace"
+        - name: PROJECTS_PATH
+          value: "/app/workspace/projects"
         - name: MISSION_CONTROL_URL
           value: "https://authensa.ygnv.my.id"
         - name: OPENCLAW_GATEWAY_URL
