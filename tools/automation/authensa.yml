@@ -49,6 +49,9 @@ spec:
           value: "https://authensa.ygnv.my.id"
         - name: OPENCLAW_GATEWAY_URL
           value: "ws://openclaw.tools.svc.cluster.local:18789"
+        envFrom:
+        - secretRef:
+            name: openclaw-cred
         volumeMounts:
         - name: authensa-data
           mountPath: /app/data

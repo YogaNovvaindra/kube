@@ -1,0 +1,13 @@
+﻿---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: openclaw-cred
+  namespace: tools
+spec:
+  encryptedData:
+    OPENCLAW_GATEWAY_TOKEN: AgCoomEslOS/r42sF1DtFbzWyF6rZ8/9ebRG9qQhASTXyY9d/Ar3myDjipA9CWA7Lse4dUzRL/RkD2cWUbjx7ejh+fS/s5Z3BxqZEf8VrODgeCVROMmE4vCIoedlCpMUtdwGl9424nKYna1pWcwc6yPxzv3CH1zx0M88h5hd40X6rXkLKy3f5kcZq3mz99bRU8mzjwx/MDfKzXz40SfEZ8JKS2+Xr2GWHXcjAgVLmhirF8IWK2wdsN5KfL2kTXH4cPlB+MbsPLCxKr/3022JXtLY6PqdK3ThAb1AWwKPHPzZnP7AVzhdpwBGKYwPKVpJ3Z4WyMqK/i/OiaLY/v1OoJlNlSvpbAp/8Q6mwDQ6p3LcP8Sn+jIoPb+XwXtQlNdQcpmalZLLJZ8YA7bkEzvYf9gYta192zQTcpM0wsiCeypSC9rP1QYQvUplCpyagDAQqv7OdDZsGyyo/sYlzq/yf12SrEwXT0pP4eiTceV2A0GnKlkvewXK7yqcZrzcKb62gkVzpcQd9CDREm+4L4IUsB90Y84fPSGckQr5k5ZamBv4/k4bHvlqWl8byYF/CvbQc5iD7zYp30coCZIJwoaeZpTbNdLY4tdG3udNrk3pJxl7ddcl5OJ7bTK/hh/3U9CTrTQOkpmPsYUo7a4cMdEztKjip1GvIbXN/C5YkwPzJQ6FzRZgLyv/9jZBGxH3bUMGmIOPfmYWae1IJAe0u0yQLjQY4mJenyzrNSbxmyYgQoo=
+  template:
+    metadata:
+      name: openclaw-cred
+      namespace: tools

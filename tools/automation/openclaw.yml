@@ -1,19 +1,3 @@
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: openclaw-config
-  namespace: tools
-data:
-  openclaw.json: |
-    {
-      "gateway": {
-        "mode": "local",
-        "bind": "0.0.0.0",
-        "port": 18789
-      }
-    }
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -47,6 +31,9 @@ spec:
         ports:
         - containerPort: 18789
           name: ws
+        envFrom:
+        - secretRef:
+            name: openclaw-cred
         resources:
           requests:
             cpu: 100m
