@@ -8,6 +8,8 @@ A collection of utility tools, development environments, automation platforms, a
 - **[n8n](automation/n8n.yml)**: Workflow automation platform
 - **[Home Assistant](automation/homeassistant.yml)**: Open source home automation that puts local control and privacy first
 - **[ESPHome](automation/esphome.yml)**: System that lets you control your ESP boards
+- **[Authensa](automation/authensa.yml)**: Autonomous Product Engine & AI Agent Orchestration (Mission Control)
+- **[OpenClaw](automation/openclaw.yml)**: AI Agent Gateway Runtime for Authensa
 
 ### 🔐 Security & Identity (`authentik/`, `security/`)
 - **[Authentik](authentik/authentik.yml)**: Identity and Access Management (SSO) acting as the central identity provider

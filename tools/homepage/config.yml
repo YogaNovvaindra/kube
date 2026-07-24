@@ -530,6 +530,16 @@ data:
           siteMonitor: http://crosswatch.media:8787
 
     - Automation:
+      - Authensa:
+          icon: https://raw.githubusercontent.com/crshdn/mission-control/main/public/favicon.ico
+          href: https://authensa.ygnv.my.id
+          description: Autonomous Product Engine & AI Agent Orchestration
+          siteMonitor: http://authensa.tools:4000
+      - OpenClaw Gateway:
+          icon: openclaw.png
+          href: https://openclaw.ygnv.my.id
+          description: AI Agent Gateway Runtime
+          siteMonitor: http://openclaw.tools:18789
       - N8n:
           icon: n8n.png
           href: https://n8n.ygnv.my.id

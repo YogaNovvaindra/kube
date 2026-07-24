@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: authensa
+  namespace: tools
+  labels:
+    app: authensa
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: authensa
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: authensa
+    spec:
+      containers:
+      - name: authensa
+        image: reg.ygnv.my.id/ghcr/crshdn/mission-control:latest
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            memory: 1Gi
+        ports:
+        - containerPort: 4000
+          name: http
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: PORT
+          value: "4000"
+        - name: DATABASE_PATH
+          value: "/app/data/mission-control.db"
+        - name: WORKSPACE_BASE_PATH
+          value: "/app/workspace"
+        - name: MISSION_CONTROL_URL
+          value: "https://authensa.ygnv.my.id"
+        - name: OPENCLAW_GATEWAY_URL
+          value: "ws://openclaw.tools.svc.cluster.local:18789"
+        volumeMounts:
+        - name: authensa-data
+          mountPath: /app/data
+        - name: authensa-workspace
+          mountPath: /app/workspace
+      volumes:
+      - name: authensa-data
+        hostPath:
+          path: /mnt/cephfs/docker/tools/authensa/data
+          type: DirectoryOrCreate
+      - name: authensa-workspace
+        hostPath:
+          path: /mnt/cephfs/docker/tools/authensa/workspace
+          type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: authensa
+  namespace: tools
+spec:
+  selector:
+    app: authensa
+  ports:
+  - port: 4000
+    targetPort: http
+    name: http
+  type: ClusterIP
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: authensa
+  namespace: tools
+  labels:
+    app: authensa
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`authensa.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: authensa
+          port: 4000
+  tls: {}
