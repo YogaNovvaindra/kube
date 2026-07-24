@@ -47,9 +47,9 @@ spec:
             memory: 2Gi
         volumeMounts:
         - name: openclaw-data
-          mountPath: /root/.openclaw
+          mountPath: /home/node/.openclaw
         - name: openclaw-workspace
-          mountPath: /root/workspace
+          mountPath: /home/node/workspace
       volumes:
       - name: openclaw-data
         hostPath:
