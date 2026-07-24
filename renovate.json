@@ -56,6 +56,11 @@
       "automerge": true,
       "automergeType": "pr",
       "ignoreTests": true
+    },
+    {
+      "matchPackageNames": ["openclaw/openclaw"],
+      "enabled": false,
+      "description": "Pinned to v2026.5.17 — OpenClaw v2026.5.18+ uses protocol v4 which is incompatible with mission-control (authensa). Re-enable once mission-control supports protocol v4."
     }
   ],
   "platformAutomerge": true,

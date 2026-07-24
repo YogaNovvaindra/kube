@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - name: openclaw
-        image: reg.ygnv.my.id/ghcr/openclaw/openclaw:latest
+        image: reg.ygnv.my.id/ghcr/openclaw/openclaw:v2026.5.17
         imagePullPolicy: IfNotPresent
         command: ["openclaw", "gateway", "run", "--allow-unconfigured", "--bind", "lan", "--port", "18789"]
         ports:
