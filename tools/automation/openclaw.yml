@@ -32,8 +32,8 @@ spec:
         - containerPort: 18789
           name: ws
         env:
-        - name: OPENCLAW_ALLOWED_ORIGINS
-          value: "https://authensa.ygnv.my.id,https://openclaw.ygnv.my.id,http://localhost:18789"
+        - name: OPENCLAW_GATEWAY_CONTROL_UI_ALLOWED_ORIGINS
+          value: "https://authensa.ygnv.my.id,https://openclaw.ygnv.my.id,http://localhost:18789,http://127.0.0.1:18789"
         envFrom:
         - secretRef:
             name: openclaw-cred
