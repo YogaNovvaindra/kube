@@ -1,3 +1,19 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: openclaw-config
+  namespace: tools
+data:
+  openclaw.json: |
+    {
+      "gateway": {
+        "mode": "local",
+        "bind": "0.0.0.0",
+        "port": 18789
+      }
+    }
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -27,7 +43,7 @@ spec:
       - name: openclaw
         image: reg.ygnv.my.id/ghcr/openclaw/openclaw:latest
         imagePullPolicy: IfNotPresent
-        command: ["openclaw", "gateway", "run"]
+        command: ["openclaw", "gateway", "run", "--allow-unconfigured", "--bind", "lan", "--port", "18789"]
         ports:
         - containerPort: 18789
           name: ws
@@ -38,12 +54,12 @@ spec:
           limits:
             memory: 2Gi
         volumeMounts:
-        - name: openclaw-config
+        - name: openclaw-data
           mountPath: /root/.openclaw
         - name: openclaw-workspace
           mountPath: /root/workspace
       volumes:
-      - name: openclaw-config
+      - name: openclaw-data
         hostPath:
           path: /mnt/cephfs/docker/tools/openclaw/config
           type: DirectoryOrCreate
