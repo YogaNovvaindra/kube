@@ -27,10 +27,13 @@ spec:
       - name: openclaw
         image: reg.ygnv.my.id/ghcr/openclaw/openclaw:latest
         imagePullPolicy: IfNotPresent
-        command: ["openclaw", "gateway", "run", "--allow-unconfigured", "--bind", "lan", "--port", "18789"]
+        command: ["openclaw", "gateway", "run", "--allow-unconfigured", "--bind", "0.0.0.0", "--port", "18789"]
         ports:
         - containerPort: 18789
           name: ws
+        env:
+        - name: OPENCLAW_ALLOWED_ORIGINS
+          value: "https://authensa.ygnv.my.id,https://openclaw.ygnv.my.id,http://localhost:18789"
         envFrom:
         - secretRef:
             name: openclaw-cred
