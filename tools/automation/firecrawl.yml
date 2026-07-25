@@ -91,10 +91,6 @@ metadata:
   namespace: tools
   labels:
     app: firecrawl-api
-  annotations:
-    keel.sh/policy: force
-    keel.sh/trigger: poll
-    keel.sh/pollSchedule: "@every 6h"
 spec:
   replicas: 1
   revisionHistoryLimit: 3
@@ -108,7 +104,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: reg.ygnv.my.id/ghcr/firecrawl/firecrawl:latest
+        image: reg.ygnv.my.id/ghcr/firecrawl/firecrawl:2.11.134
         command: ["node", "dist/src/index.js"]
         ports:
         - containerPort: 3002
@@ -145,10 +141,6 @@ metadata:
   namespace: tools
   labels:
     app: firecrawl-worker
-  annotations:
-    keel.sh/policy: force
-    keel.sh/trigger: poll
-    keel.sh/pollSchedule: "@every 6h"
 spec:
   replicas: 1
   revisionHistoryLimit: 3
@@ -162,7 +154,7 @@ spec:
     spec:
       containers:
       - name: worker
-        image: reg.ygnv.my.id/ghcr/firecrawl/firecrawl:latest
+        image: reg.ygnv.my.id/ghcr/firecrawl/firecrawl:2.11.134
         command: ["node", "dist/src/services/queue-worker.js"]
         envFrom:
         - configMapRef:
