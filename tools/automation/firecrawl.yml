@@ -17,9 +17,6 @@ data:
   USE_DB_AUTHENTICATION: "false"
   BLOCK_MEDIA: "false"
   ALLOW_LOCAL_WEBHOOKS: "true"
-  POSTGRES_HOST: "postgres.db"
-  POSTGRES_PORT: "5432"
-  POSTGRES_DB: "firecrawl"
 ---
 # ── Playwright service ───────────────────────────────
 apiVersion: apps/v1
