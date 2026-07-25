@@ -44,6 +44,10 @@ spec:
       containers:
       - name: playwright
         image: reg.ygnv.my.id/ghcr/firecrawl/playwright-service:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: PORT
+          value: "3000"
         ports:
         - containerPort: 3000
           name: http
@@ -105,6 +109,7 @@ spec:
       containers:
       - name: api
         image: reg.ygnv.my.id/ghcr/firecrawl/firecrawl:2.11.134
+        imagePullPolicy: IfNotPresent
         command: ["node", "dist/src/index.js"]
         ports:
         - containerPort: 3002
@@ -155,6 +160,7 @@ spec:
       containers:
       - name: worker
         image: reg.ygnv.my.id/ghcr/firecrawl/firecrawl:2.11.134
+        imagePullPolicy: IfNotPresent
         command: ["node", "dist/src/services/queue-worker.js"]
         envFrom:
         - configMapRef:
