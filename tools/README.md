@@ -10,6 +10,7 @@ A collection of utility tools, development environments, automation platforms, a
 - **[ESPHome](automation/esphome.yml)**: System that lets you control your ESP boards
 - **[Authensa](automation/authensa.yml)**: Autonomous Product Engine & AI Agent Orchestration (Mission Control)
 - **[OpenClaw](automation/openclaw.yml)**: AI Agent Gateway Runtime for Authensa
+- **[Hermes Agent](automation/hermes.yml)**: AI Agent Platform with Authentik OIDC integration
 
 ### 🔐 Security & Identity (`authentik/`, `security/`)
 - **[Authentik](authentik/authentik.yml)**: Identity and Access Management (SSO) acting as the central identity provider

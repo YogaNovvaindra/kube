@@ -540,6 +540,11 @@ data:
           href: https://openclaw.ygnv.my.id
           description: AI Agent Gateway Runtime
           siteMonitor: http://openclaw.tools:18789
+      - Hermes Agent:
+          icon: robot.svg
+          href: https://hermes.ygnv.my.id
+          description: AI Agent Platform with Authentik OIDC
+          siteMonitor: http://hermes.tools:8642
       - N8n:
           icon: n8n.png
           href: https://n8n.ygnv.my.id
