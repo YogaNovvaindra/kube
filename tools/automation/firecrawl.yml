@@ -41,6 +41,8 @@ spec:
       labels:
         app: firecrawl-playwright
     spec:
+      nodeSelector:
+        kubernetes.io/hperf: "true"
       containers:
       - name: playwright
         image: reg.ygnv.my.id/ghcr/firecrawl/playwright-service:latest
