@@ -1,0 +1,200 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: firecrawl-env
+  namespace: tools
+  labels:
+    app: firecrawl
+data:
+  PORT: "3002"
+  HOST: "0.0.0.0"
+  NODE_ENV: "production"
+  NUM_WORKERS_PER_QUEUE: "8"
+  REDIS_URL: "redis://valkey.db:6379"
+  REDIS_RATE_LIMIT_URL: "redis://valkey.db:6379"
+  PLAYWRIGHT_MICROSERVICE_URL: "http://firecrawl-playwright:3000/scrape"
+  USE_DB_AUTHENTICATION: "false"
+  BLOCK_MEDIA: "false"
+  ALLOW_LOCAL_WEBHOOKS: "true"
+  POSTGRES_HOST: "postgres.db"
+  POSTGRES_PORT: "5432"
+  POSTGRES_DB: "firecrawl"
+---
+# ── Playwright service ───────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: firecrawl-playwright
+  namespace: tools
+  labels:
+    app: firecrawl-playwright
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: firecrawl-playwright
+  template:
+    metadata:
+      labels:
+        app: firecrawl-playwright
+    spec:
+      containers:
+      - name: playwright
+        image: reg.ygnv.my.id/ghcr/firecrawl/playwright-service:latest
+        ports:
+        - containerPort: 3000
+          name: http
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+        resources:
+          requests:
+            cpu: 100m
+            memory: 512Mi
+          limits:
+            memory: 2Gi
+        # Playwright/Chromium needs real /dev/shm, not the tiny 64Mi k8s default
+        volumeMounts:
+        - name: dshm
+          mountPath: /dev/shm
+      volumes:
+      - name: dshm
+        emptyDir:
+          medium: Memory
+          sizeLimit: 2Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: firecrawl-playwright
+  namespace: tools
+spec:
+  selector:
+    app: firecrawl-playwright
+  ports:
+  - port: 3000
+    targetPort: http
+---
+# ── API ───────────────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: firecrawl-api
+  namespace: tools
+  labels:
+    app: firecrawl-api
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: firecrawl-api
+  template:
+    metadata:
+      labels:
+        app: firecrawl-api
+    spec:
+      containers:
+      - name: api
+        image: reg.ygnv.my.id/ghcr/firecrawl/firecrawl:latest
+        command: ["node", "dist/src/index.js"]
+        ports:
+        - containerPort: 3002
+          name: http
+        envFrom:
+        - configMapRef:
+            name: firecrawl-env
+        - secretRef:
+            name: firecrawl-cred
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            memory: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: firecrawl-api
+  namespace: tools
+spec:
+  selector:
+    app: firecrawl-api
+  ports:
+  - port: 3002
+    targetPort: http
+---
+# ── Worker ────────────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: firecrawl-worker
+  namespace: tools
+  labels:
+    app: firecrawl-worker
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: firecrawl-worker
+  template:
+    metadata:
+      labels:
+        app: firecrawl-worker
+    spec:
+      containers:
+      - name: worker
+        image: reg.ygnv.my.id/ghcr/firecrawl/firecrawl:latest
+        command: ["node", "dist/src/services/queue-worker.js"]
+        envFrom:
+        - configMapRef:
+            name: firecrawl-env
+        - secretRef:
+            name: firecrawl-cred
+        resources:
+          requests:
+            cpu: 200m
+            memory: 512Mi
+          limits:
+            memory: 2Gi
+---
+# ── Ingress ───────────────────────────────────────────
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: firecrawl
+  namespace: tools
+  labels:
+    app: firecrawl
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`firecrawl.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: firecrawl-api
+          port: 3002
+  tls: {}
