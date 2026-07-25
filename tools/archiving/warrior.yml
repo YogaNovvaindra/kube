@@ -31,7 +31,9 @@ spec:
         name: warrior
         resources: 
           requests:
-            memory: 64Mi
+            memory: 128Mi
+          limits:
+            memory: 1Gi
         env:
         - name: DOWNLOADER
           value: YGNV
@@ -48,7 +50,7 @@ spec:
               name: warrior-cred
               key: HTTP_PASSWORD
         - name: CONCURRENT_ITEMS
-          value: "6"
+          value: "3"
         ports:
         - containerPort: 8001
 
