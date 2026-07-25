@@ -22,7 +22,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
         - name: postgres
-          image: pgautoupgrade/pgautoupgrade:latest@sha256:60db5a593b78b04719d0bc6970870905c2d9fedc40cd103815d43b925781f298
+          image: pgautoupgrade/pgautoupgrade:latest@sha256:6da2d599f826243db379ec6dbb82defca1855fb82a63971d3bc233b37a558647
           imagePullPolicy: IfNotPresent
           args:
             - "-c"
