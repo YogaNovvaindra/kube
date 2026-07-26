@@ -78,7 +78,7 @@ data:
                   refId: C
                   type: threshold
                   conditions:
-                    - evaluator: { params: [80], type: lt }
+                    - evaluator: { params: [20], type: lt }
                       operator: { type: and }
                       query: { params: [C] }
                       reducer: { params: [], type: last }
