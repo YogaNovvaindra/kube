@@ -51,7 +51,7 @@ spec:
     spec:
       containers:
       - name: rabbitmq
-        image: reg.ygnv.my.id/docker/rabbitmq:3.13-alpine
+        image: reg.ygnv.my.id/docker/rabbitmq:4.3-alpine
         imagePullPolicy: IfNotPresent
         envFrom:
         - secretRef:
