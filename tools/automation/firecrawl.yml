@@ -17,6 +17,7 @@ data:
   USE_DB_AUTHENTICATION: "false"
   BLOCK_MEDIA: "false"
   ALLOW_LOCAL_WEBHOOKS: "true"
+  LOGGING_LEVEL: "WARN"
 ---
 # ── RabbitMQ (NUQ broker) ─────────────────────────────
 apiVersion: v1
