@@ -18,6 +18,90 @@ data:
   BLOCK_MEDIA: "false"
   ALLOW_LOCAL_WEBHOOKS: "true"
 ---
+# ── RabbitMQ (NUQ broker) ─────────────────────────────
+apiVersion: v1
+kind: Secret
+metadata:
+  name: firecrawl-rabbitmq-cred
+  namespace: tools
+type: Opaque
+stringData:
+  RABBITMQ_DEFAULT_USER: firecrawl
+  RABBITMQ_DEFAULT_PASS: CHANGEME
+  NUQ_RABBITMQ_URL: "amqp://firecrawl:CHANGEME@firecrawl-rabbitmq:5672"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: firecrawl-rabbitmq
+  namespace: tools
+  labels:
+    app: firecrawl-rabbitmq
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: firecrawl-rabbitmq
+  template:
+    metadata:
+      labels:
+        app: firecrawl-rabbitmq
+    spec:
+      containers:
+      - name: rabbitmq
+        image: reg.ygnv.my.id/docker/rabbitmq:3.13-alpine
+        imagePullPolicy: IfNotPresent
+        envFrom:
+        - secretRef:
+            name: firecrawl-cred
+        ports:
+        - containerPort: 5672
+          name: amqp
+        # - containerPort: 15672
+        #   name: management
+        livenessProbe:
+          tcpSocket:
+            port: 5672
+          initialDelaySeconds: 20
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          exec:
+            command: ["rabbitmq-diagnostics", "-q", "check_running"]
+          initialDelaySeconds: 20
+          periodSeconds: 15
+          timeoutSeconds: 5
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            memory: 512Mi
+        volumeMounts:
+        - name: rabbitmq-data
+          mountPath: /var/lib/rabbitmq
+      volumes:
+      - name: rabbitmq-data
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: firecrawl-rabbitmq
+  namespace: tools
+spec:
+  selector:
+    app: firecrawl-rabbitmq
+  ports:
+  - port: 5672
+    targetPort: amqp
+    name: amqp
+  # - port: 15672
+  #   targetPort: management
+  #   name: management
+---
 # ── Playwright service ───────────────────────────────
 apiVersion: apps/v1
 kind: Deployment
