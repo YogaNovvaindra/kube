@@ -6,7 +6,7 @@ metadata:
 data:
   pg-dump.sh: |
     #!/bin/sh
-    apk add --no-cache curl
+    apt-get update -qq && apt-get install -y --no-install-recommends curl
     set -eo pipefail
     set -o errtrace
 
