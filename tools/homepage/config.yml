@@ -534,7 +534,7 @@ data:
           icon: https://cdn.hermesagents.net/public/images/hermes-avatar.png
           href: https://hermes.ygnv.my.id
           description: The self-improving AI agent
-          siteMonitor: http://hermes.tools:8642
+          siteMonitor: http://hermes.tools:9119
       - N8n:
           icon: n8n.png
           href: https://n8n.ygnv.my.id
