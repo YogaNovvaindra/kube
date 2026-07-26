@@ -42,7 +42,7 @@ spec:
                 -c max_slot_wal_keep_size=10GB
           resources:
             requests:
-              memory: 128Mi
+              memory: 256Mi
           env:
             - name: POSTGRES_USER
               valueFrom:
