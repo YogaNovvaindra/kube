@@ -5,7 +5,7 @@ metadata:
   namespace: db
 data:
   pg-dump.sh: |
-    #!/bin/sh
+    #!/bin/bash
     apt update -qq && apt install -y --no-install-recommends curl
     set -eo pipefail
     set -o errtrace
@@ -169,7 +169,7 @@ spec:
                 secretKeyRef:
                   name: discord-cred
                   key: DISCORD_URL
-            command: ["/bin/sh", "/scripts/pg-dump.sh"]
+            command: ["/bin/bash", "/scripts/pg-dump.sh"]
             volumeMounts:
             - name: localtime
               mountPath: /etc/localtime
