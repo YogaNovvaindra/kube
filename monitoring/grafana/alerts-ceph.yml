@@ -54,6 +54,7 @@ data:
           - uid: ceph_health_warning
             title: Ceph Cluster Health Warning
             condition: C
+            isPaused: true
             data:
               - refId: A
                 relativeTimeRange: { from: 300, to: 0 }
@@ -249,6 +250,7 @@ data:
           - uid: ceph_health_detail_alert
             title: Ceph Detailed Health Issue
             condition: C
+            isPaused: true
             data:
               - refId: A
                 relativeTimeRange: { from: 300, to: 0 }
