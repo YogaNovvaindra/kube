@@ -6,7 +6,7 @@ metadata:
 data:
   pg-dump.sh: |
     #!/bin/bash
-    apt update -qq && apt install -y --no-install-recommends curl
+    apt update -qq && apt install -y --no-install-recommends curl ca-certificates
     set -eo pipefail
     set -o errtrace
 
