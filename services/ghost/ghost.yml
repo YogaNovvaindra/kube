@@ -37,7 +37,7 @@ spec:
     spec:
       containers:
         - name: ghost
-          image: reg.ygnv.my.id/docker/ghost:6.54.0
+          image: reg.ygnv.my.id/docker/ghost:6.54.1
           imagePullPolicy: IfNotPresent
           resources:
             requests:
@@ -147,7 +147,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
         - name: ghostdb
-          image: reg.ygnv.my.id/docker/mysql:9.7.1
+          image: reg.ygnv.my.id/docker/mysql:9.7.2
           imagePullPolicy: IfNotPresent
           resources:
             requests:
