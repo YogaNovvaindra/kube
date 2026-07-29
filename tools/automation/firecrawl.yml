@@ -195,7 +195,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: reg.ygnv.my.id/ghcr/firecrawl/firecrawl:2.11.146
+        image: reg.ygnv.my.id/ghcr/firecrawl/firecrawl:2.11.150
         imagePullPolicy: IfNotPresent
         command: ["node", "dist/src/index.js"]
         ports:
@@ -246,7 +246,7 @@ spec:
     spec:
       containers:
       - name: worker
-        image: reg.ygnv.my.id/ghcr/firecrawl/firecrawl:2.11.146
+        image: reg.ygnv.my.id/ghcr/firecrawl/firecrawl:2.11.150
         imagePullPolicy: IfNotPresent
         command: ["node", "dist/src/services/queue-worker.js"]
         envFrom:
