@@ -118,7 +118,7 @@ data:
     ARCHIVE="/snapshots/postgres-backup-${TIMESTAMP}.zip"
     cd /pgdata || exit 1
 
-    if ! zip -rq "$ARCHIVE" .; then
+    if ! zip -rv "$ARCHIVE" .; then
       TS_FAIL=$(date +"%Y-%m-%d %H:%M:%S")
       FAIL_DESCRIPTION="**Host:** ${HOSTNAME}\n**Time:** ${TS_FAIL}\n**Error:** Archive creation failed"
       discord_notify "FAILED" "🚨 Backup FAILED" "$FAIL_DESCRIPTION"
