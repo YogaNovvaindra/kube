@@ -210,7 +210,7 @@ metadata:
   name: db-pg-snapshots
   namespace: db
 spec:
-  schedule: "50 0 * * *"  # Daily at 00:50 UTC+7
+  schedule: "50 1 * * *"  # Daily at 01:50 UTC+7
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
