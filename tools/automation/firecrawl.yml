@@ -193,6 +193,8 @@ spec:
       labels:
         app: firecrawl-api
     spec:
+      nodeSelector:
+        kubernetes.io/arch: "amd64"
       containers:
       - name: api
         image: reg.ygnv.my.id/ghcr/firecrawl/firecrawl:2.11.167
@@ -244,6 +246,8 @@ spec:
       labels:
         app: firecrawl-worker
     spec:
+      nodeSelector:
+        kubernetes.io/arch: "amd64"
       containers:
       - name: worker
         image: reg.ygnv.my.id/ghcr/firecrawl/firecrawl:2.11.167
