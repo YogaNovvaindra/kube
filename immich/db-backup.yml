@@ -6,7 +6,7 @@ metadata:
 data:
   pg-snapshot.sh: |
     #!/bin/sh
-    set -euo pipefail
+    set -eu
 
     # Ensure curl is installed for Discord notifications
     if ! command -v curl >/dev/null 2>&1; then
