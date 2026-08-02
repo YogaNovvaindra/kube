@@ -95,7 +95,8 @@ data:
     set -euo pipefail
 
     # Install curl for Discord notifications (pg_basebackup already in image)
-    apk add --no-cache curl
+    # pgautoupgrade is Debian-based
+    apt update -qq && apt-get install -y --no-install-recommends curl ca-certificates -qq
 
     # Discord notification helper
     discord_notify() {
