@@ -1,0 +1,1621 @@
+{
+  "apiVersion": "dashboard.grafana.app/v2",
+  "kind": "Dashboard",
+  "metadata": {
+    "name": "docker-cadvisor-logs-multinode"
+  },
+  "spec": {
+    "annotations": [
+      {
+        "kind": "AnnotationQuery",
+        "spec": {
+          "builtIn": true,
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations \u0026 Alerts",
+          "query": {
+            "datasource": {
+              "name": "${datasource}"
+            },
+            "group": "grafana",
+            "kind": "DataQuery",
+            "spec": {
+              "editor": {
+                "format": "json"
+              },
+              "exemplar": false,
+              "expr": "",
+              "instant": false,
+              "range": false
+            },
+            "version": "v0"
+          }
+        }
+      }
+    ],
+    "cursorSync": "Crosshair",
+    "editable": true,
+    "elements": {
+      "panel-1": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${prometheus_ds}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "exemplar": false,
+                        "expr": "sum(rate(container_cpu_usage_seconds_total{job=\"docker_cadvisor\",cluster=~\"$cluster\",instance=~\"$instance\",name=~\"$container\",name!=\"\"}[5m])) by (name,instance,image)",
+                        "format": "table",
+                        "instant": true,
+                        "legendFormat": "",
+                        "range": false
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${prometheus_ds}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "exemplar": false,
+                        "expr": "sum(container_memory_working_set_bytes{job=\"docker_cadvisor\",cluster=~\"$cluster\",instance=~\"$instance\",name=~\"$container\",name!=\"\"}) by (name,instance,image)",
+                        "format": "table",
+                        "instant": true,
+                        "legendFormat": "",
+                        "range": false
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "B"
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${prometheus_ds}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "exemplar": false,
+                        "expr": "sum(rate(container_network_receive_bytes_total{job=\"docker_cadvisor\",cluster=~\"$cluster\",instance=~\"$instance\",name=~\"$container\",name!=\"\"}[5m])) by (name,instance) * 8",
+                        "format": "table",
+                        "instant": true,
+                        "legendFormat": "__auto",
+                        "range": false
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "C"
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${prometheus_ds}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "exemplar": false,
+                        "expr": "sum(rate(container_network_transmit_bytes_total{job=\"docker_cadvisor\",cluster=~\"$cluster\",instance=~\"$instance\",name=~\"$container\",name!=\"\"}[5m])) by (name,instance) * 8",
+                        "format": "table",
+                        "instant": true,
+                        "legendFormat": "__auto",
+                        "range": false
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "D"
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${prometheus_ds}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "exemplar": false,
+                        "expr": "sum(rate(container_fs_reads_bytes_total{job=\"docker_cadvisor\",cluster=~\"$cluster\",instance=~\"$instance\",name=~\"$container\",name!=\"\"}[5m])) by (name,instance,image)",
+                        "format": "table",
+                        "instant": true,
+                        "legendFormat": "__auto",
+                        "range": false
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "E"
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${prometheus_ds}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "exemplar": false,
+                        "expr": "sum(rate(container_fs_writes_bytes_total{job=\"docker_cadvisor\",cluster=~\"$cluster\",instance=~\"$instance\",name=~\"$container\",name!=\"\"}[5m])) by (name,instance,image)",
+                        "format": "table",
+                        "instant": true,
+                        "legendFormat": "__auto",
+                        "range": false
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "F"
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${prometheus_ds}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "exemplar": false,
+                        "expr": "time() - container_start_time_seconds{job=\"docker_cadvisor\",cluster=~\"$cluster\",instance=~\"$instance\",name=~\"$container\",name!=\"\"}",
+                        "format": "table",
+                        "instant": true,
+                        "legendFormat": "__auto",
+                        "range": false
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "G"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": [
+                {
+                  "group": "merge",
+                  "kind": "Transformation",
+                  "spec": {
+                    "options": {}
+                  }
+                },
+                {
+                  "group": "organize",
+                  "kind": "Transformation",
+                  "spec": {
+                    "options": {
+                      "excludeByName": {},
+                      "includeByName": {},
+                      "indexByName": {
+                        "Time": 0,
+                        "Value #A": 5,
+                        "Value #B": 6,
+                        "Value #C": 10,
+                        "Value #D": 11,
+                        "Value #E": 8,
+                        "Value #F": 9,
+                        "Value #G": 7,
+                        "cluster": 1,
+                        "image": 4,
+                        "instance": 2,
+                        "name": 3
+                      },
+                      "renameByName": {
+                        "Value #A": "CPU Usage",
+                        "Value #B": "RAM Usage",
+                        "Value #C": "Download",
+                        "Value #D": "Upload",
+                        "Value #E": "Disk R",
+                        "Value #F": "Disk W",
+                        "Value #G": "Age",
+                        "cluster": "Cluster",
+                        "image": "Image",
+                        "instance": "Node",
+                        "name": "Container"
+                      }
+                    }
+                  }
+                },
+                {
+                  "group": "filterFieldsByName",
+                  "kind": "Transformation",
+                  "spec": {
+                    "options": {
+                      "include": {
+                        "names": [
+                          "Node",
+                          "Container",
+                          "Image",
+                          "CPU Usage",
+                          "RAM Usage",
+                          "Age",
+                          "Disk W",
+                          "Disk R",
+                          "Download",
+                          "Upload"
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "description": "cAdvisor container metrics, scraped per Docker host by Alloy (job=docker_cadvisor)",
+          "id": 1,
+          "links": [],
+          "title": "Container Info",
+          "vizConfig": {
+            "group": "table",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "fixedColor": "#32ac2df7",
+                    "mode": "thresholds"
+                  },
+                  "custom": {
+                    "align": "auto",
+                    "cellOptions": {
+                      "type": "auto"
+                    },
+                    "filterable": false,
+                    "footer": {
+                      "reducers": []
+                    },
+                    "inspect": false,
+                    "minWidth": 50,
+                    "wrapText": false
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "#32ac2df7",
+                        "value": 0
+                      }
+                    ]
+                  }
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Node"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 110
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "CPU Usage"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "mode": "gradient",
+                          "type": "gauge",
+                          "valueDisplayMode": "text"
+                        }
+                      },
+                      {
+                        "id": "unit",
+                        "value": "short"
+                      },
+                      {
+                        "id": "min",
+                        "value": 0
+                      },
+                      {
+                        "id": "color",
+                        "value": {
+                          "mode": "continuous-GrYlRd"
+                        }
+                      },
+                      {
+                        "id": "fieldMinMax",
+                        "value": true
+                      },
+                      {
+                        "id": "custom.minWidth",
+                        "value": 150
+                      },
+                      {
+                        "id": "decimals",
+                        "value": 3
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "RAM Usage"
+                    },
+                    "properties": [
+                      {
+                        "id": "unit",
+                        "value": "decbytes"
+                      },
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "mode": "gradient",
+                          "type": "gauge",
+                          "valueDisplayMode": "text"
+                        }
+                      },
+                      {
+                        "id": "fieldMinMax",
+                        "value": true
+                      },
+                      {
+                        "id": "color",
+                        "value": {
+                          "mode": "continuous-GrYlRd"
+                        }
+                      },
+                      {
+                        "id": "min",
+                        "value": 0
+                      },
+                      {
+                        "id": "custom.minWidth",
+                        "value": 147
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Download"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "mode": "gradient",
+                          "type": "color-background"
+                        }
+                      },
+                      {
+                        "id": "unit",
+                        "value": "decbytes"
+                      },
+                      {
+                        "id": "custom.width",
+                        "value": 90
+                      },
+                      {
+                        "id": "thresholds",
+                        "value": {
+                          "mode": "absolute",
+                          "steps": [
+                            {
+                              "color": "#32ac2df7",
+                              "value": 0
+                            },
+                            {
+                              "color": "#ed8128e3",
+                              "value": 10485760
+                            },
+                            {
+                              "color": "#f53636e6",
+                              "value": 20485760
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "id": "custom.align",
+                        "value": "center"
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Upload"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "mode": "gradient",
+                          "type": "color-background"
+                        }
+                      },
+                      {
+                        "id": "unit",
+                        "value": "decbytes"
+                      },
+                      {
+                        "id": "custom.width",
+                        "value": 90
+                      },
+                      {
+                        "id": "thresholds",
+                        "value": {
+                          "mode": "absolute",
+                          "steps": [
+                            {
+                              "color": "#32ac2df7",
+                              "value": 0
+                            },
+                            {
+                              "color": "#ed8128e3",
+                              "value": 10485760
+                            },
+                            {
+                              "color": "#f53636e6",
+                              "value": 20485760
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "id": "custom.align",
+                        "value": "center"
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byRegexp",
+                      "options": "/.*Disk.*/"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 90
+                      },
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "type": "color-background"
+                        }
+                      },
+                      {
+                        "id": "unit",
+                        "value": "decbytes"
+                      },
+                      {
+                        "id": "thresholds",
+                        "value": {
+                          "mode": "absolute",
+                          "steps": [
+                            {
+                              "color": "#32ac2df7",
+                              "value": 0
+                            },
+                            {
+                              "color": "#ed8128e3",
+                              "value": 10485760
+                            },
+                            {
+                              "color": "#f53636e6",
+                              "value": 20485760
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "id": "custom.align",
+                        "value": "center"
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Age"
+                    },
+                    "properties": [
+                      {
+                        "id": "unit",
+                        "value": "s"
+                      },
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "type": "color-background"
+                        }
+                      },
+                      {
+                        "id": "thresholds",
+                        "value": {
+                          "mode": "absolute",
+                          "steps": [
+                            {
+                              "color": "#f53636e6",
+                              "value": 0
+                            },
+                            {
+                              "color": "#ed8128e3",
+                              "value": 3600
+                            },
+                            {
+                              "color": "#32ac2df7",
+                              "value": 21600
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "id": "custom.width",
+                        "value": 90
+                      },
+                      {
+                        "id": "decimals",
+                        "value": 1
+                      },
+                      {
+                        "id": "custom.align",
+                        "value": "center"
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Container"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 220
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Image"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 220
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byNames",
+                      "options": {
+                        "mode": "include",
+                        "names": [
+                          "Value #A",
+                          "Value #B",
+                          "Value #F",
+                          "Value #E",
+                          "Value #C",
+                          "Value #D"
+                        ]
+                      }
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.footer.reducers",
+                        "value": [
+                          "sum"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "cellHeight": "sm",
+                "enablePagination": false,
+                "showHeader": true,
+                "sortBy": [
+                  {
+                    "desc": true,
+                    "displayName": "RAM Usage"
+                  }
+                ]
+              }
+            },
+            "version": "13.1.1"
+          }
+        }
+      },
+      "panel-6": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${datasource}"
+                      },
+                      "group": "loki",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "direction": "backward",
+                        "editorMode": "code",
+                        "expr": "sum by (container) (count_over_time(\n  {job=\"docker_logs\", cluster=~\"$cluster\", instance=~\"$instance\"}\n[$__range]\n))",
+                        "legendFormat": "{{container}}",
+                        "queryType": "range"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 6,
+          "links": [],
+          "title": "Logs by Container",
+          "vizConfig": {
+            "group": "piechart",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "fixedColor": "#73BF69",
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    }
+                  },
+                  "unit": "sishort"
+                },
+                "overrides": []
+              },
+              "options": {
+                "displayLabels": [],
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "overflow": "ellipsis",
+                  "placement": "right",
+                  "showLegend": true,
+                  "values": []
+                },
+                "pieType": "pie",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "sort": "desc",
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                }
+              }
+            },
+            "version": "13.1.1"
+          }
+        }
+      },
+      "panel-7": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${datasource}"
+                      },
+                      "group": "loki",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "direction": "backward",
+                        "editorMode": "code",
+                        "expr": "sum(count_over_time({job=\"docker_logs\", cluster=~\"$cluster\", instance=~\"$instance\", container=~\"$container\", level=\"info\"}[$__range]))",
+                        "legendFormat": "Info",
+                        "queryType": "instant"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${datasource}"
+                      },
+                      "group": "loki",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "direction": "backward",
+                        "editorMode": "code",
+                        "expr": "sum(count_over_time({job=\"docker_logs\", cluster=~\"$cluster\", instance=~\"$instance\", container=~\"$container\", level=\"\"}[$__range]))",
+                        "legendFormat": "Unknown",
+                        "queryType": "instant"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "B"
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${datasource}"
+                      },
+                      "group": "loki",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "direction": "backward",
+                        "editorMode": "code",
+                        "expr": "sum(count_over_time({job=\"docker_logs\", cluster=~\"$cluster\", instance=~\"$instance\", container=~\"$container\", level=\"warn\"}[$__range]))",
+                        "legendFormat": "Warn",
+                        "queryType": "instant"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "C"
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${datasource}"
+                      },
+                      "group": "loki",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "direction": "backward",
+                        "editorMode": "code",
+                        "expr": "sum(count_over_time({job=\"docker_logs\", cluster=~\"$cluster\", instance=~\"$instance\", container=~\"$container\", level=\"error\"}[$__range]))",
+                        "legendFormat": "Error",
+                        "queryType": "instant"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "D"
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${datasource}"
+                      },
+                      "group": "loki",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "direction": "backward",
+                        "editorMode": "code",
+                        "expr": "sum(count_over_time({job=\"docker_logs\", cluster=~\"$cluster\", instance=~\"$instance\", container=~\"$container\", level=\"debug\"}[$__range]))",
+                        "legendFormat": "Debug",
+                        "queryType": "instant"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "E"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "'level' is a real Loki label here (extracted by Alloy's loki.process json/logfmt stages), not a detected_level",
+          "id": 7,
+          "links": [],
+          "title": "Logs by Level",
+          "vizConfig": {
+            "group": "bargauge",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "fixedColor": "red",
+                    "mode": "fixed"
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "red",
+                        "value": 80
+                      }
+                    ]
+                  },
+                  "unit": "short"
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Value #A"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "green",
+                          "mode": "fixed"
+                        }
+                      },
+                      {
+                        "id": "displayName",
+                        "value": "Info"
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Value #B"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "#c7c7c7",
+                          "mode": "fixed"
+                        }
+                      },
+                      {
+                        "id": "displayName",
+                        "value": "Unknown"
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Value #C"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "orange",
+                          "mode": "fixed"
+                        }
+                      },
+                      {
+                        "id": "displayName",
+                        "value": "Warn"
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Value #E"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "blue",
+                          "mode": "fixed"
+                        }
+                      },
+                      {
+                        "id": "displayName",
+                        "value": "Debug"
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Value #D",
+                      "scope": "series"
+                    },
+                    "properties": [
+                      {
+                        "id": "displayName",
+                        "value": "Error"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "displayMode": "gradient",
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "overflow": "ellipsis",
+                  "placement": "bottom",
+                  "showLegend": false
+                },
+                "maxVizHeight": 300,
+                "minVizHeight": 16,
+                "minVizWidth": 8,
+                "namePlacement": "auto",
+                "orientation": "horizontal",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": true
+                },
+                "showUnfilled": true,
+                "sizing": "auto",
+                "valueMode": "color"
+              }
+            },
+            "version": "13.1.1"
+          }
+        }
+      },
+      "panel-8": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${datasource}"
+                      },
+                      "group": "loki",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "direction": "backward",
+                        "editorMode": "code",
+                        "expr": "sum by (detected_level) (count_over_time(\n  {job=\"docker_logs\", cluster=~\"$cluster\", instance=~\"$instance\", container=~\"$container\"}\n[5m]\n))",
+                        "legendFormat": "{{level}}",
+                        "queryType": "range",
+                        "range": true
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": [
+                {
+                  "group": "filterFieldsByName",
+                  "kind": "Transformation",
+                  "spec": {
+                    "disabled": true,
+                    "options": {
+                      "byVariable": false,
+                      "include": {
+                        "names": [
+                          "Time",
+                          "error",
+                          "info",
+                          "warn"
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "description": "",
+          "id": 8,
+          "links": [],
+          "title": "Log Volume by Level",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 20,
+                    "gradientMode": "opacity",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "linear",
+                    "lineStyle": {
+                      "fill": "solid"
+                    },
+                    "lineWidth": 2,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "auto",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "red",
+                        "value": 80
+                      }
+                    ]
+                  },
+                  "unit": "sishort"
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "error"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "red",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "info"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "green",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "unknown",
+                      "scope": "series"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "#d9d9d9",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "warn"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "orange",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "debug"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "blue",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "fatal",
+                      "scope": "series"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "purple",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [
+                    "max",
+                    "lastNotNull"
+                  ],
+                  "displayMode": "list",
+                  "enableFacetedFilter": false,
+                  "overflow": "ellipsis",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                }
+              }
+            },
+            "version": "13.1.1"
+          }
+        }
+      },
+      "panel-9": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${datasource}"
+                      },
+                      "group": "loki",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "direction": "backward",
+                        "editorMode": "code",
+                        "expr": "{job=\"docker_logs\", cluster=~\"$cluster\", instance=~\"$instance\", container=~\"$container\"}\n  | line_format `🖥️ {{.instance}} ➡️ 📦 {{.container}} ➡️ {{ __line__ }}`",
+                        "queryType": "range"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "loki.source.docker output after stage.docker{} unwraps the Docker JSON log envelope",
+          "id": 9,
+          "links": [],
+          "title": "Recent Container Logs",
+          "vizConfig": {
+            "group": "logs",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {},
+                "overrides": []
+              },
+              "options": {
+                "dedupStrategy": "exact",
+                "enableInfiniteScrolling": true,
+                "enableLogDetails": true,
+                "fontSize": "small",
+                "prettifyLogMessage": false,
+                "showCommonLabels": false,
+                "showControls": false,
+                "showFieldSelector": false,
+                "showLabels": false,
+                "showLevel": true,
+                "showTime": true,
+                "sortOrder": "Descending",
+                "timestampResolution": "ms",
+                "unwrappedColumns": false,
+                "wrapLogMessage": false
+              }
+            },
+            "version": "13.1.1"
+          }
+        }
+      }
+    },
+    "layout": {
+      "kind": "GridLayout",
+      "spec": {
+        "items": [
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-1"
+              },
+              "height": 9,
+              "width": 24,
+              "x": 0,
+              "y": 0
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-6"
+              },
+              "height": 7,
+              "width": 6,
+              "x": 0,
+              "y": 9
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-7"
+              },
+              "height": 7,
+              "width": 6,
+              "x": 6,
+              "y": 9
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-8"
+              },
+              "height": 7,
+              "width": 12,
+              "x": 12,
+              "y": 9
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-9"
+              },
+              "height": 10,
+              "width": 24,
+              "x": 0,
+              "y": 16
+            }
+          }
+        ]
+      }
+    },
+    "links": [],
+    "liveNow": false,
+    "preload": false,
+    "tags": [
+      "docker",
+      "cadvisor",
+      "loki",
+      "prometheus",
+      "alloy",
+      "multinode"
+    ],
+    "timeSettings": {
+      "autoRefresh": "1m",
+      "autoRefreshIntervals": [
+        "5s",
+        "10s",
+        "30s",
+        "1m",
+        "5m",
+        "15m",
+        "30m",
+        "1h",
+        "2h",
+        "1d"
+      ],
+      "fiscalYearStartMonth": 0,
+      "from": "now-6h",
+      "hideTimepicker": false,
+      "timezone": "browser",
+      "to": "now"
+    },
+    "title": "Docker: cAdvisor \u0026 Logs (Multi-Node)",
+    "variables": [
+      {
+        "kind": "DatasourceVariable",
+        "spec": {
+          "allowCustomValue": true,
+          "current": {
+            "text": "Loki",
+            "value": "loki"
+          },
+          "hide": "dontHide",
+          "includeAll": false,
+          "label": "loki-ds",
+          "multi": false,
+          "name": "datasource",
+          "options": [],
+          "pluginId": "loki",
+          "refresh": "onDashboardLoad",
+          "regex": "",
+          "skipUrlSync": false
+        }
+      },
+      {
+        "kind": "DatasourceVariable",
+        "spec": {
+          "allowCustomValue": true,
+          "current": {
+            "text": "Prometheus",
+            "value": "prometheus"
+          },
+          "hide": "dontHide",
+          "includeAll": false,
+          "label": "prom-ds",
+          "multi": false,
+          "name": "prometheus_ds",
+          "options": [],
+          "pluginId": "prometheus",
+          "refresh": "onDashboardLoad",
+          "regex": "",
+          "skipUrlSync": false
+        }
+      },
+      {
+        "kind": "QueryVariable",
+        "spec": {
+          "allowCustomValue": true,
+          "current": {
+            "text": "docker_cluster",
+            "value": "docker_cluster"
+          },
+          "definition": "label_values(up{job=\"docker_cadvisor\"}, cluster)",
+          "hide": "dontHide",
+          "includeAll": false,
+          "label": "Cluster",
+          "multi": false,
+          "name": "cluster",
+          "options": [],
+          "query": {
+            "datasource": {
+              "name": "${prometheus_ds}"
+            },
+            "group": "prometheus",
+            "kind": "DataQuery",
+            "spec": {
+              "qryType": 1,
+              "query": "label_values(up{job=\"docker_cadvisor\"}, cluster)",
+              "refId": "PrometheusVariableQueryEditor-VariableQuery"
+            },
+            "version": "v0"
+          },
+          "refresh": "onDashboardLoad",
+          "regex": "",
+          "regexApplyTo": "value",
+          "skipUrlSync": false,
+          "sort": "alphabeticalAsc"
+        }
+      },
+      {
+        "kind": "QueryVariable",
+        "spec": {
+          "allValue": ".*",
+          "allowCustomValue": true,
+          "current": {
+            "text": [
+              "All"
+            ],
+            "value": [
+              "$__all"
+            ]
+          },
+          "definition": "label_values(up{job=\"docker_cadvisor\",cluster=~\"$cluster\"}, instance)",
+          "hide": "dontHide",
+          "includeAll": true,
+          "label": "Node (host)",
+          "multi": true,
+          "name": "instance",
+          "options": [],
+          "query": {
+            "datasource": {
+              "name": "${prometheus_ds}"
+            },
+            "group": "prometheus",
+            "kind": "DataQuery",
+            "spec": {
+              "qryType": 1,
+              "query": "label_values(up{job=\"docker_cadvisor\",cluster=~\"$cluster\"}, instance)",
+              "refId": "PrometheusVariableQueryEditor-VariableQuery"
+            },
+            "version": "v0"
+          },
+          "refresh": "onDashboardLoad",
+          "regex": "",
+          "regexApplyTo": "value",
+          "skipUrlSync": false,
+          "sort": "alphabeticalAsc"
+        }
+      },
+      {
+        "kind": "QueryVariable",
+        "spec": {
+          "allValue": ".*",
+          "allowCustomValue": true,
+          "current": {
+            "text": "All",
+            "value": [
+              "$__all"
+            ]
+          },
+          "definition": "label_values(container_last_seen{job=\"docker_cadvisor\",cluster=~\"$cluster\",instance=~\"$instance\"}, name)",
+          "hide": "dontHide",
+          "includeAll": true,
+          "label": "Container",
+          "multi": true,
+          "name": "container",
+          "options": [],
+          "query": {
+            "datasource": {
+              "name": "${prometheus_ds}"
+            },
+            "group": "prometheus",
+            "kind": "DataQuery",
+            "spec": {
+              "qryType": 1,
+              "query": "label_values(container_last_seen{job=\"docker_cadvisor\",cluster=~\"$cluster\",instance=~\"$instance\"}, name)",
+              "refId": "PrometheusVariableQueryEditor-VariableQuery"
+            },
+            "version": "v0"
+          },
+          "refresh": "onDashboardLoad",
+          "regex": "",
+          "regexApplyTo": "value",
+          "skipUrlSync": false,
+          "sort": "alphabeticalAsc"
+        }
+      },
+      {
+        "datasource": {
+          "name": "${datasource}"
+        },
+        "group": "loki",
+        "kind": "AdhocVariable",
+        "spec": {
+          "allowCustomValue": true,
+          "baseFilters": [],
+          "defaultKeys": [],
+          "enableGroupBy": false,
+          "filters": [],
+          "hide": "dontHide",
+          "name": "Filters",
+          "skipUrlSync": false
+        }
+      }
+    ]
+  }
+}
