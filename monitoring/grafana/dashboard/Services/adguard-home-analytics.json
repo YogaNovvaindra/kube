@@ -1,0 +1,3675 @@
+{
+  "apiVersion": "dashboard.grafana.app/v2",
+  "kind": "Dashboard",
+  "metadata": {
+    "name": "adguard-home-analytics"
+  },
+  "spec": {
+    "annotations": [
+      {
+        "kind": "AnnotationQuery",
+        "spec": {
+          "builtIn": true,
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations \u0026 Alerts",
+          "query": {
+            "datasource": {
+              "name": "-- Grafana --"
+            },
+            "group": "grafana",
+            "kind": "DataQuery",
+            "spec": {},
+            "version": "v0"
+          }
+        }
+      }
+    ],
+    "cursorSync": "Crosshair",
+    "editable": true,
+    "elements": {
+      "panel-11": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_LOKI}"
+                      },
+                      "group": "loki",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "direction": "backward",
+                        "editorMode": "code",
+                        "expr": "{job=\"adguard_querylogs\"} | json | IP=~\"$client_ip\" | Upstream=~\"$upstream\" | line_format \"{{.IP}} → {{.QH}} ({{.QT}}) via {{.Upstream}} [{{if eq .Cached \\\"true\\\"}}⚡CACHED{{else}}🌐LIVE{{end}}]\"",
+                        "queryType": "range"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 11,
+          "links": [],
+          "title": "Live Query Stream",
+          "vizConfig": {
+            "group": "logs",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {},
+                "overrides": []
+              },
+              "options": {
+                "dedupStrategy": "none",
+                "enableInfiniteScrolling": false,
+                "enableLogDetails": true,
+                "prettifyLogMessage": false,
+                "showCommonLabels": false,
+                "showControls": false,
+                "showFieldSelector": false,
+                "showLabels": false,
+                "showLevel": true,
+                "showTime": true,
+                "sortOrder": "Descending",
+                "timestampResolution": "ms",
+                "unwrappedColumns": false,
+                "wrapLogMessage": true
+              }
+            },
+            "version": "13.1.1"
+          }
+        }
+      },
+      "panel-12": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_LOKI}"
+                      },
+                      "group": "loki",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "direction": "backward",
+                        "editorMode": "code",
+                        "expr": "{job=\"adguard_querylogs\"} | json | IP=~\"$client_ip\" | Upstream=~\"$upstream\" ",
+                        "queryType": "range"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": [
+                {
+                  "group": "extractFields",
+                  "kind": "Transformation",
+                  "spec": {
+                    "options": {
+                      "format": "json",
+                      "source": "Line"
+                    }
+                  }
+                },
+                {
+                  "group": "organize",
+                  "kind": "Transformation",
+                  "spec": {
+                    "options": {
+                      "excludeByName": {
+                        "Answer": true,
+                        "CP": true,
+                        "Line": true,
+                        "QC": true,
+                        "Result": true,
+                        "T": true,
+                        "id": true,
+                        "labels": true,
+                        "tsNs": true
+                      },
+                      "indexByName": {
+                        "Cached": 6,
+                        "Elapsed": 5,
+                        "IP": 1,
+                        "QH": 2,
+                        "QT": 3,
+                        "Time": 0,
+                        "Upstream": 4
+                      },
+                      "renameByName": {
+                        "Cached": "Cached",
+                        "Elapsed": "Latency (ns)",
+                        "IP": "Client",
+                        "QH": "Domain",
+                        "QT": "Type",
+                        "Upstream": "Resolver"
+                      }
+                    }
+                  }
+                },
+                {
+                  "group": "calculateField",
+                  "kind": "Transformation",
+                  "spec": {
+                    "options": {
+                      "alias": "Latency (ms)",
+                      "binary": {
+                        "left": "Latency (ns)",
+                        "operator": "/",
+                        "right": "1000000"
+                      },
+                      "mode": "binary",
+                      "reduce": {
+                        "reducer": "sum"
+                      }
+                    }
+                  }
+                },
+                {
+                  "group": "filterFieldsByName",
+                  "kind": "Transformation",
+                  "spec": {
+                    "options": {
+                      "include": {
+                        "names": [
+                          "Time",
+                          "Client",
+                          "Domain",
+                          "Type",
+                          "Resolver",
+                          "Cached",
+                          "Latency (ms)"
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "description": "",
+          "id": 12,
+          "links": [],
+          "title": "Query Logs Table",
+          "vizConfig": {
+            "group": "table",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "custom": {
+                    "align": "auto",
+                    "cellOptions": {
+                      "type": "auto"
+                    },
+                    "filterable": true,
+                    "footer": {
+                      "reducers": []
+                    },
+                    "inspect": false
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  }
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Latency (ms)"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 100
+                      },
+                      {
+                        "id": "thresholds",
+                        "value": {
+                          "mode": "absolute",
+                          "steps": [
+                            {
+                              "color": "green",
+                              "value": 0
+                            },
+                            {
+                              "color": "yellow",
+                              "value": 50
+                            },
+                            {
+                              "color": "red",
+                              "value": 100
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "mode": "gradient",
+                          "type": "color-background"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Cached"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 80
+                      },
+                      {
+                        "id": "mappings",
+                        "value": [
+                          {
+                            "options": {
+                              "false": {
+                                "color": "blue",
+                                "text": "🌐"
+                              },
+                              "true": {
+                                "color": "green",
+                                "text": "⚡"
+                              }
+                            },
+                            "type": "value"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Domain"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 250
+                      },
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "type": "color-text"
+                        }
+                      },
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "blue",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Client"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 120
+                      },
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "type": "color-text"
+                        }
+                      },
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "blue",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Type"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 60
+                      },
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "type": "color-text"
+                        }
+                      },
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "blue",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Resolver"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "type": "color-text"
+                        }
+                      },
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "blue",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Time"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 171
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "cellHeight": "sm",
+                "enablePagination": false,
+                "showHeader": true,
+                "sortBy": [
+                  {
+                    "desc": true,
+                    "displayName": "Time"
+                  }
+                ]
+              }
+            },
+            "version": "13.1.1"
+          }
+        }
+      },
+      "panel-2": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_LOKI}"
+                      },
+                      "group": "loki",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "direction": "backward",
+                        "editorMode": "code",
+                        "expr": "sum(count_over_time({job=\"adguard_querylogs\"} | json | IP=~\"$client_ip\" | Upstream=~\"$upstream\" [$__interval]))",
+                        "legendFormat": "Total",
+                        "queryType": "range"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 2,
+          "links": [],
+          "title": "Total DNS Queries",
+          "vizConfig": {
+            "group": "stat",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "blue",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "short"
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "value",
+                "graphMode": "area",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "sum"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+              }
+            },
+            "version": "13.1.1"
+          }
+        }
+      },
+      "panel-21": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_PROMETHEUS}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "expr": "sum(rate(adguard_processing_time_milliseconds_sum{client=~\"$client_ip\", upstream=~\"$upstream\"}[1m])) / sum(rate(adguard_processing_time_milliseconds_count{client=~\"$client_ip\", upstream=~\"$upstream\"}[1m])) / 1000",
+                        "legendFormat": "Avg Latency"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_PROMETHEUS}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "expr": "histogram_quantile(0.95, sum(rate(adguard_processing_time_milliseconds_bucket{client=~\"$client_ip\", upstream=~\"$upstream\"}[5m])) by (le)) / 1000",
+                        "legendFormat": "P95 Latency"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "B"
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_PROMETHEUS}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "expr": "histogram_quantile(0.99, sum(rate(adguard_processing_time_milliseconds_bucket{client=~\"$client_ip\", upstream=~\"$upstream\"}[5m])) by (le)) / 1000",
+                        "legendFormat": "P99 Latency"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "C"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 21,
+          "links": [],
+          "title": "DNS Latency Trends",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 10,
+                    "gradientMode": "opacity",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "smooth",
+                    "lineWidth": 2,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "never",
+                    "showValues": false,
+                    "spanNulls": true,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "line+area"
+                    }
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "red",
+                        "value": 0.1
+                      }
+                    ]
+                  },
+                  "unit": "s"
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "P95 Latency"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "orange",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "P99 Latency"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "red",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [
+                    "mean",
+                    "max"
+                  ],
+                  "displayMode": "table",
+                  "enableFacetedFilter": false,
+                  "overflow": "ellipsis",
+                  "placement": "right",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              }
+            },
+            "version": "13.1.1"
+          }
+        }
+      },
+      "panel-22": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_PROMETHEUS}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "expr": "sum(rate(adguard_processing_time_milliseconds_bucket{client=~\"$client_ip\", upstream=~\"$upstream\"}[5m])) by (le)",
+                        "format": "heatmap",
+                        "legendFormat": "{{le}}"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 22,
+          "links": [],
+          "title": "DNS Latency Heatmap",
+          "vizConfig": {
+            "group": "heatmap",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "custom": {
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "scaleDistribution": {
+                      "type": "linear"
+                    }
+                  }
+                },
+                "overrides": []
+              },
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "calculate": false,
+                "cellGap": 1,
+                "color": {
+                  "exponent": 0.5,
+                  "fill": "dark-orange",
+                  "mode": "scheme",
+                  "reverse": false,
+                  "scale": "exponential",
+                  "scheme": "Spectral",
+                  "steps": 64
+                },
+                "exemplars": {
+                  "color": "rgba(255,0,255,0.7)"
+                },
+                "filterValues": {
+                  "le": 1e-9
+                },
+                "legend": {
+                  "show": true
+                },
+                "rowsFrame": {
+                  "layout": "auto"
+                },
+                "tooltip": {
+                  "mode": "single",
+                  "showColorScale": false,
+                  "yHistogram": true
+                },
+                "yAxis": {
+                  "axisPlacement": "left",
+                  "reverse": false,
+                  "unit": "ms"
+                }
+              }
+            },
+            "version": "13.1.1"
+          }
+        }
+      },
+      "panel-23": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_LOKI}"
+                      },
+                      "group": "loki",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "direction": "backward",
+                        "editorMode": "code",
+                        "expr": "{job=\"adguard_querylogs\"} | json | IP=~\"$client_ip\" | Upstream=~\"$upstream\" | Elapsed \u003e 100000000",
+                        "queryType": "range"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": [
+                {
+                  "group": "extractFields",
+                  "kind": "Transformation",
+                  "spec": {
+                    "options": {
+                      "format": "json",
+                      "source": "Line"
+                    }
+                  }
+                },
+                {
+                  "group": "organize",
+                  "kind": "Transformation",
+                  "spec": {
+                    "options": {
+                      "excludeByName": {
+                        "Answer": true,
+                        "CP": true,
+                        "Line": true,
+                        "QC": true,
+                        "Result": true,
+                        "T": true,
+                        "id": true,
+                        "labels": true,
+                        "tsNs": true
+                      },
+                      "renameByName": {
+                        "Elapsed": "Latency (ns)",
+                        "IP": "Client",
+                        "QH": "Domain",
+                        "QT": "Type",
+                        "Upstream": "Resolver"
+                      }
+                    }
+                  }
+                },
+                {
+                  "group": "calculateField",
+                  "kind": "Transformation",
+                  "spec": {
+                    "options": {
+                      "alias": "Latency (ms)",
+                      "binary": {
+                        "left": "Latency (ns)",
+                        "operator": "/",
+                        "right": "1000000"
+                      },
+                      "mode": "binary"
+                    }
+                  }
+                },
+                {
+                  "group": "filterFieldsByName",
+                  "kind": "Transformation",
+                  "spec": {
+                    "options": {
+                      "include": {
+                        "names": [
+                          "Time",
+                          "Client",
+                          "Domain",
+                          "Type",
+                          "Resolver",
+                          "Latency (ms)"
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "description": "",
+          "id": 23,
+          "links": [],
+          "title": "Slow Queries (\u003e100ms)",
+          "vizConfig": {
+            "group": "table",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "custom": {
+                    "align": "auto",
+                    "cellOptions": {
+                      "type": "auto"
+                    },
+                    "filterable": true,
+                    "footer": {
+                      "reducers": []
+                    },
+                    "inspect": false
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "red",
+                        "value": 0
+                      }
+                    ]
+                  }
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Latency (ms)"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "mode": "gradient",
+                          "type": "color-background"
+                        }
+                      },
+                      {
+                        "id": "thresholds",
+                        "value": {
+                          "mode": "absolute",
+                          "steps": [
+                            {
+                              "color": "yellow",
+                              "value": 0
+                            },
+                            {
+                              "color": "orange",
+                              "value": 200
+                            },
+                            {
+                              "color": "red",
+                              "value": 500
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "id": "custom.width",
+                        "value": 79
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Domain"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "type": "color-text"
+                        }
+                      },
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "blue",
+                          "mode": "fixed"
+                        }
+                      },
+                      {
+                        "id": "custom.width"
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Client"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "type": "color-text"
+                        }
+                      },
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "blue",
+                          "mode": "fixed"
+                        }
+                      },
+                      {
+                        "id": "custom.width",
+                        "value": 79
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Type"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "type": "color-text"
+                        }
+                      },
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "blue",
+                          "mode": "fixed"
+                        }
+                      },
+                      {
+                        "id": "custom.width",
+                        "value": 74
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Resolver"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "type": "color-text"
+                        }
+                      },
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "blue",
+                          "mode": "fixed"
+                        }
+                      },
+                      {
+                        "id": "custom.width",
+                        "value": 196
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Time"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 162
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "cellHeight": "sm",
+                "enablePagination": false,
+                "showHeader": true,
+                "sortBy": [
+                  {
+                    "desc": true,
+                    "displayName": "Latency (ms)"
+                  }
+                ]
+              }
+            },
+            "version": "13.1.1"
+          }
+        }
+      },
+      "panel-24": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_PROMETHEUS}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "expr": "topk(10, adguard_top_upstreams_avg_response_time_seconds{upstream=~\"$upstream\"})",
+                        "legendFormat": "{{upstream}}"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 24,
+          "links": [],
+          "title": "Latency by Upstream Resolver",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "bars",
+                    "fillOpacity": 80,
+                    "gradientMode": "hue",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "linear",
+                    "lineWidth": 1,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "never",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "s"
+                },
+                "overrides": []
+              },
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [
+                    "mean"
+                  ],
+                  "displayMode": "table",
+                  "enableFacetedFilter": false,
+                  "overflow": "ellipsis",
+                  "placement": "right",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              }
+            },
+            "version": "13.1.1"
+          }
+        }
+      },
+      "panel-3": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_LOKI}"
+                      },
+                      "group": "loki",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "direction": "backward",
+                        "editorMode": "code",
+                        "expr": "sum(count_over_time({job=\"adguard_querylogs\"} | json | IP=~\"$client_ip\" | Upstream=~\"$upstream\" [$__interval]))",
+                        "legendFormat": "QPM",
+                        "queryType": "range"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 3,
+          "links": [],
+          "title": "Queries Per Minute",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 20,
+                    "gradientMode": "opacity",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "smooth",
+                    "lineWidth": 2,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "never",
+                    "showValues": false,
+                    "spanNulls": true,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "short"
+                },
+                "overrides": []
+              },
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [
+                    "mean",
+                    "max"
+                  ],
+                  "displayMode": "list",
+                  "enableFacetedFilter": false,
+                  "overflow": "ellipsis",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              }
+            },
+            "version": "13.1.1"
+          }
+        }
+      },
+      "panel-31": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_PROMETHEUS}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "expr": "topk(10, adguard_top_upstreams{upstream=~\"$upstream\"})",
+                        "legendFormat": "{{upstream}}"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 31,
+          "links": [],
+          "title": "Query Distribution by Upstream",
+          "vizConfig": {
+            "group": "piechart",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "fixedColor": "#73BF69",
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    }
+                  },
+                  "unit": "short"
+                },
+                "overrides": []
+              },
+              "options": {
+                "legend": {
+                  "displayMode": "table",
+                  "overflow": "ellipsis",
+                  "placement": "right",
+                  "showLegend": true,
+                  "values": [
+                    "value",
+                    "percent"
+                  ]
+                },
+                "pieType": "donut",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "sort": "desc",
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                }
+              }
+            },
+            "version": "13.1.1"
+          }
+        }
+      },
+      "panel-32": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_LOKI}"
+                      },
+                      "group": "loki",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "direction": "backward",
+                        "editorMode": "code",
+                        "expr": "sum by (proto) (count_over_time({job=\"adguard_querylogs\"} | json | IP=~\"$client_ip\" | Upstream=~\"$upstream\" | Upstream=~\"(tls|quic|https)://.*\" | regexp \"(?P\u003cproto\u003etls|quic|https)://.*\" [$__interval]))",
+                        "legendFormat": "{{proto}}",
+                        "queryType": "range"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 32,
+          "links": [],
+          "title": "Protocol Usage (TLS/QUIC/HTTPS)",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 20,
+                    "gradientMode": "opacity",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "smooth",
+                    "lineWidth": 2,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "never",
+                    "showValues": false,
+                    "spanNulls": true,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "normal"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "short"
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "tls"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "green",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "quic"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "blue",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "https"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "purple",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [
+                    "sum"
+                  ],
+                  "displayMode": "table",
+                  "enableFacetedFilter": false,
+                  "overflow": "ellipsis",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              }
+            },
+            "version": "13.1.1"
+          }
+        }
+      },
+      "panel-33": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_LOKI}"
+                      },
+                      "group": "loki",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "direction": "backward",
+                        "editorMode": "code",
+                        "expr": "sum(count_over_time({job=\"adguard_querylogs\"} | json | IP=~\"$client_ip\" | Upstream=~\"$upstream\" | Cached=\"true\" [$__interval]))",
+                        "legendFormat": "Cached",
+                        "queryType": "range"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_LOKI}"
+                      },
+                      "group": "loki",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "direction": "backward",
+                        "editorMode": "code",
+                        "expr": "sum(count_over_time({job=\"adguard_querylogs\"} | json | IP=~\"$client_ip\" | Upstream=~\"$upstream\" | Cached!=\"true\" [$__interval]))",
+                        "legendFormat": "Live",
+                        "queryType": "range"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "B"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 33,
+          "links": [],
+          "title": "Cached vs Live Queries",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 10,
+                    "gradientMode": "opacity",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "smooth",
+                    "lineWidth": 2,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "never",
+                    "showValues": false,
+                    "spanNulls": true,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "short"
+                },
+                "overrides": []
+              },
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [
+                    "sum"
+                  ],
+                  "displayMode": "table",
+                  "enableFacetedFilter": false,
+                  "overflow": "ellipsis",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              }
+            },
+            "version": "13.1.1"
+          }
+        }
+      },
+      "panel-34": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_LOKI}"
+                      },
+                      "group": "loki",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "direction": "backward",
+                        "editorMode": "code",
+                        "expr": "sum(count_over_time({job=\"adguard_querylogs\"} | json | IP=~\"$client_ip\" | Upstream=~\"$upstream\" [$__interval]))",
+                        "legendFormat": "Total",
+                        "queryType": "range"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_LOKI}"
+                      },
+                      "group": "loki",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "direction": "backward",
+                        "editorMode": "code",
+                        "expr": "sum(count_over_time({job=\"adguard_querylogs\"} |~ \"IsFiltered\" | json | IP=~\"$client_ip\" [$__interval]))",
+                        "legendFormat": "Blocked",
+                        "queryType": "range"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "B"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 34,
+          "links": [],
+          "title": "Queries vs Blocked",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 10,
+                    "gradientMode": "opacity",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "smooth",
+                    "lineWidth": 2,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "never",
+                    "showValues": false,
+                    "spanNulls": true,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "short"
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Blocked"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "red",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Total"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "green",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [
+                    "sum",
+                    "max"
+                  ],
+                  "displayMode": "table",
+                  "enableFacetedFilter": false,
+                  "overflow": "ellipsis",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              }
+            },
+            "version": "13.1.1"
+          }
+        }
+      },
+      "panel-4": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_LOKI}"
+                      },
+                      "group": "loki",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "direction": "backward",
+                        "editorMode": "code",
+                        "expr": "sum(count_over_time({job=\"adguard_querylogs\"} | json | IP=~\"$client_ip\" | Upstream=~\"$upstream\" | Cached=\"true\" [$__interval])) / sum(count_over_time({job=\"adguard_querylogs\"} | json | IP=~\"$client_ip\" | Upstream=~\"$upstream\" [$__interval])) * 100",
+                        "legendFormat": "",
+                        "queryType": "range"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 4,
+          "links": [],
+          "title": "Cache Hit Ratio",
+          "vizConfig": {
+            "group": "stat",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "max": 100,
+                  "min": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "red",
+                        "value": 0
+                      },
+                      {
+                        "color": "yellow",
+                        "value": 50
+                      },
+                      {
+                        "color": "green",
+                        "value": 80
+                      }
+                    ]
+                  },
+                  "unit": "percent"
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "value",
+                "graphMode": "area",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "mean"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+              }
+            },
+            "version": "13.1.1"
+          }
+        }
+      },
+      "panel-41": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_LOKI}"
+                      },
+                      "group": "loki",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "direction": "backward",
+                        "editorMode": "code",
+                        "expr": "topk(25, sum by (QH) (count_over_time({job=\"adguard_querylogs\"} | json | IP=~\"$client_ip\" | Upstream=~\"$upstream\" [$__interval])))",
+                        "legendFormat": "{{QH}}",
+                        "queryType": "range"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": [
+                {
+                  "group": "reduce",
+                  "kind": "Transformation",
+                  "spec": {
+                    "options": {
+                      "reducers": [
+                        "sum"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "group": "organize",
+                  "kind": "Transformation",
+                  "spec": {
+                    "options": {
+                      "renameByName": {
+                        "Field": "Domain",
+                        "Total": "Count"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "description": "",
+          "id": 41,
+          "links": [],
+          "title": "Top Queried Domains (from Loki)",
+          "vizConfig": {
+            "group": "table",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "custom": {
+                    "align": "auto",
+                    "cellOptions": {
+                      "type": "auto"
+                    },
+                    "filterable": true,
+                    "footer": {
+                      "reducers": []
+                    },
+                    "inspect": false
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "short"
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Count"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "mode": "gradient",
+                          "type": "gauge"
+                        }
+                      },
+                      {
+                        "id": "color",
+                        "value": {
+                          "mode": "continuous-BlPu"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "cellHeight": "sm",
+                "showHeader": true,
+                "sortBy": [
+                  {
+                    "desc": true,
+                    "displayName": "Count"
+                  }
+                ]
+              }
+            },
+            "version": "13.1.1"
+          }
+        }
+      },
+      "panel-42": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_PROMETHEUS}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "expr": "adguard_query_types{type=~\"$query_type\"}",
+                        "legendFormat": "{{type}}"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 42,
+          "links": [],
+          "title": "Query Type Distribution",
+          "vizConfig": {
+            "group": "piechart",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "fixedColor": "#73BF69",
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    }
+                  }
+                },
+                "overrides": []
+              },
+              "options": {
+                "legend": {
+                  "displayMode": "table",
+                  "overflow": "ellipsis",
+                  "placement": "right",
+                  "showLegend": true,
+                  "values": [
+                    "value",
+                    "percent"
+                  ]
+                },
+                "pieType": "donut",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "sort": "desc",
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                }
+              }
+            },
+            "version": "13.1.1"
+          }
+        }
+      },
+      "panel-5": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_PROMETHEUS}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "expr": "adguard_protection_enabled"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 5,
+          "links": [],
+          "title": "Protection Status",
+          "vizConfig": {
+            "group": "stat",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "mappings": [
+                    {
+                      "options": {
+                        "0": {
+                          "color": "red",
+                          "text": "DISABLED"
+                        }
+                      },
+                      "type": "value"
+                    },
+                    {
+                      "options": {
+                        "1": {
+                          "color": "green",
+                          "text": "ENABLED"
+                        }
+                      },
+                      "type": "value"
+                    }
+                  ],
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  }
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "background",
+                "graphMode": "none",
+                "justifyMode": "center",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "value",
+                "wideLayout": true
+              }
+            },
+            "version": "13.1.1"
+          }
+        }
+      },
+      "panel-51": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_LOKI}"
+                      },
+                      "group": "loki",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "direction": "backward",
+                        "editorMode": "code",
+                        "expr": "topk(25, sum by (QH) (count_over_time({job=\"adguard_querylogs\"} |~ \"IsFiltered\" | json | IP=~\"$client_ip\" [$__interval])))",
+                        "legendFormat": "{{QH}}",
+                        "queryType": "range"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": [
+                {
+                  "group": "reduce",
+                  "kind": "Transformation",
+                  "spec": {
+                    "options": {
+                      "reducers": [
+                        "sum"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "group": "organize",
+                  "kind": "Transformation",
+                  "spec": {
+                    "options": {
+                      "renameByName": {
+                        "Field": "Domain",
+                        "Total": "Count"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "description": "",
+          "id": 51,
+          "links": [],
+          "title": "Top Blocked Domains",
+          "vizConfig": {
+            "group": "table",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "custom": {
+                    "align": "auto",
+                    "cellOptions": {
+                      "type": "auto"
+                    },
+                    "filterable": true,
+                    "footer": {
+                      "reducers": []
+                    },
+                    "inspect": false
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "red",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "short"
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Count"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "mode": "gradient",
+                          "type": "gauge"
+                        }
+                      },
+                      {
+                        "id": "color",
+                        "value": {
+                          "mode": "continuous-RdYlGr"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "cellHeight": "sm",
+                "showHeader": true,
+                "sortBy": [
+                  {
+                    "desc": true,
+                    "displayName": "Count"
+                  }
+                ]
+              }
+            },
+            "version": "13.1.1"
+          }
+        }
+      },
+      "panel-53": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_LOKI}"
+                      },
+                      "group": "loki",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "direction": "backward",
+                        "editorMode": "code",
+                        "expr": "sum by (filter_id) (count_over_time({job=\"adguard_querylogs\"} |~ \"IsFiltered\" | regexp \"FilterListID.:(?P\u003cfilter_id\u003e[0-9]+)\" [$__interval]))",
+                        "legendFormat": "List {{filter_id}}",
+                        "queryType": "range"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 53,
+          "links": [],
+          "title": "Blocks by Filter List",
+          "vizConfig": {
+            "group": "piechart",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "fixedColor": "#73BF69",
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    }
+                  },
+                  "unit": "short"
+                },
+                "overrides": []
+              },
+              "options": {
+                "legend": {
+                  "displayMode": "table",
+                  "overflow": "ellipsis",
+                  "placement": "right",
+                  "showLegend": true,
+                  "values": [
+                    "value",
+                    "percent"
+                  ]
+                },
+                "pieType": "donut",
+                "reduceOptions": {
+                  "calcs": [
+                    "sum"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "sort": "desc",
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                }
+              }
+            },
+            "version": "13.1.1"
+          }
+        }
+      },
+      "panel-6": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_LOKI}"
+                      },
+                      "group": "loki",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "direction": "backward",
+                        "editorMode": "code",
+                        "expr": "sum(count_over_time({job=\"adguard_querylogs\"} |~ \"IsFiltered\" | json | IP=~\"$client_ip\" [$__interval]))",
+                        "queryType": "range"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 6,
+          "links": [],
+          "title": "Total Blocked",
+          "vizConfig": {
+            "group": "stat",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "orange",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "short"
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "value",
+                "graphMode": "area",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "sum"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+              }
+            },
+            "version": "13.1.1"
+          }
+        }
+      },
+      "panel-61": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_PROMETHEUS}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "expr": "topk(10, adguard_top_clients{client=~\"$client_ip\"})",
+                        "legendFormat": "{{client}}"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 61,
+          "links": [],
+          "title": "Query Distribution by Client",
+          "vizConfig": {
+            "group": "piechart",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "fixedColor": "#73BF69",
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    }
+                  },
+                  "unit": "short"
+                },
+                "overrides": []
+              },
+              "options": {
+                "legend": {
+                  "displayMode": "table",
+                  "overflow": "ellipsis",
+                  "placement": "right",
+                  "showLegend": true,
+                  "values": [
+                    "value",
+                    "percent"
+                  ]
+                },
+                "pieType": "donut",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "sort": "desc",
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                }
+              }
+            },
+            "version": "13.1.1"
+          }
+        }
+      },
+      "panel-62": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_LOKI}"
+                      },
+                      "group": "loki",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "direction": "backward",
+                        "editorMode": "code",
+                        "expr": "topk(10, sum by (IP) (count_over_time({job=\"adguard_querylogs\"} | json | IP=~\"$client_ip\" | Upstream=~\"$upstream\" [$__interval])))",
+                        "legendFormat": "{{IP}}",
+                        "queryType": "range"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 62,
+          "links": [],
+          "title": "Queries by Client Over Time",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 10,
+                    "gradientMode": "opacity",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "smooth",
+                    "lineWidth": 1,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "never",
+                    "showValues": false,
+                    "spanNulls": true,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "short"
+                },
+                "overrides": []
+              },
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [
+                    "sum"
+                  ],
+                  "displayMode": "table",
+                  "enableFacetedFilter": false,
+                  "overflow": "ellipsis",
+                  "placement": "right",
+                  "showLegend": true,
+                  "sortBy": "Total",
+                  "sortDesc": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              }
+            },
+            "version": "13.1.1"
+          }
+        }
+      },
+      "panel-63": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_LOKI}"
+                      },
+                      "group": "loki",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "direction": "backward",
+                        "editorMode": "code",
+                        "expr": "sum by (QT) (count_over_time({job=\"adguard_querylogs\"} | json | IP=~\"$client_ip\" | Upstream=~\"$upstream\" | QT=~\"A|AAAA\" [$__interval]))",
+                        "legendFormat": "{{QT}}",
+                        "queryType": "range"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 63,
+          "links": [],
+          "title": "IPv4 vs IPv6 Query Ratio",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 20,
+                    "gradientMode": "opacity",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "smooth",
+                    "lineWidth": 2,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "never",
+                    "showValues": false,
+                    "spanNulls": true,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "short"
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "A"
+                    },
+                    "properties": [
+                      {
+                        "id": "displayName",
+                        "value": "IPv4 (A)"
+                      },
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "blue",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "AAAA"
+                    },
+                    "properties": [
+                      {
+                        "id": "displayName",
+                        "value": "IPv6 (AAAA)"
+                      },
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "green",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [
+                    "sum"
+                  ],
+                  "displayMode": "table",
+                  "enableFacetedFilter": false,
+                  "overflow": "ellipsis",
+                  "placement": "right",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              }
+            },
+            "version": "13.1.1"
+          }
+        }
+      },
+      "panel-8": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_LOKI}"
+                      },
+                      "group": "loki",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "direction": "backward",
+                        "editorMode": "code",
+                        "expr": "sum(count_over_time({job=\"adguard_querylogs\"} |~ \"IsFiltered\" | json | IP=~\"$client_ip\" [$__interval])) / sum(count_over_time({job=\"adguard_querylogs\"} | json | IP=~\"$client_ip\" | Upstream=~\"$upstream\" [$__interval])) * 100",
+                        "queryType": "range"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 8,
+          "links": [],
+          "title": "Blocked Ratio",
+          "vizConfig": {
+            "group": "stat",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "max": 100,
+                  "min": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "yellow",
+                        "value": 10
+                      },
+                      {
+                        "color": "red",
+                        "value": 20
+                      }
+                    ]
+                  },
+                  "unit": "percent"
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "value",
+                "graphMode": "area",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "mean"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+              }
+            },
+            "version": "13.1.1"
+          }
+        }
+      }
+    },
+    "layout": {
+      "kind": "RowsLayout",
+      "spec": {
+        "rows": [
+          {
+            "kind": "RowsLayoutRow",
+            "spec": {
+              "collapse": false,
+              "layout": {
+                "kind": "GridLayout",
+                "spec": {
+                  "items": [
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-5"
+                        },
+                        "height": 4,
+                        "width": 3,
+                        "x": 0,
+                        "y": 0
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-2"
+                        },
+                        "height": 4,
+                        "width": 4,
+                        "x": 3,
+                        "y": 0
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-6"
+                        },
+                        "height": 4,
+                        "width": 4,
+                        "x": 7,
+                        "y": 0
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-8"
+                        },
+                        "height": 4,
+                        "width": 4,
+                        "x": 11,
+                        "y": 0
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-3"
+                        },
+                        "height": 4,
+                        "width": 6,
+                        "x": 15,
+                        "y": 0
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-4"
+                        },
+                        "height": 4,
+                        "width": 3,
+                        "x": 21,
+                        "y": 0
+                      }
+                    }
+                  ]
+                }
+              },
+              "title": "📊 Overview"
+            }
+          },
+          {
+            "kind": "RowsLayoutRow",
+            "spec": {
+              "collapse": false,
+              "layout": {
+                "kind": "GridLayout",
+                "spec": {
+                  "items": [
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-11"
+                        },
+                        "height": 10,
+                        "width": 24,
+                        "x": 0,
+                        "y": 0
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-12"
+                        },
+                        "height": 10,
+                        "width": 24,
+                        "x": 0,
+                        "y": 10
+                      }
+                    }
+                  ]
+                }
+              },
+              "title": "📜 Query Logs (Loki)"
+            }
+          },
+          {
+            "kind": "RowsLayoutRow",
+            "spec": {
+              "collapse": false,
+              "layout": {
+                "kind": "GridLayout",
+                "spec": {
+                  "items": [
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-21"
+                        },
+                        "height": 8,
+                        "width": 12,
+                        "x": 0,
+                        "y": 0
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-22"
+                        },
+                        "height": 8,
+                        "width": 12,
+                        "x": 12,
+                        "y": 0
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-23"
+                        },
+                        "height": 8,
+                        "width": 12,
+                        "x": 0,
+                        "y": 8
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-24"
+                        },
+                        "height": 8,
+                        "width": 12,
+                        "x": 12,
+                        "y": 8
+                      }
+                    }
+                  ]
+                }
+              },
+              "title": "⚡ Latency \u0026 Performance"
+            }
+          },
+          {
+            "kind": "RowsLayoutRow",
+            "spec": {
+              "collapse": false,
+              "layout": {
+                "kind": "GridLayout",
+                "spec": {
+                  "items": [
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-31"
+                        },
+                        "height": 8,
+                        "width": 6,
+                        "x": 0,
+                        "y": 0
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-32"
+                        },
+                        "height": 8,
+                        "width": 6,
+                        "x": 6,
+                        "y": 0
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-33"
+                        },
+                        "height": 8,
+                        "width": 6,
+                        "x": 12,
+                        "y": 0
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-34"
+                        },
+                        "height": 8,
+                        "width": 6,
+                        "x": 18,
+                        "y": 0
+                      }
+                    }
+                  ]
+                }
+              },
+              "title": "🌐 Upstream Resolvers"
+            }
+          },
+          {
+            "kind": "RowsLayoutRow",
+            "spec": {
+              "collapse": false,
+              "layout": {
+                "kind": "GridLayout",
+                "spec": {
+                  "items": [
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-41"
+                        },
+                        "height": 10,
+                        "width": 12,
+                        "x": 0,
+                        "y": 0
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-42"
+                        },
+                        "height": 10,
+                        "width": 12,
+                        "x": 12,
+                        "y": 0
+                      }
+                    }
+                  ]
+                }
+              },
+              "title": "🔍 Domain Analytics"
+            }
+          },
+          {
+            "kind": "RowsLayoutRow",
+            "spec": {
+              "collapse": false,
+              "layout": {
+                "kind": "GridLayout",
+                "spec": {
+                  "items": [
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-51"
+                        },
+                        "height": 10,
+                        "width": 15,
+                        "x": 0,
+                        "y": 0
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-53"
+                        },
+                        "height": 10,
+                        "width": 9,
+                        "x": 15,
+                        "y": 0
+                      }
+                    }
+                  ]
+                }
+              },
+              "title": "🛡️ Filtering \u0026 Security"
+            }
+          },
+          {
+            "kind": "RowsLayoutRow",
+            "spec": {
+              "collapse": false,
+              "layout": {
+                "kind": "GridLayout",
+                "spec": {
+                  "items": [
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-61"
+                        },
+                        "height": 8,
+                        "width": 8,
+                        "x": 0,
+                        "y": 0
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-62"
+                        },
+                        "height": 8,
+                        "width": 16,
+                        "x": 8,
+                        "y": 0
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-63"
+                        },
+                        "height": 8,
+                        "width": 24,
+                        "x": 0,
+                        "y": 8
+                      }
+                    }
+                  ]
+                }
+              },
+              "title": "👥 Client Analytics"
+            }
+          }
+        ]
+      }
+    },
+    "links": [],
+    "liveNow": false,
+    "preload": false,
+    "tags": [
+      "adguard",
+      "dns",
+      "observability"
+    ],
+    "timeSettings": {
+      "autoRefresh": "30s",
+      "autoRefreshIntervals": [
+        "5s",
+        "10s",
+        "30s",
+        "1m",
+        "5m",
+        "15m",
+        "30m",
+        "1h",
+        "2h",
+        "1d"
+      ],
+      "fiscalYearStartMonth": 0,
+      "from": "now-6h",
+      "hideTimepicker": false,
+      "timezone": "browser",
+      "to": "now"
+    },
+    "title": "AdGuard Home Analytics",
+    "variables": [
+      {
+        "kind": "DatasourceVariable",
+        "spec": {
+          "allowCustomValue": true,
+          "current": {
+            "text": "Prometheus",
+            "value": "prometheus"
+          },
+          "hide": "dontHide",
+          "includeAll": false,
+          "label": "Prometheus",
+          "multi": false,
+          "name": "DS_PROMETHEUS",
+          "options": [],
+          "pluginId": "prometheus",
+          "refresh": "onDashboardLoad",
+          "regex": "",
+          "skipUrlSync": false
+        }
+      },
+      {
+        "kind": "DatasourceVariable",
+        "spec": {
+          "allowCustomValue": true,
+          "current": {
+            "text": "Loki",
+            "value": "loki"
+          },
+          "hide": "dontHide",
+          "includeAll": false,
+          "label": "Loki",
+          "multi": false,
+          "name": "DS_LOKI",
+          "options": [],
+          "pluginId": "loki",
+          "refresh": "onDashboardLoad",
+          "regex": "",
+          "skipUrlSync": false
+        }
+      },
+      {
+        "kind": "QueryVariable",
+        "spec": {
+          "allowCustomValue": true,
+          "current": {
+            "text": "All",
+            "value": [
+              "$__all"
+            ]
+          },
+          "definition": "label_values(adguard_top_clients, client)",
+          "hide": "dontHide",
+          "includeAll": true,
+          "label": "Client IP",
+          "multi": true,
+          "name": "client_ip",
+          "options": [],
+          "query": {
+            "group": "prometheus",
+            "kind": "DataQuery",
+            "spec": {
+              "query": "label_values(adguard_top_clients, client)",
+              "refId": "StandardVariableQuery"
+            },
+            "version": "v0"
+          },
+          "refresh": "onDashboardLoad",
+          "regex": "",
+          "regexApplyTo": "value",
+          "skipUrlSync": false,
+          "sort": "alphabeticalAsc"
+        }
+      },
+      {
+        "kind": "QueryVariable",
+        "spec": {
+          "allowCustomValue": true,
+          "current": {
+            "text": "All",
+            "value": [
+              "$__all"
+            ]
+          },
+          "definition": "label_values(adguard_top_upstreams, upstream)",
+          "hide": "dontHide",
+          "includeAll": true,
+          "label": "Upstream",
+          "multi": true,
+          "name": "upstream",
+          "options": [],
+          "query": {
+            "group": "prometheus",
+            "kind": "DataQuery",
+            "spec": {
+              "query": "label_values(adguard_top_upstreams, upstream)",
+              "refId": "StandardVariableQuery"
+            },
+            "version": "v0"
+          },
+          "refresh": "onDashboardLoad",
+          "regex": "",
+          "regexApplyTo": "value",
+          "skipUrlSync": false,
+          "sort": "alphabeticalAsc"
+        }
+      },
+      {
+        "kind": "QueryVariable",
+        "spec": {
+          "allowCustomValue": true,
+          "current": {
+            "text": "All",
+            "value": [
+              "$__all"
+            ]
+          },
+          "definition": "label_values(adguard_query_types, type)",
+          "hide": "dontHide",
+          "includeAll": true,
+          "label": "Query Type",
+          "multi": true,
+          "name": "query_type",
+          "options": [],
+          "query": {
+            "group": "prometheus",
+            "kind": "DataQuery",
+            "spec": {
+              "query": "label_values(adguard_query_types, type)",
+              "refId": "StandardVariableQuery"
+            },
+            "version": "v0"
+          },
+          "refresh": "onDashboardLoad",
+          "regex": "",
+          "regexApplyTo": "value",
+          "skipUrlSync": false,
+          "sort": "alphabeticalAsc"
+        }
+      }
+    ]
+  }
+}
