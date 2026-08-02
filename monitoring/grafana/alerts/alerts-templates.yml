@@ -9,49 +9,40 @@ data:
     templates:
       - name: discord
         template: |
-          {{- define "__severity_icon" -}}
+          {{ define "__severity_icon" -}}
             {{- if eq .Labels.severity "critical" -}}🔴
             {{- else if eq .Labels.severity "warning" -}}🟡
             {{- else if eq .Labels.severity "info" -}}🔵
             {{- else -}}⚪
             {{- end -}}
-          {{- end -}}
+          {{- end }}
 
-          {{- define "__discord_alert" -}}
+          {{ define "__discord_alert" -}}
           {{ template "__severity_icon" . }} **{{ .Labels.alertname }}**
-          > 📋 **Summary**: {{ .Annotations.summary | default "No summary provided" }}
-          > 📝 **Description**: {{ .Annotations.description | default "No description provided" }}
-          {{- if .Annotations.value }}
-          > 📊 **Value**: {{ .Annotations.value }}
-          {{- end }}
-          > 🏷️ **Severity**: `{{ .Labels.severity | default "unknown" }}`
-          {{- if .Labels.instance }}
-          > 🖥️ **Instance**: `{{ .Labels.instance }}`
-          {{- end }}
-          {{- if .Labels.job }}
-          > ⚙️ **Job**: `{{ .Labels.job }}`
-          {{- end }}
-          > 🕐 **Started**: {{ .StartsAt.UTC.Format "2006-01-02 15:04:05 UTC" }}
+          {{ if .Annotations.summary }}> 📋 **Summary**: {{ .Annotations.summary }}{{ end }}
+          {{ if .Annotations.description }}> 📝 **Description**: {{ .Annotations.description }}{{ end }}
+          {{ if .Annotations.value }}> 📊 **Value**: {{ .Annotations.value }}{{ end }}
+          > 🏷️ **Severity**: `{{ if .Labels.severity }}{{ .Labels.severity }}{{ else }}unknown{{ end }}`
+          {{ if .Labels.instance }}> 🖥️ **Instance**: `{{ .Labels.instance }}`{{ end }}
+          {{ if .Labels.job }}> ⚙️ **Job**: `{{ .Labels.job }}`{{ end }}
+          > 🕐 **Started**: {{ .StartsAt }}
           {{- end }}
 
-          {{- define "discord.title" -}}
-          {{- if gt (len .Alerts.Firing) 0 -}}🔥 FIRING: {{ len .Alerts.Firing }}{{- end -}}
-          {{- if and (gt (len .Alerts.Firing) 0) (gt (len .Alerts.Resolved) 0) -}} | {{- end -}}
-          {{- if gt (len .Alerts.Resolved) 0 -}}✅ RESOLVED: {{ len .Alerts.Resolved }}{{- end -}}
-          {{- with .GroupLabels.SortedPairs }} — {{ .Values | join ", " }}{{- end -}}
+          {{ define "discord.title" -}}
+          [{{ if gt (len .Alerts.Firing) 0 }}🔥 FIRING: {{ len .Alerts.Firing }}{{ end }}{{ if and (gt (len .Alerts.Firing) 0) (gt (len .Alerts.Resolved) 0) }} | {{ end }}{{ if gt (len .Alerts.Resolved) 0 }}✅ RESOLVED: {{ len .Alerts.Resolved }}{{ end }}]
           {{- end }}
 
-          {{- define "discord.message" -}}
-          {{- if gt (len .Alerts.Firing) 0 }}
+          {{ define "discord.message" -}}
+          {{ if gt (len .Alerts.Firing) 0 -}}
           ## 🔥 Firing Alerts
-          {{ range .Alerts.Firing -}}
+          {{ range .Alerts.Firing }}
           {{ template "__discord_alert" . }}
-          {{ end -}}
-          {{- end -}}
-          {{- if gt (len .Alerts.Resolved) 0 }}
+          {{ end }}
+          {{- end }}
+          {{ if gt (len .Alerts.Resolved) 0 -}}
           ## ✅ Resolved Alerts
-          {{ range .Alerts.Resolved -}}
+          {{ range .Alerts.Resolved }}
           {{ template "__discord_alert" . }}
-          {{ end -}}
-          {{- end -}}
+          {{ end }}
+          {{- end }}
           {{- end }}
