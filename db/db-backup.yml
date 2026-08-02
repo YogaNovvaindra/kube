@@ -94,8 +94,8 @@ data:
     #!/bin/sh
     set -euo pipefail
 
-    # Install required tools
-    apk add --no-cache curl zip
+    # Install curl for Discord notifications (pg_basebackup already in image)
+    apk add --no-cache curl
 
     # Discord notification helper
     discord_notify() {
@@ -108,38 +108,49 @@ data:
         -d "{\"embeds\":[{\"title\":\"$title\",\"description\":\"$description\",\"color\":$color}]}"
     }
 
-    # Main execution
+    PGUSER=$(cat /etc/creds/username)
+    PGPASSWORD=$(cat /etc/creds/password)
     TS_INIT=$(date +"%Y-%m-%d %H:%M:%S")
-    START_DESCRIPTION="**Host:** ${HOSTNAME}\n**Time:** ${TS_INIT}\n**Action:** Starting backup"
-    discord_notify "SUCCESS" "🔔 Backup Starting" "$START_DESCRIPTION"
-
-    # Create backup
     TIMESTAMP=$(date +%Y%m%d%H%M%S)
-    ARCHIVE="/snapshots/postgres-backup-${TIMESTAMP}.zip"
-    cd /pgdata || exit 1
+    OUTDIR="/snapshots/postgres-backup-${TIMESTAMP}"
 
-    if ! zip -rv "$ARCHIVE" .; then
+    discord_notify "SUCCESS" "🔔 Backup Starting" \
+      "**Host:** ${HOSTNAME}\n**Time:** ${TS_INIT}\n**Action:** Starting pg_basebackup snapshot"
+
+    mkdir -p "$OUTDIR"
+
+    if ! PGPASSWORD="$PGPASSWORD" pg_basebackup \
+      -h postgres \
+      -p 5432 \
+      -U "$PGUSER" \
+      --pgdata="$OUTDIR" \
+      --format=tar \
+      --compress=9 \
+      --wal-method=stream \
+      --checkpoint=fast \
+      --progress \
+      --verbose; then
       TS_FAIL=$(date +"%Y-%m-%d %H:%M:%S")
-      FAIL_DESCRIPTION="**Host:** ${HOSTNAME}\n**Time:** ${TS_FAIL}\n**Error:** Archive creation failed"
-      discord_notify "FAILED" "🚨 Backup FAILED" "$FAIL_DESCRIPTION"
+      discord_notify "FAILED" "🚨 Backup FAILED" \
+        "**Host:** ${HOSTNAME}\n**Time:** ${TS_FAIL}\n**Error:** pg_basebackup failed — check pod logs"
       exit 1
     fi
-    
-    # Cleanup old backups
-    find /snapshots -type f -name '*.zip' -mtime +7 -print -delete
-    find /snapshots -type d -empty -print -delete
 
-    # Generate report
+    # Cleanup old backups (keep 7 days)
+    find /snapshots -maxdepth 1 -type d -name 'postgres-backup-*' -mtime +7 -exec rm -rf {} +
+
     TS_END=$(date +"%Y-%m-%d %H:%M:%S")
-    FILE_NAME=$(basename "$ARCHIVE")
-    FILE_SIZE=$(du -h "$ARCHIVE" | cut -f1)
+    DURATION=$(( $(date +%s) - $(date -d "$TS_INIT" +%s) ))
+    BASE_SIZE=$(du -h "${OUTDIR}/base.tar.gz" 2>/dev/null | cut -f1 || echo "n/a")
+    WAL_SIZE=$(du -h "${OUTDIR}/pg_wal.tar.gz" 2>/dev/null | cut -f1 || echo "n/a")
 
     SUMMARY="**Host:** ${HOSTNAME}\n**Time:** ${TS_END}\n"
-    SUMMARY="${SUMMARY}**Duration:** $(( $(date +%s) - $(date -d "$TS_INIT" +%s) )) seconds\n"
-    SUMMARY="${SUMMARY}**Archive:** ${FILE_NAME} (${FILE_SIZE})"
+    SUMMARY="${SUMMARY}**Duration:** ${DURATION}s\n"
+    SUMMARY="${SUMMARY}**base.tar.gz:** ${BASE_SIZE}\n"
+    SUMMARY="${SUMMARY}**pg_wal.tar.gz:** ${WAL_SIZE}"
 
     discord_notify "SUCCESS" "✅ Backup Succeeded" "$SUMMARY"
-    echo "✅ Backup completed successfully!"
+    echo "✅ Backup completed: $OUTDIR"
 ---
 apiVersion: batch/v1
 kind: CronJob
@@ -224,7 +235,7 @@ spec:
             kubernetes.io/arch: amd64
           containers:
           - name: postgres-snapshotter
-            image: reg.ygnv.my.id/docker/alpine:3.24.1
+            image: reg.ygnv.my.id/docker/pgautoupgrade/pgautoupgrade:debian@sha256:6c5e519451fe7ad193678e8ad79bd9b258c8c70bbb43410a55ff3cd1a9ce0a5f
             imagePullPolicy: IfNotPresent
             env:
             - name: DISCORD_WEBHOOK_URL
@@ -237,13 +248,13 @@ spec:
             - name: localtime
               mountPath: /etc/localtime
               readOnly: true
-            - name: pgdata
-              mountPath: /pgdata
-              readOnly: true
             - name: pg-snapshots
               mountPath: /snapshots
             - name: pg-snapshot-config
               mountPath: /scripts
+            - name: postgres-creds
+              mountPath: /etc/creds
+              readOnly: true
           volumes:
           - name: localtime
             hostPath:
@@ -253,14 +264,18 @@ spec:
             configMap:
               name: pg-snapshot-config
               defaultMode: 0744
-          - name: pgdata
-            hostPath:
-              path: /mnt/cephfs/docker/db/postgres/data
-              type: Directory
           - name: pg-snapshots
             hostPath:
               path: /mnt/cephfs/docker/db/postgres/backup/pg-snapshots
               type: Directory
+          - name: postgres-creds
+            secret:
+              secretName: pg-cred
+              items:
+              - key: username
+                path: username
+              - key: password
+                path: password
           restartPolicy: Never
 ---
 apiVersion: v1
