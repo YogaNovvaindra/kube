@@ -88,6 +88,7 @@ data:
             annotations:
               summary: "Ceph Cluster Health: Warning"
               description: "Ceph cluster health is WARNING. Current status value: {{ $values.B.Value | printf \"%.0f\" }}."
+              value: '{{ $values.B.Value | printf "%.0f" }} (0=OK, 1=WARN, 2=ERR)'
             labels:
               severity: warning
 
@@ -323,6 +324,7 @@ data:
             annotations:
               summary: "Ceph OSD High Latency: {{ $labels.ceph_daemon }}"
               description: "OSD {{ $labels.ceph_daemon }} has high apply latency: {{ $values.B.Value | printf \"%.2f\" }}ms."
+              value: '{{ $values.B.Value | printf "%.2f" }}ms'
             labels:
               severity: warning
 
@@ -362,6 +364,7 @@ data:
             annotations:
               summary: "Ceph Cluster Near Full"
               description: "Cluster capacity usage is above 80% (Current: {{ $values.B.Value | printf \"%.2f\" }}%)."
+              value: '{{ $values.B.Value | printf "%.2f" }}%'
             labels:
               severity: warning
 
@@ -401,6 +404,7 @@ data:
             annotations:
               summary: "Ceph Cluster Critically Full"
               description: "Cluster capacity usage is above 90% (Current: {{ $values.B.Value | printf \"%.2f\" }}%)."
+              value: '{{ $values.B.Value | printf "%.2f" }}%'
             labels:
               severity: critical
 
@@ -440,6 +444,7 @@ data:
             annotations:
               summary: "Ceph Pool Near Full: {{ $labels.name }}"
               description: "Pool {{ $labels.name }} is above 80% full (Current: {{ $values.B.Value | printf \"%.2f\" }}%)."
+              value: '{{ $values.B.Value | printf "%.2f" }}%'
             labels:
               severity: warning
 
@@ -479,5 +484,6 @@ data:
             annotations:
               summary: "Ceph Pool Critically Full: {{ $labels.name }}"
               description: "Pool {{ $labels.name }} is above 90% full (Current: {{ $values.B.Value | printf \"%.2f\" }}%)."
+              value: '{{ $values.B.Value | printf "%.2f" }}%'
             labels:
               severity: critical

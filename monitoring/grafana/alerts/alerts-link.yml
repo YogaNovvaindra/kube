@@ -48,6 +48,7 @@ data:
             annotations:
               summary: "Ubiquiti Low Signal: {{ or $labels.ubntStaName $labels.instance $labels.ubntStaMac }}"
               description: "Ubiquiti link {{ or $labels.ubntStaName $labels.instance $labels.ubntStaMac }} has low signal strength: {{ $values.B.Value | printf \"%.0f\" }} dBm."
+              value: '{{ $values.B.Value | printf "%.0f" }} dBm'
             labels:
               severity: warning
 
@@ -87,6 +88,7 @@ data:
             annotations:
               summary: "Ubiquiti Low CCQ: {{ or $labels.ubntStaName $labels.instance $labels.ubntStaMac }}"
               description: "Ubiquiti link {{ or $labels.ubntStaName $labels.instance $labels.ubntStaMac }} CCQ is low: {{ $values.B.Value | printf \"%.0f\" }}%."
+              value: '{{ $values.B.Value | printf "%.0f" }}%'
             labels:
               severity: warning
 
@@ -126,6 +128,7 @@ data:
             annotations:
               summary: "Ubiquiti Link Saturation: {{ or $labels.ubntStaName $labels.instance $labels.ubntStaMac }}"
               description: "Ubiquiti link {{ or $labels.ubntStaName $labels.instance $labels.ubntStaMac }} output is near wireless capacity: {{ $values.B.Value | printf \"%.1f%%\" }}."
+              value: '{{ $values.B.Value | printf "%.1f" }}%'
             labels:
               severity: warning
 
@@ -165,6 +168,7 @@ data:
             annotations:
               summary: "Ubiquiti High Noise: {{ or $labels.ubntStaName $labels.instance $labels.ubntStaMac }}"
               description: "Ubiquiti link {{ or $labels.ubntStaName $labels.instance $labels.ubntStaMac }} noise floor is high: {{ $values.B.Value | printf \"%.0f\" }} dBm."
+              value: '{{ $values.B.Value | printf "%.0f" }} dBm'
             labels:
               severity: info
 
@@ -204,5 +208,6 @@ data:
             annotations:
               summary: "Ubiquiti High CPU: {{ $labels.instance }}"
               description: "Ubiquiti host {{ $labels.instance }} CPU load is high: {{ $values.B.Value | printf \"%.1f\" }}%."
+              value: '{{ $values.B.Value | printf "%.1f" }}%'
             labels:
               severity: warning

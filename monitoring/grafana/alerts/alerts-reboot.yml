@@ -94,6 +94,7 @@ data:
                 Instance has rebooted within the last hour.
                   Uptime: {{ $values.B.Value | humanizeDuration }}
               summary: Instance recently rebooted (instance {{ $labels.instance }}, job {{ $labels.job }})
+              value: '{{ $values.B.Value | humanizeDuration }}'
             isPaused: false
           - uid: fee0o8u0hjx8ge
             title: Reboot mktxp
@@ -177,4 +178,5 @@ data:
                 Instance has rebooted within the last hour.
                   Uptime: {{ $values.B.Value | humanizeDuration }}
               summary: Instance recently rebooted (instance {{ $labels.routerboard_name }})
+              value: '{{ $values.B.Value | humanizeDuration }}'
             isPaused: false

@@ -97,6 +97,7 @@ data:
                 Used storage space is over 90%.
                   Current used space: {{ $values.B.Value | printf "%.2f" }}%
               summary: Low storage space on (instance {{ $labels.instance }}, job {{ $labels.job }})
+              value: '{{ $values.B.Value | printf "%.2f" }}%'
             isPaused: false
           - uid: fee0oubrhrhtsa
             title: Storage mktxp
@@ -180,4 +181,5 @@ data:
                 Used storage space is over 90%.
                   Current used space: {{ $values.B.Value | printf "%.2f" }}%
               summary: Low storage space on (instance {{ $labels.routerboard_name }})
+              value: '{{ $values.B.Value | printf "%.2f" }}%'
             isPaused: false
