@@ -9,7 +9,7 @@ data:
     groups:
       - orgId: 1
         name: Infrastructure
-        folder: Infra Alerts
+        folder: Services
         interval: 5m
         rules:
           - uid: target_down

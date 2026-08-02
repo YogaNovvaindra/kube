@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-alerts-templates
+  namespace: monitoring
+data:
+  alerts-templates.yaml: |
+    apiVersion: 1
+    templates:
+      - name: discord
+        template: |
+          {{ define "__discord_subject" }}
+          [{{ if gt (len .Alerts.Firing) 0 }}FIRING:{{ .Alerts.Firing | len }}{{ end }}{{ if and (gt (len .Alerts.Firing) 0) (gt (len .Alerts.Resolved) 0) }} | {{ end }}{{ if gt (len .Alerts.Resolved) 0 }}RESOLVED:{{ .Alerts.Resolved | len }}{{ end }}] {{ .GroupLabels.SortedPairs.Values | join " " }}
+          {{ end }}
+
+          {{ define "__discord_alert" -}}
+          **{{ .Labels.alertname -}}** (instance: {{ .Labels.instance }} | job: {{ .Labels.job }})
+          {{ if .Annotations -}}
+          **Annotations**:
+          {{ range .Annotations.SortedPairs }}• {{ .Name }}: {{ .Value }}
+          {{ end }}{{ end -}}
+          {{ if .Labels -}}
+          **Labels**:
+          {{ range .Labels.SortedPairs }}• {{ .Name }}: {{ .Value }}
+          {{ end }}{{ end -}}
+          {{ end -}}
+
+          {{ define "discord.title" }}
+          {{ template "__discord_subject" . }}
+          {{ end }}
+
+          {{ define "discord.message" }}
+          {{ if gt (len .Alerts.Firing) 0 -}}
+          🔥 **FIRING ALERTS** 🔥
+          {{ range .Alerts.Firing }}
+          {{ template "__discord_alert" . }}
+          {{ end }}{{ end -}}
+
+          {{ if gt (len .Alerts.Resolved) 0 -}}
+          ✅ **RESOLVED ALERTS** ✅
+          {{ range .Alerts.Resolved }}
+          {{ template "__discord_alert" . }}
+          {{ end }}{{ end -}}
+          {{ end }}

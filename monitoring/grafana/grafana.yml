@@ -115,6 +115,21 @@ spec:
                   items:
                     - key: alerts-link.yaml
                       path: alerts-link.yaml
+              - configMap:
+                  name: grafana-alerts-templates
+                  items:
+                    - key: alerts-templates.yaml
+                      path: alerts-templates.yaml
+              - secret:
+                  name: grafana-alerts-contact-points
+                  items:
+                    - key: alerts-contact-points.yaml
+                      path: alerts-contact-points.yaml
+              - configMap:
+                  name: grafana-alerts-policies
+                  items:
+                    - key: alerts-policies.yaml
+                      path: alerts-policies.yaml
         - name: grafana-data
 
           hostPath:

@@ -9,7 +9,7 @@ data:
     groups:
       - orgId: 1
         name: Kubernetes
-        folder: Kube Alerts
+        folder: Kube
         interval: 5m
         rules:
           - uid: pod_crash_looping

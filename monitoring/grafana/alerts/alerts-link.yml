@@ -9,7 +9,7 @@ data:
     groups:
       - orgId: 1
         name: Network Links
-        folder: Network Alerts
+        folder: Network
         interval: 1m
         rules:
           - uid: ubiquiti_low_signal
