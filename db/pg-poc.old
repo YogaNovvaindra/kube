@@ -1,0 +1,287 @@
+---
+# ============================================================
+# pg_basebackup PoC — runs in pg-poc namespace
+# Connects to production postgres.db.svc.cluster.local:5432
+# Backup stored at /mnt/cephfs/docker/db/postgres/poc-restore
+# ============================================================
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: pg-poc
+
+---
+# ============================================================
+# STEP 1: Backup Job
+# pg_basebackup connects to prod postgres over replication protocol
+# Output: /mnt/cephfs/docker/db/postgres/poc-restore/base.tar.gz
+#         /mnt/cephfs/docker/db/postgres/poc-restore/pg_wal.tar.gz
+# ============================================================
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pg-poc-backup
+  namespace: pg-poc
+spec:
+  backoffLimit: 0
+  ttlSecondsAfterFinished: 600
+  template:
+    spec:
+      nodeSelector:
+        kubernetes.io/hperf: "true"   # same node label as production postgres
+      restartPolicy: Never
+      containers:
+        - name: pg-basebackup
+          image: reg.ygnv.my.id/docker/pgautoupgrade/pgautoupgrade:debian@sha256:6c5e519451fe7ad193678e8ad79bd9b258c8c70bbb43410a55ff3cd1a9ce0a5f
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -euo pipefail
+              PGUSER=$(cat /etc/creds/username)
+              PGPASSWORD=$(cat /etc/creds/password)
+              OUTDIR="/poc-restore"
+
+              echo "==> Cleaning output dir"
+              rm -rf "${OUTDIR:?}"/*
+
+              echo "==> Starting pg_basebackup from postgres.db.svc.cluster.local"
+              PGPASSWORD="$PGPASSWORD" pg_basebackup \
+                -h postgres.db.svc.cluster.local \
+                -p 5432 \
+                -U "$PGUSER" \
+                --pgdata="$OUTDIR" \
+                --format=tar \
+                --compress=9 \
+                --wal-method=stream \
+                --checkpoint=fast \
+                --progress \
+                --verbose
+
+              echo ""
+              echo "==> Backup complete. Contents:"
+              ls -lh "$OUTDIR"
+              echo "==> Done"
+          volumeMounts:
+            - name: poc-restore
+              mountPath: /poc-restore
+            - name: creds
+              mountPath: /etc/creds
+              readOnly: true
+      volumes:
+        - name: poc-restore
+          hostPath:
+            path: /mnt/cephfs/docker/db/postgres/poc-restore
+            type: DirectoryOrCreate
+        - name: creds
+          secret:
+            secretName: pg-cred
+            items:
+              - key: username
+                path: username
+              - key: password
+                path: password
+
+---
+# ============================================================
+# STEP 2: Restore Pod
+# initContainer extracts base.tar.gz + pg_wal.tar.gz into emptyDir
+# Main container starts postgres against extracted data
+# Access: kubectl exec -n pg-poc pg-poc-restore -c postgres -- psql -U postgres
+# ============================================================
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pg-poc-restore
+  namespace: pg-poc
+  labels:
+    app: pg-poc-restore
+spec:
+  nodeSelector:
+    kubernetes.io/hperf: "true"
+  restartPolicy: Never
+  initContainers:
+    - name: extract
+      image: reg.ygnv.my.id/docker/pgautoupgrade/pgautoupgrade:debian@sha256:6c5e519451fe7ad193678e8ad79bd9b258c8c70bbb43410a55ff3cd1a9ce0a5f
+      imagePullPolicy: IfNotPresent
+      securityContext:
+        runAsUser: 0   # root to chown
+      command:
+        - /bin/sh
+        - -c
+        - |
+          set -euo pipefail
+          BACKUP_DIR="/poc-restore"
+          DATA_DIR="/pgdata"
+
+          echo "==> Waiting for backup to be ready..."
+          until [ -f "${BACKUP_DIR}/base.tar.gz" ]; do
+            echo "  backup not ready yet, sleeping 10s..."
+            sleep 10
+          done
+          echo "==> Backup found!"
+
+          echo "==> Clearing data directory contents"
+          rm -rf "${DATA_DIR:?}"/*
+
+          echo "==> Extracting base.tar.gz"
+          tar -xzf "${BACKUP_DIR}/base.tar.gz" -C "$DATA_DIR"
+
+          echo "==> Extracting pg_wal.tar.gz into pg_wal/"
+          mkdir -p "${DATA_DIR}/pg_wal"
+          tar -xzf "${BACKUP_DIR}/pg_wal.tar.gz" -C "${DATA_DIR}/pg_wal"
+
+          echo "==> Fixing ownership to postgres (uid 999)"
+          chown -R 999:999 "$DATA_DIR"
+
+          echo "==> Fixing permissions (Postgres requires 0700 on data dir)"
+          chmod 0700 "$DATA_DIR"
+
+          echo "==> Extract done. Directory contents:"
+          ls -la "$DATA_DIR"
+      volumeMounts:
+        - name: poc-restore
+          mountPath: /poc-restore
+          readOnly: true
+        - name: pgdata
+          mountPath: /pgdata
+
+  containers:
+    - name: postgres
+      image: reg.ygnv.my.id/docker/pgautoupgrade/pgautoupgrade:debian@sha256:6c5e519451fe7ad193678e8ad79bd9b258c8c70bbb43410a55ff3cd1a9ce0a5f
+      imagePullPolicy: IfNotPresent
+      securityContext:
+        runAsUser: 999
+        runAsGroup: 999
+      command:
+        - /bin/sh
+        - -c
+        - |
+          # pg_cron requires a specific database — skip it here, just stat_statements
+          exec postgres -D /pgdata \
+            -c shared_preload_libraries=pg_stat_statements \
+            -c listen_addresses='*' \
+            -c port=5432
+      env:
+        - name: PGDATA
+          value: /pgdata
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: pg-cred
+              key: username
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: pg-cred
+              key: password
+      ports:
+        - containerPort: 5432
+      readinessProbe:
+        exec:
+          command: ["pg_isready", "-h", "localhost", "-U", "postgres", "-p", "5432"]
+        initialDelaySeconds: 15
+        periodSeconds: 5
+        timeoutSeconds: 10
+      volumeMounts:
+        - name: pgdata
+          mountPath: /pgdata
+
+  volumes:
+    - name: poc-restore
+      hostPath:
+        path: /mnt/cephfs/docker/db/postgres/poc-restore
+        type: Directory
+    - name: pgdata
+      emptyDir: {}
+
+---
+# ============================================================
+# STEP 3: Verify Job
+# Waits for pg-poc-restore to be ready, then queries it
+# Checks: database list, table counts per DB, current WAL LSN
+# ============================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: pg-poc-restore
+  namespace: pg-poc
+spec:
+  selector:
+    app: pg-poc-restore
+  ports:
+    - port: 5432
+      targetPort: 5432
+  clusterIP: None   # headless — DNS resolves directly to pod IP
+
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pg-poc-verify
+  namespace: pg-poc
+spec:
+  backoffLimit: 5
+  ttlSecondsAfterFinished: 600
+  template:
+    spec:
+      nodeSelector:
+        kubernetes.io/hperf: "true"
+      restartPolicy: OnFailure
+      containers:
+        - name: verify
+          image: reg.ygnv.my.id/docker/pgautoupgrade/pgautoupgrade:debian@sha256:6c5e519451fe7ad193678e8ad79bd9b258c8c70bbb43410a55ff3cd1a9ce0a5f
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -euo pipefail
+              HOST="pg-poc-restore"
+
+              echo "==> Waiting for restored postgres to be ready..."
+              until pg_isready -h "$HOST" -p 5432 -U postgres; do
+                sleep 3
+              done
+              echo ""
+
+              echo "========================================"
+              echo "  Databases in restored backup"
+              echo "========================================"
+              PGPASSWORD="$PGPASSWORD" psql -h "$HOST" -U "$PGUSER" -c "\l"
+
+              echo ""
+              echo "========================================"
+              echo "  Table counts per database"
+              echo "========================================"
+              for db in $(PGPASSWORD="$PGPASSWORD" psql -h "$HOST" -U "$PGUSER" -t -c \
+                "SELECT datname FROM pg_database WHERE datistemplate=false AND datname<>'postgres';" \
+                | tr -d ' ' | grep -v '^$'); do
+                count=$(PGPASSWORD="$PGPASSWORD" psql -h "$HOST" -U "$PGUSER" -d "$db" -t -c \
+                  "SELECT count(*) FROM pg_stat_user_tables;" | tr -d ' ')
+                size=$(PGPASSWORD="$PGPASSWORD" psql -h "$HOST" -U "$PGUSER" -d "$db" -t -c \
+                  "SELECT pg_size_pretty(pg_database_size('${db}'));" | tr -d ' ')
+                echo "  [${db}] ${count} user tables, size: ${size}"
+              done
+
+              echo ""
+              echo "========================================"
+              echo "  Current WAL position (post-recovery)"
+              echo "========================================"
+              PGPASSWORD="$PGPASSWORD" psql -h "$HOST" -U "$PGUSER" \
+                -c "SELECT pg_current_wal_lsn() AS wal_lsn, now() AS recovered_at;"
+
+              echo ""
+              echo "Restore POC verified successfully!"
+          env:
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pg-cred
+                  key: password
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: pg-cred
+                  key: username
