@@ -140,7 +140,7 @@ spec:
             kubernetes.io/arch: amd64
           containers:
           - name: ghostdb-dumper
-            image: reg.ygnv.my.id/docker/mysql:9.7.2
+            image: reg.ygnv.my.id/docker/mysql:26.7.0
             imagePullPolicy: IfNotPresent
             env:
             - name: DISCORD_WEBHOOK_URL
@@ -354,7 +354,7 @@ spec:
             kubernetes.io/arch: amd64
           containers:
           - name: ghostdb-replica-snapshotter
-            image: reg.ygnv.my.id/docker/mysql:9.7.2
+            image: reg.ygnv.my.id/docker/mysql:26.7.0
             imagePullPolicy: IfNotPresent
             env:
             - name: DISCORD_WEBHOOK_URL
