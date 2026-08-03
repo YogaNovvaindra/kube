@@ -9,7 +9,6 @@ spec:
     repoURL: https://github.com/YogaNovvaindra/kube.git
     path: metallb
     targetRevision: HEAD
-    kustomize: {}
   destination:
     server: https://kubernetes.default.svc
     namespace: metallb-system
