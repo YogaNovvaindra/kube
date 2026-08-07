@@ -1,0 +1,101 @@
+# slskd Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: slskd
+  namespace: media
+  labels:
+    app: slskd
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: slskd
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: slskd
+    spec:
+      containers:
+        - name: slskd
+          image: reg.ygnv.my.id/docker/slskd/slskd:0.26.0
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 256Mi
+          ports:
+            - containerPort: 5030
+              name: http
+            - containerPort: 2242
+              name: peer-tcp
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "Asia/Jakarta"
+            - name: SLSKD_REMOTE_CONFIGURATION
+              value: "true"
+          volumeMounts:
+            - name: slskd-config
+              mountPath: /app
+            - name: slskd-downloads
+              mountPath: /app/downloads
+            - name: slskd-music
+              mountPath: /music
+      volumes:
+        - name: slskd-config
+          persistentVolumeClaim:
+            claimName: media-slskd-pvc
+        - name: slskd-downloads
+          hostPath:
+            path: /mnt/cephfs/data/downloads/slskd
+            type: DirectoryOrCreate
+        - name: slskd-music
+          hostPath:
+            path: /mnt/cephfs/data/Music
+            type: DirectoryOrCreate
+---
+# slskd Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: slskd
+  namespace: media
+  labels:
+    app: slskd
+spec:
+  type: ClusterIP
+  selector:
+    app: slskd
+  ports:
+    - name: http
+      protocol: TCP
+      port: 5030
+      targetPort: 5030
+    - name: peer-tcp
+      protocol: TCP
+      port: 2242
+      targetPort: 2242
+---
+# slskd IngressRoute
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: slskd
+  namespace: media
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`slskd.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: slskd
+          port: 5030
+  tls: {}

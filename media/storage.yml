@@ -461,3 +461,91 @@ spec:
       storage: 256Mi
   storageClassName: cephfs
   volumeName: media-seerr-pv
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: media-slskd-pv
+spec:
+  capacity:
+    storage: 256Mi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: cephfs
+  hostPath:
+    path: /mnt/cephfs/docker/media/slskd
+    type: Directory
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-slskd-pvc
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 256Mi
+  storageClassName: cephfs
+  volumeName: media-slskd-pv
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: media-droppedneedle-config-pv
+spec:
+  capacity:
+    storage: 256Mi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: cephfs
+  hostPath:
+    path: /mnt/cephfs/docker/media/droppedneedle/config
+    type: Directory
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-droppedneedle-config-pvc
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 256Mi
+  storageClassName: cephfs
+  volumeName: media-droppedneedle-config-pv
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: media-droppedneedle-cache-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: cephfs
+  hostPath:
+    path: /mnt/cephfs/docker/media/droppedneedle/cache
+    type: Directory
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-droppedneedle-cache-pvc
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: cephfs
+  volumeName: media-droppedneedle-cache-pv
+

@@ -19,6 +19,8 @@ The media stack provides automated media management, downloading, streaming, and
 | **Maintainerr** | [`maintainerr.yml`](maintainerr.yml) | Rule-based media library cleanup & management |
 | **Crosswatch** | [`crosswatch.yml`](crosswatch.yml) | Cross-platform media watch progress synchronization |
 | **FlareSolverr** | [`flaresolverr.yml`](flaresolverr.yml) | Proxy server to bypass Cloudflare protection for indexers |
+| **slskd** | [`slskd.yml`](slskd.yml) | Soulseek daemon & HTTP API for music downloads |
+| **DroppedNeedle** | [`droppedneedle.yml`](droppedneedle.yml) | Music request & discovery engine using slskd |
 
 ## 🔄 Automation Workflow
 
@@ -29,7 +31,10 @@ graph TD
     Prowlarr --> FlareSolverr["FlareSolverr (bypass)"]
     Arr --> Download["Transmission / qBittorrent (download)"]
     Download --> Import["Radarr / Sonarr (import)"]
+    DN["DroppedNeedle (request & import)"] --> SLSKD["slskd (download)"]
+    SLSKD --> DN
     Import --> Serve["Plex & Jellyfin (serve)"]
+    DN --> Serve
     Serve -.-> Tautulli["Tautulli (monitor)"]
     Serve -.-> Maintainerr["Maintainerr (cleanup)"]
     Serve -.-> Crosswatch["Crosswatch (sync progress)"]
@@ -42,6 +47,7 @@ All PersistentVolumes and PersistentVolumeClaims are defined in [`storage.yml`](
 Media files are served from:
 - **Movies**: `/mnt/cephfs/data/Videos/Movies`
 - **TV Shows**: `/mnt/cephfs/data/Videos/TV`
+- **Music**: `/mnt/cephfs/data/Music`
 - **Downloads**: `/mnt/cephfs/data/downloads`
 
 ## 🌐 Service URLs
@@ -56,5 +62,7 @@ Media files are served from:
 | Maintainerr | `https://maintainerr.ygnv.my.id` |
 | Crosswatch | `https://crosswatch.ygnv.my.id` |
 | Radarr | `https://radarr.ygnv.my.id` |
+| slskd | `https://slskd.ygnv.my.id` |
+| DroppedNeedle | `https://droppedneedle.ygnv.my.id` |
 
 > **Note**: Plex and Jellyfin are pinned to `kube-2` (GPU-equipped node) via `nodeSelector: kubernetes.io/hostname: kube-2`.

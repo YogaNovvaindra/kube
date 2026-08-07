@@ -1,0 +1,102 @@
+# DroppedNeedle Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: droppedneedle
+  namespace: media
+  labels:
+    app: droppedneedle
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: droppedneedle
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: droppedneedle
+    spec:
+      containers:
+        - name: droppedneedle
+          image: reg.ygnv.my.id/ghcr/habirabbu/droppedneedle:v2.3.0
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 256Mi
+          ports:
+            - containerPort: 8688
+              name: http
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: PORT
+              value: "8688"
+            - name: TZ
+              value: "Asia/Jakarta"
+            - name: SLSKD_DOWNLOADS_PATH
+              value: "/slskd-downloads"
+          volumeMounts:
+            - name: droppedneedle-config
+              mountPath: /app/config
+            - name: droppedneedle-cache
+              mountPath: /app/cache
+            - name: droppedneedle-music
+              mountPath: /music
+            - name: slskd-downloads
+              mountPath: /slskd-downloads
+      volumes:
+        - name: droppedneedle-config
+          persistentVolumeClaim:
+            claimName: media-droppedneedle-config-pvc
+        - name: droppedneedle-cache
+          persistentVolumeClaim:
+            claimName: media-droppedneedle-cache-pvc
+        - name: droppedneedle-music
+          hostPath:
+            path: /mnt/cephfs/data/Music
+            type: DirectoryOrCreate
+        - name: slskd-downloads
+          hostPath:
+            path: /mnt/cephfs/data/downloads/slskd
+            type: DirectoryOrCreate
+---
+# DroppedNeedle Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: droppedneedle
+  namespace: media
+  labels:
+    app: droppedneedle
+spec:
+  type: ClusterIP
+  selector:
+    app: droppedneedle
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8688
+      targetPort: 8688
+---
+# DroppedNeedle IngressRoute
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: droppedneedle
+  namespace: media
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`droppedneedle.ygnv.my.id`)
+      kind: Rule
+      services:
+        - name: droppedneedle
+          port: 8688
+  tls: {}
