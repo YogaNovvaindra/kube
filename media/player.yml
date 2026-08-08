@@ -49,6 +49,8 @@ spec:
               mountPath: /tv
             - name: plex-movies
               mountPath: /movies
+            - name: plex-music
+              mountPath: /music
           securityContext:
             privileged: false
       volumes:
@@ -67,6 +69,10 @@ spec:
           hostPath:
             path: /mnt/cephfs/data/Videos/Movies
             type: Directory
+        - name: plex-music
+          hostPath:
+            path: /mnt/cephfs/data/Music
+            type: DirectoryOrCreate
 ---
 # Plex Service
 apiVersion: v1
@@ -157,6 +163,8 @@ spec:
               mountPath: /data/tvshows
             - name: jellyfin-movies
               mountPath: /data/movies
+            - name: jellyfin-music
+              mountPath: /data/music
           securityContext:
             privileged: true
       volumes:
@@ -178,6 +186,10 @@ spec:
           hostPath:
             path: /mnt/cephfs/data/Videos/Movies
             type: Directory
+        - name: jellyfin-music
+          hostPath:
+            path: /mnt/cephfs/data/Music
+            type: DirectoryOrCreate
 ---
 # Jellyfin Service
 apiVersion: v1
