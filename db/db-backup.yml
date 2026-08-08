@@ -590,13 +590,18 @@ data:
     fi
     
     TEMP_HEADER=$(mktemp)
-    (set +e +o pipefail; gzip -cd "${DUMP_FILE}" | head -n 100 > "${TEMP_HEADER}")
-    MASTER_LOG_FILE=$(grep -m1 'CHANGE MASTER TO' "${TEMP_HEADER}" \
-      | sed "s/.*MASTER_LOG_FILE='\([^']*\)'.*/\1/" || true)
-    MASTER_LOG_POS=$(grep -m1 'CHANGE MASTER TO' "${TEMP_HEADER}" \
-      | sed "s/.*MASTER_LOG_POS=\([0-9]*\).*/\1/" || true)
-    GTID_POS=$(grep -m1 'gtid_slave_pos' "${TEMP_HEADER}" \
-      | sed "s/.*gtid_slave_pos = '\([^']*\)'.*/\1/" || true)
+    (set +e +o pipefail; gzip -cd "${DUMP_FILE}" | head -n 150 > "${TEMP_HEADER}")
+    
+    CHANGE_MASTER_LINE=$(grep -m1 'CHANGE MASTER TO' "${TEMP_HEADER}" || true)
+    if echo "${CHANGE_MASTER_LINE}" | grep -q 'MASTER_LOG_FILE'; then
+      MASTER_LOG_FILE=$(echo "${CHANGE_MASTER_LINE}" | sed -E "s/.*MASTER_LOG_FILE='([^']+)'.*/\1/")
+      MASTER_LOG_POS=$(echo "${CHANGE_MASTER_LINE}" | sed -E "s/.*MASTER_LOG_POS=([0-9]+).*/\1/")
+    else
+      MASTER_LOG_FILE=""
+      MASTER_LOG_POS=""
+    fi
+
+    GTID_POS=$(grep -i 'gtid_slave_pos' "${TEMP_HEADER}" | sed -E "s/.*gtid_slave_pos[[:space:]]*=[[:space:]]*['\"]?([^'\";]+)['\"]?.*/\1/" | head -n 1 || true)
     rm -f "${TEMP_HEADER}"
     
     if [ -z "${MASTER_LOG_FILE}" ] && [ -z "${GTID_POS}" ]; then
@@ -624,8 +629,11 @@ data:
     SUMMARY="**Host:** ${HOSTNAME}\n**Time:** ${TS_END}\n"
     SUMMARY="${SUMMARY}**Duration:** $(( $(date +%s) - $(date -d "$TS_INIT" +%s) )) seconds\n"
     SUMMARY="${SUMMARY}**Dump:** ${FILE_NAME} (${FILE_SIZE})\n"
-    SUMMARY="${SUMMARY}**Binlog:** ${MASTER_LOG_FILE:-n/a} @ ${MASTER_LOG_POS:-n/a}\n"
-    SUMMARY="${SUMMARY}**GTID:** ${GTID_POS:-n/a}"
+    if [ -n "${GTID_POS}" ]; then
+      SUMMARY="${SUMMARY}**GTID:** ${GTID_POS}"
+    else
+      SUMMARY="${SUMMARY}**Binlog:** ${MASTER_LOG_FILE:-n/a} @ ${MASTER_LOG_POS:-n/a}"
+    fi
     
     discord_notify "SUCCESS" "✅ Replica Snapshot Succeeded" "$SUMMARY"
     echo "✅ Snapshot completed successfully!"
