@@ -608,9 +608,11 @@ data:
       GTID_POS=$(grep -i -E 'gtid_current_pos|gtid' "${TEMP_HEADER}" | sed -E "s/.*['\"]([0-9]+-[0-9]+-[0-9]+)['\"].*/\1/" | grep -E '^[0-9]+-[0-9]+-[0-9]+$' | head -n 1 || true)
     fi
 
-    if [ -z "${GTID_POS}" ] && [ -n "${CHANGE_MASTER_LINE}" ]; then
-      if echo "${CHANGE_MASTER_LINE}" | grep -q 'MASTER_USE_GTID'; then
-        GTID_POS=$(echo "${CHANGE_MASTER_LINE}" | sed -E "s/.*MASTER_USE_GTID=([^;[:space:]]+).*/\1/")
+    # Query GTID position directly from master if header only yielded mode name (e.g., slave_pos/current_pos)
+    if [ -z "${GTID_POS}" ] || [ "${GTID_POS}" = "slave_pos" ] || [ "${GTID_POS}" = "current_pos" ] || [ "${GTID_POS}" = "no" ]; then
+      GTID_DIRECT=$(mariadb -h "${MASTER_HOST}" -P "${MASTER_PORT}" -u "${REPLICATION_USER}" -sN -e "SELECT @@gtid_current_pos;" 2>/dev/null || true)
+      if [ -n "${GTID_DIRECT}" ]; then
+        GTID_POS="${GTID_DIRECT}"
       fi
     fi
 
