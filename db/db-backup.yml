@@ -578,6 +578,7 @@ data:
       --ignore-database=performance_schema \
       --ignore-database=sys \
       --single-transaction \
+      --gtid \
       --master-data=2 \
       --triggers \
       --routines \
@@ -591,14 +592,16 @@ data:
     TEMP_HEADER=$(mktemp)
     (set +e +o pipefail; gzip -cd "${DUMP_FILE}" | head -n 100 > "${TEMP_HEADER}")
     MASTER_LOG_FILE=$(grep -m1 'CHANGE MASTER TO' "${TEMP_HEADER}" \
-      | sed "s/.*MASTER_LOG_FILE='\([^']*\)'.*/\1/")
+      | sed "s/.*MASTER_LOG_FILE='\([^']*\)'.*/\1/" || true)
     MASTER_LOG_POS=$(grep -m1 'CHANGE MASTER TO' "${TEMP_HEADER}" \
-      | sed "s/.*MASTER_LOG_POS=\([0-9]*\).*/\1/")
+      | sed "s/.*MASTER_LOG_POS=\([0-9]*\).*/\1/" || true)
+    GTID_POS=$(grep -m1 'gtid_slave_pos' "${TEMP_HEADER}" \
+      | sed "s/.*gtid_slave_pos = '\([^']*\)'.*/\1/" || true)
     rm -f "${TEMP_HEADER}"
     
-    if [ -z "${MASTER_LOG_FILE}" ] || [ -z "${MASTER_LOG_POS}" ]; then
+    if [ -z "${MASTER_LOG_FILE}" ] && [ -z "${GTID_POS}" ]; then
       TS_FAIL=$(date +"%Y-%m-%d %H:%M:%S")
-      discord_notify "FAILED" "🚨 Snapshot FAILED" "**Host:** ${HOSTNAME}\n**Time:** ${TS_FAIL}\n**Error:** Could not parse binlog position. Ensure binary logging is enabled."
+      discord_notify "FAILED" "🚨 Snapshot FAILED" "**Host:** ${HOSTNAME}\n**Time:** ${TS_FAIL}\n**Error:** Could not parse binlog or GTID position."
       exit 1
     fi
     
@@ -607,6 +610,7 @@ data:
     # Master: ${MASTER_HOST}:${MASTER_PORT}
     MASTER_LOG_FILE=${MASTER_LOG_FILE}
     MASTER_LOG_POS=${MASTER_LOG_POS}
+    GTID_POS=${GTID_POS}
     EOF
     
     # Cleanup old backups
@@ -620,7 +624,8 @@ data:
     SUMMARY="**Host:** ${HOSTNAME}\n**Time:** ${TS_END}\n"
     SUMMARY="${SUMMARY}**Duration:** $(( $(date +%s) - $(date -d "$TS_INIT" +%s) )) seconds\n"
     SUMMARY="${SUMMARY}**Dump:** ${FILE_NAME} (${FILE_SIZE})\n"
-    SUMMARY="${SUMMARY}**Binlog:** ${MASTER_LOG_FILE} @ ${MASTER_LOG_POS}"
+    SUMMARY="${SUMMARY}**Binlog:** ${MASTER_LOG_FILE:-n/a} @ ${MASTER_LOG_POS:-n/a}\n"
+    SUMMARY="${SUMMARY}**GTID:** ${GTID_POS:-n/a}"
     
     discord_notify "SUCCESS" "✅ Replica Snapshot Succeeded" "$SUMMARY"
     echo "✅ Snapshot completed successfully!"
