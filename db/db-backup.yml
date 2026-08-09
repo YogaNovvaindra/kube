@@ -578,7 +578,6 @@ data:
       --ignore-database=performance_schema \
       --ignore-database=sys \
       --single-transaction \
-      --gtid \
       --master-data=2 \
       --triggers \
       --routines \
@@ -590,48 +589,24 @@ data:
     fi
     
     TEMP_HEADER=$(mktemp)
-    gzip -cd "${DUMP_FILE}" 2>/dev/null | head -n 300 > "${TEMP_HEADER}" || true
+    (set +e +o pipefail; gzip -cd "${DUMP_FILE}" | head -n 100 > "${TEMP_HEADER}")
+    MASTER_LOG_FILE=$(grep -m1 'CHANGE MASTER TO' "${TEMP_HEADER}" \
+      | sed "s/.*MASTER_LOG_FILE='\([^']*\)'.*/\1/")
+    MASTER_LOG_POS=$(grep -m1 'CHANGE MASTER TO' "${TEMP_HEADER}" \
+      | sed "s/.*MASTER_LOG_POS=\([0-9]*\).*/\1/")
+    rm -f "${TEMP_HEADER}"
     
-    CHANGE_MASTER_LINE=$(grep -i 'CHANGE MASTER TO' "${TEMP_HEADER}" | head -n 1 || true)
-    
-    MASTER_LOG_FILE=""
-    MASTER_LOG_POS=""
-    if echo "${CHANGE_MASTER_LINE}" | grep -q 'MASTER_LOG_FILE'; then
-      MASTER_LOG_FILE=$(echo "${CHANGE_MASTER_LINE}" | sed -E "s/.*MASTER_LOG_FILE='([^']+)'.*/\1/")
-      MASTER_LOG_POS=$(echo "${CHANGE_MASTER_LINE}" | sed -E "s/.*MASTER_LOG_POS=([0-9]+).*/\1/")
-    fi
-
-    # Try extracting GTID position in various formats (gtid_slave_pos, gtid_current_pos, domain-server-seq format)
-    GTID_POS=$(grep -i 'gtid_slave_pos' "${TEMP_HEADER}" | sed -E "s/.*gtid_slave_pos[[:space:]]*=[[:space:]]*['\"]?([^'\";[:space:]]+)['\"]?.*/\1/" | head -n 1 || true)
-    
-    if [ -z "${GTID_POS}" ]; then
-      GTID_POS=$(grep -i -E 'gtid_current_pos|gtid' "${TEMP_HEADER}" | sed -E "s/.*['\"]([0-9]+-[0-9]+-[0-9]+)['\"].*/\1/" | grep -E '^[0-9]+-[0-9]+-[0-9]+$' | head -n 1 || true)
-    fi
-
-    # Query GTID position directly from master if header only yielded mode name (e.g., slave_pos/current_pos)
-    if [ -z "${GTID_POS}" ] || [ "${GTID_POS}" = "slave_pos" ] || [ "${GTID_POS}" = "current_pos" ] || [ "${GTID_POS}" = "no" ]; then
-      GTID_DIRECT=$(mariadb -h "${MASTER_HOST}" -P "${MASTER_PORT}" -u "${REPLICATION_USER}" -sN -e "SELECT @@gtid_current_pos;" 2>/dev/null || true)
-      if [ -n "${GTID_DIRECT}" ]; then
-        GTID_POS="${GTID_DIRECT}"
-      fi
-    fi
-
-    if [ -z "${MASTER_LOG_FILE}" ] && [ -z "${GTID_POS}" ]; then
-      echo "==> [DEBUG] Dump Header Content (first 40 lines):"
-      head -n 40 "${TEMP_HEADER}" || true
-      rm -f "${TEMP_HEADER}"
+    if [ -z "${MASTER_LOG_FILE}" ] || [ -z "${MASTER_LOG_POS}" ]; then
       TS_FAIL=$(date +"%Y-%m-%d %H:%M:%S")
-      discord_notify "FAILED" "🚨 Snapshot FAILED" "**Host:** ${HOSTNAME}\n**Time:** ${TS_FAIL}\n**Error:** Could not parse binlog or GTID position."
+      discord_notify "FAILED" "🚨 Snapshot FAILED" "**Host:** ${HOSTNAME}\n**Time:** ${TS_FAIL}\n**Error:** Could not parse binlog position. Ensure binary logging is enabled."
       exit 1
     fi
-    rm -f "${TEMP_HEADER}"
     
     cat > "${ENV_FILE}" <<EOF
     # MariaDB snapshot taken: ${TIMESTAMP}
     # Master: ${MASTER_HOST}:${MASTER_PORT}
     MASTER_LOG_FILE=${MASTER_LOG_FILE}
     MASTER_LOG_POS=${MASTER_LOG_POS}
-    GTID_POS=${GTID_POS}
     EOF
     
     # Cleanup old backups
@@ -645,11 +620,7 @@ data:
     SUMMARY="**Host:** ${HOSTNAME}\n**Time:** ${TS_END}\n"
     SUMMARY="${SUMMARY}**Duration:** $(( $(date +%s) - $(date -d "$TS_INIT" +%s) )) seconds\n"
     SUMMARY="${SUMMARY}**Dump:** ${FILE_NAME} (${FILE_SIZE})\n"
-    if [ -n "${GTID_POS}" ]; then
-      SUMMARY="${SUMMARY}**GTID:** ${GTID_POS}"
-    else
-      SUMMARY="${SUMMARY}**Binlog:** ${MASTER_LOG_FILE:-n/a} @ ${MASTER_LOG_POS:-n/a}"
-    fi
+    SUMMARY="${SUMMARY}**Binlog:** ${MASTER_LOG_FILE} @ ${MASTER_LOG_POS}"
     
     discord_notify "SUCCESS" "✅ Replica Snapshot Succeeded" "$SUMMARY"
     echo "✅ Snapshot completed successfully!"
