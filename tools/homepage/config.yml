@@ -535,11 +535,11 @@ data:
           href: https://hermes.ygnv.my.id
           description: The self-improving AI agent
           siteMonitor: http://hermes.tools:9119
-      - N8n:
-          icon: n8n.png
-          href: https://n8n.ygnv.my.id
-          description: Workflow automation and integration platform
-          siteMonitor: http://n8n.tools:5678
+      # - N8n:
+      #     icon: n8n.png
+      #     href: https://n8n.ygnv.my.id
+      #     description: Workflow automation and integration platform
+      #     siteMonitor: http://n8n.tools:5678
       # - Change Detection:
       #     icon: changedetection.svg
       #     href: https://changedetection.ygnv.my.id
