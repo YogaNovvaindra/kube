@@ -28,6 +28,8 @@ spec:
             - "--log-bin=mariadb-bin"
             - "--server-id=1"
             - "--performance-schema=ON"
+            - "--expire-logs-days=30"
+            - "--max-binlog-size=1073741824"
           resources:
             requests:
               memory: 256Mi

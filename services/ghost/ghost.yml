@@ -14,6 +14,9 @@ data:
     # Explicitly disable GTID as requested
     gtid_mode = OFF
     enforce_gtid_consistency = OFF
+    # Binlog retention and size limits
+    expire_logs_days = 30
+    max_binlog_size = 1073741824
 ---
 apiVersion: apps/v1
 kind: Deployment
