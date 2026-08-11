@@ -323,18 +323,18 @@ data:
           - source_labels: [__meta_kubernetes_pod_name]
             target_label: instance
 
-      # - job_name: adguard
-      #   kubernetes_sd_configs:
-      #     - role: pod
-      #       namespaces:
-      #         names: [monitoring]
-      #   relabel_configs:
-      #     - source_labels: [__meta_kubernetes_pod_label_app]
-      #       action: keep
-      #       regex: adguard-exporter
-      #     - source_labels: [__meta_kubernetes_pod_ip]
-      #       target_label: __address__
-      #       replacement: $1:9618
+      - job_name: adguard
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: [monitoring]
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            action: keep
+            regex: adguard-exporter
+          - source_labels: [__meta_kubernetes_pod_ip]
+            target_label: __address__
+            replacement: $1:9618
 
       - job_name: authentik
 
