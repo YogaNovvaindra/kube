@@ -28,7 +28,7 @@ spec:
             - name: NB_HOSTNAME
               value: "microk8s"
             - name: NB_LOG_LEVEL
-              value: "info"
+              value: "warn"
           volumeMounts:
             - name: netbird-agent
               mountPath: /var/lib/netbird
