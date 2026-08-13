@@ -97,6 +97,14 @@ spec:
                   key: mailpass
             - name: url
               value: "https://ygnv.my.id"
+            - name: server__host
+              value: "0.0.0.0"
+            - name: server__port
+              value: "2368"
+            - name: server__trustProxy
+              value: "true"
+            - name: admin__url
+              value: "https://ygnv.my.id/ghost/"
           volumeMounts:
             - name: ghost-data
               mountPath: /var/lib/ghost/content
