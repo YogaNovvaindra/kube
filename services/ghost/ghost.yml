@@ -38,6 +38,25 @@ spec:
       labels:
         app: ghost
     spec:
+      initContainers:
+        - name: ghost-config-init
+          image: reg.ygnv.my.id/docker/ghost:6.57.1
+          command:
+            - node
+            - -e
+            - |
+              const fs = require('fs');
+              const cfg = {
+                url: 'https://ygnv.my.id',
+                server: { port: 2368, host: '::', trustProxy: true },
+                mail: { transport: 'Direct' },
+                logging: { transports: ['file', 'stdout'] },
+                process: 'systemd',
+                security: { staffDeviceVerification: true },
+                paths: { contentPath: '/var/lib/ghost/content' }
+              };
+              fs.writeFileSync('/var/lib/ghost/config.production.json', JSON.stringify(cfg, null, 2));
+              console.log('Ghost config written:', cfg.url);
       containers:
         - name: ghost
           image: reg.ygnv.my.id/docker/ghost:6.57.1
@@ -97,9 +116,6 @@ spec:
                   key: mailpass
             - name: url
               value: "https://ygnv.my.id"
-            # Trust X-Forwarded-Proto from Cloudflare Tunnel to prevent 301 redirect loops
-            - name: server__trustProxy
-              value: "true"
           volumeMounts:
             - name: ghost-data
               mountPath: /var/lib/ghost/content
