@@ -3,6 +3,8 @@ kind: ClusterTunnel
 metadata:
   name: homelab-tunnel-ygnv
 spec:
+  originRequest:
+    httpHostHeader: ygnv.my.id
   newTunnel:
     name: homelab-tunnel-ygnv
   # v1alpha2 uses deployPatch for replicas instead of 'size'
