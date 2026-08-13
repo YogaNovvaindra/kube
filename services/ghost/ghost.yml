@@ -103,8 +103,6 @@ spec:
               value: "2368"
             - name: server__trustProxy
               value: "true"
-            - name: admin__url
-              value: "https://ygnv.my.id/ghost/"
           volumeMounts:
             - name: ghost-data
               mountPath: /var/lib/ghost/content
