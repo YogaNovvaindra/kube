@@ -97,6 +97,9 @@ spec:
                   key: mailpass
             - name: url
               value: "https://ygnv.my.id"
+            # Trust X-Forwarded-Proto from Cloudflare Tunnel to prevent 301 redirect loops
+            - name: server__trustProxy
+              value: "true"
           volumeMounts:
             - name: ghost-data
               mountPath: /var/lib/ghost/content
