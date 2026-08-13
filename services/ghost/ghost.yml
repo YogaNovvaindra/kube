@@ -142,7 +142,7 @@ spec:
               mountPath: /etc/localtime
               readOnly: true
         - name: nginx-proxy
-          image: nginx:1.27-alpine
+          image: reg.ygnv.my.id/docker/nginx:1.27-alpine
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
