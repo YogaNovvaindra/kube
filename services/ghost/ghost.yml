@@ -150,6 +150,9 @@ spec:
             - name: ghost-nginx-config
               mountPath: /etc/nginx/nginx.conf
               subPath: nginx.conf
+          env:
+            - name: TZ
+              value: "Asia/Jakarta"
       volumes:
         - name: ghost-data
           hostPath:
