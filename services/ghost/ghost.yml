@@ -175,6 +175,9 @@ spec:
   ports:
     - name: ghost
       port: 2368
+      targetPort: 2368
+    - name: nginx
+      port: 8080
       targetPort: 8080
 ---
 apiVersion: apps/v1
