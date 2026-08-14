@@ -140,7 +140,7 @@ spec:
                       - "amd64"
       containers:
         - name: keel
-          image: reg.ygnv.my.id/docker/karolisr/keel:0.22.0
+          image: reg.ygnv.my.id/docker/karolisr/keel:0.22.1
           imagePullPolicy: IfNotPresent
           command: ["/bin/keel"]
           env:
