@@ -54,8 +54,8 @@ spec:
           requests:
             cpu: 100m
             memory: 512Mi
-          limits:
-            memory: 2Gi
+          # limits:
+          #   memory: 2Gi
         volumeMounts:
         - name: hermes-data
           mountPath: /opt/data
@@ -63,7 +63,7 @@ spec:
       - name: hermes-data
         hostPath:
           path: /mnt/cephfs/docker/tools/hermes
-          type: DirectoryOrCreate
+          type: Directory
 ---
 apiVersion: v1
 kind: Service

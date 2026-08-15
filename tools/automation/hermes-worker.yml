@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hermes-worker
+  namespace: tools
+  labels:
+    app: hermes-worker
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: hermes-worker
+  template:
+    metadata:
+      labels:
+        app: hermes-worker
+    spec:
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      containers:
+      - name: hermes-worker
+        image: reg.ygnv.my.id/docker/nousresearch/hermes-agent:v2026.8.13
+        imagePullPolicy: IfNotPresent
+        args: ["worker", "run"]
+        env:
+        - name: HERMES_GATEWAY_URL
+          value: "http://hermes:8642"
+        envFrom:
+        - configMapRef:
+            name: hermes-env
+        - secretRef:
+            name: hermes-cred
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          # limits:
+          #   memory: 1Gi
+        volumeMounts:
+        - name: hermes-data
+          mountPath: /opt/data
+      volumes:
+      - name: hermes-data
+        hostPath:
+          path: /mnt/cephfs/docker/tools/hermes
+          type: Directory
