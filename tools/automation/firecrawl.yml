@@ -197,7 +197,7 @@ spec:
         kubernetes.io/arch: "amd64"
       containers:
       - name: api
-        image: reg.ygnv.my.id/ghcr/firecrawl/firecrawl:2.11.216
+        image: reg.ygnv.my.id/ghcr/firecrawl/firecrawl:2.11.219
         imagePullPolicy: IfNotPresent
         command: ["node", "dist/src/index.js"]
         ports:
@@ -250,7 +250,7 @@ spec:
         kubernetes.io/arch: "amd64"
       containers:
       - name: worker
-        image: reg.ygnv.my.id/ghcr/firecrawl/firecrawl:2.11.216
+        image: reg.ygnv.my.id/ghcr/firecrawl/firecrawl:2.11.219
         imagePullPolicy: IfNotPresent
         command: ["node", "dist/src/services/queue-worker.js"]
         envFrom:
