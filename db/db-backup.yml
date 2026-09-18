@@ -433,7 +433,7 @@ spec:
             kubernetes.io/arch: amd64
           containers:
           - name: mariadb-dumper
-            image: reg.ygnv.my.id/docker/alpine:3.24.1
+            image: reg.ygnv.my.id/docker/alpine:3.24.2
             imagePullPolicy: IfNotPresent
             env:
             - name: DISCORD_WEBHOOK_URL
@@ -495,7 +495,7 @@ spec:
             kubernetes.io/arch: amd64
           containers:
           - name: mariadb-snapshotter
-            image: reg.ygnv.my.id/docker/alpine:3.24.1
+            image: reg.ygnv.my.id/docker/alpine:3.24.2
             imagePullPolicy: IfNotPresent
             env:
             - name: DISCORD_WEBHOOK_URL
@@ -644,7 +644,7 @@ spec:
             kubernetes.io/arch: amd64
           containers:
           - name: mariadb-replica-snapshotter
-            image: reg.ygnv.my.id/docker/alpine:3.24.1
+            image: reg.ygnv.my.id/docker/alpine:3.24.2
             imagePullPolicy: IfNotPresent
             env:
             - name: DISCORD_WEBHOOK_URL
