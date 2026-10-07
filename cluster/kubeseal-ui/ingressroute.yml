@@ -1,5 +1,19 @@
 ---
 apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: kubeseal-ui-strip-api
+  namespace: cluster
+  labels:
+    app.kubernetes.io/name: kubeseal-ui
+    app.kubernetes.io/part-of: kubeseal-ui
+spec:
+  stripPrefix:
+    prefixes:
+      - /api
+
+---
+apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: kubeseal-ui
@@ -13,6 +27,9 @@ spec:
   routes:
     - match: Host(`sealer.ygnv.my.id`) && PathPrefix(`/api`)
       kind: Rule
+      middlewares:
+        - name: kubeseal-ui-strip-api
+          namespace: cluster
       services:
         - name: kubeseal-ui-api
           port: 8080
