@@ -1,0 +1,271 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kubeseal-ui-api
+  namespace: cluster
+  labels:
+    app: kubeseal-ui
+    app.kubernetes.io/component: api
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: kubeseal-ui-api
+  labels:
+    app: kubeseal-ui
+    app.kubernetes.io/component: api
+rules:
+  - apiGroups: ["bitnami.com"]
+    resources: ["sealedsecrets"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["namespaces"]
+    verbs: ["get", "list"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: kubeseal-ui-api
+  labels:
+    app: kubeseal-ui
+    app.kubernetes.io/component: api
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kubeseal-ui-api
+subjects:
+  - kind: ServiceAccount
+    name: kubeseal-ui-api
+    namespace: cluster
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubeseal-ui-api
+  namespace: cluster
+  labels:
+    app: kubeseal-ui
+    app.kubernetes.io/component: api
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: kubeseal-ui
+    app.kubernetes.io/component: api
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubeseal-ui
+  namespace: cluster
+  labels:
+    app: kubeseal-ui
+    app.kubernetes.io/component: ui
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: kubeseal-ui
+    app.kubernetes.io/component: ui
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubeseal-ui-api
+  namespace: cluster
+  labels:
+    app: kubeseal-ui
+    app.kubernetes.io/component: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kubeseal-ui
+      app.kubernetes.io/component: api
+  template:
+    metadata:
+      labels:
+        app: kubeseal-ui
+        app.kubernetes.io/component: api
+    spec:
+      serviceAccountName: kubeseal-ui-api
+      securityContext:
+        fsGroup: 65532
+        runAsGroup: 65532
+        runAsNonRoot: true
+        runAsUser: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: api
+          image: reg.ygnv.my.id/ghcr/kubeseal-ui/api:dev
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65532
+            capabilities:
+              drop: [ALL]
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: KUBESEAL_API_PORT
+              value: "8080"
+            - name: LOG_LEVEL
+              value: "info"
+            - name: OIDC_ISSUER
+              value: "https://auth.ygnv.my.id/application/o/kubeseal-ui/"
+            - name: OIDC_CLIENT_ID
+              value: "kubeseal-ui"
+            - name: OIDC_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: kubeseal-cred
+                  key: OIDC_CLIENT_SECRET
+            - name: ENABLE_DECRYPT
+              value: "true"
+            - name: KUBESEAL_CONTROLLER_NAMESPACE
+              value: "cluster"
+            - name: KUBESEAL_ACTIVE_KEY_LABEL
+              value: "sealedsecrets.bitnami.com/sealed-secrets-key"
+            - name: GITOPS_ENABLED
+              value: "true"
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: ""
+            - name: OTEL_SERVICE_NAME
+              value: "kubeseal-ui-api"
+            - name: OTEL_SERVICE_VERSION
+              value: "dev"
+            - name: OTEL_DEPLOYMENT_ENVIRONMENT
+              value: "cluster"
+            - name: GITOPS_AUTHOR_NAME
+              value: "kubeseal-ui"
+            - name: GITOPS_AUTHOR_EMAIL
+              value: "kubeseal-ui@ygnv.my.id"
+            - name: GITOPS_WORKTREE_DIR
+              value: "/tmp/kubeseal-ui/gitops"
+            - name: GITOPS_CREDENTIAL_REFS
+              value: "github:https-token:yoganovvaindra:/var/run/secrets/git/platform/token"
+            - name: GITOPS_NAMESPACES
+              value: "cluster:YogaNovvaindra/kube:main:cluster-sealed-secrets-{name}.yaml:github:direct:cluster/sealed-secrets/-cluster/kubeseal-ui/-cluster/sealed-secret/"
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          volumeMounts:
+            - name: worktree
+              mountPath: /tmp/kubeseal-ui
+            - name: git-credentials
+              mountPath: /var/run/secrets/git/platform
+              readOnly: true
+      volumes:
+        - name: worktree
+          emptyDir:
+            sizeLimit: 1Gi
+        - name: git-credentials
+          secret:
+            secretName: kubeseal-cred
+      terminationGracePeriodSeconds: 30
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubeseal-ui
+  namespace: cluster
+  labels:
+    app: kubeseal-ui
+    app.kubernetes.io/component: ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kubeseal-ui
+      app.kubernetes.io/component: ui
+  template:
+    metadata:
+      labels:
+        app: kubeseal-ui
+        app.kubernetes.io/component: ui
+    spec:
+      securityContext:
+        fsGroup: 65532
+        runAsGroup: 65532
+        runAsNonRoot: true
+        runAsUser: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: ui
+          image: reg.ygnv.my.id/ghcr/kubeseal-ui/frontend:dev
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65532
+            capabilities:
+              drop: [ALL]
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi

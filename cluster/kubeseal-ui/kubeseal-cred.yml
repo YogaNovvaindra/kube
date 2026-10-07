@@ -1,0 +1,49 @@
+---
+# SealedSecret template for kubeseal-ui API credentials.
+#
+# This file is a SEALING TEMPLATE only. The encryptedData block below is a
+# placeholder with no real ciphertext — the SealedSecrets controller cannot
+# decrypt it, so this resource MUST NOT be applied with the placeholder bytes.
+#
+# To populate it:
+#
+#   1. Create the plaintext secret (never committed):
+#      kubectl create secret generic kubeseal-cred \
+#        --namespace cluster \
+#        --from-literal=OIDC_CLIENT_SECRET='<authentik-application-client-secret>' \
+#        --from-literal=token='<github-personal-access-token>' \
+#        --dry-run=client -o json \
+#      > /tmp/kubeseal-cred.secret.json
+#
+#   2. Seal it against THIS cluster's controller keys:
+#      kubeseal < /tmp/kubeseal-cred.secret.json \
+#        --namespace cluster \
+#        --name kubeseal-cred \
+#        --format yaml \
+#        --cert <(kubectl get secret -n kube-system \
+#          -l sealedsecrets.bitnami.com/sealed-secrets-key=active \
+#          -o jsonpath='{.items[0].data}.tls\.crt' | base64 -d) \
+#      > cluster/kubeseal-ui/kubeseal-cred.yml
+#
+#   3. Commit the sealed file. The API consumes it as:
+#      - OIDC_CLIENT_SECRET via secretKeyRef (env)
+#      - GITHUB_PAT via file mount at /var/run/secrets/git/platform/token
+#        (the gitops tokenFile path configured in values.cluster.gitops.yaml)
+#
+# The seal is cluster-bound: re-seal for each target cluster using that
+# cluster's active sealed-secrets key.
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: kubeseal-cred
+  namespace: cluster
+  labels:
+    app.kubernetes.io/name: kubeseal-ui
+    app.kubernetes.io/part-of: kubeseal-ui
+    app.kubernetes.io/component: api
+spec:
+  encryptedData:
+    OIDC_CLIENT_SECRET: PLACEHOLDER-REPLACE-BY-SEALING
+    token: PLACEHOLDER-REPLACE-BY-SEALING
+  template:
+    type: Opaque
