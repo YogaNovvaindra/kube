@@ -90,6 +90,11 @@ metadata:
   labels:
     app: kubeseal-ui
     app.kubernetes.io/component: api
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
 spec:
   replicas: 1
   selector:
@@ -112,7 +117,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: api
-          image: reg.ygnv.my.id/ghcr/kubeseal-ui/api:dev
+          image: ghcr.io/kubeseal-ui/api:dev
           imagePullPolicy: IfNotPresent
           securityContext:
             allowPrivilegeEscalation: false
@@ -133,7 +138,10 @@ spec:
             - name: OIDC_ISSUER
               value: "https://auth.ygnv.my.id/application/o/kubeseal-ui/"
             - name: OIDC_CLIENT_ID
-              value: "kubeseal-ui"
+              valueFrom:
+                secretKeyRef:
+                  name: kubeseal-cred
+                  key: OIDC_CLIENT_ID
             - name: OIDC_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
@@ -212,6 +220,11 @@ metadata:
   labels:
     app: kubeseal-ui
     app.kubernetes.io/component: ui
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
 spec:
   replicas: 1
   selector:
@@ -233,7 +246,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: ui
-          image: reg.ygnv.my.id/ghcr/kubeseal-ui/frontend:dev
+          image: ghcr.io/kubeseal-ui/frontend:dev
           imagePullPolicy: IfNotPresent
           securityContext:
             allowPrivilegeEscalation: false

@@ -3,8 +3,9 @@ kind: Kustomization
 
 resources:
   - sealed-secret
-  # - kubeseal-ui/kubeseal-ui.yml
-  # - kubeseal-ui/ingressroute.yml
+  - kubeseal-ui/kubeseal-ui.yml
+  - kubeseal-ui/kubeseal-cred.yml
+  - kubeseal-ui/ingressroute.yml
   - reloader
   - keel/keel.yml
   - keel/keel-cred.yml
