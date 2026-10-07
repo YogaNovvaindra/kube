@@ -150,7 +150,14 @@ spec:
                   name: kubeseal-cred
                   key: OIDC_CLIENT_SECRET
             - name: OIDC_REDIRECT_URL
-              value: "https://sealer.ygnv.my.id/auth/callback"
+              value: "https://sealer.ygnv.my.id/api/v1/auth/callback"
+            - name: CSRF_TRUSTED_ORIGINS
+              value: "https://sealer.ygnv.my.id"
+            - name: SESSION_SIGNING_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: kubeseal-cred
+                  key: SESSION_SIGNING_KEY
             - name: ENABLE_DECRYPT
               value: "true"
             - name: KUBESEAL_CONTROLLER_NAMESPACE
