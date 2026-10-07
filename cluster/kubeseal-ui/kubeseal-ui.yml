@@ -170,7 +170,10 @@ spec:
             - name: GITOPS_WORKTREE_DIR
               value: "/tmp/kubeseal-ui/gitops"
             - name: GITOPS_CREDENTIAL_REFS
-              value: "github:https-token:yoganovvaindra:/var/run/secrets/git/platform/token"
+              valueFrom:
+                secretKeyRef:
+                  name: kubeseal-cred
+                  key: GITOPS_CREDENTIAL_REFS
             - name: GITOPS_NAMESPACES
               value: "cluster:YogaNovvaindra/kube:main:cluster-sealed-secrets--{name}.yaml:github:direct:cluster-sealed-secrets-"
           livenessProbe:
