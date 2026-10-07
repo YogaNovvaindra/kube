@@ -133,6 +133,8 @@ spec:
           env:
             - name: KUBESEAL_API_PORT
               value: "8080"
+            - name: KUBESEAL_CERT_URL
+              value: "http://sealed-secrets-controller.cluster.svc.cluster.local:8080/v1/cert.pem"
             - name: LOG_LEVEL
               value: "info"
             - name: OIDC_ISSUER
