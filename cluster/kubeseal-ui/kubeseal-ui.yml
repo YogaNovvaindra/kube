@@ -177,7 +177,7 @@ spec:
                   name: kubeseal-cred
                   key: GITOPS_CREDENTIAL_REFS
             - name: GITOPS_NAMESPACES
-              value: "cluster:YogaNovvaindra/kube:main:/cluster/{namespace}/{name}-cred.yml:github:direct:cluster/"
+              value: "cluster:YogaNovvaindra/kube:main:cluster/{namespace}/{name}-cred.yml:github:direct:cluster/"
           livenessProbe:
             httpGet:
               path: /healthz
