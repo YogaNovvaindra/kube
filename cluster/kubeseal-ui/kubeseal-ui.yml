@@ -147,6 +147,8 @@ spec:
                 secretKeyRef:
                   name: kubeseal-cred
                   key: OIDC_CLIENT_SECRET
+            - name: OIDC_REDIRECT_URL
+              value: "https://sealer.ygnv.my.id/auth/callback"
             - name: ENABLE_DECRYPT
               value: "true"
             - name: KUBESEAL_CONTROLLER_NAMESPACE
@@ -175,7 +177,7 @@ spec:
                   name: kubeseal-cred
                   key: GITOPS_CREDENTIAL_REFS
             - name: GITOPS_NAMESPACES
-              value: "cluster:YogaNovvaindra/kube:main:cluster-sealed-secrets--{name}.yaml:github:direct:cluster-sealed-secrets-"
+              value: "cluster:YogaNovvaindra/kube:main:/cluster/{namespace}/{name}-cred.yml:github:direct:cluster/"
           livenessProbe:
             httpGet:
               path: /healthz
@@ -285,3 +287,18 @@ spec:
             limits:
               cpu: 200m
               memory: 128Mi
+          volumeMounts:
+            - name: nginx-cache
+              mountPath: /var/cache/nginx
+            - name: nginx-run
+              mountPath: /var/run
+            - name: nginx-tmp
+              mountPath: /tmp
+      volumes:
+        - name: nginx-cache
+          emptyDir: {}
+        - name: nginx-run
+          emptyDir: {}
+        - name: nginx-tmp
+          emptyDir: {}
+      terminationGracePeriodSeconds: 30
