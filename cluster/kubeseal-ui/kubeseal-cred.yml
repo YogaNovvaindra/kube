@@ -1,49 +1,20 @@
 ---
-# SealedSecret template for kubeseal-ui API credentials.
-#
-# This file is a SEALING TEMPLATE only. The encryptedData block below is a
-# placeholder with no real ciphertext — the SealedSecrets controller cannot
-# decrypt it, so this resource MUST NOT be applied with the placeholder bytes.
-#
-# To populate it:
-#
-#   1. Create the plaintext secret (never committed):
-#      kubectl create secret generic kubeseal-cred \
-#        --namespace cluster \
-#        --from-literal=OIDC_CLIENT_SECRET='<authentik-application-client-secret>' \
-#        --from-literal=token='<github-personal-access-token>' \
-#        --dry-run=client -o json \
-#      > /tmp/kubeseal-cred.secret.json
-#
-#   2. Seal it against THIS cluster's controller keys:
-#      kubeseal < /tmp/kubeseal-cred.secret.json \
-#        --namespace cluster \
-#        --name kubeseal-cred \
-#        --format yaml \
-#        --cert <(kubectl get secret -n kube-system \
-#          -l sealedsecrets.bitnami.com/sealed-secrets-key=active \
-#          -o jsonpath='{.items[0].data}.tls\.crt' | base64 -d) \
-#      > cluster/kubeseal-ui/kubeseal-cred.yml
-#
-#   3. Commit the sealed file. The API consumes it as:
-#      - OIDC_CLIENT_SECRET via secretKeyRef (env)
-#      - GITHUB_PAT via file mount at /var/run/secrets/git/platform/token
-#        (the gitops tokenFile path configured in values.cluster.gitops.yaml)
-#
-# The seal is cluster-bound: re-seal for each target cluster using that
-# cluster's active sealed-secrets key.
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
 metadata:
   name: kubeseal-cred
   namespace: cluster
-  labels:
-    app.kubernetes.io/name: kubeseal-ui
-    app.kubernetes.io/part-of: kubeseal-ui
-    app.kubernetes.io/component: api
 spec:
   encryptedData:
-    OIDC_CLIENT_SECRET: PLACEHOLDER-REPLACE-BY-SEALING
-    token: PLACEHOLDER-REPLACE-BY-SEALING
+    OIDC_CLIENT_ID: AgB4Ruj7VHEotKv/Xg2fhIaPnbnlSDZICWWOIA5mKGlcLtR0cd0e3HE9ShoPSWtZG3Hnn8cTQWaKHTTmy4+JiIhC+BUBsnAxuObZCcJcmNSDDLaZP84TnmK/LISXvOwPlsdGqnPkzwwxU/EFTYVjwYevPf1fHEHfnE5fDl/3FK/fxEk+Tn+45EHMh6IDsawZnb/pDNcyZa3Vjeenn54twhxVrExiMqC+2tzKw3uzdITtTmt3ASzehegLWD0LiXSK23FtpjvCVEyEdS5uuvmvMVJzk2byIGFrA69VrTEX97OjZQO0Afx44ol45cD4uSJnLBYASw4ZFPrjvwS5A2xDBQjSjM0MyBKnrabmln6gY4KYqJ6c4ayAT7ulp5DeCWT/QbnpPEfDuuaL/BK+xU3vs4Y4UmnhzC+M+z8vUbq1tUNIaswvDkMbWSU0NvDXoMOStV3rzJPpF/BsuNmMjWjHmaSj2PiepS1BQDm5bavZkorHwAKK6iaPCNONbf09VzAI16DILazEXbnPGWb02bwjRThfGqVyOXBIAyHOQAIRt8mCpaXqTGzJf2UVpzn6g6IlaOTa3mZqnD3Mt6b3wAJzdYZ2doGcZDarb+DAZVYKlMQwfJL/i72ZpEXnhXyGXXlKOe9MM+3oTAIeTFsozLlMpAmT+qzhEva42pJrX4/RF16pvwU/TTF5kGJU8ogXWgzqwKDqVhfPlPqag1fzHfEkJtoiW6GGME6VyIZ7wjdFpQ0jGg+9UB70F+qY
+    OIDC_CLIENT_SECRET: AgBaQXDbyVeZC/arKI2rjgqDbx42QpmRzZ6nC4vEhPbZ4+AixU9RvUrmPobFXl77miljCAzXm11qe1emmqj0LGfOQiOr8czIdyKWPfTwy+iOmE7SJS99etHknPXsO2wFIv1Ge2v00xe6g+nOf4x/bEd56MC74pR3AlzB5GRws+ef50iF/eVMP+q3o23qeXu7Nn6Vfcjy93DHOOa7GwNb08614D1cz9Q1rhB+s91SRNdQZEWddLsvrCDLiBYs9Vz5cN/KZlg6nbuK2nBjUXlStKm7hLJK/hI8/zf0B6lA5ddTXYIut8K1If03UooeoOgLQ4IVXdd0Jf+L3HmfLk8gqMuJjvekDSeHvLXcDcPXXwLguVXisFiLUfE9V6aic+T2N5AyvOtAcIesD6O0LZun97tqjOh6rgxjePWpMofoqrRPcn2i+mkAPvL+zv7iXqwE+f9Vfypg4pg3EY9beASRjuQJcq+J3Z08ex8vw7CS1VMiw3q07jRNIvjKvS6ErgsnhNqt48IWF8hYAPzCsjpOsRE7QosxQH9a+aGPP2IeK60yHXE99ecTacJpj1+JJR2jyNwCvlER7TdUBNAGuQxQ2CKiE58svWg/PuJcUhgjBFoLcprAqwP83icrhU1HxYlde0QX74J+h4w5FB05qbv8NRyB7SXHfq/6oq+5HWo2FOA8AiJ28AsaiCdDNoLOcQWJZrythgL1R3mBJowm2aIOtZg0mu3t58V1fuLRACvoFQtblKEBPxfugQb6TYYrm1uE0c3B1sCn6GHCIILsRiGvETsrDLYLgl2z7F1U/fQnzjvMId7kDFMnWUmzq40pKRT1+351zwlg9/aS1MHAirplu7QJAJbShYqonSlx6XnLDinYOw==
+    token: AgCG9rytlld7hH4PKdN3DLsPy1RK8h9R2yc5hBENzdiUnkqCbkcG0TuxfhrRgi4hDVISxWhtVUkky1Dt7Fm6wkGCeAMSSUy5uWHn8b70b+Mht+e6cp/ne4+Td+X+Bkm2oV64H5p53i2GlG3crod88eFqEINtkAdrwK6AIY0MrQhltq8mybPYMV/9jtXbwf3LIfQopAzKoHRvyZdEyTHahfmH8+tr3m2mgXLO45++d9JdMtkVP6zFT0A3A2kwijf7UtOGLPIYzwbYNaxlNHXhIXNa1O5QyqTEQVLohsOfb8kQABY600fdKbXx9eXivaky5QccgeGsgJpgLWk8ZX0dFKl6VKWSaPvfp+Nn75MinmBwfL4z8h9kJ5OeR9SsFRworanQc/zN4NsNLJ/TPdYKnHDwgtALcv6JcxpdsURlAsdnGfQtbmpXQpbVisUiMvs/KhOciP4HB2L7DPTyVJor6txZwj2dXq/ftlxpxzKjML8YOQlkl1kWlnpPadpjypqKB2pyFXBwMlcyQtH5yTJJOHw3jpqrGB5dwTBOPoNVBFyGxO/TJi+F0UYk0nJpbr4szJjxs/TAdCm3AiRIoJ8YKs4gi/0s0fqNhlBmY77xij6gB8QI55/DYe3/rm+EOpnJB4B+/xpl8LoETV09KztXm4EJO/geTg4Mo8e1C1SDCP6CC+nMKPcRh70GAo4og9oCBzW9BC81p18nQQDUu3Z3Q1d0zQY8K/7gjgVAf76kWcVydlDwh6FMy4gm
   template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: api
+        app.kubernetes.io/name: kubeseal-ui
+        app.kubernetes.io/part-of: kubeseal-ui
+      name: kubeseal-cred
+      namespace: cluster
     type: Opaque

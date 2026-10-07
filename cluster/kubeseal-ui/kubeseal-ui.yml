@@ -164,7 +164,7 @@ spec:
             - name: GITOPS_CREDENTIAL_REFS
               value: "github:https-token:yoganovvaindra:/var/run/secrets/git/platform/token"
             - name: GITOPS_NAMESPACES
-              value: "cluster:YogaNovvaindra/kube:main:cluster-sealed-secrets-{name}.yaml:github:direct:cluster/sealed-secrets/-cluster/kubeseal-ui/-cluster/sealed-secret/"
+              value: "cluster:YogaNovvaindra/kube:main:cluster-sealed-secrets--{name}.yaml:github:direct:cluster-sealed-secrets-"
           livenessProbe:
             httpGet:
               path: /healthz
