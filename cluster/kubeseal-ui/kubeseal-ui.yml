@@ -10,32 +10,31 @@ metadata:
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
+kind: Role
 metadata:
-  name: kubeseal-ui-api
+  name: kubeseal-ui-api-controller-key
+  namespace: cluster
   labels:
     app: kubeseal-ui
     app.kubernetes.io/component: api
 rules:
-  - apiGroups: ["bitnami.com"]
-    resources: ["sealedsecrets"]
-    verbs: ["get", "list", "watch"]
   - apiGroups: [""]
-    resources: ["namespaces"]
+    resources: ["secrets"]
     verbs: ["get", "list"]
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
+kind: RoleBinding
 metadata:
-  name: kubeseal-ui-api
+  name: kubeseal-ui-api-controller-key
+  namespace: cluster
   labels:
     app: kubeseal-ui
     app.kubernetes.io/component: api
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: kubeseal-ui-api
+  kind: Role
+  name: kubeseal-ui-api-controller-key
 subjects:
   - kind: ServiceAccount
     name: kubeseal-ui-api
