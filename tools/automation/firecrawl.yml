@@ -130,7 +130,7 @@ spec:
         kubernetes.io/hperf: "true"
       containers:
       - name: playwright
-        image: reg.ygnv.my.id/ghcr/firecrawl/playwright-service:latest
+        image: ghcr.io/firecrawl/playwright-service:latest
         imagePullPolicy: IfNotPresent
         env:
         - name: PORT
