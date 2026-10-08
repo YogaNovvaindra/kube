@@ -202,7 +202,7 @@ spec:
               path: /readyz
               port: http
             initialDelaySeconds: 5
-            periodSeconds: 10
+            periodSeconds: 30
             timeoutSeconds: 3
             failureThreshold: 3
           resources:
@@ -288,7 +288,7 @@ spec:
               path: /
               port: http
             initialDelaySeconds: 5
-            periodSeconds: 10
+            periodSeconds: 30
             timeoutSeconds: 3
             failureThreshold: 3
           resources:
