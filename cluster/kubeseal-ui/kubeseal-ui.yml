@@ -139,6 +139,8 @@ spec:
               value: "info"
             - name: OIDC_ISSUER
               value: "https://auth.ygnv.my.id/application/o/kubeseal-ui/"
+            - name: OIDC_SCOPES
+              value: "openid profile email kubeseal_mapping"
             - name: OIDC_CLIENT_ID
               valueFrom:
                 secretKeyRef:
