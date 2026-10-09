@@ -1,0 +1,13 @@
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: tet
+  namespace: immich
+spec:
+  encryptedData:
+    key: AgCXOe1aDrSAaEPcEuzPQcaAt2vad+6+6y8pufOz78l+G5YSLmsWg0cO4b/CKPYL1u2xHjCiONJ2+UEwI0v1y1nQN5xhZ4378WwrcD7tJr0Jq0tyWAXyoG8ets3M5n3aVlSEeSH+JnW68r7jeekw2kdMQ1dqbuBzxn9dI/pzV6q1P0rVZJqVHGDpXBApYaVHBkcO9zLwpJJLMjJhI5vJdiHapEpBO723ycAu+NHPRiult/9nX197eXDeoUItHbZosA9UO5nj941QmJ5Be4p+QY5CBMj8O/FB8FMl+DNORQ9EkSzOfG5ENMFLPur38MAX9m37kflCywf3y1Mt9xuSYaTbohH22sLBVoK6vZB3OqB0Z5JXZfxeleMp+GvP1illygIA8L2adkE2VXe4UuwFKHNJaAhcyLTLpxJZnCKeYm0fRklka3p0wRHJZLm08iHEEtURNmmEhmusmI73gynCcX+LZfBu/E035PexODrwW/AYGxgNSsgN7cC1q06X2ipBmljfmHNCTgqPMaYAdy/SHWPxIrFuwGbq2S2emqv88aht8EElBzKNFDdnGXQ1jmfM3rwryhy0yFB68mlRCdVC7taSRyvYTvwlsIij8K0TGc8wCSoplmkRoeovST1ZM4RCraEQAvd2Oyok0rwX9qoYin7c0HjKij+jybBpRP9RR2jBpxQwKVr210zJLXLwc/+uqzmu5g==
+  template:
+    metadata:
+      name: tet
+      namespace: immich
+    type: Opaque
