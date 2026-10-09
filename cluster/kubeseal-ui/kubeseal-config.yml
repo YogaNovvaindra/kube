@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kubeseal-ui-authz
+  namespace: cluster
+data:
+  acl.yaml: |
+    version: 1
+
+    authz:
+      defaults:
+        unauthenticated: deny
+        authenticated: deny
+
+      roles:
+        # The only bundle carrying everything — platform admins.
+        platform-owner:
+          capabilities: [metadata:read, secret:seal, secret:decrypt, gitops:push, access:manage]
+        # Makes and delivers, cannot read values back.
+        project-developer:
+          capabilities: [metadata:read, secret:seal, gitops:push]
+        # Adds reveal, for the few who must see existing values.
+        project-revealer:
+          capabilities: [metadata:read, secret:seal, secret:decrypt]
+        project-reader:
+          capabilities: [metadata:read]
+
+      groups:
+        - {name: platform-admin, namespaces: ['*'], role: platform-owner}
+
+        # ---- services ----
+        - {name: services-reader,    namespaces: [services, services-staging, services-dev], role: project-reader}
+        - {name: services-developer, namespaces: [services-staging, services-dev],          role: project-developer}
+        - {name: services-releaser,  namespaces: [services, services-staging, services-dev], role: project-developer}
+        - {name: services-revealer,  namespaces: [services, services-staging, services-dev], role: project-revealer}

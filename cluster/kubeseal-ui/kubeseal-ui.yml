@@ -188,6 +188,8 @@ spec:
                   key: GITOPS_CREDENTIAL_REFS
             - name: GITOPS_NAMESPACES
               value: "*:YogaNovvaindra/kube:main:{namespace}/{name}-cred.yml:github:direct"
+            - name: CONFIG_PATH
+              value: "/etc/kubeseal-ui/acl.yaml"
           livenessProbe:
             httpGet:
               path: /healthz
@@ -217,6 +219,9 @@ spec:
             - name: git-credentials
               mountPath: /var/run/secrets/git/platform
               readOnly: true
+            - name: authz
+              mountPath: /etc/kubeseal-ui
+              readOnly: true
       volumes:
         - name: worktree
           emptyDir:
@@ -224,6 +229,9 @@ spec:
         - name: git-credentials
           secret:
             secretName: kubeseal-cred
+        - name: authz
+          configMap:
+            name: kubeseal-ui-authz
       terminationGracePeriodSeconds: 30
 
 ---
