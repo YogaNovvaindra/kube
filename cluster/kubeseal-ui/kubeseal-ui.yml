@@ -187,7 +187,7 @@ spec:
                   name: kubeseal-cred
                   key: GITOPS_CREDENTIAL_REFS
             - name: GITOPS_NAMESPACES
-              value: "*:YogaNovvaindra/kube:main:{namespace}-{name}-cred.yml:<auth-ref>:direct:{namespace};sealed-secrets"
+              value: "*:YogaNovvaindra/kube:main:{namespace}-{name}-cred.yml:github:direct:{namespace};sealed-secrets"
             - name: CONFIG_PATH
               value: "/etc/kubeseal-ui/acl.yaml"
           livenessProbe:
