@@ -1,0 +1,13 @@
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: this
+  namespace: immich
+spec:
+  encryptedData:
+    wth: AgAvOeYKNGLhFWUXmx5ZsQxvEPnLzsvm3wF7Q9bRHhP5C11Bq/ZhU4O5yT8v/VqwVesVblO4w1cOBxGzCZDxoJU5ZOsH/goLxNZr6q+VZ/IdakScU/YRyFiR7f65bmL3mvoyhzkX+c2gkAJLAGx5dB+pAOx3fGE4nHoyNbsAFLy/qBcVEJSZUYNBn/sqzOiPtF7yMc6QHSwBTWotdVeFN3t4TBUOzZOctEsvVKNCHowFTc6O4YvSJBcGeX35CHm/zAlpD/6N9dNG8FBKyw8PSAQFHEWAh2sRR48Yc1IqzAoAmHLRbWZhcmQSoT+HOk2ws5mrhkaJIYuv22NKcN1MWv+0NRk729/Xk3cPzuY66yl8L8nUXx2cdXp5tmRFNMZ7/PC1cDGZ+FFZbXEd9oQNgKhez6LJBP2hYbJVJWEa2SpZFYeRMBewY833EFTaJZoPHJ4E/BLTPsM3y3JaWIdtLKtXsWuASt9Q3qYkvwxgMRWHEU1QrOIRwPNuo6YBo+8GR3PO7FWgOXIPJ9ThzKuxLqeW1Xicy6Myx9gwBRULh2WwRFrmz6QFco3jQ7IcMazX3qIwvhLJh9CY7amnVNviXr9yIIQFiLYfuRcaqiHBuw+0qrfAU8Op5/fxFwxcJ/Vn3Ca0quxAoBe82KupkvHQ/OOMyWSBhXeOCLQB8GJFVgmLGhnA9KY5H7td8tyX/zIa18XKoH98
+  template:
+    metadata:
+      name: this
+      namespace: immich
+    type: Opaque
