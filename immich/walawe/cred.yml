@@ -1,0 +1,13 @@
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: walawe
+  namespace: immich
+spec:
+  encryptedData:
+    this: AgBbQWRA8/amMNfgPwdMeSCX4FbjFZnqpcnHk9/sZoqmSYB8O5V7N1/Sue9lUU4w7ct/ZnmH1GUJrGxcBoKtq+6q+NNki1CxgfZuk4wI5SnLDlPoN88nlN+BJpmx7GYAw1oAHRsfYCbizP6jtdcTowNNsBDUCMJj68XNHDCXlt1zvc/uBIPV9d0/O/y80l/facJ+86XPJvQ0rD+uBibTMOC9ml97gihI4R9dFkGARsVZiMlZzszPb90vO6li7Kb4YjgistJAH5USdvl3Qb7DzBKu5qwyXOiqCdTRAliv0oL+6WBoBSe1+z9NxMT8dYNX/e39wydGyL7JCNm5GG6xqg3X0RR+D4p4xbJd8ci+LW2S6myI3xbn/WVc060613pdGK5j2Up71HFy6jS+mWo+G3FCPF8qxdrv2DZqbwbXqoFIxY9va5rWpVXhFnsHAc+HSwm/s00fBjLYYymGjeP0L0zrzy3aAT2orzx8i8Qkbx1PlKN/FPOntx3+ToKH/lLZQ2ouRq+N0zkFhBErOKFiT0t44c04p9G/SxgGA5E1cbWRvL369f9xzOvsFisbs70qqJabVNguQsCAqBm5pDXanJYF1VV8By5ZfcbM3PjWnNjfwmMm5YJ6hPADNm5ccBkCumHyJZjgtYwrwuw5PhRDwAY3Lxqh351acR24zn0zV5/7CsCyd4iKSM5Kj2INlACQeQlHX/peBQ==
+  template:
+    metadata:
+      name: walawe
+      namespace: immich
+    type: Opaque
