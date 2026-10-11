@@ -282,6 +282,9 @@ spec:
             - name: http
               containerPort: 80
               protocol: TCP
+          env:
+            - name: VITE_AVATAR_ENDPOINT
+              value: https://www.gravatar.com/avatar
           livenessProbe:
             httpGet:
               path: /
