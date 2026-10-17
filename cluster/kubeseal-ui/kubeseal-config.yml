@@ -33,3 +33,9 @@ data:
         - {name: services-developer, namespaces: [services-staging, services-dev],          role: project-developer}
         - {name: services-releaser,  namespaces: [services, services-staging, services-dev], role: project-developer}
         - {name: services-revealer,  namespaces: [services, services-staging, services-dev], role: project-revealer}
+
+        # ---- immich ----
+        - {name: immich-reader,    namespaces: [immich], role: project-reader}
+        - {name: immich-developer, namespaces: [immich], role: project-developer}
+        - {name: immich-releaser,  namespaces: [immich], role: project-developer}
+        - {name: immich-revealer,  namespaces: [immich], role: project-revealer}

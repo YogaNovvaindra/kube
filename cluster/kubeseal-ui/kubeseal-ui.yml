@@ -188,7 +188,7 @@ spec:
                   key: GITOPS_CREDENTIAL_REFS
             - name: GITOPS_NAMESPACES
               # value: "*:YogaNovvaindra/kube:main:{namespace}/{name}-cred.yml:github:direct:{namespace};sealed-secrets"
-              value: "*:YogaNovvaindra/kube:main:{namespace}/{name}-cred.yml:github:proposal:kube-pr:{namespace};sealed-secrets"
+              value: "*:YogaNovvaindra/kube:main:{namespace}/{name}.yml:github:proposal:kube-pr:{namespace};sealed-secrets"
             - name: GITOPS_PROPOSAL_ADAPTERS
               valueFrom:
                 secretKeyRef: 
@@ -240,7 +240,7 @@ spec:
             secretName: kubeseal-cred
         - name: git-pr-credentials
           secret:
-            secretName: kube-pr-cred
+            secretName: kube-pr
         - name: authz
           configMap:
             name: kubeseal-ui-authz
