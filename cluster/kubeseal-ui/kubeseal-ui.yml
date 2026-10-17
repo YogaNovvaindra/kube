@@ -220,6 +220,9 @@ spec:
             - name: git-credentials
               mountPath: /var/run/secrets/git/platform
               readOnly: true
+            - name: git-pr-credentials
+              mountPath: /var/run/secrets/git/kube-pr
+              readOnly: true
             - name: authz
               mountPath: /etc/kubeseal-ui
               readOnly: true
@@ -230,6 +233,9 @@ spec:
         - name: git-credentials
           secret:
             secretName: kubeseal-cred
+        - name: git-pr-credentials
+          secret:
+            secretName: kube-pr-cred
         - name: authz
           configMap:
             name: kubeseal-ui-authz
