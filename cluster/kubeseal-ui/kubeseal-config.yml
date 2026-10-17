@@ -15,10 +15,10 @@ data:
       roles:
         # The only bundle carrying everything — platform admins.
         platform-owner:
-          capabilities: [metadata:read, secret:seal, secret:decrypt, gitops:push, access:manage]
+          capabilities: [metadata:read, secret:seal, secret:decrypt, gitops:push, gitops:propose, access:manage]
         # Makes and delivers, cannot read values back.
         project-developer:
-          capabilities: [metadata:read, secret:seal, gitops:push]
+          capabilities: [metadata:read, secret:seal, gitops:push, gitops:propose]
         # Adds reveal, for the few who must see existing values.
         project-revealer:
           capabilities: [metadata:read, secret:seal, secret:decrypt]
@@ -30,7 +30,7 @@ data:
 
         # ---- services ----
         - {name: services-reader,    namespaces: [services, services-staging, services-dev], role: project-reader}
-        - {name: services-developer, namespaces: [services-staging, services-dev],          role: project-developer}
+        - {name: services-developer, namespaces: [services-staging, services-dev],           role: project-developer}
         - {name: services-releaser,  namespaces: [services, services-staging, services-dev], role: project-developer}
         - {name: services-revealer,  namespaces: [services, services-staging, services-dev], role: project-revealer}
 
