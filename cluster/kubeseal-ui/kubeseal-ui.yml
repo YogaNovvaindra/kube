@@ -240,7 +240,7 @@ spec:
             secretName: kubeseal-cred
         - name: git-pr-credentials
           secret:
-            secretName: kube-pr
+            secretName: kube-pr-cred
         - name: authz
           configMap:
             name: kubeseal-ui-authz

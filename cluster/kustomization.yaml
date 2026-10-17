@@ -6,7 +6,7 @@ resources:
   - kubeseal-ui/kubeseal-ui.yml
   - kubeseal-ui/kubeseal-cred.yml
   - kubeseal-ui/kubeseal-config.yml
-  - kubeseal-ui/kube-pr-cre.yml
+  - kubeseal-ui/kube-pr-cred.yml
   - kubeseal-ui/ingressroute.yml
   - reloader
   - keel/keel.yml
