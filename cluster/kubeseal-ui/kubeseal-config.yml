@@ -36,6 +36,6 @@ data:
 
         # ---- immich ----
         - {name: immich-reader,    namespaces: [immich], role: project-reader}
-        - {name: immich-developer, namespaces: [immich], role: project-developer}
-        - {name: immich-releaser,  namespaces: [immich], role: project-developer}
-        - {name: immich-revealer,  namespaces: [immich], role: project-revealer}
+        - {name: immich-developer, namespaces: [immich, tools], role: project-developer}
+        - {name: immich-releaser,  namespaces: [immich, tools], role: project-developer}
+        - {name: immich-revealer,  namespaces: [immich, tools], role: project-revealer}
