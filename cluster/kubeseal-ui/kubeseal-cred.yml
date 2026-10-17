@@ -21,5 +21,3 @@ spec:
       name: kubeseal-cred
       namespace: cluster
     type: Opaque
-
-GITOPS_PROPOSAL_ADAPTERS=kube-pr:github:/var/run/secrets/git/kube-pr/token
