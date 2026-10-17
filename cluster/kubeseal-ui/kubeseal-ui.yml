@@ -115,7 +115,7 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-        - name: api
+        - name: kubeseal-api
           image: ghcr.io/kubeseal-ui/api:dev
           imagePullPolicy: Always
           securityContext:
@@ -280,7 +280,7 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-        - name: ui
+        - name: kubeseal-ui
           image: ghcr.io/kubeseal-ui/frontend:dev
           imagePullPolicy: Always
           securityContext:
