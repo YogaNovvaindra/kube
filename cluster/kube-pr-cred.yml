@@ -1,0 +1,13 @@
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: kube-pr
+  namespace: cluster
+spec:
+  encryptedData:
+    token: AgAP4aDkw0bw9bmFX83uVt3uQUkPzmzwdgj28htD0KTvC2J+xGsGhlq0waFdD20lzqWPDKXmLIkBGflODgOJsy1dUsLajnemP8jNDR7WR/OYGhAx4mxOqYinmlG4nyB0vKlkum2gAVyo4Vrl9cnz98531DORJEDipRBjCfdQQIqiFOb/kA8YG3QCFFb7IIgmPZZAbkiEuFzX/5FEqaXdCXID0e/b5UY/KCIqNVo8RxQgg29MCeaLf2KjNqBVV2bb8ubcplBwe8E+mLaE2/UK290kRqy3nXBKYrmFlAlLHtnefHiVqWBweFwAhxvlpzuRfJbPkEKc7HTdm7nl307zW3X8POiPK6M54221WJrv05i1es/Bn/D6RhFf9dS+ZWWGIxfUPtrQTo6YNEEvLA5PoTXyZW23kyuOY7dx3VCZSjnwBMAQEczQ4pZsGf17ED7j+TzfpPkMNq39Ia1Zmm8cqDa4mhzJV37y0ENfSxWBcJTmF95tD/LWYE7+9g2vrHGnIqCgspQtoiVB2WA6+ICoHwXZn4Lo/FMDI7O4xnwpXWFHlP6vO9TpfPS9sWjtp/bLGfe/Ddczs3O4ivIt4yST8OpJXKFF8nwsWJ1jC1CyKFsYAvxYwym8PnLxejpfEz1WFkmmS/5YN4Vv8qzHZHAGe1HwaoJOw7dLI5PIYHhyskNrsj+cycQViwyh8JlchpWq2McSdArKZ0DXJxvhcOGmFcMLtxzP5w5JsbXPaJul2gkSbxqm6C8lxqcDazbZZQpEsSvYeKfxWV/Ydq5+YDW5bTOHqv5oojzW8weDpzrdxpp2qWeM0xM79xyu5wTTyY8=
+  template:
+    metadata:
+      name: kube-pr
+      namespace: cluster
+    type: Opaque
