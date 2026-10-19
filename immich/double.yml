@@ -1,0 +1,13 @@
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: double
+  namespace: immich
+spec:
+  encryptedData:
+    satu: AgA4shPZww3YDwR4GQq679QhgcrfloEb4d9k+7veui6/WCEY6u+xEDGMIGf5Jr9pPUOCxbIsD4O0qzvYRY0Nx9HdymK9knpXucATxug3PvAMYnWe5wpBM7DG3ovejrQbeoJ6Xxu64hbiTbkQkkAejPODwS9h6z49ge6woN7ovgow0RgDM+vvPR5kpBlnElxYU1I4Az1V37aWqTlVbBumxQBnpgOleJt/ZcCMikuxjsjAToTMjFKyaROmEt+/+9uhaJlyDAFjWrgUkFrbGfky7KNqzzBEBuWKHLnpj+67jc0OH6zgrTA42wZCSKQwqo5pvLx4pvkS54nYyulGH6Jy+bWhbcp6RO5kpGV6giJHXie4KxeCP9VqSYW1q+Xk7pIg6/Nrscii5yLXm87jiPtl9gYoTFEuACAtvJ/1kIGuGBzMldZ4zmF9KIm6Y7rdhvMGM8OGzg1G6bbDGdavQO9ZjGB524WVAcVGYslnIXajH+v2kxCp03v1GyldpmdWfxiM/YW0AewUdV0mFDKVmLOF+tjCmQ6Z1ExqyD4QVhtMuOVBvjw9d5UoIFudJijfv22DOBBYSiG1JKsZLzv2h0/HHx9WN8uDqnNhAKEQerYWrfAbfY8OCQZZQKgtfW/HlZu9VotbZ0CJcqLA3v9fY1Sz2EtBHYTcceTl9rEQbz6I02sDri8bj1L/pG4rwb8Mj3jHFg+HeU8=
+  template:
+    metadata:
+      name: double
+      namespace: immich
+    type: Opaque
