@@ -1,0 +1,14 @@
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: kube-pr-cred
+  namespace: kube-system
+spec:
+  encryptedData:
+    token: AgAqbKVK7vPWrOTbgj64uogRyql0yJp8h2Xso6nWoAJPfiENYiG+s+G/fm4NVRgQoxZlv6zLq7tYBXm87KsNu3gBlmoFGT9F7p3v3GL14thBj62HJjMGjhG8caih8GrsmBUB8J7lO1fuT7A6XQMV7CRd6ixNxiLO5GGnRdk2CA6HMjyvXDkwUu2gBgIIb9XpiU2vFWqQJwg5+wYbhWtnpilnivXZgBuVYAYgxM0n4zzFs4LZnbwJ7Hyyq3g42HrpDvU37AO6A3jKveWwfNUwL4ZoJXtulI5nwNHBc2Az7DK+PddhjQ2cqquA998hBsCBhRr5rpSObzwcA6/U6T9qXq0dSaI6WF1BLfbSDdvPKbLTPqcX8O/nOzEG2PzzfcCy4PBhj9DSDB/ZxRWZX2v7+p7A9d6vtx7wywkg+0q+hiqHxiqO/2rp2CcUZhwzKTKIjlfR5P9LCPiBgUPi5JrJoVuaGMUWCZiqlQWHdU77jXZyXJbSbrPxDio2vAOlOMXnoHzwOzKX0RsgNY9hjnn5YlC48364QPjdYWbxKO6sEfsg0w3+IKw/M7fQHGeeEkeqjual3oj24Bh29SCpxIelsbbm6XHONIuunrndh8uHLjt8i6yiPs2bG4SCrfD2gBAJPbBd13AU3iIZLnLttCJGQ6ZOXqhK9Kq8Y7xelhaFqPjCDmHEZen7x+WDC22e9E1JdWFiurlPXIBP35JcOdXc0/0MJSOy0Em3L9XKICSOzXZL1v0GX3Qgw7cCLhvObbvkZU+wBd1NQm60pM7r5WQe6EznvMgIU9ly7aAGd/cQaMmUOEyxKPTeZ9ssDqR6smU=
+  template:
+    metadata:
+      name: kube-pr-cred
+      namespace: kube-system
+    type: Opaque

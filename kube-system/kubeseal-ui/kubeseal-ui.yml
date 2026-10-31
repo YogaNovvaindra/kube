@@ -3,7 +3,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: kubeseal-ui-api
-  namespace: cluster
+  namespace: kube-system
   labels:
     app: kubeseal-ui
     app.kubernetes.io/component: api
@@ -13,7 +13,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: kubeseal-ui-api-controller-key
-  namespace: cluster
+  namespace: kube-system
   labels:
     app: kubeseal-ui
     app.kubernetes.io/component: api
@@ -27,7 +27,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: kubeseal-ui-api-controller-key
-  namespace: cluster
+  namespace: kube-system
   labels:
     app: kubeseal-ui
     app.kubernetes.io/component: api
@@ -38,14 +38,14 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: kubeseal-ui-api
-    namespace: cluster
+    namespace: kube-system
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: kubeseal-ui-api
-  namespace: cluster
+  namespace: kube-system
   labels:
     app: kubeseal-ui
     app.kubernetes.io/component: api
@@ -65,7 +65,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: kubeseal-ui
-  namespace: cluster
+  namespace: kube-system
   labels:
     app: kubeseal-ui
     app.kubernetes.io/component: ui
@@ -85,7 +85,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: kubeseal-ui-api
-  namespace: cluster
+  namespace: kube-system
   labels:
     app: kubeseal-ui
     app.kubernetes.io/component: api
@@ -133,7 +133,7 @@ spec:
             - name: KUBESEAL_API_PORT
               value: "8080"
             - name: KUBESEAL_CERT_URL
-              value: "http://sealed-secrets-controller.cluster.svc.cluster.local:8080/v1/cert.pem"
+              value: "http://sealed-secrets-controller.kube-system.svc.cluster.local:8080/v1/cert.pem"
             - name: LOG_LEVEL
               value: "info"
             - name: OIDC_ISSUER
@@ -162,7 +162,7 @@ spec:
             - name: ENABLE_DECRYPT
               value: "true"
             - name: KUBESEAL_CONTROLLER_NAMESPACE
-              value: "cluster"
+              value: "kube-system"
             - name: KUBESEAL_ACTIVE_KEY_LABEL
               value: "sealedsecrets.bitnami.com/sealed-secrets-key"
             - name: GITOPS_ENABLED
@@ -174,7 +174,7 @@ spec:
             - name: OTEL_SERVICE_VERSION
               value: "dev"
             - name: OTEL_DEPLOYMENT_ENVIRONMENT
-              value: "cluster"
+              value: "kube-system"
             - name: GITOPS_AUTHOR_NAME
               value: "kubeseal-ui"
             - name: GITOPS_AUTHOR_EMAIL
@@ -251,7 +251,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: kubeseal-ui
-  namespace: cluster
+  namespace: kube-system
   labels:
     app: kubeseal-ui
     app.kubernetes.io/component: ui

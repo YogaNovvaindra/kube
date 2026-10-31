@@ -1,14 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cluster
+  name: kube-system
   namespace: argocd
 spec:
   destination:
-    namespace: cluster
+    namespace: kube-system
     server: https://kubernetes.default.svc
   source:
-    path: cluster
+    path: kube-system
     repoURL: https://github.com/YogaNovvaindra/kube.git
     targetRevision: HEAD
   sources: []

@@ -123,7 +123,7 @@ This Git repository is organized to support a GitOps workflow with ArgoCD:
 - **`gitops/`**: GitOps orchestration directory containing ArgoCD `Application` definitions. These resources manage the lifecycle of all cluster applications, including core infrastructure and user services.
 - **`apps.yml`**: Implementation of the "App-of-Apps" pattern, serving as the root entry point for ArgoCD to manage the `gitops/` directory.
 - **Application Manifests**: Top-level directories (e.g., `harbor/`, `monitoring/`, `services/`) containing raw Kubernetes manifests, Kustomize overlays, or Helm chart `values.yaml` files.
-- **`cluster/`**: Contains core system-level services consolidated into the cluster-wide GitOps management flow.
+- **`kube-system/`**: Contains core system-level services consolidated into the cluster-wide GitOps management flow.
 
 ## 📦 Applications
 

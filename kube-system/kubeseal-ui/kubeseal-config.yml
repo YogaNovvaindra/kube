@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: kubeseal-ui-authz
-  namespace: cluster
+  namespace: kube-system
 data:
   acl.yaml: |
     version: 1
