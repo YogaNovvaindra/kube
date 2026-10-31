@@ -133,7 +133,7 @@ This cluster hosts a variety of self-managed applications and services.
 
 - **🔄 ArgoCD**: GitOps deployment controller.
 - **🐋 Keel**: Automated image updates for latest tags (located in [cluster.yml](./gitops/cluster.yml)).
-- **[🕵️ Portainer Agent](./portainer/portainer-agent.yml)**: Connects to a Portainer instance for cluster management.
+- **[🕵️ Portainer Agent](./kube-system/portainer/portainer.yml)**: Connects to a Portainer instance for cluster management.
 - **🔏 Sealed Secrets**: Manages encrypted secrets in Git (located in [cluster.yml](./gitops/cluster.yml)).
 - **♻️ Reloader**: Automatically restarts pods when ConfigMaps or Secrets are updated (located in [cluster.yml](./gitops/cluster.yml)).
 - **🚦 Traefik**: TLS-terminating ingress controller (mentioned in Infrastructure).

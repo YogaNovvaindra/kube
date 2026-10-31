@@ -13,3 +13,4 @@ resources:
   - keel/keel.yml
   - keel/keel-cred.yml
   - keel/notification.yml
+  - portainer/portainer.yml

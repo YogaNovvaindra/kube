@@ -4,7 +4,7 @@ Portainer is a container management platform that simplifies the management of D
 
 ## 📂 Structure
 
-- **[`portainer.yml`](portainer/portainer.yml)**: Deployment manifest for the Portainer Agent.
+- **[`portainer.yml`](portainer.yml)**: Deployment manifest for the Portainer Agent.
 
 ## 🚀 Deployment / Usage
 
