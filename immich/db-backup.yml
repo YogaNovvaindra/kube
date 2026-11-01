@@ -79,7 +79,6 @@ metadata:
   namespace: immich
 spec:
   schedule: "30 0 * * *" # Daily at 00:30
-  suspend: true
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
