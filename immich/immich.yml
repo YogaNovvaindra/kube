@@ -315,6 +315,8 @@ spec:
               value: "--data-checksums"
             - name: DB_STORAGE_TYPE
               value: "HDD"
+            - name: IGNORE_DATABASE_FSTYPE
+              value: "true"
           lifecycle:
             postStart:
               exec:
