@@ -173,7 +173,7 @@ spec:
             kubernetes.io/arch: amd64
           containers:
           - name: postgres-dumper
-            image: reg.ygnv.my.id/docker/pgautoupgrade/pgautoupgrade:debian@sha256:105c3ce70aee55881aa34703693447c02f8d3d490210f009c63db6355aa3f95e
+            image: reg.ygnv.my.id/docker/pgautoupgrade/pgautoupgrade:debian@sha256:90e56759c0dcb3231723f15d1df4a197119320d073b54726c1d0e708a71bc9ac
             imagePullPolicy: IfNotPresent
             env:
             - name: DISCORD_WEBHOOK_URL
@@ -236,7 +236,7 @@ spec:
             kubernetes.io/arch: amd64
           containers:
           - name: postgres-snapshotter
-            image: reg.ygnv.my.id/docker/pgautoupgrade/pgautoupgrade:debian@sha256:105c3ce70aee55881aa34703693447c02f8d3d490210f009c63db6355aa3f95e
+            image: reg.ygnv.my.id/docker/pgautoupgrade/pgautoupgrade:debian@sha256:90e56759c0dcb3231723f15d1df4a197119320d073b54726c1d0e708a71bc9ac
             imagePullPolicy: IfNotPresent
             env:
             - name: DISCORD_WEBHOOK_URL
