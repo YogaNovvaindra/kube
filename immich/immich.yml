@@ -285,10 +285,10 @@ spec:
     spec:
       nodeSelector:
         kubernetes.io/hperf: "true"
-      terminationGracePeriodSeconds: 10
+      terminationGracePeriodSeconds: 60
       containers:
         - name: db
-          image: reg.ygnv.my.id/ghcr/immich-app/postgres:16-vectorchord1.1.1
+          image: reg.ygnv.my.id/ghcr/immich-app/postgres:18-vectorchord1.1.1
           imagePullPolicy: IfNotPresent
           resources:
             requests:
@@ -326,11 +326,11 @@ spec:
                   - 'until HBA=$(find /var/lib/postgresql -name pg_hba.conf 2>/dev/null | head -n 1) && [ -n "$HBA" ]; do sleep 2; done; grep -q "host replication all 0.0.0.0/0 scram-sha-256" "$HBA" || echo "host replication all 0.0.0.0/0 scram-sha-256" >> "$HBA"; su - postgres -c "pg_ctl reload -D $(dirname $HBA)" || true'
           volumeMounts:
             - name: db-data
-              mountPath: /var/lib/postgresql/data
+              mountPath: /var/lib/postgresql
       volumes:
         - name: db-data
           persistentVolumeClaim:
-            claimName: immich-postgres-pvc
+            claimName: immich-postgres18-pvc
 ---
 apiVersion: v1
 kind: Service

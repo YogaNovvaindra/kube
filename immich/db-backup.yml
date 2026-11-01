@@ -93,7 +93,7 @@ spec:
             kubernetes.io/arch: amd64
           containers:
             - name: postgres-snapshotter
-              image: reg.ygnv.my.id/ghcr/immich-app/postgres:16-vectorchord0.4.2-pgvectors0.3.0
+              image: reg.ygnv.my.id/ghcr/immich-app/postgres:18-vectorchord1.1.1
               imagePullPolicy: IfNotPresent
               env:
                 - name: DISCORD_WEBHOOK_URL
