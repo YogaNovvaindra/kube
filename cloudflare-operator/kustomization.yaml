@@ -4,7 +4,7 @@ namespace: cloudflare-operator-system
 
 resources:
   # Cloudflare Operator (latest stable)
-  - https://github.com/adyanth/cloudflare-operator/config/default?ref=v0.13.1
+  - https://github.com/adyanth/cloudflare-operator/config/default?ref=v0.14.0
   # Local resources
   - cloudflare-cred.yml
   - cluster-tunnel-ygnv.yml
