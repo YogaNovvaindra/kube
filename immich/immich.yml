@@ -6,7 +6,7 @@ metadata:
   labels:
     app: immich-server
 spec:
-  replicas: 0
+  replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
@@ -108,7 +108,7 @@ metadata:
   labels:
     app: immich-machine-learning
 spec:
-  replicas: 0
+  replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
