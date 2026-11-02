@@ -129,7 +129,7 @@
         "/kustomization\\.ya?ml$/"
       ],
       "matchStrings": [
-        "https://github\\.com/adyanth/cloudflare-operator/config/default\\?ref=(?<currentValue>v[0-9.]+)"
+        "https://github\\.com/adyanth/cloudflare-operator/releases/download/(?<currentValue>v[0-9.]+)/cloudflare-operator\\.yaml"
       ],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "adyanth/cloudflare-operator"
