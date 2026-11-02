@@ -6,7 +6,6 @@ resources:
   # Cloudflare Operator (latest stable)
   # - https://github.com/adyanth/cloudflare-operator/config/default?ref=v0.14.0
   - https://github.com/adyanth/cloudflare-operator/releases/download/v0.14.0/cloudflare-operator.yaml
-  - https://github.com/adyanth/cloudflare-operator/releases/download/v0.14.0/cloudflare-operator.crds.yaml
   # Local resources
   - cloudflare-cred.yml
   - cluster-tunnel-ygnv.yml
