@@ -19,18 +19,6 @@ data:
   ALLOW_LOCAL_WEBHOOKS: "true"
   LOGGING_LEVEL: "WARN"
 ---
-# ── RabbitMQ (NUQ broker) ─────────────────────────────
-apiVersion: v1
-kind: Secret
-metadata:
-  name: firecrawl-rabbitmq-cred
-  namespace: tools
-type: Opaque
-stringData:
-  RABBITMQ_DEFAULT_USER: firecrawl
-  RABBITMQ_DEFAULT_PASS: CHANGEME
-  NUQ_RABBITMQ_URL: "amqp://firecrawl:CHANGEME@firecrawl-rabbitmq:5672"
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
