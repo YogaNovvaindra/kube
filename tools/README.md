@@ -35,7 +35,7 @@ A collection of utility tools, development environments, automation platforms, a
 
 ### 🛠️ Developer Utilities (`utilities/`, `git/`)
 - **[IT-Tools](utilities/it-tools.yml)**: Collection of handy online tools for developers
-- **[Gitea](git/gitea.yml)**: Self-hosted Git service
+- **[Gitea](git/gitea.yml)**: Self-hosted Git service with scheduled GitHub repository mirrors, including kubeseal-ui
 
 ### 📦 Archiving (`archiving/`)
 - **[Warrior](archiving/warrior.yml)**: Archive Team Warrior for distributed archiving

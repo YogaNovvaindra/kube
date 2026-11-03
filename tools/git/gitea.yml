@@ -141,6 +141,7 @@ spec:
           port: 22
   tls:
     passthrough: true
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -194,5 +195,105 @@ spec:
                   key: githubtoken
             - name: MIRROR_PRIVATE_REPOSITORIES
               value: "true"
+            - name: DELAY
+              value: "21600"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitea-mirror-kubeseal-ui
+  namespace: tools
+  labels:
+    app: gitea-mirror-kubeseal-ui
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: gitea-mirror-kubeseal-ui
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: gitea-mirror-kubeseal-ui
+    spec:
+      containers:
+        - name: gitea-mirror-kubeseal-ui
+          image: jaedle/mirror-to-gitea:latest
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 64Mi
+          env:
+            - name: GITHUB_USERNAME
+              value: "kubeseal-ui"
+            - name: GITEA_URL
+              value: "http://gitea-http:3000"
+            - name: GITEA_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: gitea-cred
+                  key: giteatoken
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: gitea-cred
+                  key: githubtoken
+            - name: DELAY
+              value: "21600"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitea-mirror-pamawas
+  namespace: tools
+  labels:
+    app: gitea-mirror-pamawas
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 6h"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: gitea-mirror-pamawas
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: gitea-mirror-pamawas
+    spec:
+      containers:
+        - name: gitea-mirror-pamawas
+          image: jaedle/mirror-to-gitea:latest
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 64Mi
+          env:
+            - name: GITHUB_USERNAME
+              value: "pamawas"
+            - name: GITEA_URL
+              value: "http://gitea-http:3000"
+            - name: GITEA_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: gitea-cred
+                  key: giteatoken
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: gitea-cred
+                  key: githubtoken
             - name: DELAY
               value: "21600"
