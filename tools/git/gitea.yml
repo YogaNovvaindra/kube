@@ -235,6 +235,8 @@ spec:
               value: "kubeseal-ui"
             - name: GITEA_URL
               value: "http://gitea-http:3000"
+            - name: GITEA_ORGANIZATION
+              value: "kubeseal-ui"
             - name: GITEA_TOKEN
               valueFrom:
                 secretKeyRef:
@@ -285,6 +287,8 @@ spec:
               value: "pamawas"
             - name: GITEA_URL
               value: "http://gitea-http:3000"
+            - name: GITEA_ORGANIZATION
+              value: "pamawas"
             - name: GITEA_TOKEN
               valueFrom:
                 secretKeyRef:
