@@ -62,19 +62,51 @@ All services include:
 
 ## Ingress
 
-Ingress configured for nginx with TLS via cert-manager. Update `pamawas.example.com` to your domain.
+Ingress configured for Traefik with TLS via cert-manager. Update `pamawas.ygnv.my.id` to your domain.
 
 ```yaml
-# ingress.yaml paths
-/webhook*        -> pamawas-ingest
-/healthz, /ready -> pamawas-ingest
-/trigger*        -> pamawas-correlator
-/status          -> pamawas-correlator
-/investigate*    -> pamawas-investigator
-/report*         -> pamawas-reporter
-/trigger/daily   -> pamawas-scheduler
-/trigger/high-severity -> pamawas-scheduler
+# ingressroute.yml paths
+/healthz, /ready                    -> pamawas-ingest
+/api/v1/webhooks/grafana            -> pamawas-ingest
+/api/v1/webhooks/generic            -> pamawas-ingest
+/api/v1/metrics                     -> pamawas-ingest
+/api/v1/trigger, /api/v1/status     -> pamawas-correlator
+/api/v1/investigate                 -> pamawas-investigator
+/api/v1/report, /api/v1/status      -> pamawas-reporter
+/api/v1/trigger/daily               -> pamawas-scheduler
+/api/v1/trigger/high-severity       -> pamawas-scheduler
 ```
+
+## Grafana Webhook Integration
+
+Configure a **Contact Point → Webhook** in Grafana to send alerts to Pamawas:
+
+| Field | Value |
+|-------|-------|
+| **URL** | `https://pamawas.ygnv.my.id/api/v1/webhooks/grafana` |
+| **Method** | `POST` |
+| **Headers** | `Content-Type: application/json`<br>`Authorization: Bearer <PAMAWAS_WEBHOOK_TOKEN>` |
+
+**Required payload fields** (auto-sent by Grafana):
+```json
+{
+  "ruleName": "High CPU Usage",
+  "timestamp": "2026-08-16T01:47:00Z",
+  "tags": {
+    "service": "payment-api",      // required
+    "severity": "high",            // optional: high/warning/info
+    "namespace": "payments"        // optional
+  },
+  "evalMatches": [{
+    "time": "2026-08-16T01:47:00Z",
+    "value": "95.5"
+  }]
+}
+```
+
+**Set `PAMAWAS_WEBHOOK_TOKEN`** in your `pamawas-secrets` — the handler validates `Authorization: Bearer <token>`.
+
+**Optional:** Add `X-Idempotency-Key` header in Grafana webhook settings for deduplication on retries.
 
 ## ServiceAccount
 
