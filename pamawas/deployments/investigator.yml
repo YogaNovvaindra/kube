@@ -56,6 +56,7 @@ spec:
                 secretKeyRef:
                   name: pamawas-secrets
                   key: LLM_API_KEY
+                  optional: true
             - name: LLM_MODEL
               valueFrom:
                 configMapKeyRef:
