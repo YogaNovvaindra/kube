@@ -24,7 +24,6 @@ spec:
         - name: pamawas-schema-migration
           image: ghcr.io/pamawas/pamawas-schema:dev
           imagePullPolicy: IfNotPresent
-          command: ["pamawas-schema", "migrate"]
           env:
             - name: DATABASE_URL
               valueFrom:
@@ -32,6 +31,8 @@ spec:
                   name: pamawas-secrets
                   key: DATABASE_URL
             - name: USE_EMBEDDED_MIGRATIONS
+              value: "true"
+            - name: PAMAWAS_SCHEMA_MIGRATE_ONLY
               value: "true"
             - name: PORT
               value: "8080"
