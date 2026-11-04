@@ -206,11 +206,11 @@ data:
           href: http://10.1.1.251
           description: ZTE Access Point
           siteMonitor: http://10.1.1.251
-      - Tenda Outdoor:
-          icon: tenda.svg
-          href: http://10.1.1.254
-          description: Tenda Outdoor Access Point
-          siteMonitor: http://10.1.1.254
+      # - Tenda Outdoor:
+      #     icon: tenda.svg
+      #     href: http://10.1.1.254
+      #     description: Tenda Outdoor Access Point
+      #     siteMonitor: http://10.1.1.254
 
     - Server Management:
       - Proxmox:
@@ -248,7 +248,7 @@ data:
           icon: https://Keel.sh/img/logo_small.png
           href: https://keel.ygnv.my.id
           description: Container image automation and management
-          siteMonitor: http://keel.cluster:9300
+          siteMonitor: http://keel.kube-system:9300
 
     - Monitoring and Analytics:
       - Grafana:
