@@ -51,46 +51,55 @@ spec:
                 secretKeyRef:
                   name: pamawas-secrets
                   key: DISCORD_WEBHOOK_URL
+                  optional: true
             - name: TELEGRAM_BOT_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: pamawas-secrets
                   key: TELEGRAM_BOT_TOKEN
+                  optional: true
             - name: TELEGRAM_CHAT_ID
               valueFrom:
                 secretKeyRef:
                   name: pamawas-secrets
                   key: TELEGRAM_CHAT_ID
+                  optional: true
             - name: EMAIL_SMTP_HOST
               valueFrom:
                 secretKeyRef:
                   name: pamawas-secrets
                   key: EMAIL_SMTP_HOST
+                  optional: true
             - name: EMAIL_SMTP_PORT
               valueFrom:
                 secretKeyRef:
                   name: pamawas-secrets
                   key: EMAIL_SMTP_PORT
+                  optional: true
             - name: EMAIL_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: pamawas-secrets
                   key: EMAIL_USERNAME
+                  optional: true
             - name: EMAIL_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: pamawas-secrets
                   key: EMAIL_PASSWORD
+                  optional: true
             - name: EMAIL_FROM
               valueFrom:
                 secretKeyRef:
                   name: pamawas-secrets
                   key: EMAIL_FROM
+                  optional: true
             - name: EMAIL_TO
               valueFrom:
                 secretKeyRef:
                   name: pamawas-secrets
                   key: EMAIL_TO
+                  optional: true
             - name: REPORT_INTERVAL
               valueFrom:
                 configMapKeyRef:
