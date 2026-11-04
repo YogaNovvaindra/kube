@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: pamawas
+  labels:
+    app.kubernetes.io/name: pamawas
+    app.kubernetes.io/part-of: pamawas

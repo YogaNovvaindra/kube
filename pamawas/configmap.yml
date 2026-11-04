@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pamawas-config
+  namespace: pamawas
+  labels:
+    app.kubernetes.io/name: pamawas
+    app.kubernetes.io/part-of: pamawas
+data:
+  # Common configuration
+  PORT: "8080"
+  LOG_LEVEL: "info"
+  ENVIRONMENT: "production"
+  OTEL_EXPORTER_OTLP_ENDPOINT: "tempo.example.com:4317"
+
+  # Correlator
+  CORRELATION_TIME_WINDOW: "10m"
+  CORRELATION_INTERVAL: "1m"
+  CORRELATOR_MODE: "auto"
+
+  # Scheduler
+  REPORTER_URL: "http://pamawas-reporter:8080"
+  DAILY_REPORT_TIME: "07:00"
+  HIGH_SEVERITY_THRESHOLD: "high"
+  CHECK_INTERVAL: "30s"
+  ENABLE_DAILY_REPORT: "true"
+  ENABLE_HIGH_SEVERITY_ALERT: "true"
+  SCHEDULER_MODE: "auto"
+
+  # Reporter
+  REPORT_INTERVAL: "1h"
+  REPORTER_MODE: "auto"
+
+  # Investigator
+  LLM_BASE_URL: "https://api.openai.com/v1"
+  LLM_MODEL: "gpt-4o-mini"
+  PROMETHEUS_URL: "http://prometheus.example.com:9090"
+  LOKI_URL: "http://loki.example.com:3100"
+  MAX_TOOL_CALLS: "6"

@@ -1,0 +1,94 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: pamawas-ingest
+  namespace: pamawas
+  labels:
+    app: pamawas-ingest
+    app.kubernetes.io/name: pamawas-ingest
+    app.kubernetes.io/part-of: pamawas
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app: pamawas-ingest
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pamawas-correlator
+  namespace: pamawas
+  labels:
+    app: pamawas-correlator
+    app.kubernetes.io/name: pamawas-correlator
+    app.kubernetes.io/part-of: pamawas
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app: pamawas-correlator
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pamawas-investigator
+  namespace: pamawas
+  labels:
+    app: pamawas-investigator
+    app.kubernetes.io/name: pamawas-investigator
+    app.kubernetes.io/part-of: pamawas
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app: pamawas-investigator
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pamawas-reporter
+  namespace: pamawas
+  labels:
+    app: pamawas-reporter
+    app.kubernetes.io/name: pamawas-reporter
+    app.kubernetes.io/part-of: pamawas
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app: pamawas-reporter
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pamawas-scheduler
+  namespace: pamawas
+  labels:
+    app: pamawas-scheduler
+    app.kubernetes.io/name: pamawas-scheduler
+    app.kubernetes.io/part-of: pamawas
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app: pamawas-scheduler

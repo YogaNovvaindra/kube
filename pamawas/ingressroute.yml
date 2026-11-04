@@ -1,0 +1,85 @@
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: pamawas
+  namespace: pamawas
+  labels:
+    app.kubernetes.io/name: pamawas
+    app.kubernetes.io/part-of: pamawas
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`pamawas.ygnv.my.id`) && PathPrefix(`/healthz`)
+      kind: Rule
+      services:
+        - name: pamawas-ingest
+          port: 8080
+    - match: Host(`pamawas.ygnv.my.id`) && PathPrefix(`/ready`)
+      kind: Rule
+      services:
+        - name: pamawas-ingest
+          port: 8080
+    - match: Host(`pamawas.ygnv.my.id`) && PathPrefix(`/api/v1/webhook`)
+      kind: Rule
+      services:
+        - name: pamawas-ingest
+          port: 8080
+    - match: Host(`pamawas.ygnv.my.id`) && PathPrefix(`/api/v1/metrics`)
+      kind: Rule
+      services:
+        - name: pamawas-ingest
+          port: 8080
+    - match: Host(`pamawas.ygnv.my.id`) && PathPrefix(`/api/v1/trigger`)
+      kind: Rule
+      services:
+        - name: pamawas-correlator
+          port: 8080
+    - match: Host(`pamawas.ygnv.my.id`) && PathPrefix(`/api/v1/status`)
+      kind: Rule
+      services:
+        - name: pamawas-correlator
+          port: 8080
+    - match: Host(`pamawas.ygnv.my.id`) && PathPrefix(`/api/v1/investigate`)
+      kind: Rule
+      services:
+        - name: pamawas-investigator
+          port: 8080
+    - match: Host(`pamawas.ygnv.my.id`) && PathPrefix(`/api/v1/report`)
+      kind: Rule
+      services:
+        - name: pamawas-reporter
+          port: 8080
+    - match: Host(`pamawas.ygnv.my.id`) && PathPrefix(`/api/v1/trigger/daily`)
+      kind: Rule
+      services:
+        - name: pamawas-scheduler
+          port: 8080
+    - match: Host(`pamawas.ygnv.my.id`) && PathPrefix(`/api/v1/trigger/high-severity`)
+      kind: Rule
+      services:
+        - name: pamawas-scheduler
+          port: 8080
+  tls:
+    secretName: pamawas-tls
+    options:
+      namespace: kube-system
+---
+apiVersion: traefik.io/v1alpha1
+kind: TLSOption
+metadata:
+  name: default
+  namespace: kube-system
+spec:
+  minVersion: VersionTLS12
+  cipherSuites:
+    - TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+    - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+    - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+    - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+  curvePreferences:
+    - CurveP521
+    - CurveP384
+  sniStrict: true

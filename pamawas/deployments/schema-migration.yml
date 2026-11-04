@@ -1,0 +1,46 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pamawas-schema-migration
+  namespace: pamawas
+  labels:
+    app: pamawas-schema-migration
+    app.kubernetes.io/name: pamawas-schema-migration
+    app.kubernetes.io/part-of: pamawas
+spec:
+  template:
+    metadata:
+      labels:
+        app: pamawas-schema-migration
+    spec:
+      serviceAccountName: pamawas
+      restartPolicy: OnFailure
+      containers:
+        - name: pamawas-schema-migration
+          image: ghcr.io/pamawas/pamawas-schema:dev
+          imagePullPolicy: IfNotPresent
+          command: ["pamawas-schema", "migrate"]
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: pamawas-secrets
+                  key: DATABASE_URL
+            - name: USE_EMBEDDED_MIGRATIONS
+              value: "true"
+            - name: PORT
+              value: "8080"
+            - name: LOG_LEVEL
+              value: "info"
+            - name: ENVIRONMENT
+              value: "production"
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "tempo.example.com:4317"
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "250m"
+              memory: "256Mi"
+  backoffLimit: 3

@@ -1,0 +1,112 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pamawas-scheduler
+  namespace: pamawas
+  labels:
+    app: pamawas-scheduler
+    app.kubernetes.io/name: pamawas-scheduler
+    app.kubernetes.io/part-of: pamawas
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pamawas-scheduler
+  template:
+    metadata:
+      labels:
+        app: pamawas-scheduler
+        app.kubernetes.io/name: pamawas-scheduler
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: pamawas
+      containers:
+        - name: pamawas-scheduler
+          image: ghcr.io/pamawas/pamawas-scheduler:dev
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: pamawas-secrets
+                  key: DATABASE_URL
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: PORT
+            - name: REPORTER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: REPORTER_URL
+            - name: DAILY_REPORT_TIME
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: DAILY_REPORT_TIME
+            - name: HIGH_SEVERITY_THRESHOLD
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: HIGH_SEVERITY_THRESHOLD
+            - name: CHECK_INTERVAL
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: CHECK_INTERVAL
+            - name: ENABLE_DAILY_REPORT
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: ENABLE_DAILY_REPORT
+            - name: ENABLE_HIGH_SEVERITY_ALERT
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: ENABLE_HIGH_SEVERITY_ALERT
+            - name: SCHEDULER_MODE
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: SCHEDULER_MODE
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: LOG_LEVEL
+            - name: ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: ENVIRONMENT
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: OTEL_EXPORTER_OTLP_ENDPOINT
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "250m"
+              memory: "256Mi"

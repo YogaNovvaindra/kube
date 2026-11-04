@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pamawas-investigator
+  namespace: pamawas
+  labels:
+    app: pamawas-investigator
+    app.kubernetes.io/name: pamawas-investigator
+    app.kubernetes.io/part-of: pamawas
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pamawas-investigator
+  template:
+    metadata:
+      labels:
+        app: pamawas-investigator
+        app.kubernetes.io/name: pamawas-investigator
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: pamawas
+      containers:
+        - name: pamawas-investigator
+          image: ghcr.io/pamawas/pamawas-investigator:dev
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: pamawas-secrets
+                  key: DATABASE_URL
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: PORT
+            - name: LLM_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: LLM_BASE_URL
+            - name: LLM_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: pamawas-secrets
+                  key: LLM_API_KEY
+            - name: LLM_MODEL
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: LLM_MODEL
+            - name: PROMETHEUS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: PROMETHEUS_URL
+            - name: LOKI_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: LOKI_URL
+            - name: MAX_TOOL_CALLS
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: MAX_TOOL_CALLS
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: LOG_LEVEL
+            - name: ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: ENVIRONMENT
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: OTEL_EXPORTER_OTLP_ENDPOINT
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"

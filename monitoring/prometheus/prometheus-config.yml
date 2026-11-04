@@ -87,6 +87,32 @@ data:
           - target_label: __address__
             replacement: pve-exporter:9221
 
+      # Pamawas monitoring
+      - job_name: pamawas
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: [pamawas]
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+            action: keep
+            regex: "true"
+          - source_labels: [__meta_kubernetes_pod_ip, __meta_kubernetes_pod_annotation_prometheus_io_port]
+            action: replace
+            regex: (.+);(.+)
+            replacement: $1:$2
+            target_label: __address__
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            target_label: app
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+            action: replace
+            target_label: __metrics_path__
+            regex: "(.+)"
+
       # Kubernetes Node Exporter
       - job_name: kube_node
         kubernetes_sd_configs:

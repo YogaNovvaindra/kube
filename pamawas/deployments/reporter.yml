@@ -1,0 +1,138 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pamawas-reporter
+  namespace: pamawas
+  labels:
+    app: pamawas-reporter
+    app.kubernetes.io/name: pamawas-reporter
+    app.kubernetes.io/part-of: pamawas
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pamawas-reporter
+  template:
+    metadata:
+      labels:
+        app: pamawas-reporter
+        app.kubernetes.io/name: pamawas-reporter
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: pamawas
+      containers:
+        - name: pamawas-reporter
+          image: ghcr.io/pamawas/pamawas-reporter:dev
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: pamawas-secrets
+                  key: DATABASE_URL
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: PORT
+            - name: DISCORD_WEBHOOK_URL
+              valueFrom:
+                secretKeyRef:
+                  name: pamawas-secrets
+                  key: DISCORD_WEBHOOK_URL
+            - name: TELEGRAM_BOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: pamawas-secrets
+                  key: TELEGRAM_BOT_TOKEN
+            - name: TELEGRAM_CHAT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: pamawas-secrets
+                  key: TELEGRAM_CHAT_ID
+            - name: EMAIL_SMTP_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: pamawas-secrets
+                  key: EMAIL_SMTP_HOST
+            - name: EMAIL_SMTP_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: pamawas-secrets
+                  key: EMAIL_SMTP_PORT
+            - name: EMAIL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: pamawas-secrets
+                  key: EMAIL_USERNAME
+            - name: EMAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pamawas-secrets
+                  key: EMAIL_PASSWORD
+            - name: EMAIL_FROM
+              valueFrom:
+                secretKeyRef:
+                  name: pamawas-secrets
+                  key: EMAIL_FROM
+            - name: EMAIL_TO
+              valueFrom:
+                secretKeyRef:
+                  name: pamawas-secrets
+                  key: EMAIL_TO
+            - name: REPORT_INTERVAL
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: REPORT_INTERVAL
+            - name: REPORTER_MODE
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: REPORTER_MODE
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: LOG_LEVEL
+            - name: ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: ENVIRONMENT
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: OTEL_EXPORTER_OTLP_ENDPOINT
+            - name: REPORT_TEMPLATE
+              valueFrom:
+                secretKeyRef:
+                  name: pamawas-secrets
+                  key: REPORT_TEMPLATE
+                  optional: true
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
