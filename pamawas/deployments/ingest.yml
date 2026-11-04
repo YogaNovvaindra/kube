@@ -31,7 +31,7 @@ spec:
       containers:
         - name: pamawas-ingest
           image: ghcr.io/pamawas/pamawas-ingest:dev
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
               name: http

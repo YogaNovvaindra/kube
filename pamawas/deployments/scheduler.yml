@@ -31,7 +31,7 @@ spec:
       containers:
         - name: pamawas-scheduler
           image: ghcr.io/pamawas/pamawas-scheduler:dev
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
               name: http

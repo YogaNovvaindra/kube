@@ -31,7 +31,7 @@ spec:
       containers:
         - name: pamawas-investigator
           image: ghcr.io/pamawas/pamawas-investigator:dev
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
               name: http
