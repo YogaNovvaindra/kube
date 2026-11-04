@@ -35,7 +35,7 @@ spec:
             - name: ENVIRONMENT
               value: "production"
             - name: OTEL_EXPORTER_OTLP_ENDPOINT
-              value: "tempo.example.com:4317"
+              value: "tempo.monitoring.svc.cluster.local:4317"
           resources:
             requests:
               cpu: "50m"
