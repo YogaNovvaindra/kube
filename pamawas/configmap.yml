@@ -11,7 +11,7 @@ data:
   PORT: "8080"
   LOG_LEVEL: "info"
   ENVIRONMENT: "production"
-  OTEL_EXPORTER_OTLP_ENDPOINT: "tempo.example.com:4317"
+  OTEL_EXPORTER_OTLP_ENDPOINT: "tempo.monitoring.svc.cluster.local:4317"
 
   # Correlator
   CORRELATION_TIME_WINDOW: "10m"
@@ -34,6 +34,6 @@ data:
   # Investigator
   LLM_BASE_URL: "https://api.openai.com/v1"
   LLM_MODEL: "gpt-4o-mini"
-  PROMETHEUS_URL: "http://prometheus.example.com:9090"
-  LOKI_URL: "http://loki.example.com:3100"
+  PROMETHEUS_URL: "http://prometheus.monitoring.svc.cluster.local:9090"
+  LOKI_URL: "http://loki.monitoring.svc.cluster.local:3100"
   MAX_TOOL_CALLS: "6"
