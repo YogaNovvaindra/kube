@@ -96,13 +96,13 @@ spec:
               path: /healthz
               port: 8080
             initialDelaySeconds: 15
-            periodSeconds: 10
+            periodSeconds: 60
           readinessProbe:
             httpGet:
               path: /ready
               port: 8080
             initialDelaySeconds: 10
-            periodSeconds: 10
+            periodSeconds: 60
           resources:
             requests:
               cpu: "250m"
