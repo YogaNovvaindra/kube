@@ -8,6 +8,7 @@ metadata:
     app.kubernetes.io/name: pamawas-schema-migration
     app.kubernetes.io/part-of: pamawas
   annotations:
+    argocd.argoproj.io/sync-options: Force=true,Replace=true
     keel.sh/policy: force
     keel.sh/trigger: poll
     keel.sh/match-tag: "true"
