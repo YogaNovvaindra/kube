@@ -13,3 +13,9 @@ data:
         group_wait: 30s
         group_interval: 5m
         repeat_interval: 4h
+        routes:
+          - receiver: discord-notification
+            continue: true
+          - receiver: pamawas-ingest
+            matchers:
+              - send_to_pamawas = true
