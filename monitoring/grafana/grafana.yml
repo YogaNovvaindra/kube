@@ -24,7 +24,7 @@ metadata:
   labels:
     app: grafana
 spec:
-  replicas: 1
+  replicas: 0
   revisionHistoryLimit: 3
   selector:
     matchLabels:
