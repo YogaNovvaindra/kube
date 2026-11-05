@@ -54,7 +54,7 @@ spec:
             - name: PAMAWAS_WEBHOOK_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: grafana-pamawas-webhook-token
+                  name: grafana-cred
                   key: PAMAWAS_WEBHOOK_TOKEN
           volumeMounts:
             - name: grafana-datasources
