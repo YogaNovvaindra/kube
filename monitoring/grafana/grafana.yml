@@ -50,6 +50,12 @@ spec:
                 name: grafana-env
             - secretRef:
                 name: grafana-cred
+          env:
+            - name: PAMAWAS_WEBHOOK_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: grafana-pamawas-webhook-token
+                  key: PAMAWAS_WEBHOOK_TOKEN
           volumeMounts:
             - name: grafana-datasources
               mountPath: /etc/grafana/provisioning/datasources
