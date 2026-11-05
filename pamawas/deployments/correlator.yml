@@ -81,6 +81,11 @@ spec:
                 configMapKeyRef:
                   name: pamawas-config
                   key: INVESTIGATOR_URL
+            - name: PAMAWAS_SERVICE_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: pamawas-secrets
+                  key: PAMAWAS_SERVICE_TOKEN
           livenessProbe:
             httpGet:
               path: /healthz
