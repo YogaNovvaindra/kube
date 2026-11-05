@@ -99,6 +99,8 @@ data:
               summary: High CPU usage detected (instance {{ $labels.instance }}, job {{ $labels.job }})
               value: '{{ $values.B.Value | printf "%.2f" }}%'
             isPaused: false
+            labels:
+              send_to_pamawas: "true"
           - uid: aee0na19cb280f
             title: CPU mktxp
             condition: C
@@ -186,3 +188,5 @@ data:
               summary: High CPU usage detected (instance {{ $labels.routerboard_name }})
               value: '{{ $values.B.Value | printf "%.2f" }}%'
             isPaused: false
+            labels:
+              send_to_pamawas: "true"

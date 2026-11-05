@@ -52,6 +52,7 @@ data:
               description: "Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} has restarted {{ $values.B.Value | printf \"%.0f\" }} times in the last 15 minutes."
               value: '{{ $values.B.Value | printf "%.0f" }} restarts'
             labels:
+              send_to_pamawas: "true"
               severity: warning
 
           - uid: deployment_replicas_mismatch
@@ -93,6 +94,7 @@ data:
               summary: "Deployment Mismatch: {{ $labels.deployment }}"
               description: "Deployment {{ $labels.deployment }} has {{ $labels.ready_replicas }} ready replicas but expected {{ $labels.desired_replicas }}."
             labels:
+              send_to_pamawas: "true"
               severity: warning
 
           - uid: pod_oom_killed
@@ -134,6 +136,7 @@ data:
               summary: "OOMKilled: {{ $labels.pod }}"
               description: "Container {{ $labels.container }} in pod {{ $labels.pod }} was terminated due to Out Of Memory (OOM)."
             labels:
+              send_to_pamawas: "true"
               severity: critical
 
           - uid: pod_image_pull_error
@@ -175,6 +178,7 @@ data:
               summary: "Image Pull Error: {{ $labels.pod }}"
               description: "Pod {{ $labels.pod }} is failing to pull image {{ $labels.image }}."
             labels:
+              send_to_pamawas: "true"
               severity: warning
 
           - uid: node_memory_pressure
@@ -216,6 +220,7 @@ data:
               summary: "Node Memory Pressure: {{ $labels.node }}"
               description: "Node {{ $labels.node }} is under memory pressure."
             labels:
+              send_to_pamawas: "true"
               severity: warning
 
           - uid: cert_expiry_soon
@@ -258,6 +263,7 @@ data:
               description: "Certificate {{ $labels.name }} in namespace {{ $labels.namespace }} will expire in {{ $values.B.Value | printf \"%.1f\" }} days."
               value: '{{ $values.B.Value | printf "%.1f" }} days'
             labels:
+              send_to_pamawas: "true"
               severity: warning
 
           - uid: node_not_ready
@@ -298,6 +304,7 @@ data:
               description: "There are currently {{ $values.B.Value | printf \"%.0f\" }} nodes not in the Ready state."
               value: '{{ $values.B.Value | printf "%.0f" }} nodes'
             labels:
+              send_to_pamawas: "true"
               severity: critical
 
           - uid: pod_stuck_pending
@@ -338,6 +345,7 @@ data:
               description: "There are currently {{ $values.B.Value | printf \"%.0f\" }} pods stuck in Pending state."
               value: '{{ $values.B.Value | printf "%.0f" }} pods'
             labels:
+              send_to_pamawas: "true"
               severity: warning
 
           - uid: cluster_cpu_requests_high
@@ -378,6 +386,7 @@ data:
               description: "Cluster CPU requests are over 85% (Current: {{ $values.B.Value | printf \"%.2f\" }}%)."
               value: '{{ $values.B.Value | printf "%.2f" }}%'
             labels:
+              send_to_pamawas: "true"
               severity: warning
 
           - uid: cluster_memory_requests_high
@@ -418,6 +427,7 @@ data:
               description: "Cluster Memory requests are over 85% (Current: {{ $values.B.Value | printf \"%.2f\" }}%)."
               value: '{{ $values.B.Value | printf "%.2f" }}%'
             labels:
+              send_to_pamawas: "true"
               severity: warning
 
           - uid: node_pod_capacity_high
@@ -458,6 +468,7 @@ data:
               description: "Node {{ $labels.node }} active pod capacity usage is over 90% (Current: {{ $values.B.Value | printf \"%.2f\" }}%). This excludes completed/failed pods."
               value: '{{ $values.B.Value | printf "%.2f" }}%'
             labels:
+              send_to_pamawas: "true"
               severity: warning
 
           - uid: job_failed
@@ -498,6 +509,7 @@ data:
               description: "There are currently {{ $values.B.Value | printf \"%.0f\" }} failed jobs in the cluster."
               value: '{{ $values.B.Value | printf "%.0f" }} failed jobs'
             labels:
+              send_to_pamawas: "true"
               severity: warning
 
           - uid: hpa_max_capacity
@@ -538,4 +550,5 @@ data:
               description: "HPA {{ $labels.horizontalpodautoscaler }} is at max capacity ({{ $values.B.Value | printf \"%.0f\" }}%)."
               value: '{{ $values.B.Value | printf "%.0f" }}%'
             labels:
+              send_to_pamawas: "true"
               severity: warning

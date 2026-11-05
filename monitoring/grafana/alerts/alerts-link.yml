@@ -50,6 +50,7 @@ data:
               description: "Ubiquiti link {{ or $labels.ubntStaName $labels.instance $labels.ubntStaMac }} has low signal strength: {{ $values.B.Value | printf \"%.0f\" }} dBm."
               value: '{{ $values.B.Value | printf "%.0f" }} dBm'
             labels:
+              send_to_pamawas: "true"
               severity: warning
 
           - uid: ubiquiti_low_ccq
@@ -90,6 +91,7 @@ data:
               description: "Ubiquiti link {{ or $labels.ubntStaName $labels.instance $labels.ubntStaMac }} CCQ is low: {{ $values.B.Value | printf \"%.0f\" }}%."
               value: '{{ $values.B.Value | printf "%.0f" }}%'
             labels:
+              send_to_pamawas: "true"
               severity: warning
 
           - uid: ubiquiti_link_saturation
@@ -130,6 +132,7 @@ data:
               description: "Ubiquiti link {{ or $labels.ubntStaName $labels.instance $labels.ubntStaMac }} output is near wireless capacity: {{ $values.B.Value | printf \"%.1f%%\" }}."
               value: '{{ $values.B.Value | printf "%.1f" }}%'
             labels:
+              send_to_pamawas: "true"
               severity: warning
 
           - uid: ubiquiti_high_noise
@@ -170,6 +173,7 @@ data:
               description: "Ubiquiti link {{ or $labels.ubntStaName $labels.instance $labels.ubntStaMac }} noise floor is high: {{ $values.B.Value | printf \"%.0f\" }} dBm."
               value: '{{ $values.B.Value | printf "%.0f" }} dBm'
             labels:
+              send_to_pamawas: "true"
               severity: info
 
           - uid: ubiquiti_high_cpu
@@ -210,4 +214,5 @@ data:
               description: "Ubiquiti host {{ $labels.instance }} CPU load is high: {{ $values.B.Value | printf \"%.1f\" }}%."
               value: '{{ $values.B.Value | printf "%.1f" }}%'
             labels:
+              send_to_pamawas: "true"
               severity: warning

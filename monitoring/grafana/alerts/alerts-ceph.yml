@@ -49,6 +49,7 @@ data:
               summary: "Ceph Cluster Health: Error"
               description: "Ceph cluster is in ERROR state. Check `ceph -s` for details."
             labels:
+              send_to_pamawas: "true"
               severity: critical
 
           - uid: ceph_health_warning
@@ -90,6 +91,7 @@ data:
               description: "Ceph cluster health is WARNING. Current status value: {{ $values.B.Value | printf \"%.0f\" }}."
               value: '{{ $values.B.Value | printf "%.0f" }} (0=OK, 1=WARN, 2=ERR)'
             labels:
+              send_to_pamawas: "true"
               severity: warning
 
           - uid: ceph_osd_down
@@ -129,6 +131,7 @@ data:
               summary: "Ceph OSD Down: {{ $labels.ceph_daemon }}"
               description: "OSD {{ $labels.ceph_daemon }} on host {{ $labels.hostname }} is DOWN."
             labels:
+              send_to_pamawas: "true"
               severity: critical
 
           - uid: ceph_mon_down
@@ -168,6 +171,7 @@ data:
               summary: "Ceph Monitor Down: {{ $labels.ceph_daemon }}"
               description: "Monitor {{ $labels.ceph_daemon }} is not in quorum."
             labels:
+              send_to_pamawas: "true"
               severity: critical
 
           - uid: ceph_mgr_none_active
@@ -207,6 +211,7 @@ data:
               summary: "Ceph No Active MGR"
               description: "No active Ceph Manager (MGR) daemon found in the cluster."
             labels:
+              send_to_pamawas: "true"
               severity: critical
 
           - uid: ceph_slow_ops
@@ -246,6 +251,7 @@ data:
               summary: "Ceph Slow Operations Detected"
               description: "Slow operations detected in the cluster. This may indicate performance issues."
             labels:
+              send_to_pamawas: "true"
               severity: warning
 
           - uid: ceph_health_detail_alert
@@ -286,6 +292,7 @@ data:
               summary: "Ceph Health Detail: {{ $labels.name }}"
               description: "Ceph health check '{{ $labels.name }}' is active with severity {{ $labels.severity }}."
             labels:
+              send_to_pamawas: "true"
               severity: warning
 
           - uid: ceph_osd_high_latency
@@ -326,6 +333,7 @@ data:
               description: "OSD {{ $labels.ceph_daemon }} has high apply latency: {{ $values.B.Value | printf \"%.2f\" }}ms."
               value: '{{ $values.B.Value | printf "%.2f" }}ms'
             labels:
+              send_to_pamawas: "true"
               severity: warning
 
           - uid: ceph_cluster_capacity_warn
@@ -366,6 +374,7 @@ data:
               description: "Cluster capacity usage is above 80% (Current: {{ $values.B.Value | printf \"%.2f\" }}%)."
               value: '{{ $values.B.Value | printf "%.2f" }}%'
             labels:
+              send_to_pamawas: "true"
               severity: warning
 
           - uid: ceph_cluster_capacity_crit
@@ -406,6 +415,7 @@ data:
               description: "Cluster capacity usage is above 90% (Current: {{ $values.B.Value | printf \"%.2f\" }}%)."
               value: '{{ $values.B.Value | printf "%.2f" }}%'
             labels:
+              send_to_pamawas: "true"
               severity: critical
 
           - uid: ceph_pool_capacity_warn
@@ -446,6 +456,7 @@ data:
               description: "Pool {{ $labels.name }} is above 80% full (Current: {{ $values.B.Value | printf \"%.2f\" }}%)."
               value: '{{ $values.B.Value | printf "%.2f" }}%'
             labels:
+              send_to_pamawas: "true"
               severity: warning
 
           - uid: ceph_pool_capacity_crit
@@ -486,4 +497,5 @@ data:
               description: "Pool {{ $labels.name }} is above 90% full (Current: {{ $values.B.Value | printf \"%.2f\" }}%)."
               value: '{{ $values.B.Value | printf "%.2f" }}%'
             labels:
+              send_to_pamawas: "true"
               severity: critical

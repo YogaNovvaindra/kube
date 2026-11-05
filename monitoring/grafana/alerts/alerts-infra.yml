@@ -52,6 +52,7 @@ data:
               description: "Monitoring target {{ $labels.instance }} (job: {{ $labels.job }}) is unreachable."
               value: '{{ $values.B.Value | printf "%.0f" }} (1=up, 0=down)'
             labels:
+              send_to_pamawas: "true"
               severity: critical
 
           - uid: traefik_high_error_rate
@@ -94,6 +95,7 @@ data:
               description: "Traefik is reporting a high rate of 5xx errors (Current: {{ $values.B.Value | printf \"%.2f\" }}%)."
               value: '{{ $values.B.Value | printf "%.2f" }}%'
             labels:
+              send_to_pamawas: "true"
               severity: warning
 
           - uid: authentik_worker_absent
@@ -136,4 +138,5 @@ data:
               description: "Number of active Authentik workers is {{ $values.B.Value | printf \"%.0f\" }}."
               value: '{{ $values.B.Value | printf "%.0f" }} workers'
             labels:
+              send_to_pamawas: "true"
               severity: critical

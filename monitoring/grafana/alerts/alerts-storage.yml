@@ -99,6 +99,8 @@ data:
               summary: Low storage space on (instance {{ $labels.instance }}, job {{ $labels.job }})
               value: '{{ $values.B.Value | printf "%.2f" }}%'
             isPaused: false
+            labels:
+              send_to_pamawas: "true"
           - uid: fee0oubrhrhtsa
             title: Storage mktxp
             condition: C
@@ -183,3 +185,5 @@ data:
               summary: Low storage space on (instance {{ $labels.routerboard_name }})
               value: '{{ $values.B.Value | printf "%.2f" }}%'
             isPaused: false
+            labels:
+              send_to_pamawas: "true"
