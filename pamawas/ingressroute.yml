@@ -22,7 +22,7 @@ spec:
       services:
         - name: pamawas-ingest
           port: 8080
-    - match: Host(`pamawas.ygnv.my.id`) && PathPrefix(`/api/v1/webhook`)
+    - match: Host(`pamawas.ygnv.my.id`) && PathPrefix(`/api/v1/webhooks`)
       kind: Rule
       services:
         - name: pamawas-ingest
