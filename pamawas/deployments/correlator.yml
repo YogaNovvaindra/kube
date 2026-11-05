@@ -76,6 +76,11 @@ spec:
                 configMapKeyRef:
                   name: pamawas-config
                   key: OTEL_EXPORTER_OTLP_ENDPOINT
+            - name: INVESTIGATOR_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: INVESTIGATOR_URL
           livenessProbe:
             httpGet:
               path: /healthz

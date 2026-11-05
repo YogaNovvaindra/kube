@@ -17,6 +17,7 @@ data:
   CORRELATION_TIME_WINDOW: "10m"
   CORRELATION_INTERVAL: "1m"
   CORRELATOR_MODE: "auto"
+  INVESTIGATOR_URL: "http://pamawas-investigator:8080"
 
   # Scheduler
   REPORTER_URL: "http://pamawas-reporter:8080"
