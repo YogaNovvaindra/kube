@@ -1,0 +1,13 @@
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: freellmapi-cred
+  namespace: tools
+spec:
+  encryptedData:
+    ENCRYPTION_KEY: AgAPqJU87l5PUNAXQwSBnpEe+EOb4kYnsQxK227uss7Bh3q++3dmqK6Pbf7bRsbonoRsl5ecMeQHBCOvCiWTKv9f93lvhhiK1/c/YM3ufbmRlwFW8MRm7ZJApwjs3uVKVe9v3jqg2cCvCkiAebJ2MHBaeoNTRmG9HtQZqD+doq7xbIiIxudT6ZOyJx65rMJaEk7UoEXbn33sV+6gU1nlyltEy9cpqsLZ68/x0jUS1JxvfgHPZUx3QVXxoVX5viSx1ePmnKNMMsLAoU8Y8CWtmBzSpPUoyuJ59KWxVWYlB9BTU4AhlD2cUDSLynGW9RB7FHjmc4YxZ5ikUv0xhB5nWptXFs7kna4j1VF0+ymgdeJM8fps+yhkyanEpfKhbO7+hzBOZyzIYD7LmJJIgTcKQkWVM+OzB8xd2oxuomOOGAoXRJVxbIoTbEYPEsxoB5wUKZrVIb7dCr5/3pjzbBHCa9uXZTwTBpMpTTX+4KtAVFl82u/UQ6sk8Y3dvlGCXZhDJQJDltcTWvKc5346n/p+Yod0POIys3hxnoToGSpCM1dld9GoPn53vFbAQ08xe7TZsrsGTsTZmZm72WOHor2PAmtGxcRoz3IJK8Z2Nb2+QBEZpTWdbe9ouMXJpfSeA1aAGVbQiy63ColUzlx5G1A/+IwIBCVbpf6YLTzDKvDGe0DOXk6ADm+xtzSUpAUIR925LzSZoqNgqlcFVQ6r6So1P6pyrLGu5USCSCOBr2ubZTJVvCTwt8DERzhV8fBNw1MmOvyxWeMUXfQ746AAo0Mz7KVX
+  template:
+    metadata:
+      name: freellmapi-cred
+      namespace: tools
+    type: Opaque
