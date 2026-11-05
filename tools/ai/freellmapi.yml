@@ -1,0 +1,110 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: freellmapi-env
+  namespace: tools
+  labels:
+    app: freellmapi
+data:
+  PORT: "3001"
+  HOST_BIND: "0.0.0.0"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: freellmapi
+  namespace: tools
+  labels:
+    app: freellmapi
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: freellmapi
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: freellmapi
+    spec:
+      containers:
+      - name: freellmapi
+        image: ghcr.io/tashfeenahmed/freellmapi:v0.16.19
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            cpu: 100m
+            memory: 512Mi
+          limits:
+            memory: 1Gi
+        envFrom:
+        - configMapRef:
+            name: freellmapi-env
+        env:
+        - name: ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              name: freellmapi-cred
+              key: ENCRYPTION_KEY
+        ports:
+        - containerPort: 3001
+          name: http
+        startupProbe:
+          httpGet:
+            path: /api/ping
+            port: http
+          periodSeconds: 10
+          failureThreshold: 30
+        readinessProbe:
+          httpGet:
+            path: /api/ping
+            port: http
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /api/ping
+            port: http
+          periodSeconds: 30
+        volumeMounts:
+        - name: data
+          mountPath: /app/server/data
+      volumes:
+      - name: data
+        hostPath:
+          path: /mnt/cephfs/docker/tools/freellmapi
+          type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: freellmapi
+  namespace: tools
+  labels:
+    app: freellmapi
+spec:
+  selector:
+    app: freellmapi
+  ports:
+  - port: 3001
+    targetPort: http
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: freellmapi
+  namespace: tools
+  labels:
+    app: freellmapi
+spec:
+  entryPoints:
+  - http
+  - https
+  routes:
+  - match: Host(`freellmapi.ygnv.my.id`)
+    kind: Rule
+    services:
+    - name: freellmapi
+      port: 3001
+  tls: {}

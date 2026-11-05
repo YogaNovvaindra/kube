@@ -152,6 +152,10 @@ This cluster hosts a variety of self-managed applications and services.
 - [📚 Outline](./tools/editor/outline.yml): Collaborative knowledge base/wiki.
 - [⚙️ Semaphore](./tools/cluster/semaphore.yml): UI for running Ansible playbooks.
 
+#### 🤖 AI & LLM
+
+- [🤖 FreeLLMAPI](./tools/ai/freellmapi.yml): OpenAI-compatible API and dashboard for free LLM providers.
+
 #### 📝 Document & File Management
 
 - [📄 BentoPDF](./tools/editor/bentopdf.yml): Self-hosted PDF manipulation and conversion tool suite.

@@ -4,6 +4,9 @@ A collection of utility tools, development environments, automation platforms, a
 
 ## 📂 Structure
 
+### 🤖 AI & LLM (`ai/`)
+- **[FreeLLMAPI](ai/freellmapi.yml)**: OpenAI-compatible API and dashboard aggregating free LLM providers
+
 ### 🤖 Automation (`automation/`)
 - **[n8n](automation/n8n.yml)**: Workflow automation platform
 - **[Home Assistant](automation/homeassistant.yml)**: Open source home automation that puts local control and privacy first
@@ -42,3 +45,21 @@ A collection of utility tools, development environments, automation platforms, a
 
 ### 🏠 Dashboard (`homepage/`)
 - **[Homepage](homepage/homepage.yml)**: Central dashboard for accessing all homelab services
+
+## FreeLLMAPI setup
+
+FreeLLMAPI requires a persistent `ENCRYPTION_KEY` in production. Create and seal
+the key before syncing the application; do not commit an unsealed Kubernetes
+Secret:
+
+```bash
+kubectl create secret generic freellmapi-cred \
+  --namespace tools \
+  --from-literal=ENCRYPTION_KEY="$(openssl rand -hex 32)" \
+  --dry-run=client -o yaml |
+  kubeseal --format yaml > ai/freellmapi-cred.yml
+```
+
+Keep the same key with the persistent application data when backing up or
+restoring FreeLLMAPI, since provider keys stored by the app are encrypted with
+it.
