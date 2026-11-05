@@ -13,7 +13,7 @@ metadata:
     keel.sh/match-tag: "true"
     keel.sh/pollSchedule: "@every 1h"
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: pamawas-ingest
