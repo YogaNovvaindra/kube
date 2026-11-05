@@ -120,6 +120,11 @@ spec:
                   items:
                     - key: alerts-templates.yaml
                       path: alerts-templates.yaml
+              - configMap:
+                  name: grafana-alerts-pamawas-contactpoints
+                  items:
+                    - key: alerts-pamawas-contactpoints.yaml
+                      path: alerts-pamawas-contactpoints.yaml
               - secret:
                   name: grafana-alerts-contact-points
                   items:
