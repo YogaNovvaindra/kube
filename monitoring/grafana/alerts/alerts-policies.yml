@@ -9,14 +9,11 @@ data:
     policies:
       - orgId: 1
         receiver: discord-notification
-        continue: true
         group_by: ['grafana_folder', 'alertname', 'instance']
         group_wait: 30s
         group_interval: 5m
         repeat_interval: 4h
-      - orgId: 1
-        receiver: pamawas-ingest
-        group_by: ['grafana_folder', 'alertname', 'instance']
-        group_wait: 30s
-        group_interval: 5m
-        repeat_interval: 4h
+        routes:
+          - receiver: discord-notification
+            continue: true
+          - receiver: pamawas-ingest
