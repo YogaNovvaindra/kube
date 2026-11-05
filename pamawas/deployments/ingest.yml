@@ -61,8 +61,7 @@ spec:
                 secretKeyRef:
                   name: pamawas-secrets
                   key: PAMAWAS_WEBHOOK_TOKEN
-            - name: TEST_MODE
-              value: "true"
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
               valueFrom:
                 configMapKeyRef:
                   name: pamawas-config
