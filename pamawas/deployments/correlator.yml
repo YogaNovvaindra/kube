@@ -86,6 +86,8 @@ spec:
                 secretKeyRef:
                   name: pamawas-secrets
                   key: PAMAWAS_SERVICE_TOKEN
+            - name: TZ
+              value: "Asia/Jakarta"
           livenessProbe:
             httpGet:
               path: /healthz

@@ -131,6 +131,8 @@ spec:
                   name: pamawas-secrets
                   key: REPORT_TEMPLATE
                   optional: true
+            - name: TZ
+              value: "Asia/Jakarta"
           livenessProbe:
             httpGet:
               path: /healthz

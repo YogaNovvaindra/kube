@@ -96,6 +96,8 @@ spec:
                 configMapKeyRef:
                   name: pamawas-config
                   key: OTEL_EXPORTER_OTLP_ENDPOINT
+            - name: TZ
+              value: "Asia/Jakarta"
           livenessProbe:
             httpGet:
               path: /healthz
