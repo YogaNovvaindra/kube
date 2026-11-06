@@ -38,9 +38,9 @@ data:
   # Prometheus/Loki for evidence enrichment (investigator only)
   PROMETHEUS_URL: "http://prometheus.monitoring.svc.cluster.local:9090"
   PROMETHEUS_QUERY_TEMPLATE: '{incident="%s"}'
-  PROMETHEUS_TIMEOUT: "30"
+  PROMETHEUS_TIMEOUT_SECONDS: "30"
   LOKI_URL: "http://loki.monitoring.svc.cluster.local:3100"
   LOKI_QUERY_TEMPLATE: '{incident="%s"}'
-  LOKI_TIMEOUT: "30"
-  LOKI_MAX_LINES: "100"
+  LOKI_TIMEOUT_SECONDS: "30"
+  LOKI_MAX_LOG_LINES: "100"
   MAX_TOOL_CALLS: "6"
