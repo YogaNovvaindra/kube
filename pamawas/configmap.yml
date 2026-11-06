@@ -29,7 +29,8 @@ data:
   SCHEDULER_MODE: "auto"
 
   # Reporter
-  REPORT_INTERVAL: "1h"
+  # Report interval adjusted - investigator now handles evidence enrichment
+  # Daily reports triggered by scheduler at DAILY_REPORT_TIME (07:00)
   REPORTER_MODE: "auto"
 
   # Investigator
