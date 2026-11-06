@@ -100,11 +100,6 @@ spec:
                   name: pamawas-secrets
                   key: EMAIL_TO
                   optional: true
-            - name: REPORT_INTERVAL
-              valueFrom:
-                configMapKeyRef:
-                  name: pamawas-config
-                  key: REPORT_INTERVAL
             - name: REPORTER_MODE
               valueFrom:
                 configMapKeyRef:
