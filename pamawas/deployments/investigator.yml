@@ -67,11 +67,36 @@ spec:
                 configMapKeyRef:
                   name: pamawas-config
                   key: PROMETHEUS_URL
+            - name: PROMETHEUS_QUERY_TEMPLATE
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: PROMETHEUS_QUERY_TEMPLATE
+            - name: PROMETHEUS_TIMEOUT
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: PROMETHEUS_TIMEOUT
             - name: LOKI_URL
               valueFrom:
                 configMapKeyRef:
                   name: pamawas-config
                   key: LOKI_URL
+            - name: LOKI_QUERY_TEMPLATE
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: LOKI_QUERY_TEMPLATE
+            - name: LOKI_TIMEOUT
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: LOKI_TIMEOUT
+            - name: LOKI_MAX_LINES
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: LOKI_MAX_LINES
             - name: MAX_TOOL_CALLS
               valueFrom:
                 configMapKeyRef:
