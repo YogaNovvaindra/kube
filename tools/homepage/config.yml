@@ -314,7 +314,7 @@ data:
           icon: https://sealer.ygnv.my.id/favicon.svg
           href: https://sealer.ygnv.my.id
           description: Team-oriented administration interface for Git-managed Kubernetes SealedSecrets.
-          siteMonitor: http://kubeseal-ui-api.kube-system:8080//healthz
+          siteMonitor: http://kubeseal-ui-api.kube-system:8080/healthz
 
     - Development and DevOps:
       - Gitea:
