@@ -224,11 +224,11 @@ data:
             username: ${PROXMOX_USERNAME}
             password: ${PROXMOX_PASSWORD}
             # node: pve # optional
-      - Semaphore:
-          icon: semaphore.png
-          href: http://semaphore.ygnv.my.id
-          description: Web GUI for Ansible automation
-          siteMonitor: http://semaphore:3000
+      # - Semaphore:
+      #     icon: semaphore.png
+      #     href: http://semaphore.ygnv.my.id
+      #     description: Web GUI for Ansible automation
+      #     siteMonitor: http://semaphore:3000
       - Portainer:
           icon: portainer.svg
           href: https://portainer.ygnv.my.id
@@ -310,6 +310,11 @@ data:
           href: https://wazuh.ygnv.my.id
           description: Security information and event management (SIEM)
           ping: 10.0.1.176
+      - Sealer:
+          icon: https://sealer.ygnv.my.id/favicon.svg
+          href: https://sealer.ygnv.my.id
+          description: Team-oriented administration interface for Git-managed Kubernetes SealedSecrets.
+          siteMonitor: http://kubeseal-ui-api.kube-system:8080
 
     - Development and DevOps:
       - Gitea:
@@ -529,31 +534,17 @@ data:
           description: Cross-platform media watch status tracker
           siteMonitor: http://crosswatch.media:8787
 
-    - Automation:
+    - AI:
       - Hermes Agent:
           icon: https://cdn.hermesagents.net/public/images/hermes-avatar.png
           href: https://hermes.ygnv.my.id
           description: The self-improving AI agent
           siteMonitor: http://hermes.tools:9119
-      # - N8n:
-      #     icon: n8n.png
-      #     href: https://n8n.ygnv.my.id
-      #     description: Workflow automation and integration platform
-      #     siteMonitor: http://n8n.tools:5678
-      # - Change Detection:
-      #     icon: changedetection.svg
-      #     href: https://changedetection.ygnv.my.id
-      #     description: Website change detection and monitoring
-      #     siteMonitor: http://changedetection.tools:5000
-      #     widget:
-      #       type: changedetectionio
-      #       url: http://changedetection.tools:5000
-      #       key: ${CHANGEDETECTION_KEY}
-      # - Iventoy:
-      #     icon: netboot.svg
-      #     href: https://iventoy.ygnv.my.id
-      #     description: Network boot and OS deployment server
-      #     siteMonitor: http://10.1.1.51:26000
+      - FreeLLMAPI:
+          icon: https://freellmapi.ygnv.my.id/favicon.svg
+          href: https://freellmapi.ygnv.my.id
+          description: Aggregate free tiers from dozens of providers.
+          siteMonitor: http://freellmapi.tools:3001
 
     - Productivity Tools:
       - Openspeedtest:
