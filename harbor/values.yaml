@@ -103,6 +103,7 @@ trivy:
   nodeSelector:
     kubernetes.io/arch: amd64
   enabled: true
+  timeout: 10m
   resources:
     requests:
       memory: 256Mi
