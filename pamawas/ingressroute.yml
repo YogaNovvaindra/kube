@@ -27,7 +27,7 @@ spec:
       services:
         - name: pamawas-ingest
           port: 8080
-    - match: Host(`pamawas.ygnv.my.id`) && PathPrefix(`/api/v1/metrics`)
+    - match: Host(`pamawas.ygnv.my.id`) && PathPrefix(`/metrics`)
       kind: Rule
       services:
         - name: pamawas-ingest
@@ -42,7 +42,7 @@ spec:
       services:
         - name: pamawas-correlator
           port: 8080
-    - match: Host(`pamawas.ygnv.my.id`) && PathPrefix(`/api/v1/investigate`)
+    - match: Host(`pamawas.ygnv.my.id`) && PathPrefix(`/api/v1/investigations`)
       kind: Rule
       services:
         - name: pamawas-investigator
@@ -52,12 +52,12 @@ spec:
       services:
         - name: pamawas-reporter
           port: 8080
-    - match: Host(`pamawas.ygnv.my.id`) && PathPrefix(`/api/v1/trigger/daily`)
+    - match: Host(`pamawas.ygnv.my.id`) && PathPrefix(`/api/v1/report-requests/daily`)
       kind: Rule
       services:
         - name: pamawas-scheduler
           port: 8080
-    - match: Host(`pamawas.ygnv.my.id`) && PathPrefix(`/api/v1/trigger/high-severity`)
+    - match: Host(`pamawas.ygnv.my.id`) && PathPrefix(`/api/v1/report-requests/high-severity`)
       kind: Rule
       services:
         - name: pamawas-scheduler

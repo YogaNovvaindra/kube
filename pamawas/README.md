@@ -68,12 +68,12 @@ Ingress configured for Traefik with TLS via cert-manager. Update `pamawas.ygnv.m
 /healthz, /ready                    -> pamawas-ingest
 /api/v1/webhooks/grafana            -> pamawas-ingest
 /api/v1/webhooks/generic            -> pamawas-ingest
-/api/v1/metrics                     -> pamawas-ingest
+/metrics                            -> pamawas-ingest
 /api/v1/trigger, /api/v1/status     -> pamawas-correlator
-/api/v1/investigate                 -> pamawas-investigator
-/api/v1/report, /api/v1/status      -> pamawas-reporter
-/api/v1/trigger/daily               -> pamawas-scheduler
-/api/v1/trigger/high-severity       -> pamawas-scheduler
+/api/v1/investigations              -> pamawas-investigator
+/api/v1/reports                     -> pamawas-reporter
+/api/v1/report-requests/daily       -> pamawas-scheduler
+/api/v1/report-requests/high-severity -> pamawas-scheduler
 ```
 
 ## Grafana Webhook Integration
