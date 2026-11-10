@@ -115,6 +115,16 @@ spec:
                 configMapKeyRef:
                   name: pamawas-config
                   key: OTEL_EXPORTER_OTLP_ENDPOINT
+            - name: PROMETHEUS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: PROMETHEUS_URL
+            - name: AVAILABILITY_METRIC
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: AVAILABILITY_METRIC
             - name: TZ
               value: "Asia/Jakarta"
           livenessProbe:

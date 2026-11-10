@@ -29,6 +29,7 @@ data:
   SCHEDULER_MODE: "auto"
 
   # Reporter reports are generated from scheduler-created requests.
+  AVAILABILITY_METRIC: "up"
 
   # Investigator
   LLM_BASE_URL: "https://freellmapi.ygnv.my.id/v1"
