@@ -125,6 +125,11 @@ spec:
                 configMapKeyRef:
                   name: pamawas-config
                   key: AVAILABILITY_METRIC
+            - name: REPORT_TEMPLATE
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: REPORT_TEMPLATE
             - name: TZ
               value: "Asia/Jakarta"
           livenessProbe:
