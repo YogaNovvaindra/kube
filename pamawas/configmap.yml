@@ -28,8 +28,7 @@ data:
   ENABLE_HIGH_SEVERITY_ALERT: "true"
   SCHEDULER_MODE: "auto"
 
-  # Reporter
-  REPORTER_MODE: "auto"
+  # Reporter reports are generated from scheduler-created requests.
 
   # Investigator
   LLM_BASE_URL: "https://freellmapi.ygnv.my.id/v1"

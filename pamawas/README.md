@@ -38,7 +38,6 @@ Sensitive values. **Replace all placeholder values** before applying:
 - `DATABASE_URL`: PostgreSQL connection string with credentials
 - `LLM_API_KEY`: OpenAI/Anthropic/Ollama API key
 - Delivery credentials (Discord, Telegram, Email)
-- `REPORT_TEMPLATE`: Optional custom report template
 
 ## Services Deployed
 

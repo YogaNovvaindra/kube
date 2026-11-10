@@ -100,11 +100,6 @@ spec:
                   name: pamawas-secrets
                   key: EMAIL_TO
                   optional: true
-            - name: REPORTER_MODE
-              valueFrom:
-                configMapKeyRef:
-                  name: pamawas-config
-                  key: REPORTER_MODE
             - name: LOG_LEVEL
               valueFrom:
                 configMapKeyRef:
@@ -120,12 +115,6 @@ spec:
                 configMapKeyRef:
                   name: pamawas-config
                   key: OTEL_EXPORTER_OTLP_ENDPOINT
-            - name: REPORT_TEMPLATE
-              valueFrom:
-                secretKeyRef:
-                  name: pamawas-secrets
-                  key: REPORT_TEMPLATE
-                  optional: true
             - name: TZ
               value: "Asia/Jakarta"
           livenessProbe:
