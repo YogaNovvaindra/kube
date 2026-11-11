@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
       - name: freellmapi
-        image: ghcr.io/tashfeenahmed/freellmapi:v0.16.25
+        image: ghcr.io/tashfeenahmed/freellmapi:v0.16.26
         imagePullPolicy: IfNotPresent
         resources:
           requests:
