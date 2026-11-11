@@ -71,6 +71,16 @@ spec:
                 configMapKeyRef:
                   name: pamawas-config
                   key: ENVIRONMENT
+            - name: INVESTIGATOR_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: INVESTIGATOR_URL
+            - name: PAMAWAS_SERVICE_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: pamawas-secrets
+                  key: PAMAWAS_SERVICE_TOKEN
             - name: OTEL_EXPORTER_OTLP_ENDPOINT
               valueFrom:
                 configMapKeyRef:
