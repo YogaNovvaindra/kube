@@ -110,6 +110,11 @@ spec:
                 configMapKeyRef:
                   name: pamawas-config
                   key: ENVIRONMENT
+            - name: HIGH_SEVERITY_THRESHOLD
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: HIGH_SEVERITY_THRESHOLD
             - name: OTEL_EXPORTER_OTLP_ENDPOINT
               valueFrom:
                 configMapKeyRef:
