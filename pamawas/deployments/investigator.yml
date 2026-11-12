@@ -62,6 +62,22 @@ spec:
                 configMapKeyRef:
                   name: pamawas-config
                   key: LLM_MODEL
+            - name: LLM_BASE_URLS
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: LLM_BASE_URLS
+            - name: LLM_API_KEYS
+              valueFrom:
+                secretKeyRef:
+                  name: pamawas-secrets
+                  key: LLM_API_KEYS
+                  optional: true
+            - name: LLM_MODELS
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: LLM_MODELS
             - name: PROMETHEUS_URL
               valueFrom:
                 configMapKeyRef:

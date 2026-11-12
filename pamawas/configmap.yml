@@ -33,8 +33,8 @@ data:
   REPORT_TEMPLATE: "v2"
 
   # Investigator
-  LLM_BASE_URL: "https://freellmapi.ygnv.my.id/v1"
-  LLM_MODEL: "auto"
+  LLM_BASE_URLS: "https://freellmapi.ygnv.my.id/v1,https://integrate.api.nvidia.com/v1"
+  LLM_MODELS: "auto,poolside/laguna-xs-2.1"
   # Prometheus/Loki for evidence enrichment (investigator only)
   PROMETHEUS_URL: "http://prometheus.monitoring.svc.cluster.local:9090"
   PROMETHEUS_QUERY_TEMPLATE: '{incident="%s"}'
