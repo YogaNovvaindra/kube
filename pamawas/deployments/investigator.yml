@@ -46,22 +46,6 @@ spec:
                 configMapKeyRef:
                   name: pamawas-config
                   key: PORT
-            - name: LLM_BASE_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: pamawas-config
-                  key: LLM_BASE_URL
-            - name: LLM_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: pamawas-secrets
-                  key: LLM_API_KEY
-                  optional: true
-            - name: LLM_MODEL
-              valueFrom:
-                configMapKeyRef:
-                  name: pamawas-config
-                  key: LLM_MODEL
             - name: LLM_BASE_URLS
               valueFrom:
                 configMapKeyRef:
