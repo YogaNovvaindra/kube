@@ -56,6 +56,11 @@ spec:
                 configMapKeyRef:
                   name: pamawas-config
                   key: ENVIRONMENT
+            - name: REPORTER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: REPORTER_URL
             - name: PAMAWAS_WEBHOOK_TOKEN
               valueFrom:
                 secretKeyRef:
