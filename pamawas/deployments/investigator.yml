@@ -124,6 +124,26 @@ spec:
                 secretKeyRef:
                   name: pamawas-secrets
                   key: PAMAWAS_SERVICE_TOKEN
+            - name: RATE_LIMIT_RPS
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: RATE_LIMIT_RPS
+            - name: RATE_LIMIT_BURST
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: RATE_LIMIT_BURST
+            - name: RETRY_SCHEDULER_TICK_SECONDS
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: RETRY_SCHEDULER_TICK_SECONDS
+            - name: OTEL_SAMPLE_RATIO
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: OTEL_SAMPLE_RATIO
           livenessProbe:
             httpGet:
               path: /healthz

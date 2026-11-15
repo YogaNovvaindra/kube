@@ -86,16 +86,21 @@ spec:
                 configMapKeyRef:
                   name: pamawas-config
                   key: OTEL_EXPORTER_OTLP_ENDPOINT
-            - name: INVESTIGATOR_URL
+            - name: RATE_LIMIT_RPS
               valueFrom:
                 configMapKeyRef:
                   name: pamawas-config
-                  key: INVESTIGATOR_URL
-            - name: PAMAWAS_SERVICE_TOKEN
+                  key: RATE_LIMIT_RPS
+            - name: RATE_LIMIT_BURST
               valueFrom:
-                secretKeyRef:
-                  name: pamawas-secrets
-                  key: PAMAWAS_SERVICE_TOKEN
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: RATE_LIMIT_BURST
+            - name: OUTBOX_MAX_ATTEMPTS
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: OUTBOX_MAX_ATTEMPTS
             - name: TZ
               value: "Asia/Jakarta"
           livenessProbe:

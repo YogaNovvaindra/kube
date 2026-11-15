@@ -115,6 +115,16 @@ spec:
                 configMapKeyRef:
                   name: pamawas-config
                   key: HIGH_SEVERITY_THRESHOLD
+            - name: RATE_LIMIT_RPS
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: RATE_LIMIT_RPS
+            - name: RATE_LIMIT_BURST
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: RATE_LIMIT_BURST
             - name: OTEL_EXPORTER_OTLP_ENDPOINT
               valueFrom:
                 configMapKeyRef:

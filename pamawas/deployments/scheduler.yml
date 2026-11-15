@@ -81,6 +81,16 @@ spec:
                 configMapKeyRef:
                   name: pamawas-config
                   key: SCHEDULER_MODE
+            - name: RATE_LIMIT_RPS
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: RATE_LIMIT_RPS
+            - name: RATE_LIMIT_BURST
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: RATE_LIMIT_BURST
             - name: LOG_LEVEL
               valueFrom:
                 configMapKeyRef:

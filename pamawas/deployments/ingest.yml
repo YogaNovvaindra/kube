@@ -61,6 +61,33 @@ spec:
                 configMapKeyRef:
                   name: pamawas-config
                   key: REPORTER_URL
+            # Severity gate for event-driven alert forwarding to the reporter.
+            # Same value the reporter re-checks authoritatively.
+            - name: HIGH_SEVERITY_THRESHOLD
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: HIGH_SEVERITY_THRESHOLD
+            - name: RATE_LIMIT_RPS
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: RATE_LIMIT_RPS
+            - name: RATE_LIMIT_BURST
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: RATE_LIMIT_BURST
+            - name: WEBHOOK_RATE_LIMIT_RPS
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: WEBHOOK_RATE_LIMIT_RPS
+            - name: WEBHOOK_RATE_LIMIT_BURST
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: WEBHOOK_RATE_LIMIT_BURST
             - name: PAMAWAS_WEBHOOK_TOKEN
               valueFrom:
                 secretKeyRef:
