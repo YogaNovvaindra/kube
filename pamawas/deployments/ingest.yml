@@ -93,6 +93,12 @@ spec:
                 secretKeyRef:
                   name: pamawas-secrets
                   key: PAMAWAS_WEBHOOK_TOKEN
+            - name: PAMAWAS_SERVICE_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: pamawas-secrets
+                  key: PAMAWAS_SERVICE_TOKEN
+
             - name: TZ
               value: "Asia/Jakarta"
             - name: OTEL_EXPORTER_OTLP_ENDPOINT
