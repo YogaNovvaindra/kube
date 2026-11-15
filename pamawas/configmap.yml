@@ -57,10 +57,12 @@ data:
   LLM_MODELS: "auto,poolside/laguna-xs-2.1"
   # Prometheus/Loki for evidence enrichment (investigator only)
   PROMETHEUS_URL: "http://prometheus.monitoring.svc.cluster.local:9090"
-  PROMETHEUS_QUERY_TEMPLATE: '{incident="%s"}'
+  # Label carrying the service name, used to build enrichment selectors.
+  # Neither Prometheus nor Loki has an "incident" label.
+  PROMETHEUS_SERVICE_LABEL: "service"
   PROMETHEUS_TIMEOUT_SECONDS: "60"
   LOKI_URL: "http://loki.monitoring.svc.cluster.local:3100"
-  LOKI_QUERY_TEMPLATE: '{incident="%s"}'
+  LOKI_SERVICE_LABEL: "kubernetes_container_name"
   LOKI_TIMEOUT_SECONDS: "60"
   LOKI_MAX_LOG_LINES: "100"
   MAX_TOOL_CALLS: "100"
