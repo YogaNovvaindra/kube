@@ -51,6 +51,9 @@ data:
   # Reporter reports are generated from scheduler-created requests.
   AVAILABILITY_METRIC: "up"
   REPORT_TEMPLATE: "v2"
+  # Cap on the reporter's daily-summary call to the investigator. The digest is
+  # delivered on time without the summary if the model is slow.
+  SUMMARY_TIMEOUT: "60s"
 
   # Investigator
   LLM_BASE_URLS: "https://freellmapi.ygnv.my.id/v1,https://integrate.api.nvidia.com/v1"
