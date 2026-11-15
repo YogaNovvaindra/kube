@@ -145,6 +145,19 @@ spec:
                 configMapKeyRef:
                   name: pamawas-config
                   key: REPORT_TEMPLATE
+            # The daily digest's prose summary comes from the investigator,
+            # which owns all LLM access. Optional: without it the digest renders
+            # its deterministic incident lists.
+            - name: INVESTIGATOR_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: INVESTIGATOR_URL
+            - name: SUMMARY_TIMEOUT
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: SUMMARY_TIMEOUT
             - name: TZ
               value: "Asia/Jakarta"
           livenessProbe:
