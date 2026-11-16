@@ -80,6 +80,12 @@ data:
   # is reserved for writing findings, so evidence gathered is not discarded
   # when the budget runs out. The previous default was 600s.
   INVESTIGATION_TIMEOUT_SECONDS: "600"
+  # Floor for a single LLM request, in seconds. It is a floor, not a cap: each
+  # attempt gets a share of the remaining investigation budget, up to 180s, so a
+  # slow endpoint is allowed to finish. This used to be a hard 30s cap, which
+  # cut off every free-endpoint response mid-generation and produced runs that
+  # timed out six times in a row and submitted nothing.
+  LLM_REQUEST_TIMEOUT_SECONDS: "60"
   # How many investigations may call the LLM at once. The LLM endpoint is the
   # scarce resource — a free endpoint serves a handful of concurrent requests,
   # so an unbounded burst turns every run into a timeout. Investigations beyond
