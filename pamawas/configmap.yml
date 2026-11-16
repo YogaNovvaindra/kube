@@ -75,7 +75,7 @@ data:
   # Wall-clock budget per investigation. The last quarter of it (at least 90s)
   # is reserved for writing findings, so evidence gathered is not discarded
   # when the budget runs out. The previous default was 600s.
-  INVESTIGATION_TIMEOUT_SECONDS: "300"
+  INVESTIGATION_TIMEOUT_SECONDS: "600"
   # How many investigations may call the LLM at once. The LLM endpoint is the
   # scarce resource — a free endpoint serves a handful of concurrent requests,
   # so an unbounded burst turns every run into a timeout. Investigations beyond
