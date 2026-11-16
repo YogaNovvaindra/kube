@@ -25,7 +25,7 @@ data:
   # Single source of truth for alert severity gating. Consumed by ingest
   # (event-driven alert forwarding), reporter (authoritative re-check) and
   # scheduler (follow-up report eligibility). "high" => high + critical.
-  HIGH_SEVERITY_THRESHOLD: "high"
+  HIGH_SEVERITY_THRESHOLD: "unknown"
   CHECK_INTERVAL: "30s"
   ENABLE_DAILY_REPORT: "true"
   ENABLE_HIGH_SEVERITY_ALERT: "true"
