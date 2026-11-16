@@ -45,8 +45,12 @@ data:
   # Investigator background retry scheduler cadence.
   RETRY_SCHEDULER_TICK_SECONDS: "60"
 
-  # OpenTelemetry sampling (fraction of traces kept).
-  OTEL_SAMPLE_RATIO: "0.1"
+  # OpenTelemetry sampling (fraction of traces kept). Probes and scrapes are
+  # not traced at all, so what remains is incident traffic: webhooks, outbox
+  # deliveries, report generation. That volume is low enough to keep every
+  # trace, and dropping 9 in 10 was what made "the trace is missing" a normal
+  # outcome when debugging a report that never arrived.
+  OTEL_SAMPLE_RATIO: "1.0"
 
   # Reporter reports are generated from scheduler-created requests.
   AVAILABILITY_METRIC: "up"
