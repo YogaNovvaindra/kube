@@ -112,6 +112,11 @@ spec:
                 configMapKeyRef:
                   name: pamawas-config
                   key: INVESTIGATION_TIMEOUT_SECONDS
+            - name: LLM_REQUEST_TIMEOUT_SECONDS
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: LLM_REQUEST_TIMEOUT_SECONDS
             - name: LOG_LEVEL
               valueFrom:
                 configMapKeyRef:
