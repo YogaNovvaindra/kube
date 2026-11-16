@@ -68,4 +68,16 @@ data:
   LOKI_SERVICE_LABEL: "kubernetes_container_name"
   LOKI_TIMEOUT_SECONDS: "60"
   LOKI_MAX_LOG_LINES: "100"
-  MAX_TOOL_CALLS: "100"
+  # Turns per investigation. A run that has made this many LLM calls without
+  # converging is not going to; the old value of 100 let a run burn the whole
+  # wall-clock budget and still submit nothing.
+  MAX_TOOL_CALLS: "25"
+  # Wall-clock budget per investigation. The last quarter of it (at least 90s)
+  # is reserved for writing findings, so evidence gathered is not discarded
+  # when the budget runs out. The previous default was 600s.
+  INVESTIGATION_TIMEOUT_SECONDS: "300"
+  # How many investigations may call the LLM at once. The LLM endpoint is the
+  # scarce resource — a free endpoint serves a handful of concurrent requests,
+  # so an unbounded burst turns every run into a timeout. Investigations beyond
+  # this limit wait in the `queued` state and are claimed by a worker.
+  MAX_CONCURRENT_INVESTIGATIONS: "2"

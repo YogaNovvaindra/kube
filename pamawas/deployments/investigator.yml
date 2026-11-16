@@ -102,6 +102,16 @@ spec:
                 configMapKeyRef:
                   name: pamawas-config
                   key: MAX_TOOL_CALLS
+            - name: MAX_CONCURRENT_INVESTIGATIONS
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: MAX_CONCURRENT_INVESTIGATIONS
+            - name: INVESTIGATION_TIMEOUT_SECONDS
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: INVESTIGATION_TIMEOUT_SECONDS
             - name: LOG_LEVEL
               valueFrom:
                 configMapKeyRef:
