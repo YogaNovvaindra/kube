@@ -60,7 +60,7 @@ data:
   REPORT_TEMPLATE: "v2"
   # Cap on the reporter's daily-summary call to the investigator. The digest is
   # delivered on time without the summary if the model is slow.
-  SUMMARY_TIMEOUT: "60s"
+  SUMMARY_TIMEOUT: "300s"
 
   # Investigator
   LLM_BASE_URLS: "https://freellmapi.ygnv.my.id/v1,https://integrate.api.nvidia.com/v1"
@@ -78,7 +78,7 @@ data:
   # Turns per investigation. A run that has made this many LLM calls without
   # converging is not going to; the old value of 100 let a run burn the whole
   # wall-clock budget and still submit nothing.
-  MAX_TOOL_CALLS: "25"
+  MAX_TOOL_CALLS: "50"
   # Wall-clock budget per investigation. The last quarter of it (at least 90s)
   # is reserved for writing findings, so evidence gathered is not discarded
   # when the budget runs out. The previous default was 600s.
