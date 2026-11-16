@@ -25,6 +25,9 @@ data:
   # Single source of truth for alert severity gating. Consumed by ingest
   # (event-driven alert forwarding), reporter (authoritative re-check) and
   # scheduler (follow-up report eligibility). "high" => high + critical.
+  # "unknown" is the absence of a gate: it ranks below every real severity, so
+  # every alert passes through to an investigation and a report. Use it when all
+  # alerts must be recorded, not just the ones that would page.
   HIGH_SEVERITY_THRESHOLD: "unknown"
   CHECK_INTERVAL: "30s"
   ENABLE_DAILY_REPORT: "true"
