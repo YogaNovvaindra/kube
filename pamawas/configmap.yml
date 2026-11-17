@@ -99,8 +99,8 @@ data:
   # INCIDENT_STALE_AFTER, the correlator asks the investigator whether the
   # condition is still down. A verification answers one question, so it is
   # bounded far below a full investigation.
-  VERIFY_TOOL_CALLS: "6"
-  VERIFY_TIMEOUT_SECONDS: "180"
+  VERIFY_TOOL_CALLS: "20"
+  VERIFY_TIMEOUT_SECONDS: "300"
   # How many investigations may call the LLM at once. The LLM endpoint is the
   # scarce resource — a free endpoint serves a handful of concurrent requests,
   # so an unbounded burst turns every run into a timeout. Investigations beyond
