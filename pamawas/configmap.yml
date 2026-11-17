@@ -18,6 +18,12 @@ data:
   CORRELATION_INTERVAL: "1m"
   CORRELATOR_MODE: "auto"
   INVESTIGATOR_URL: "http://pamawas-investigator:8080"
+  # REPORTER_URL is under Scheduler below; the correlator reads the same key to
+  # send verification-outcome cards.
+  # Silence after which an open incident is verified rather than blindly closed.
+  # The investigator is asked whether the condition is still down; only a
+  # recovered verdict closes it (stale-incident-verification.md).
+  INCIDENT_STALE_AFTER: "6h"
 
   # Scheduler
   REPORTER_URL: "http://pamawas-reporter:8080"
@@ -89,6 +95,12 @@ data:
   # cut off every free-endpoint response mid-generation and produced runs that
   # timed out six times in a row and submitted nothing.
   LLM_REQUEST_TIMEOUT_SECONDS: "60"
+  # Stale-incident verification budget. When an incident is silent past
+  # INCIDENT_STALE_AFTER, the correlator asks the investigator whether the
+  # condition is still down. A verification answers one question, so it is
+  # bounded far below a full investigation.
+  VERIFY_TOOL_CALLS: "6"
+  VERIFY_TIMEOUT_SECONDS: "180"
   # How many investigations may call the LLM at once. The LLM endpoint is the
   # scarce resource — a free endpoint serves a handful of concurrent requests,
   # so an unbounded burst turns every run into a timeout. Investigations beyond

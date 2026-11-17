@@ -117,6 +117,16 @@ spec:
                 configMapKeyRef:
                   name: pamawas-config
                   key: LLM_REQUEST_TIMEOUT_SECONDS
+            - name: VERIFY_TOOL_CALLS
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: VERIFY_TOOL_CALLS
+            - name: VERIFY_TIMEOUT_SECONDS
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: VERIFY_TIMEOUT_SECONDS
             - name: LOG_LEVEL
               valueFrom:
                 configMapKeyRef:
