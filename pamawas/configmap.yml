@@ -18,12 +18,6 @@ data:
   CORRELATION_INTERVAL: "1m"
   CORRELATOR_MODE: "auto"
   INVESTIGATOR_URL: "http://pamawas-investigator:8080"
-  # REPORTER_URL is under Scheduler below; the correlator reads the same key to
-  # send verification-outcome cards.
-  # Silence after which an open incident is verified rather than blindly closed.
-  # The investigator is asked whether the condition is still down; only a
-  # recovered verdict closes it (stale-incident-verification.md).
-  INCIDENT_STALE_AFTER: "6h"
 
   # Scheduler
   REPORTER_URL: "http://pamawas-reporter:8080"
@@ -39,6 +33,11 @@ data:
   ENABLE_DAILY_REPORT: "true"
   ENABLE_HIGH_SEVERITY_ALERT: "true"
   SCHEDULER_MODE: "auto"
+  # Stale incident verification (scheduler sweep + anti-flood back-off).
+  ENABLE_STALE_VERIFICATION: "true"
+  INCIDENT_STALE_AFTER: "6h"
+  STALE_REVERIFY_BASE_BACKOFF: "1h"
+  STALE_REVERIFY_MAX_BACKOFF: "24h"
 
   # Inbound HTTP rate limiting (per route; probes and /metrics exempt).
   # Webhook routes get a higher budget: alert floods are the expected shape.

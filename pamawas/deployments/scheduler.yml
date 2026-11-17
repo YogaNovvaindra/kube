@@ -81,6 +81,26 @@ spec:
                 configMapKeyRef:
                   name: pamawas-config
                   key: SCHEDULER_MODE
+            - name: ENABLE_STALE_VERIFICATION
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: ENABLE_STALE_VERIFICATION
+            - name: INCIDENT_STALE_AFTER
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: INCIDENT_STALE_AFTER
+            - name: STALE_REVERIFY_BASE_BACKOFF
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: STALE_REVERIFY_BASE_BACKOFF
+            - name: STALE_REVERIFY_MAX_BACKOFF
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: STALE_REVERIFY_MAX_BACKOFF
             - name: RATE_LIMIT_RPS
               valueFrom:
                 configMapKeyRef:

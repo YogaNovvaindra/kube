@@ -76,16 +76,6 @@ spec:
                 configMapKeyRef:
                   name: pamawas-config
                   key: INVESTIGATOR_URL
-            - name: REPORTER_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: pamawas-config
-                  key: REPORTER_URL
-            - name: INCIDENT_STALE_AFTER
-              valueFrom:
-                configMapKeyRef:
-                  name: pamawas-config
-                  key: INCIDENT_STALE_AFTER
             - name: PAMAWAS_SERVICE_TOKEN
               valueFrom:
                 secretKeyRef:
