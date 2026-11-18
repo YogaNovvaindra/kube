@@ -77,7 +77,7 @@ spec:
             periodSeconds: 60
             timeoutSeconds: 60
         - name: postgres-exporter
-          image: prometheuscommunity/postgres-exporter:v0.20.1
+          image: prometheuscommunity/postgres-exporter:v0.21.1
           args:
             - "--auto-discover-databases"
             - "--collector.stat_statements"
