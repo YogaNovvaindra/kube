@@ -101,6 +101,16 @@ spec:
                 configMapKeyRef:
                   name: pamawas-config
                   key: STALE_REVERIFY_MAX_BACKOFF
+            - name: ENABLE_STALLED_DELIVERY_RECOVERY
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: ENABLE_STALLED_DELIVERY_RECOVERY
+            - name: STALLED_DELIVERY_RECOVERY_INTERVAL
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: STALLED_DELIVERY_RECOVERY_INTERVAL
             - name: RATE_LIMIT_RPS
               valueFrom:
                 configMapKeyRef:

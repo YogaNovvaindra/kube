@@ -39,6 +39,13 @@ data:
   STALE_REVERIFY_BASE_BACKOFF: "1h"
   STALE_REVERIFY_MAX_BACKOFF: "24h"
 
+  # Stalled delivery recovery. The scheduler calls the reporter's
+  # /api/v1/retry-stalled-deliveries on this interval to reclaim delivery
+  # attempts whose lease expired mid-send. One hour is deliberately slow:
+  # a leaked lease is rare, and each call mutates every expired row.
+  ENABLE_STALLED_DELIVERY_RECOVERY: "true"
+  STALLED_DELIVERY_RECOVERY_INTERVAL: "1h"
+
   # Inbound HTTP rate limiting (per route; probes and /metrics exempt).
   # Webhook routes get a higher budget: alert floods are the expected shape.
   RATE_LIMIT_RPS: "10"
