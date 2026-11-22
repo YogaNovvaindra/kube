@@ -61,6 +61,11 @@ spec:
                 configMapKeyRef:
                   name: pamawas-config
                   key: CORRELATOR_MODE
+            - name: FLAPPING_COOLDOWN_WINDOW
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: FLAPPING_COOLDOWN_WINDOW
             - name: LOG_LEVEL
               valueFrom:
                 configMapKeyRef:

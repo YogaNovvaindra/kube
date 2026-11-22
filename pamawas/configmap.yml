@@ -17,6 +17,7 @@ data:
   CORRELATION_TIME_WINDOW: "10m"
   CORRELATION_INTERVAL: "1m"
   CORRELATOR_MODE: "auto"
+  FLAPPING_COOLDOWN_WINDOW: "15m"
   INVESTIGATOR_URL: "http://pamawas-investigator:8080"
 
   # Scheduler
