@@ -41,7 +41,7 @@ data:
                   refId: C
                   type: threshold
                   conditions:
-                    - evaluator: { params: [1], type: lt }
+                    - evaluator: { params: [0.5], type: lt }
                       operator: { type: and }
                       query: { params: [C] }
                       reducer: { params: [], type: last }
@@ -127,7 +127,7 @@ data:
                   refId: C
                   type: threshold
                   conditions:
-                    - evaluator: { params: [1], type: lt }
+                    - evaluator: { params: [0.5], type: lt }
                       operator: { type: and }
                       query: { params: [C] }
                       reducer: { params: [], type: last }
