@@ -311,7 +311,7 @@ data:
               type: prometheus
               uid: prometheus
             editorMode: code
-            expr: 100 * rate(node_pressure_io_waiting_seconds_total{job=~"kube_node|system_node"}[5m])
+            expr: 100 * rate(node_pressure_io_waiting_seconds_total{job=~"kube_node|docker_node"}[5m])
             hide: false
             instant: false
             intervalMs: 1000

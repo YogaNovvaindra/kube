@@ -49,7 +49,7 @@
                       "spec": {
                         "editorMode": "code",
                         "exemplar": false,
-                        "expr": "node_uname_info{job=\"system_node\", cluster=~\"$cluster\"} - 0",
+                        "expr": "node_uname_info{job=\"docker_node\", cluster=~\"$cluster\"} - 0",
                         "format": "table",
                         "instant": true,
                         "interval": "",
@@ -73,7 +73,7 @@
                       "spec": {
                         "editorMode": "code",
                         "exemplar": false,
-                        "expr": "node_memory_MemTotal_bytes{job=\"system_node\", cluster=~\"$cluster\"} - 0",
+                        "expr": "node_memory_MemTotal_bytes{job=\"docker_node\", cluster=~\"$cluster\"} - 0",
                         "format": "table",
                         "instant": true,
                         "interval": "",
@@ -97,7 +97,7 @@
                       "spec": {
                         "editorMode": "code",
                         "exemplar": false,
-                        "expr": "count(node_cpu_seconds_total{job=\"system_node\",mode='system', cluster=~\"$cluster\"}) by (instance)",
+                        "expr": "count(node_cpu_seconds_total{job=\"docker_node\",mode='system', cluster=~\"$cluster\"}) by (instance)",
                         "format": "table",
                         "instant": true,
                         "interval": "",
@@ -121,7 +121,7 @@
                       "spec": {
                         "editorMode": "code",
                         "exemplar": false,
-                        "expr": "node_load5{job=\"system_node\", cluster=~\"$cluster\"}",
+                        "expr": "node_load5{job=\"docker_node\", cluster=~\"$cluster\"}",
                         "format": "table",
                         "instant": true,
                         "interval": "",
@@ -145,7 +145,7 @@
                       "spec": {
                         "editorMode": "code",
                         "exemplar": false,
-                        "expr": "(1 - avg(rate(node_cpu_seconds_total{job=\"system_node\",mode=\"idle\", cluster=~\"$cluster\"}[5m])) by (instance)) * 100",
+                        "expr": "(1 - avg(rate(node_cpu_seconds_total{job=\"docker_node\",mode=\"idle\", cluster=~\"$cluster\"}[5m])) by (instance)) * 100",
                         "format": "table",
                         "instant": true,
                         "interval": "",
@@ -169,7 +169,7 @@
                       "spec": {
                         "editorMode": "code",
                         "exemplar": false,
-                        "expr": "(1 - (node_memory_MemAvailable_bytes{job=\"system_node\", cluster=~\"$cluster\"} / (node_memory_MemTotal_bytes{job=\"system_node\", cluster=~\"$cluster\"})))* 100",
+                        "expr": "(1 - (node_memory_MemAvailable_bytes{job=\"docker_node\", cluster=~\"$cluster\"} / (node_memory_MemTotal_bytes{job=\"docker_node\", cluster=~\"$cluster\"})))* 100",
                         "format": "table",
                         "instant": true,
                         "interval": "",
@@ -193,7 +193,7 @@
                       "spec": {
                         "editorMode": "code",
                         "exemplar": false,
-                        "expr": "max((node_filesystem_size_bytes{job=\"system_node\",fstype=~\"ext.?|xfs\", cluster=~\"$cluster\"}-node_filesystem_free_bytes{job=\"system_node\",fstype=~\"ext.?|xfs\", cluster=~\"$cluster\"}) *100/(node_filesystem_avail_bytes {job=\"system_node\",fstype=~\"ext.?|xfs\", cluster=~\"$cluster\"}+(node_filesystem_size_bytes{job=\"system_node\",fstype=~\"ext.?|xfs\", cluster=~\"$cluster\"}-node_filesystem_free_bytes{job=\"system_node\",fstype=~\"ext.?|xfs\", cluster=~\"$cluster\"})))by(instance)",
+                        "expr": "max((node_filesystem_size_bytes{job=\"docker_node\",fstype=~\"ext.?|xfs\", cluster=~\"$cluster\"}-node_filesystem_free_bytes{job=\"docker_node\",fstype=~\"ext.?|xfs\", cluster=~\"$cluster\"}) *100/(node_filesystem_avail_bytes {job=\"docker_node\",fstype=~\"ext.?|xfs\", cluster=~\"$cluster\"}+(node_filesystem_size_bytes{job=\"docker_node\",fstype=~\"ext.?|xfs\", cluster=~\"$cluster\"}-node_filesystem_free_bytes{job=\"docker_node\",fstype=~\"ext.?|xfs\", cluster=~\"$cluster\"})))by(instance)",
                         "format": "table",
                         "instant": true,
                         "interval": "",
@@ -217,7 +217,7 @@
                       "spec": {
                         "editorMode": "code",
                         "exemplar": false,
-                        "expr": "max(rate(node_disk_read_bytes_total{job=\"system_node\", cluster=~\"$cluster\"}[5m])) by (instance)",
+                        "expr": "max(rate(node_disk_read_bytes_total{job=\"docker_node\", cluster=~\"$cluster\"}[5m])) by (instance)",
                         "format": "table",
                         "instant": true,
                         "interval": "",
@@ -241,7 +241,7 @@
                       "spec": {
                         "editorMode": "code",
                         "exemplar": false,
-                        "expr": "max(rate(node_disk_written_bytes_total{job=\"system_node\", cluster=~\"$cluster\"}[5m])) by (instance)",
+                        "expr": "max(rate(node_disk_written_bytes_total{job=\"docker_node\", cluster=~\"$cluster\"}[5m])) by (instance)",
                         "format": "table",
                         "instant": true,
                         "interval": "",
@@ -265,7 +265,7 @@
                       "spec": {
                         "editorMode": "code",
                         "exemplar": false,
-                        "expr": "max(rate(node_network_receive_bytes_total{job=\"system_node\", cluster=~\"$cluster\"}[5m])*8) by (instance)",
+                        "expr": "max(rate(node_network_receive_bytes_total{job=\"docker_node\", cluster=~\"$cluster\"}[5m])*8) by (instance)",
                         "format": "table",
                         "instant": true,
                         "interval": "",
@@ -289,7 +289,7 @@
                       "spec": {
                         "editorMode": "code",
                         "exemplar": false,
-                        "expr": "max(rate(node_network_transmit_bytes_total{job=\"system_node\", cluster=~\"$cluster\"}[5m])*8) by (instance)",
+                        "expr": "max(rate(node_network_transmit_bytes_total{job=\"docker_node\", cluster=~\"$cluster\"}[5m])*8) by (instance)",
                         "format": "table",
                         "instant": true,
                         "interval": "",
@@ -313,7 +313,7 @@
                       "spec": {
                         "editorMode": "code",
                         "exemplar": false,
-                        "expr": "((1-(1 - avg(rate(node_cpu_seconds_total{job=\"system_node\",mode=\"idle\", cluster=~\"$cluster\"}[5m])) by (instance))^1.3)^(1/3)*0.5 + \r\n(1-(1 - avg(node_memory_MemAvailable_bytes{job=\"system_node\", cluster=~\"$cluster\"} / node_memory_MemTotal_bytes{job=\"system_node\", cluster=~\"$cluster\"})by (instance))^6)^(1/3)*0.3 + \r\n(1 - max(rate(node_disk_io_time_seconds_total{job=\"system_node\", cluster=~\"$cluster\"}[5m]))by (instance)^1.1)^(1/2)*0.2)*100",
+                        "expr": "((1-(1 - avg(rate(node_cpu_seconds_total{job=\"docker_node\",mode=\"idle\", cluster=~\"$cluster\"}[5m])) by (instance))^1.3)^(1/3)*0.5 + \r\n(1-(1 - avg(node_memory_MemAvailable_bytes{job=\"docker_node\", cluster=~\"$cluster\"} / node_memory_MemTotal_bytes{job=\"docker_node\", cluster=~\"$cluster\"})by (instance))^6)^(1/3)*0.3 + \r\n(1 - max(rate(node_disk_io_time_seconds_total{job=\"docker_node\", cluster=~\"$cluster\"}[5m]))by (instance)^1.1)^(1/2)*0.2)*100",
                         "format": "table",
                         "instant": true,
                         "interval": "",
@@ -337,7 +337,7 @@
                       "spec": {
                         "editorMode": "code",
                         "exemplar": false,
-                        "expr": "max(rate(node_disk_io_time_seconds_total{job=\"system_node\", cluster=~\"$cluster\"}[5m])) by (instance) *100",
+                        "expr": "max(rate(node_disk_io_time_seconds_total{job=\"docker_node\", cluster=~\"$cluster\"}[5m])) by (instance) *100",
                         "format": "table",
                         "instant": true,
                         "interval": "",
@@ -361,7 +361,7 @@
                       "spec": {
                         "editorMode": "code",
                         "exemplar": false,
-                        "expr": "max (node_filesystem_size_bytes{job=\"system_node\",mountpoint=\"/rootfs\",fstype!=\"rootfs\", cluster=~\"$cluster\"}) by (instance)",
+                        "expr": "max (node_filesystem_size_bytes{job=\"docker_node\",mountpoint=\"/rootfs\",fstype!=\"rootfs\", cluster=~\"$cluster\"}) by (instance)",
                         "format": "table",
                         "instant": true,
                         "legendFormat": "Disk size",
@@ -385,7 +385,7 @@
                       "spec": {
                         "editorMode": "code",
                         "exemplar": false,
-                        "expr": "node_memory_SwapTotal_bytes{job=\"system_node\", cluster=~\"$cluster\"} - 0",
+                        "expr": "node_memory_SwapTotal_bytes{job=\"docker_node\", cluster=~\"$cluster\"} - 0",
                         "format": "table",
                         "instant": true,
                         "legendFormat": "__auto",
@@ -409,7 +409,7 @@
                       "spec": {
                         "editorMode": "code",
                         "exemplar": false,
-                        "expr": "(1 - (node_memory_SwapFree_bytes{job=\"system_node\", cluster=~\"$cluster\"} / (node_memory_SwapTotal_bytes{job=\"system_node\", cluster=~\"$cluster\"})))* 100",
+                        "expr": "(1 - (node_memory_SwapFree_bytes{job=\"docker_node\", cluster=~\"$cluster\"} / (node_memory_SwapTotal_bytes{job=\"docker_node\", cluster=~\"$cluster\"})))* 100",
                         "format": "table",
                         "instant": true,
                         "legendFormat": "__auto",
@@ -1018,7 +1018,7 @@
                       "spec": {
                         "direction": "backward",
                         "editorMode": "code",
-                        "expr": "sum by (detected_level) (\n  count_over_time(\n    {job=\"system_journal\", instance=~\"$node\", cluster=\"$cluster\"} \n      | logfmt\n      | __error__=\"\"\n      | detected_level = \"info\" [$__range]\n  )\n)",
+                        "expr": "sum by (detected_level) (\n  count_over_time(\n    {job=\"docker_node_journal\", instance=~\"$node\", cluster=\"$cluster\"} \n      | logfmt\n      | __error__=\"\"\n      | detected_level = \"info\" [$__range]\n  )\n)",
                         "legendFormat": "Info",
                         "queryType": "instant"
                       },
@@ -1040,7 +1040,7 @@
                       "spec": {
                         "direction": "backward",
                         "editorMode": "code",
-                        "expr": "sum by (detected_level) (\n  count_over_time(\n    {job=\"system_journal\", instance=~\"$node\", cluster=\"$cluster\"} \n      | logfmt\n      | __error__=\"\"\n      | detected_level = \"unknown\" [$__range]\n  )\n)",
+                        "expr": "sum by (detected_level) (\n  count_over_time(\n    {job=\"docker_node_journal\", instance=~\"$node\", cluster=\"$cluster\"} \n      | logfmt\n      | __error__=\"\"\n      | detected_level = \"unknown\" [$__range]\n  )\n)",
                         "legendFormat": "Unknown",
                         "queryType": "instant"
                       },
@@ -1062,7 +1062,7 @@
                       "spec": {
                         "direction": "backward",
                         "editorMode": "code",
-                        "expr": "sum by (detected_level) (\n  count_over_time(\n    {job=\"system_journal\", instance=~\"$node\", cluster=\"$cluster\"} \n      | logfmt\n      | __error__=\"\"\n      | detected_level = \"warning\" [$__range]\n  )\n)",
+                        "expr": "sum by (detected_level) (\n  count_over_time(\n    {job=\"docker_node_journal\", instance=~\"$node\", cluster=\"$cluster\"} \n      | logfmt\n      | __error__=\"\"\n      | detected_level = \"warning\" [$__range]\n  )\n)",
                         "legendFormat": "Warning",
                         "queryType": "instant"
                       },
@@ -1084,7 +1084,7 @@
                       "spec": {
                         "direction": "backward",
                         "editorMode": "code",
-                        "expr": "sum by (detected_level) (\n  count_over_time(\n    {job=\"system_journal\", instance=~\"$node\", cluster=\"$cluster\"} \n      | logfmt\n      | __error__=\"\"\n      | detected_level = \"error\" [$__range]\n  )\n)",
+                        "expr": "sum by (detected_level) (\n  count_over_time(\n    {job=\"docker_node_journal\", instance=~\"$node\", cluster=\"$cluster\"} \n      | logfmt\n      | __error__=\"\"\n      | detected_level = \"error\" [$__range]\n  )\n)",
                         "legendFormat": "Error",
                         "queryType": "instant"
                       },
@@ -1106,7 +1106,7 @@
                       "spec": {
                         "direction": "backward",
                         "editorMode": "code",
-                        "expr": "sum by (detected_level) (\n  count_over_time(\n    {job=\"system_journal\", instance=~\"$node\", cluster=\"$cluster\"} \n      | logfmt\n      | __error__=\"\"\n      | detected_level = \"debug\" [$__range]\n  )\n)",
+                        "expr": "sum by (detected_level) (\n  count_over_time(\n    {job=\"docker_node_journal\", instance=~\"$node\", cluster=\"$cluster\"} \n      | logfmt\n      | __error__=\"\"\n      | detected_level = \"debug\" [$__range]\n  )\n)",
                         "legendFormat": "Debug",
                         "queryType": "instant"
                       },
@@ -1128,7 +1128,7 @@
                       "spec": {
                         "direction": "backward",
                         "editorMode": "code",
-                        "expr": "sum by (detected_level) (\n  count_over_time(\n    {job=\"system_journal\", instance=~\"$node\", cluster=\"$cluster\"} \n      | logfmt\n      | __error__=\"\"\n      | detected_level = \"critical\" [$__range]\n  )\n)",
+                        "expr": "sum by (detected_level) (\n  count_over_time(\n    {job=\"docker_node_journal\", instance=~\"$node\", cluster=\"$cluster\"} \n      | logfmt\n      | __error__=\"\"\n      | detected_level = \"critical\" [$__range]\n  )\n)",
                         "legendFormat": "Critical",
                         "queryType": "instant"
                       },
@@ -1150,7 +1150,7 @@
                       "spec": {
                         "direction": "backward",
                         "editorMode": "code",
-                        "expr": "sum by (detected_level) (\n  count_over_time(\n    {job=\"system_journal\", instance=~\"$node\", cluster=\"$cluster\"} \n      | logfmt\n      | __error__=\"\"\n      | detected_level = \"notice\" [$__range]\n  )\n)",
+                        "expr": "sum by (detected_level) (\n  count_over_time(\n    {job=\"docker_node_journal\", instance=~\"$node\", cluster=\"$cluster\"} \n      | logfmt\n      | __error__=\"\"\n      | detected_level = \"notice\" [$__range]\n  )\n)",
                         "legendFormat": "Notice",
                         "queryType": "instant"
                       },
@@ -1336,7 +1336,7 @@
                       "spec": {
                         "direction": "backward",
                         "editorMode": "code",
-                        "expr": "sum by (detected_level) (count_over_time(\r\n  {job=\"system_journal\", instance=~\"$node\", cluster=\"$cluster\"}\r\n  | detected_level != \"\"\r\n[5m]\r\n))",
+                        "expr": "sum by (detected_level) (count_over_time(\r\n  {job=\"docker_node_journal\", instance=~\"$node\", cluster=\"$cluster\"}\r\n  | detected_level != \"\"\r\n[5m]\r\n))",
                         "legendFormat": "{{detected_level}}",
                         "queryType": "range"
                       },
@@ -1581,7 +1581,7 @@
                       "spec": {
                         "direction": "backward",
                         "editorMode": "code",
-                        "expr": "{job=\"system_logs\", instance=~\"$node\", cluster=\"$cluster\"}\r\n  | logfmt\r\n  | regexp `\\[(?P\u003clevel\u003e[A-Z]+)\\]`",
+                        "expr": "{job=\"docker_node_logs\", instance=~\"$node\", cluster=\"$cluster\"}\r\n  | logfmt\r\n  | regexp `\\[(?P\u003clevel\u003e[A-Z]+)\\]`",
                         "queryType": "range"
                       },
                       "version": "v0"
@@ -1650,7 +1650,7 @@
                       "spec": {
                         "direction": "backward",
                         "editorMode": "code",
-                        "expr": "{job=\"system_journal\", instance=~\"$node\", cluster=\"$cluster\"}\r\n  | line_format `{{if eq .level \"err\"}}❌{{else if eq .level \"crit\"}}🛑{{else if eq .level \"warning\"}}⚠️{{else}}ℹ️{{end}} [{{.level}}] 🖥️ {{.instance}} | 📦 {{.unit}} ({{.transport}}) ➡️ {{ __line__ }}`",
+                        "expr": "{job=\"docker_node_journal\", instance=~\"$node\", cluster=\"$cluster\"}\r\n  | line_format `{{if eq .level \"err\"}}❌{{else if eq .level \"crit\"}}🛑{{else if eq .level \"warning\"}}⚠️{{else}}ℹ️{{end}} [{{.level}}] 🖥️ {{.instance}} | 📦 {{.unit}} ({{.transport}}) ➡️ {{ __line__ }}`",
                         "queryType": "range"
                       },
                       "version": "v0"
@@ -1844,7 +1844,7 @@
             "text": "docker_cluster",
             "value": "docker_cluster"
           },
-          "definition": "label_values(up{job=\"system_node\"},cluster)",
+          "definition": "label_values(up{job=\"docker_node\"},cluster)",
           "hide": "dontHide",
           "includeAll": false,
           "label": "Cluster",
@@ -1856,7 +1856,7 @@
             "kind": "DataQuery",
             "spec": {
               "qryType": 1,
-              "query": "label_values(up{job=\"system_node\"},cluster)",
+              "query": "label_values(up{job=\"docker_node\"},cluster)",
               "refId": "PrometheusVariableQueryEditor-VariableQuery"
             },
             "version": "v0"

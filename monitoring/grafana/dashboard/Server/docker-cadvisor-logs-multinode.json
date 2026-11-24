@@ -691,7 +691,7 @@
                       "spec": {
                         "direction": "backward",
                         "editorMode": "code",
-                        "expr": "sum by (container) (count_over_time(\n  {job=\"docker_logs\", cluster=~\"$cluster\", instance=~\"$instance\"}\n[$__range]\n))",
+                        "expr": "sum by (container) (count_over_time(\n  {job=\"docker_container_logs\", cluster=~\"$cluster\", instance=~\"$instance\"}\n[$__range]\n))",
                         "legendFormat": "{{container}}",
                         "queryType": "range"
                       },
@@ -780,7 +780,7 @@
                       "spec": {
                         "direction": "backward",
                         "editorMode": "code",
-                        "expr": "sum(count_over_time({job=\"docker_logs\", cluster=~\"$cluster\", instance=~\"$instance\", container=~\"$container\", level=\"info\"}[$__range]))",
+                        "expr": "sum(count_over_time({job=\"docker_container_logs\", cluster=~\"$cluster\", instance=~\"$instance\", container=~\"$container\", level=\"info\"}[$__range]))",
                         "legendFormat": "Info",
                         "queryType": "instant"
                       },
@@ -802,7 +802,7 @@
                       "spec": {
                         "direction": "backward",
                         "editorMode": "code",
-                        "expr": "sum(count_over_time({job=\"docker_logs\", cluster=~\"$cluster\", instance=~\"$instance\", container=~\"$container\", level=\"\"}[$__range]))",
+                        "expr": "sum(count_over_time({job=\"docker_container_logs\", cluster=~\"$cluster\", instance=~\"$instance\", container=~\"$container\", level=\"\"}[$__range]))",
                         "legendFormat": "Unknown",
                         "queryType": "instant"
                       },
@@ -824,7 +824,7 @@
                       "spec": {
                         "direction": "backward",
                         "editorMode": "code",
-                        "expr": "sum(count_over_time({job=\"docker_logs\", cluster=~\"$cluster\", instance=~\"$instance\", container=~\"$container\", level=\"warn\"}[$__range]))",
+                        "expr": "sum(count_over_time({job=\"docker_container_logs\", cluster=~\"$cluster\", instance=~\"$instance\", container=~\"$container\", level=\"warn\"}[$__range]))",
                         "legendFormat": "Warn",
                         "queryType": "instant"
                       },
@@ -846,7 +846,7 @@
                       "spec": {
                         "direction": "backward",
                         "editorMode": "code",
-                        "expr": "sum(count_over_time({job=\"docker_logs\", cluster=~\"$cluster\", instance=~\"$instance\", container=~\"$container\", level=\"error\"}[$__range]))",
+                        "expr": "sum(count_over_time({job=\"docker_container_logs\", cluster=~\"$cluster\", instance=~\"$instance\", container=~\"$container\", level=\"error\"}[$__range]))",
                         "legendFormat": "Error",
                         "queryType": "instant"
                       },
@@ -868,7 +868,7 @@
                       "spec": {
                         "direction": "backward",
                         "editorMode": "code",
-                        "expr": "sum(count_over_time({job=\"docker_logs\", cluster=~\"$cluster\", instance=~\"$instance\", container=~\"$container\", level=\"debug\"}[$__range]))",
+                        "expr": "sum(count_over_time({job=\"docker_container_logs\", cluster=~\"$cluster\", instance=~\"$instance\", container=~\"$container\", level=\"debug\"}[$__range]))",
                         "legendFormat": "Debug",
                         "queryType": "instant"
                       },
@@ -1053,7 +1053,7 @@
                       "spec": {
                         "direction": "backward",
                         "editorMode": "code",
-                        "expr": "sum by (detected_level) (count_over_time(\n  {job=\"docker_logs\", cluster=~\"$cluster\", instance=~\"$instance\", container=~\"$container\"}\n[5m]\n))",
+                        "expr": "sum by (detected_level) (count_over_time(\n  {job=\"docker_container_logs\", cluster=~\"$cluster\", instance=~\"$instance\", container=~\"$container\"}\n[5m]\n))",
                         "legendFormat": "{{level}}",
                         "queryType": "range",
                         "range": true
@@ -1294,7 +1294,7 @@
                       "spec": {
                         "direction": "backward",
                         "editorMode": "code",
-                        "expr": "{job=\"docker_logs\", cluster=~\"$cluster\", instance=~\"$instance\", container=~\"$container\"}\n  | line_format `🖥️ {{.instance}} ➡️ 📦 {{.container}} ➡️ {{ __line__ }}`",
+                        "expr": "{job=\"docker_container_logs\", cluster=~\"$cluster\", instance=~\"$instance\", container=~\"$container\"}\n  | line_format `🖥️ {{.instance}} ➡️ 📦 {{.container}} ➡️ {{ __line__ }}`",
                         "queryType": "range"
                       },
                       "version": "v0"
