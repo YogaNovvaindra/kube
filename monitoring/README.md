@@ -78,7 +78,7 @@ Metrics are collected from various sources using dedicated exporters:
 - **Image**: `grafana/grafana:13.0.2`
 - **Sidecar**: `grafana-image-renderer:v5.8.8` on port `8081` for panel screenshots
 - **Auth**: Authentik OAuth2 SSO (`auth.ygnv.my.id`)
-- **Alerts**: 58 provisioned rules in 19 evaluation groups, organized by Infrastructure, Kubernetes, Storage, Network, Applications, and Databases
+- **Alerts**: 59 provisioned rules in 19 evaluation groups, organized by Infrastructure, Kubernetes, Storage, Network, Applications, and Databases
 - **Ingress**: `grafana.ygnv.my.id`
 
 #### Alert organization

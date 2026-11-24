@@ -28,6 +28,7 @@ data:
       prometheus:
         buckets: [0.100000, 0.300000, 1.200000, 5.000000]
         addEntryPointsLabels: true
+        addRoutersLabels: true
         addServicesLabels: true
         entryPoint: "metrics"
 
