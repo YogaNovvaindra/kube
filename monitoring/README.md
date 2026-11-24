@@ -78,20 +78,21 @@ Metrics are collected from various sources using dedicated exporters:
 - **Image**: `grafana/grafana:13.0.2`
 - **Sidecar**: `grafana-image-renderer:v5.8.8` on port `8081` for panel screenshots
 - **Auth**: Authentik OAuth2 SSO (`auth.ygnv.my.id`)
-- **Alerts**: 41 provisioned rules in 14 evaluation groups, organized by Infrastructure, Kubernetes, Storage, Network, and Applications
+- **Alerts**: 55 provisioned rules in 18 evaluation groups, organized by Infrastructure, Kubernetes, Storage, Network, Applications, and Databases
 - **Ingress**: `grafana.ygnv.my.id`
 
 #### Alert organization
 
 | Domain | Evaluation groups |
 |--------|-------------------|
-| Infrastructure | Linux Health, Linux Capacity, Monitoring Availability |
+| Infrastructure | Linux Health, Linux Capacity, Proxmox Health, Proxmox Capacity, Monitoring Availability |
 | Kubernetes | Nodes, Workloads, Capacity, Certificates |
 | Storage | Ceph Health, Ceph Performance, Ceph Capacity |
 | Network | MikroTik Health, MikroTik Capacity, Ubiquiti Links |
 | Applications | Application Services |
+| Databases | Database Health, Database Capacity |
 
-Every rule uses `severity`, `domain`, `component`, `owner`, and `actionable` labels. Notifications are grouped by domain, component, cluster, and severity; actionable alerts are additionally forwarded to Pamawas.
+Every rule uses `severity`, `domain`, `component`, `owner`, and `actionable` labels. Notifications are grouped by domain, component, cluster, and severity; a non-empty `severity` matcher forwards every alert to Pamawas while Discord routing remains severity-based.
 
 ### Prometheus — Metrics
 - **Config**: [`prometheus/prometheus-config.yml`](prometheus/prometheus-config.yml)

@@ -76,7 +76,7 @@ data:
               - ${PVE_2_ENDPOINT}
               - ${PVE_THINKPAD_ENDPOINT}
             labels:
-              cluster: '1'
+              cluster: 'proxmox_cluster'
         relabel_configs:
           - source_labels: [__address__]
             target_label: __param_target

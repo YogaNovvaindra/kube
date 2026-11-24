@@ -101,6 +101,16 @@ spec:
                     - key: alerts-services.yaml
                       path: alerts-services.yaml
               - configMap:
+                  name: grafana-alerts-databases
+                  items:
+                    - key: alerts-databases.yaml
+                      path: alerts-databases.yaml
+              - configMap:
+                  name: grafana-alerts-proxmox
+                  items:
+                    - key: alerts-proxmox.yaml
+                      path: alerts-proxmox.yaml
+              - configMap:
                   name: grafana-alerts-templates
                   items:
                     - key: alerts-templates.yaml

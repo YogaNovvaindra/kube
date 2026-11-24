@@ -1,0 +1,403 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-alerts-proxmox
+  namespace: monitoring
+data:
+  alerts-proxmox.yaml: |
+    apiVersion: 1
+    groups:
+    - orgId: 1
+      name: Proxmox Health
+      folder: Infrastructure
+      interval: 1m
+      rules:
+      - uid: proxmox_cluster_quorum_lost
+        title: Proxmox Cluster Quorum Lost
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            editorMode: code
+            expr: max by (cluster, id) (pve_cluster_info{job="proxmox",quorate="0"})
+            instant: true
+            range: false
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: last
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - 0.5
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 2m
+        annotations:
+          summary: Proxmox cluster quorum lost
+          description: 'Proxmox cluster {{ $labels.id }} has reported quorate=0 for at least 2 minutes.'
+          value: '{{ $values.B.Value | printf "%.0f" }} (1=quorum lost)'
+        labels:
+          severity: critical
+          domain: infrastructure
+          component: proxmox
+          owner: platform
+          actionable: 'true'
+        noDataState: OK
+        execErrState: Error
+      - uid: proxmox_host_down
+        title: Proxmox Host Down
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            editorMode: code
+            expr: max by (cluster, id) (pve_up{job="proxmox",id=~"node/.+"})
+            instant: true
+            range: false
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: last
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - 0.5
+                type: lt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 5m
+        annotations:
+          summary: Proxmox host down ({{ $labels.id }})
+          description: 'Proxmox host {{ $labels.id }} has been unavailable for at least 5 minutes.'
+          value: '{{ $values.B.Value | printf "%.0f" }} (1=up, 0=down)'
+        labels:
+          severity: critical
+          domain: infrastructure
+          component: proxmox
+          owner: platform
+          actionable: 'true'
+        noDataState: NoData
+        execErrState: Error
+      - uid: proxmox_host_recently_rebooted
+        title: Proxmox Host Recently Rebooted
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            editorMode: code
+            expr: max by (cluster, id) (pve_uptime_seconds{job="proxmox",id=~"node/.+"})
+            instant: true
+            range: false
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: last
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - 3600
+                type: lt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 1m
+        annotations:
+          summary: Proxmox host recently rebooted ({{ $labels.id }})
+          description: 'Proxmox host {{ $labels.id }} rebooted within the last hour.'
+          value: '{{ $values.B.Value | humanizeDuration }} uptime'
+        labels:
+          severity: info
+          domain: infrastructure
+          component: proxmox
+          owner: platform
+          actionable: 'false'
+        noDataState: NoData
+        execErrState: Error
+    - orgId: 1
+      name: Proxmox Capacity
+      folder: Infrastructure
+      interval: 5m
+      rules:
+      - uid: proxmox_host_cpu_high
+        title: Proxmox Host High CPU
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            editorMode: code
+            expr: 100 * max by (cluster, id) (pve_cpu_usage_ratio{job="proxmox",id=~"node/.+"})
+            instant: true
+            range: false
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: last
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - 85
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 15m
+        annotations:
+          summary: High CPU usage on Proxmox host {{ $labels.id }}
+          description: 'Proxmox host CPU usage has remained above 85% for 15 minutes.'
+          value: '{{ $values.B.Value | printf "%.2f" }}%'
+        labels:
+          severity: warning
+          domain: infrastructure
+          component: proxmox
+          owner: platform
+          actionable: 'true'
+        noDataState: NoData
+        execErrState: Error
+      - uid: proxmox_host_memory_high
+        title: Proxmox Host High Memory
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            editorMode: code
+            expr: 100 * max by (cluster, id) (pve_memory_usage_bytes{job="proxmox",id=~"node/.+"} / pve_memory_size_bytes{job="proxmox",id=~"node/.+"})
+            instant: true
+            range: false
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: last
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - 90
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 15m
+        annotations:
+          summary: High memory usage on Proxmox host {{ $labels.id }}
+          description: 'Proxmox host memory usage has remained above 90% for 15 minutes.'
+          value: '{{ $values.B.Value | printf "%.2f" }}%'
+        labels:
+          severity: warning
+          domain: infrastructure
+          component: proxmox
+          owner: platform
+          actionable: 'true'
+        noDataState: NoData
+        execErrState: Error
+      - uid: proxmox_host_disk_high
+        title: Proxmox Host Disk Nearly Full
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            editorMode: code
+            expr: 100 * max by (cluster, id) (pve_disk_usage_bytes{job="proxmox",id=~"node/.+"} / pve_disk_size_bytes{job="proxmox",id=~"node/.+"})
+            instant: true
+            range: false
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: last
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - 85
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 15m
+        annotations:
+          summary: Proxmox host disk nearly full ({{ $labels.id }})
+          description: 'Proxmox host disk usage has remained above 85% for 15 minutes.'
+          value: '{{ $values.B.Value | printf "%.2f" }}%'
+        labels:
+          severity: warning
+          domain: infrastructure
+          component: proxmox
+          owner: platform
+          actionable: 'true'
+        noDataState: NoData
+        execErrState: Error

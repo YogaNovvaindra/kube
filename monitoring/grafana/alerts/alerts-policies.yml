@@ -16,7 +16,7 @@ data:
         routes:
           - receiver: pamawas-ingest
             matchers:
-              - actionable = true
+              - 'severity =~ ".+"'
             group_wait: 30s
             group_interval: 10m
             repeat_interval: 4h

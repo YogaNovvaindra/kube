@@ -297,6 +297,99 @@ data:
           owner: platform
           actionable: 'true'
         for: 5m
+      - uid: linux_node_io_pressure_high
+        title: Linux Node High I/O Pressure
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            editorMode: code
+            expr: 100 * rate(node_pressure_io_waiting_seconds_total{job=~"kube_node|system_node"}[5m])
+            hide: false
+            instant: false
+            intervalMs: 1000
+            legendFormat: __auto
+            maxDataPoints: 43200
+            range: true
+            refId: A
+        - refId: B
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: __expr__
+          model:
+            conditions:
+            - evaluator:
+                params: []
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - B
+              reducer:
+                params: []
+                type: last
+              type: query
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            intervalMs: 1000
+            maxDataPoints: 43200
+            reducer: mean
+            refId: B
+            type: reduce
+        - refId: C
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: __expr__
+          model:
+            conditions:
+            - evaluator:
+                params:
+                - 90
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            intervalMs: 1000
+            maxDataPoints: 43200
+            refId: C
+            type: threshold
+        noDataState: NoData
+        execErrState: Error
+        annotations:
+          description: 'I/O pressure has remained above 90% for 15 minutes. Current
+            pressure: {{ $values.B.Value | printf "%.2f" }}%.'
+          summary: High I/O pressure on {{ $labels.instance }}
+          value: '{{ $values.B.Value | printf "%.2f" }}%'
+        isPaused: false
+        labels:
+          severity: warning
+          domain: infrastructure
+          component: linux-node
+          owner: platform
+          actionable: 'true'
+        for: 15m
       - uid: adzio59a2016od
         title: Linux Node Filesystem Nearly Full
         condition: C

@@ -1,0 +1,467 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-alerts-databases
+  namespace: monitoring
+data:
+  alerts-databases.yaml: |
+    apiVersion: 1
+    groups:
+    - orgId: 1
+      name: Database Health
+      folder: Databases
+      interval: 1m
+      rules:
+      - uid: mysql_replica_io_stopped
+        title: MySQL Replica I/O Thread Stopped
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            editorMode: code
+            expr: mysql_slave_status_replica_io_running
+            instant: false
+            range: true
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: last
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - 0.5
+                type: lt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 2m
+        annotations:
+          summary: MySQL replica I/O thread stopped on {{ $labels.instance }}
+          description: The MySQL replica I/O thread has been stopped for at least 2 minutes.
+          value: '{{ $values.B.Value | printf "%.0f" }} (1=running, 0=stopped)'
+        labels:
+          severity: critical
+          domain: database
+          component: mysql
+          owner: platform
+          actionable: 'true'
+        noDataState: OK
+        execErrState: Error
+      - uid: mysql_replica_sql_stopped
+        title: MySQL Replica SQL Thread Stopped
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            editorMode: code
+            expr: mysql_slave_status_replica_sql_running
+            instant: false
+            range: true
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: last
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - 0.5
+                type: lt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 2m
+        annotations:
+          summary: MySQL replica SQL thread stopped on {{ $labels.instance }}
+          description: The MySQL replica SQL thread has been stopped for at least 2 minutes.
+          value: '{{ $values.B.Value | printf "%.0f" }} (1=running, 0=stopped)'
+        labels:
+          severity: critical
+          domain: database
+          component: mysql
+          owner: platform
+          actionable: 'true'
+        noDataState: OK
+        execErrState: Error
+      - uid: mysql_replication_lag_high
+        title: MySQL Replication Lag High
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            editorMode: code
+            expr: mysql_slave_status_seconds_behind_master or mysql_slave_status_seconds_behind_source
+            instant: false
+            range: true
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: last
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - 60
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 5m
+        annotations:
+          summary: MySQL replication lag high on {{ $labels.instance }}
+          description: 'MySQL replication lag has remained above 60 seconds for 5 minutes.'
+          value: '{{ $values.B.Value | printf "%.0f" }} seconds'
+        labels:
+          severity: warning
+          domain: database
+          component: mysql
+          owner: platform
+          actionable: 'true'
+        noDataState: OK
+        execErrState: Error
+      - uid: postgres_replication_lag_high
+        title: PostgreSQL Replication Lag High
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            editorMode: code
+            expr: pg_replication_lag_seconds
+            instant: false
+            range: true
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: last
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - 60
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 5m
+        annotations:
+          summary: PostgreSQL replication lag high on {{ $labels.instance }}
+          description: 'PostgreSQL replication lag has remained above 60 seconds for 5 minutes.'
+          value: '{{ $values.B.Value | printf "%.0f" }} seconds'
+        labels:
+          severity: warning
+          domain: database
+          component: postgresql
+          owner: platform
+          actionable: 'true'
+        noDataState: OK
+        execErrState: Error
+    - orgId: 1
+      name: Database Capacity
+      folder: Databases
+      interval: 5m
+      rules:
+      - uid: mysql_connections_high
+        title: MySQL Connections High
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            editorMode: code
+            expr: 100 * mysql_global_status_threads_connected / mysql_global_variables_max_connections
+            instant: false
+            range: true
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: last
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - 80
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 10m
+        annotations:
+          summary: MySQL connections high on {{ $labels.instance }}
+          description: 'MySQL connection usage has remained above 80% for 10 minutes.'
+          value: '{{ $values.B.Value | printf "%.2f" }}%'
+        labels:
+          severity: warning
+          domain: database
+          component: mysql
+          owner: platform
+          actionable: 'true'
+        noDataState: NoData
+        execErrState: Error
+      - uid: postgres_connections_high
+        title: PostgreSQL Connections High
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            editorMode: code
+            expr: 100 * sum by (job, cluster, instance) (pg_stat_database_numbackends{datname!~"template0|template1"}) / max by (job, cluster, instance) (pg_settings_max_connections)
+            instant: false
+            range: true
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: last
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - 80
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 10m
+        annotations:
+          summary: PostgreSQL connections high on {{ $labels.instance }}
+          description: 'PostgreSQL connection usage has remained above 80% for 10 minutes.'
+          value: '{{ $values.B.Value | printf "%.2f" }}%'
+        labels:
+          severity: warning
+          domain: database
+          component: postgresql
+          owner: platform
+          actionable: 'true'
+        noDataState: NoData
+        execErrState: Error
+      - uid: postgres_deadlocks_high
+        title: PostgreSQL Deadlocks High
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 3900
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            editorMode: code
+            expr: sum by (job, cluster, instance) (increase(pg_stat_database_deadlocks[1h]))
+            instant: false
+            range: true
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: last
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - 5
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 5m
+        annotations:
+          summary: PostgreSQL deadlocks high on {{ $labels.instance }}
+          description: 'More than 5 PostgreSQL deadlocks occurred during the last hour.'
+          value: '{{ $values.B.Value | printf "%.0f" }} deadlocks/hour'
+        labels:
+          severity: warning
+          domain: database
+          component: postgresql
+          owner: platform
+          actionable: 'true'
+        noDataState: NoData
+        execErrState: Error
