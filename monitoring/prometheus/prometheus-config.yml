@@ -24,6 +24,16 @@ data:
           - source_labels: [__meta_kubernetes_pod_ip]
             target_label: __address__
             replacement: $1:9090
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            target_label: node
+          - target_label: cluster
+            replacement: kube_cluster
+          - target_label: platform
+            replacement: kubernetes
 
       - job_name: loki
         kubernetes_sd_configs:
@@ -37,6 +47,16 @@ data:
           - source_labels: [__meta_kubernetes_pod_ip]
             target_label: __address__
             replacement: $1:3100
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            target_label: node
+          - target_label: cluster
+            replacement: kube_cluster
+          - target_label: platform
+            replacement: kubernetes
 
       - job_name: tempo
         kubernetes_sd_configs:
@@ -50,6 +70,16 @@ data:
           - source_labels: [__meta_kubernetes_pod_ip]
             target_label: __address__
             replacement: $1:3200
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            target_label: node
+          - target_label: cluster
+            replacement: kube_cluster
+          - target_label: platform
+            replacement: kubernetes
 
       - job_name: grafana
         kubernetes_sd_configs:
@@ -63,6 +93,16 @@ data:
           - source_labels: [__meta_kubernetes_pod_ip]
             target_label: __address__
             replacement: $1:3000
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            target_label: node
+          - target_label: cluster
+            replacement: kube_cluster
+          - target_label: platform
+            replacement: kubernetes
 
       # Proxmox VE monitoring
       - job_name: proxmox
@@ -77,6 +117,7 @@ data:
               - ${PVE_THINKPAD_ENDPOINT}
             labels:
               cluster: 'proxmox_cluster'
+              platform: proxmox
         relabel_configs:
           - source_labels: [__address__]
             target_label: __param_target
@@ -108,10 +149,16 @@ data:
             target_label: pod
           - source_labels: [__meta_kubernetes_pod_label_app]
             target_label: app
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            target_label: node
           - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
             action: replace
             target_label: __metrics_path__
             regex: "(.+)"
+          - target_label: cluster
+            replacement: kube_cluster
+          - target_label: platform
+            replacement: kubernetes
 
       # Kubernetes Node Exporter
       - job_name: kube_node
@@ -123,8 +170,12 @@ data:
             regex: monitoring;node-exporter
           - source_labels: [__meta_kubernetes_pod_node_name]
             target_label: instance
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            target_label: node
           - target_label: cluster
             replacement: kube_cluster
+          - target_label: platform
+            replacement: kubernetes
 
       # Kube State Metrics
       - job_name: kube_state_metrics
@@ -140,6 +191,8 @@ data:
             regex: __meta_kubernetes_service_label_(.+)
           - target_label: cluster
             replacement: kube_cluster
+          - target_label: platform
+            replacement: kubernetes
 
       # Kubernetes core components
       - job_name: kube_cadvisor
@@ -162,6 +215,8 @@ data:
             target_label: node
           - target_label: cluster
             replacement: kube_cluster
+          - target_label: platform
+            replacement: kubernetes
 
       - job_name: kube_kubelet
         scheme: https
@@ -182,6 +237,8 @@ data:
             target_label: node
           - target_label: cluster
             replacement: kube_cluster
+          - target_label: platform
+            replacement: kubernetes
 
       - job_name: kube_apiservers
         kubernetes_sd_configs:
@@ -201,6 +258,8 @@ data:
             regex: kubernetes;https
           - target_label: cluster
             replacement: kube_cluster
+          - target_label: platform
+            replacement: kubernetes
 
       # CoreDNS monitoring
       - job_name: kube_dns
@@ -217,6 +276,8 @@ data:
             replacement: $1:9153
           - target_label: cluster
             replacement: kube_cluster
+          - target_label: platform
+            replacement: kubernetes
 
       # MetalLB monitoring
       - job_name: metallb
@@ -262,6 +323,14 @@ data:
           action: replace
           regex: "(.+);(.+)"
           target_label: component
+        - source_labels: [__meta_kubernetes_pod_name]
+          target_label: pod
+        - source_labels: [__meta_kubernetes_pod_node_name]
+          target_label: node
+        - target_label: cluster
+          replacement: kube_cluster
+        - target_label: platform
+          replacement: kubernetes
 
       # ArgoCD monitoring
       - job_name: argocd_server
@@ -276,6 +345,16 @@ data:
           - source_labels: [__meta_kubernetes_pod_ip]
             target_label: __address__
             replacement: $1:8083
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            target_label: node
+          - target_label: cluster
+            replacement: kube_cluster
+          - target_label: platform
+            replacement: kubernetes
 
       - job_name: argocd_repo_server
         kubernetes_sd_configs:
@@ -289,6 +368,16 @@ data:
           - source_labels: [__meta_kubernetes_pod_ip]
             target_label: __address__
             replacement: $1:8084
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            target_label: node
+          - target_label: cluster
+            replacement: kube_cluster
+          - target_label: platform
+            replacement: kubernetes
 
       - job_name: argocd_application_controller
         kubernetes_sd_configs:
@@ -302,6 +391,16 @@ data:
           - source_labels: [__meta_kubernetes_pod_ip]
             target_label: __address__
             replacement: $1:8082
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            target_label: node
+          - target_label: cluster
+            replacement: kube_cluster
+          - target_label: platform
+            replacement: kubernetes
 
       # Services monitoring
       - job_name: mysql
@@ -318,6 +417,16 @@ data:
             replacement: $1:9104
           - source_labels: [__meta_kubernetes_pod_name]
             target_label: instance
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            target_label: node
+          - target_label: cluster
+            replacement: kube_cluster
+          - target_label: platform
+            replacement: kubernetes
             
       - job_name: mariadb
         kubernetes_sd_configs:
@@ -333,6 +442,16 @@ data:
             replacement: $1:9104
           - source_labels: [__meta_kubernetes_pod_name]
             target_label: instance
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            target_label: node
+          - target_label: cluster
+            replacement: kube_cluster
+          - target_label: platform
+            replacement: kubernetes
 
       - job_name: postgres
         kubernetes_sd_configs:
@@ -348,6 +467,16 @@ data:
             replacement: $1:9187
           - source_labels: [__meta_kubernetes_pod_name]
             target_label: instance
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            target_label: node
+          - target_label: cluster
+            replacement: kube_cluster
+          - target_label: platform
+            replacement: kubernetes
 
       - job_name: adguard
         kubernetes_sd_configs:
@@ -361,6 +490,16 @@ data:
           - source_labels: [__meta_kubernetes_pod_ip]
             target_label: __address__
             replacement: $1:9618
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            target_label: node
+          - target_label: cluster
+            replacement: kube_cluster
+          - target_label: platform
+            replacement: kubernetes
 
       - job_name: authentik
 
@@ -375,6 +514,16 @@ data:
           - source_labels: [__meta_kubernetes_pod_ip]
             target_label: __address__
             replacement: $1:9300
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            target_label: node
+          - target_label: cluster
+            replacement: kube_cluster
+          - target_label: platform
+            replacement: kubernetes
 
       - job_name: gitea
         kubernetes_sd_configs:
@@ -388,6 +537,16 @@ data:
           - source_labels: [__meta_kubernetes_pod_ip]
             target_label: __address__
             replacement: $1:3000
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            target_label: node
+          - target_label: cluster
+            replacement: kube_cluster
+          - target_label: platform
+            replacement: kubernetes
 
       - job_name: cloudflared
         kubernetes_sd_configs:
@@ -407,6 +566,10 @@ data:
             target_label: pod
           - source_labels: [__meta_kubernetes_pod_node_name]
             target_label: node
+          - target_label: cluster
+            replacement: kube_cluster
+          - target_label: platform
+            replacement: kubernetes
 
       - job_name: cloudflare_operator
         scheme: https
@@ -425,6 +588,16 @@ data:
           - source_labels: [__meta_kubernetes_pod_ip]
             target_label: __address__
             replacement: $1:8443
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            target_label: node
+          - target_label: cluster
+            replacement: kube_cluster
+          - target_label: platform
+            replacement: kubernetes
 
       - job_name: traefik
 
@@ -447,6 +620,12 @@ data:
             target_label: pod
           - source_labels: [__meta_kubernetes_pod_label_app]
             target_label: app
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            target_label: node
+          - target_label: cluster
+            replacement: kube_cluster
+          - target_label: platform
+            replacement: kubernetes
 
       - job_name: cert_manager
 
@@ -465,6 +644,14 @@ data:
             target_label: __address__
           - source_labels: [__meta_kubernetes_pod_name]
             target_label: pod
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            target_label: node
+          - target_label: cluster
+            replacement: kube_cluster
+          - target_label: platform
+            replacement: kubernetes
 
       - job_name: uptime_kuma
 
@@ -480,6 +667,16 @@ data:
           - source_labels: [__meta_kubernetes_pod_ip]
             target_label: __address__
             replacement: $1:3001
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            target_label: node
+          - target_label: cluster
+            replacement: kube_cluster
+          - target_label: platform
+            replacement: kubernetes
         basic_auth:
           password: ${UPTIME_KUMA_API_KEY}
 
@@ -498,6 +695,14 @@ data:
             replacement: $1:8001
           - source_labels: [__meta_kubernetes_pod_name]
             target_label: pod
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            target_label: node
+          - target_label: cluster
+            replacement: kube_cluster
+          - target_label: platform
+            replacement: kubernetes
 
       - job_name: harbor_core
         params:
@@ -516,6 +721,14 @@ data:
             replacement: $1:8001
           - source_labels: [__meta_kubernetes_pod_name]
             target_label: pod
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            target_label: node
+          - target_label: cluster
+            replacement: kube_cluster
+          - target_label: platform
+            replacement: kubernetes
 
       - job_name: harbor_registry
         params:
@@ -534,6 +747,14 @@ data:
             replacement: $1:8001
           - source_labels: [__meta_kubernetes_pod_name]
             target_label: pod
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            target_label: node
+          - target_label: cluster
+            replacement: kube_cluster
+          - target_label: platform
+            replacement: kubernetes
 
       - job_name: harbor_jobservice
         params:
@@ -552,6 +773,14 @@ data:
             replacement: $1:8001
           - source_labels: [__meta_kubernetes_pod_name]
             target_label: pod
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            target_label: node
+          - target_label: cluster
+            replacement: kube_cluster
+          - target_label: platform
+            replacement: kubernetes
 
       # Storage monitoring
       - job_name: proxmox_ceph
@@ -560,6 +789,9 @@ data:
               - ${CEPH_ENDPOINT_1}
               - ${CEPH_ENDPOINT_2}
               - ${CEPH_ENDPOINT_3}
+            labels:
+              cluster: ceph_cluster
+              platform: ceph
 
       # Network devices monitoring
       - job_name: mktxp
@@ -575,6 +807,16 @@ data:
           - source_labels: [__meta_kubernetes_pod_ip]
             target_label: __address__
             replacement: $1:49090
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            target_label: node
+          - target_label: cluster
+            replacement: kube_cluster
+          - target_label: platform
+            replacement: kubernetes
 
       - job_name: openwrt
         honor_timestamps: false
@@ -582,6 +824,8 @@ data:
           - targets: [${OPENWRT_ENDPOINT}]
             labels:
               instance: mi4a_wrt
+              cluster: network_cluster
+              platform: openwrt
         metric_relabel_configs:
           - action: labeldrop
             regex: "__timestamp__"
@@ -595,9 +839,13 @@ data:
           - targets: ['${LB_ENDPOINT}']
             labels:
               instance: 'lb5_ac'
+              cluster: network_cluster
+              platform: snmp
           - targets: ['${LBAP_ENDPOINT}']
             labels:
               instance: 'lb5_ac_ap'
+              cluster: network_cluster
+              platform: snmp
         relabel_configs:
           - source_labels: [__address__]
             target_label: __param_target
