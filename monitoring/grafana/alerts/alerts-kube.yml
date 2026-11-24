@@ -86,7 +86,7 @@ data:
             datasource:
               type: prometheus
               uid: prometheus
-            expr: sum(1 - kube_node_status_condition{condition="Ready", status="true"})
+            expr: sum by (cluster) (1 - kube_node_status_condition{condition="Ready", status="true"})
               or vector(0)
             refId: A
         - refId: B
@@ -124,7 +124,7 @@ data:
               type: query
         for: 5m
         annotations:
-          summary: 'Nodes Not Ready: {{ $values.B.Value | printf "%.0f" }}'
+          summary: 'Nodes Not Ready in {{ $labels.cluster }}: {{ $values.B.Value | printf "%.0f" }}'
           description: There are currently {{ $values.B.Value | printf "%.0f" }} nodes
             not in the Ready state.
           value: '{{ $values.B.Value | printf "%.0f" }} nodes'
@@ -154,8 +154,8 @@ data:
             datasource:
               type: prometheus
               uid: prometheus
-            expr: sum(increase(kube_pod_container_status_restarts_total[15m])) by (pod,
-              namespace) or vector(0)
+            expr: sum(increase(kube_pod_container_status_restarts_total[15m])) by (cluster,
+              pod, namespace) or vector(0)
             refId: A
         - refId: B
           datasourceUid: __expr__
@@ -402,7 +402,7 @@ data:
             datasource:
               type: prometheus
               uid: prometheus
-            expr: sum(kube_pod_status_phase{phase="Pending"}) or vector(0)
+            expr: sum by (cluster) (kube_pod_status_phase{phase="Pending"}) or vector(0)
             refId: A
         - refId: B
           datasourceUid: __expr__
@@ -439,7 +439,7 @@ data:
               type: query
         for: 5m
         annotations:
-          summary: 'Pods Pending: {{ $values.B.Value | printf "%.0f" }}'
+          summary: 'Pods Pending in {{ $labels.cluster }}: {{ $values.B.Value | printf "%.0f" }}'
           description: There are currently {{ $values.B.Value | printf "%.0f" }} pods
             stuck in Pending state.
           value: '{{ $values.B.Value | printf "%.0f" }} pods'
@@ -464,7 +464,7 @@ data:
             datasource:
               type: prometheus
               uid: prometheus
-            expr: sum(kube_job_status_failed) by (job_name, namespace) or vector(0)
+            expr: sum(kube_job_status_failed) by (cluster, job_name, namespace) or vector(0)
             refId: A
         - refId: B
           datasourceUid: __expr__
@@ -594,7 +594,7 @@ data:
             datasource:
               type: prometheus
               uid: prometheus
-            expr: (sum(kube_pod_container_resource_requests{resource="cpu"}) / sum(kube_node_status_allocatable{resource="cpu"}))
+            expr: (sum by (cluster) (kube_pod_container_resource_requests{resource="cpu"}) / sum by (cluster) (kube_node_status_allocatable{resource="cpu"}))
               * 100 or vector(0)
             refId: A
         - refId: B
@@ -632,7 +632,7 @@ data:
               type: query
         for: 10m
         annotations:
-          summary: Kube Cluster CPU Requests High
+          summary: 'Kube Cluster CPU Requests High: {{ $labels.cluster }}'
           description: 'Cluster CPU requests are over 85% (Current: {{ $values.B.Value
             | printf "%.2f" }}%).'
           value: '{{ $values.B.Value | printf "%.2f" }}%'
@@ -657,7 +657,7 @@ data:
             datasource:
               type: prometheus
               uid: prometheus
-            expr: (sum(kube_pod_container_resource_requests{resource="memory"}) / sum(kube_node_status_allocatable{resource="memory"}))
+            expr: (sum by (cluster) (kube_pod_container_resource_requests{resource="memory"}) / sum by (cluster) (kube_node_status_allocatable{resource="memory"}))
               * 100 or vector(0)
             refId: A
         - refId: B
@@ -695,7 +695,7 @@ data:
               type: query
         for: 10m
         annotations:
-          summary: Kube Cluster Memory Requests High
+          summary: 'Kube Cluster Memory Requests High: {{ $labels.cluster }}'
           description: 'Cluster Memory requests are over 85% (Current: {{ $values.B.Value
             | printf "%.2f" }}%).'
           value: '{{ $values.B.Value | printf "%.2f" }}%'
@@ -720,8 +720,8 @@ data:
             datasource:
               type: prometheus
               uid: prometheus
-            expr: (sum by (node) (kube_pod_status_phase{phase=~"Running|Pending"} * on(pod,
-              namespace) group_left(node) kube_pod_info) / sum by (node) (kube_node_status_capacity{resource="pods"}))
+            expr: (sum by (cluster, node) (kube_pod_status_phase{phase=~"Running|Pending"} * on(cluster,
+              pod, namespace) group_left(node) kube_pod_info) / sum by (cluster, node) (kube_node_status_capacity{resource="pods"}))
               * 100 or vector(0)
             refId: A
         - refId: B
