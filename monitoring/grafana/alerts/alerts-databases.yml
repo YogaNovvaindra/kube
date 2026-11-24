@@ -268,6 +268,70 @@ data:
           actionable: 'true'
         noDataState: OK
         execErrState: Error
+      - uid: postgres_replica_disconnected
+        title: PostgreSQL Replica Stopped
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            editorMode: code
+            expr: (pg_replication_is_replica == 1) unless on (job, cluster, instance) pg_stat_wal_receiver_last_msg_receipt_time{status="streaming"}
+            instant: true
+            range: false
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: last
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - 0.5
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 2m
+        annotations:
+          summary: PostgreSQL replica stopped on {{ $labels.instance }}
+          description: 'PostgreSQL replica {{ $labels.instance }} has no streaming WAL receiver for at least 2 minutes.'
+          value: '{{ $values.B.Value | printf "%.0f" }} (1=replica without streaming receiver)'
+        labels:
+          severity: critical
+          domain: database
+          component: postgresql
+          owner: platform
+          actionable: 'true'
+        noDataState: OK
+        execErrState: Error
     - orgId: 1
       name: Database Capacity
       folder: Databases
