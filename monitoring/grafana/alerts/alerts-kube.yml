@@ -7,548 +7,835 @@ data:
   alerts-kube.yaml: |
     apiVersion: 1
     groups:
-      - orgId: 1
-        name: Kubernetes
-        folder: Kube
-        interval: 5m
-        rules:
-          - uid: pod_crash_looping
-            title: Pod Crash Looping
-            condition: C
-            data:
-              - refId: A
-                relativeTimeRange:
-                  from: 300
-                  to: 0
-                datasourceUid: prometheus
-                model:
-                  datasource: { type: prometheus, uid: prometheus }
-                  expr: 'sum(increase(kube_pod_container_status_restarts_total[15m])) by (pod, namespace) or vector(0)'
-                  refId: A
-              - refId: B
-                datasourceUid: __expr__
-                model:
-                  datasource: { type: __expr__, uid: __expr__ }
-                  expression: A
-                  reducer: last
-                  refId: B
-                  type: reduce
-              - refId: C
-                datasourceUid: __expr__
-                model:
-                  datasource: { type: __expr__, uid: __expr__ }
-                  expression: B
-                  refId: C
-                  type: threshold
-                  conditions:
-                    - evaluator: { params: [3], type: gt }
-                      operator: { type: and }
-                      query: { params: [C] }
-                      reducer: { params: [], type: last }
-                      type: query
-            for: 5m
-            annotations:
-              summary: "Pod Crash Loop: {{ $labels.pod }}"
-              description: "Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} has restarted {{ $values.B.Value | printf \"%.0f\" }} times in the last 15 minutes."
-              value: '{{ $values.B.Value | printf "%.0f" }} restarts'
-            labels:
-              send_to_pamawas: "true"
-              severity: warning
-
-          - uid: deployment_replicas_mismatch
-            title: Deployment Replicas Mismatch
-            condition: C
-            data:
-              - refId: A
-                relativeTimeRange:
-                  from: 300
-                  to: 0
-                datasourceUid: prometheus
-                model:
-                  datasource: { type: prometheus, uid: prometheus }
-                  expr: 'abs(kube_deployment_status_replicas_ready - kube_deployment_status_replicas_desired) or vector(0)'
-                  refId: A
-              - refId: B
-                datasourceUid: __expr__
-                model:
-                  datasource: { type: __expr__, uid: __expr__ }
-                  expression: A
-                  reducer: last
-                  refId: B
-                  type: reduce
-              - refId: C
-                datasourceUid: __expr__
-                model:
-                  datasource: { type: __expr__, uid: __expr__ }
-                  expression: B
-                  refId: C
-                  type: threshold
-                  conditions:
-                    - evaluator: { params: [0], type: gt }
-                      operator: { type: and }
-                      query: { params: [C] }
-                      reducer: { params: [], type: last }
-                      type: query
-            for: 10m
-            annotations:
-              summary: "Deployment Mismatch: {{ $labels.deployment }}"
-              description: "Deployment {{ $labels.deployment }} has {{ $labels.ready_replicas }} ready replicas but expected {{ $labels.desired_replicas }}."
-            labels:
-              send_to_pamawas: "true"
-              severity: warning
-
-          - uid: pod_oom_killed
-            title: Pod Container OOMKilled
-            condition: C
-            data:
-              - refId: A
-                relativeTimeRange:
-                  from: 300
-                  to: 0
-                datasourceUid: prometheus
-                model:
-                  datasource: { type: prometheus, uid: prometheus }
-                  expr: 'kube_pod_container_status_terminated_reason{reason="OOMKilled"} or vector(0)'
-                  refId: A
-              - refId: B
-                datasourceUid: __expr__
-                model:
-                  datasource: { type: __expr__, uid: __expr__ }
-                  expression: A
-                  reducer: last
-                  refId: B
-                  type: reduce
-              - refId: C
-                datasourceUid: __expr__
-                model:
-                  datasource: { type: __expr__, uid: __expr__ }
-                  expression: B
-                  refId: C
-                  type: threshold
-                  conditions:
-                    - evaluator: { params: [0], type: gt }
-                      operator: { type: and }
-                      query: { params: [C] }
-                      reducer: { params: [], type: last }
-                      type: query
-            for: 1m
-            annotations:
-              summary: "OOMKilled: {{ $labels.pod }}"
-              description: "Container {{ $labels.container }} in pod {{ $labels.pod }} was terminated due to Out Of Memory (OOM)."
-            labels:
-              send_to_pamawas: "true"
-              severity: critical
-
-          - uid: pod_image_pull_error
-            title: Pod Image Pull Error
-            condition: C
-            data:
-              - refId: A
-                relativeTimeRange:
-                  from: 300
-                  to: 0
-                datasourceUid: prometheus
-                model:
-                  datasource: { type: prometheus, uid: prometheus }
-                  expr: 'kube_pod_container_status_waiting_reason{reason=~"ImagePullBackOff|ErrImagePull"} or vector(0)'
-                  refId: A
-              - refId: B
-                datasourceUid: __expr__
-                model:
-                  datasource: { type: __expr__, uid: __expr__ }
-                  expression: A
-                  reducer: last
-                  refId: B
-                  type: reduce
-              - refId: C
-                datasourceUid: __expr__
-                model:
-                  datasource: { type: __expr__, uid: __expr__ }
-                  expression: B
-                  refId: C
-                  type: threshold
-                  conditions:
-                    - evaluator: { params: [0], type: gt }
-                      operator: { type: and }
-                      query: { params: [C] }
-                      reducer: { params: [], type: last }
-                      type: query
-            for: 5m
-            annotations:
-              summary: "Image Pull Error: {{ $labels.pod }}"
-              description: "Pod {{ $labels.pod }} is failing to pull image {{ $labels.image }}."
-            labels:
-              send_to_pamawas: "true"
-              severity: warning
-
-          - uid: node_memory_pressure
-            title: Node Memory Pressure
-            condition: C
-            data:
-              - refId: A
-                relativeTimeRange:
-                  from: 300
-                  to: 0
-                datasourceUid: prometheus
-                model:
-                  datasource: { type: prometheus, uid: prometheus }
-                  expr: 'kube_node_status_condition{condition="MemoryPressure", status="true"} or vector(0)'
-                  refId: A
-              - refId: B
-                datasourceUid: __expr__
-                model:
-                  datasource: { type: __expr__, uid: __expr__ }
-                  expression: A
-                  reducer: last
-                  refId: B
-                  type: reduce
-              - refId: C
-                datasourceUid: __expr__
-                model:
-                  datasource: { type: __expr__, uid: __expr__ }
-                  expression: B
-                  refId: C
-                  type: threshold
-                  conditions:
-                    - evaluator: { params: [0], type: gt }
-                      operator: { type: and }
-                      query: { params: [C] }
-                      reducer: { params: [], type: last }
-                      type: query
-            for: 5m
-            annotations:
-              summary: "Node Memory Pressure: {{ $labels.node }}"
-              description: "Node {{ $labels.node }} is under memory pressure."
-            labels:
-              send_to_pamawas: "true"
-              severity: warning
-
-          - uid: cert_expiry_soon
-            title: Certificate Expiry Soon
-            condition: C
-            data:
-              - refId: A
-                relativeTimeRange:
-                  from: 300
-                  to: 0
-                datasourceUid: prometheus
-                model:
-                  datasource: { type: prometheus, uid: prometheus }
-                  expr: '(certmanager_certificate_expiration_timestamp_seconds - time()) / 86400'
-                  refId: A
-              - refId: B
-                datasourceUid: __expr__
-                model:
-                  datasource: { type: __expr__, uid: __expr__ }
-                  expression: A
-                  reducer: last
-                  refId: B
-                  type: reduce
-              - refId: C
-                datasourceUid: __expr__
-                model:
-                  datasource: { type: __expr__, uid: __expr__ }
-                  expression: B
-                  refId: C
-                  type: threshold
-                  conditions:
-                    - evaluator: { params: [14], type: lt }
-                      operator: { type: and }
-                      query: { params: [C] }
-                      reducer: { params: [], type: last }
-                      type: query
-            for: 1h
-            annotations:
-              summary: "Certificate Expiry: {{ $labels.name }}"
-              description: "Certificate {{ $labels.name }} in namespace {{ $labels.namespace }} will expire in {{ $values.B.Value | printf \"%.1f\" }} days."
-              value: '{{ $values.B.Value | printf "%.1f" }} days'
-            labels:
-              send_to_pamawas: "true"
-              severity: warning
-
-          - uid: node_not_ready
-            title: Kube Node Not Ready
-            condition: C
-            data:
-              - refId: A
-                relativeTimeRange: { from: 300, to: 0 }
-                datasourceUid: prometheus
-                model:
-                  datasource: { type: prometheus, uid: prometheus }
-                  expr: 'sum(1 - kube_node_status_condition{condition="Ready", status="true"}) or vector(0)'
-                  refId: A
-              - refId: B
-                datasourceUid: __expr__
-                model:
-                  datasource: { type: __expr__, uid: __expr__ }
-                  expression: A
-                  reducer: last
-                  refId: B
-                  type: reduce
-              - refId: C
-                datasourceUid: __expr__
-                model:
-                  datasource: { type: __expr__, uid: __expr__ }
-                  expression: B
-                  refId: C
-                  type: threshold
-                  conditions:
-                    - evaluator: { params: [0], type: gt }
-                      operator: { type: and }
-                      query: { params: [C] }
-                      reducer: { params: [], type: last }
-                      type: query
-            for: 5m
-            annotations:
-              summary: "Nodes Not Ready: {{ $values.B.Value | printf \"%.0f\" }}"
-              description: "There are currently {{ $values.B.Value | printf \"%.0f\" }} nodes not in the Ready state."
-              value: '{{ $values.B.Value | printf "%.0f" }} nodes'
-            labels:
-              send_to_pamawas: "true"
-              severity: critical
-
-          - uid: pod_stuck_pending
-            title: Kube Pod Stuck Pending
-            condition: C
-            data:
-              - refId: A
-                relativeTimeRange: { from: 300, to: 0 }
-                datasourceUid: prometheus
-                model:
-                  datasource: { type: prometheus, uid: prometheus }
-                  expr: 'sum(kube_pod_status_phase{phase="Pending"}) or vector(0)'
-                  refId: A
-              - refId: B
-                datasourceUid: __expr__
-                model:
-                  datasource: { type: __expr__, uid: __expr__ }
-                  expression: A
-                  reducer: last
-                  refId: B
-                  type: reduce
-              - refId: C
-                datasourceUid: __expr__
-                model:
-                  datasource: { type: __expr__, uid: __expr__ }
-                  expression: B
-                  refId: C
-                  type: threshold
-                  conditions:
-                    - evaluator: { params: [0], type: gt }
-                      operator: { type: and }
-                      query: { params: [C] }
-                      reducer: { params: [], type: last }
-                      type: query
-            for: 5m
-            annotations:
-              summary: "Pods Pending: {{ $values.B.Value | printf \"%.0f\" }}"
-              description: "There are currently {{ $values.B.Value | printf \"%.0f\" }} pods stuck in Pending state."
-              value: '{{ $values.B.Value | printf "%.0f" }} pods'
-            labels:
-              send_to_pamawas: "true"
-              severity: warning
-
-          - uid: cluster_cpu_requests_high
-            title: Kube Cluster CPU Requests High
-            condition: C
-            data:
-              - refId: A
-                relativeTimeRange: { from: 300, to: 0 }
-                datasourceUid: prometheus
-                model:
-                  datasource: { type: prometheus, uid: prometheus }
-                  expr: '(sum(kube_pod_container_resource_requests{resource="cpu"}) / sum(kube_node_status_allocatable{resource="cpu"})) * 100 or vector(0)'
-                  refId: A
-              - refId: B
-                datasourceUid: __expr__
-                model:
-                  datasource: { type: __expr__, uid: __expr__ }
-                  expression: A
-                  reducer: mean
-                  refId: B
-                  type: reduce
-              - refId: C
-                datasourceUid: __expr__
-                model:
-                  datasource: { type: __expr__, uid: __expr__ }
-                  expression: B
-                  refId: C
-                  type: threshold
-                  conditions:
-                    - evaluator: { params: [85], type: gt }
-                      operator: { type: and }
-                      query: { params: [C] }
-                      reducer: { params: [], type: last }
-                      type: query
-            for: 10m
-            annotations:
-              summary: "Kube Cluster CPU Requests High"
-              description: "Cluster CPU requests are over 85% (Current: {{ $values.B.Value | printf \"%.2f\" }}%)."
-              value: '{{ $values.B.Value | printf "%.2f" }}%'
-            labels:
-              send_to_pamawas: "true"
-              severity: warning
-
-          - uid: cluster_memory_requests_high
-            title: Kube Cluster Memory Requests High
-            condition: C
-            data:
-              - refId: A
-                relativeTimeRange: { from: 300, to: 0 }
-                datasourceUid: prometheus
-                model:
-                  datasource: { type: prometheus, uid: prometheus }
-                  expr: '(sum(kube_pod_container_resource_requests{resource="memory"}) / sum(kube_node_status_allocatable{resource="memory"})) * 100 or vector(0)'
-                  refId: A
-              - refId: B
-                datasourceUid: __expr__
-                model:
-                  datasource: { type: __expr__, uid: __expr__ }
-                  expression: A
-                  reducer: mean
-                  refId: B
-                  type: reduce
-              - refId: C
-                datasourceUid: __expr__
-                model:
-                  datasource: { type: __expr__, uid: __expr__ }
-                  expression: B
-                  refId: C
-                  type: threshold
-                  conditions:
-                    - evaluator: { params: [85], type: gt }
-                      operator: { type: and }
-                      query: { params: [C] }
-                      reducer: { params: [], type: last }
-                      type: query
-            for: 10m
-            annotations:
-              summary: "Kube Cluster Memory Requests High"
-              description: "Cluster Memory requests are over 85% (Current: {{ $values.B.Value | printf \"%.2f\" }}%)."
-              value: '{{ $values.B.Value | printf "%.2f" }}%'
-            labels:
-              send_to_pamawas: "true"
-              severity: warning
-
-          - uid: node_pod_capacity_high
-            title: Kube Node Pod Capacity High
-            condition: C
-            data:
-              - refId: A
-                relativeTimeRange: { from: 300, to: 0 }
-                datasourceUid: prometheus
-                model:
-                  datasource: { type: prometheus, uid: prometheus }
-                  expr: '(sum by (node) (kube_pod_status_phase{phase=~"Running|Pending"} * on(pod, namespace) group_left(node) kube_pod_info) / sum by (node) (kube_node_status_capacity{resource="pods"})) * 100 or vector(0)'
-                  refId: A
-              - refId: B
-                datasourceUid: __expr__
-                model:
-                  datasource: { type: __expr__, uid: __expr__ }
-                  expression: A
-                  reducer: max
-                  refId: B
-                  type: reduce
-              - refId: C
-                datasourceUid: __expr__
-                model:
-                  datasource: { type: __expr__, uid: __expr__ }
-                  expression: B
-                  refId: C
-                  type: threshold
-                  conditions:
-                    - evaluator: { params: [90], type: gt }
-                      operator: { type: and }
-                      query: { params: [C] }
-                      reducer: { params: [], type: last }
-                      type: query
-            for: 10m
-            annotations:
-              summary: "Kube Node Pod Capacity High: {{ $labels.node }}"
-              description: "Node {{ $labels.node }} active pod capacity usage is over 90% (Current: {{ $values.B.Value | printf \"%.2f\" }}%). This excludes completed/failed pods."
-              value: '{{ $values.B.Value | printf "%.2f" }}%'
-            labels:
-              send_to_pamawas: "true"
-              severity: warning
-
-          - uid: job_failed
-            title: Kube Job Failed
-            condition: C
-            data:
-              - refId: A
-                relativeTimeRange: { from: 300, to: 0 }
-                datasourceUid: prometheus
-                model:
-                  datasource: { type: prometheus, uid: prometheus }
-                  expr: 'sum(kube_job_status_failed) by (job_name, namespace) or vector(0)'
-                  refId: A
-              - refId: B
-                datasourceUid: __expr__
-                model:
-                  datasource: { type: __expr__, uid: __expr__ }
-                  expression: A
-                  reducer: last
-                  refId: B
-                  type: reduce
-              - refId: C
-                datasourceUid: __expr__
-                model:
-                  datasource: { type: __expr__, uid: __expr__ }
-                  expression: B
-                  refId: C
-                  type: threshold
-                  conditions:
-                    - evaluator: { params: [0], type: gt }
-                      operator: { type: and }
-                      query: { params: [C] }
-                      reducer: { params: [], type: last }
-                      type: query
-            for: 5m
-            annotations:
-              summary: "Job Failures: {{ $values.B.Value | printf \"%.0f\" }}"
-              description: "There are currently {{ $values.B.Value | printf \"%.0f\" }} failed jobs in the cluster."
-              value: '{{ $values.B.Value | printf "%.0f" }} failed jobs'
-            labels:
-              send_to_pamawas: "true"
-              severity: warning
-
-          - uid: hpa_max_capacity
-            title: Kube HPA at Max Capacity
-            condition: C
-            data:
-              - refId: A
-                relativeTimeRange: { from: 300, to: 0 }
-                datasourceUid: prometheus
-                model:
-                  datasource: { type: prometheus, uid: prometheus }
-                  expr: '(kube_horizontalpodautoscaler_status_current_replicas / kube_horizontalpodautoscaler_spec_max_replicas) * 100 or vector(0)'
-                  refId: A
-              - refId: B
-                datasourceUid: __expr__
-                model:
-                  datasource: { type: __expr__, uid: __expr__ }
-                  expression: A
-                  reducer: max
-                  refId: B
-                  type: reduce
-              - refId: C
-                datasourceUid: __expr__
-                model:
-                  datasource: { type: __expr__, uid: __expr__ }
-                  expression: B
-                  refId: C
-                  type: threshold
-                  conditions:
-                    - evaluator: { params: [100], type: gt }
-                      operator: { type: and }
-                      query: { params: [C] }
-                      reducer: { params: [], type: last }
-                      type: query
-            for: 5m
-            annotations:
-              summary: "Kube HPA at Max Capacity: {{ $labels.horizontalpodautoscaler }}"
-              description: "HPA {{ $labels.horizontalpodautoscaler }} is at max capacity ({{ $values.B.Value | printf \"%.0f\" }}%)."
-              value: '{{ $values.B.Value | printf "%.0f" }}%'
-            labels:
-              send_to_pamawas: "true"
-              severity: warning
+    - orgId: 1
+      name: Kubernetes Nodes
+      folder: Kubernetes
+      interval: 1m
+      rules:
+      - uid: node_memory_pressure
+        title: Kubernetes Node Memory Pressure
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            expr: kube_node_status_condition{condition="MemoryPressure", status="true"}
+              or vector(0)
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: last
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - 0
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 5m
+        annotations:
+          summary: 'Node Memory Pressure: {{ $labels.node }}'
+          description: Node {{ $labels.node }} is under memory pressure.
+        labels:
+          severity: warning
+          domain: kubernetes
+          component: node
+          owner: platform
+          actionable: 'true'
+        noDataState: NoData
+        execErrState: Error
+      - uid: node_not_ready
+        title: Kubernetes Node Not Ready
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            expr: sum(1 - kube_node_status_condition{condition="Ready", status="true"})
+              or vector(0)
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: last
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - 0
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 5m
+        annotations:
+          summary: 'Nodes Not Ready: {{ $values.B.Value | printf "%.0f" }}'
+          description: There are currently {{ $values.B.Value | printf "%.0f" }} nodes
+            not in the Ready state.
+          value: '{{ $values.B.Value | printf "%.0f" }} nodes'
+        labels:
+          severity: critical
+          domain: kubernetes
+          component: node
+          owner: platform
+          actionable: 'true'
+        noDataState: NoData
+        execErrState: Error
+    - orgId: 1
+      name: Kubernetes Workloads
+      folder: Kubernetes
+      interval: 1m
+      rules:
+      - uid: pod_crash_looping
+        title: Kubernetes Pod Crash Looping
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            expr: sum(increase(kube_pod_container_status_restarts_total[15m])) by (pod,
+              namespace) or vector(0)
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: last
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - 3
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 5m
+        annotations:
+          summary: 'Pod Crash Loop: {{ $labels.pod }}'
+          description: Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} has
+            restarted {{ $values.B.Value | printf "%.0f" }} times in the last 15 minutes.
+          value: '{{ $values.B.Value | printf "%.0f" }} restarts'
+        labels:
+          severity: warning
+          domain: kubernetes
+          component: workload
+          owner: platform
+          actionable: 'true'
+        noDataState: NoData
+        execErrState: Error
+      - uid: deployment_replicas_mismatch
+        title: Kubernetes Deployment Replicas Mismatch
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            expr: abs(kube_deployment_status_replicas_ready - kube_deployment_status_replicas_desired)
+              or vector(0)
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: last
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - 0
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 10m
+        annotations:
+          summary: 'Deployment Mismatch: {{ $labels.deployment }}'
+          description: Deployment {{ $labels.deployment }} has {{ $labels.ready_replicas
+            }} ready replicas but expected {{ $labels.desired_replicas }}.
+        labels:
+          severity: warning
+          domain: kubernetes
+          component: workload
+          owner: platform
+          actionable: 'true'
+        noDataState: NoData
+        execErrState: Error
+      - uid: pod_oom_killed
+        title: Kubernetes Container OOMKilled
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            expr: kube_pod_container_status_terminated_reason{reason="OOMKilled"} or vector(0)
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: last
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - 0
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 1m
+        annotations:
+          summary: 'OOMKilled: {{ $labels.pod }}'
+          description: Container {{ $labels.container }} in pod {{ $labels.pod }} was
+            terminated due to Out Of Memory (OOM).
+        labels:
+          severity: critical
+          domain: kubernetes
+          component: workload
+          owner: platform
+          actionable: 'true'
+        noDataState: NoData
+        execErrState: Error
+      - uid: pod_image_pull_error
+        title: Kubernetes Image Pull Error
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            expr: kube_pod_container_status_waiting_reason{reason=~"ImagePullBackOff|ErrImagePull"}
+              or vector(0)
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: last
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - 0
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 5m
+        annotations:
+          summary: 'Image Pull Error: {{ $labels.pod }}'
+          description: Pod {{ $labels.pod }} is failing to pull image {{ $labels.image
+            }}.
+        labels:
+          severity: warning
+          domain: kubernetes
+          component: workload
+          owner: platform
+          actionable: 'true'
+        noDataState: NoData
+        execErrState: Error
+      - uid: pod_stuck_pending
+        title: Kubernetes Pod Stuck Pending
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            expr: sum(kube_pod_status_phase{phase="Pending"}) or vector(0)
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: last
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - 0
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 5m
+        annotations:
+          summary: 'Pods Pending: {{ $values.B.Value | printf "%.0f" }}'
+          description: There are currently {{ $values.B.Value | printf "%.0f" }} pods
+            stuck in Pending state.
+          value: '{{ $values.B.Value | printf "%.0f" }} pods'
+        labels:
+          severity: warning
+          domain: kubernetes
+          component: workload
+          owner: platform
+          actionable: 'true'
+        noDataState: NoData
+        execErrState: Error
+      - uid: job_failed
+        title: Kubernetes Job Failed
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            expr: sum(kube_job_status_failed) by (job_name, namespace) or vector(0)
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: last
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - 0
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 5m
+        annotations:
+          summary: 'Job Failures: {{ $values.B.Value | printf "%.0f" }}'
+          description: There are currently {{ $values.B.Value | printf "%.0f" }} failed
+            jobs in the cluster.
+          value: '{{ $values.B.Value | printf "%.0f" }} failed jobs'
+        labels:
+          severity: warning
+          domain: kubernetes
+          component: workload
+          owner: platform
+          actionable: 'true'
+        noDataState: NoData
+        execErrState: Error
+      - uid: hpa_max_capacity
+        title: Kubernetes HPA at Maximum Capacity
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            expr: "(kube_horizontalpodautoscaler_status_current_replicas / kube_horizontalpodautoscaler_spec_max_replicas)
+              * 100 or vector(0)"
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: max
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - 99
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 5m
+        annotations:
+          summary: 'Kube HPA at Max Capacity: {{ $labels.horizontalpodautoscaler }}'
+          description: HPA {{ $labels.horizontalpodautoscaler }} is at max capacity ({{
+            $values.B.Value | printf "%.0f" }}%).
+          value: '{{ $values.B.Value | printf "%.0f" }}%'
+        labels:
+          severity: warning
+          domain: kubernetes
+          component: workload
+          owner: platform
+          actionable: 'true'
+        noDataState: NoData
+        execErrState: Error
+    - orgId: 1
+      name: Kubernetes Capacity
+      folder: Kubernetes
+      interval: 5m
+      rules:
+      - uid: cluster_cpu_requests_high
+        title: Kubernetes CPU Requests High
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            expr: (sum(kube_pod_container_resource_requests{resource="cpu"}) / sum(kube_node_status_allocatable{resource="cpu"}))
+              * 100 or vector(0)
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: mean
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - 85
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 10m
+        annotations:
+          summary: Kube Cluster CPU Requests High
+          description: 'Cluster CPU requests are over 85% (Current: {{ $values.B.Value
+            | printf "%.2f" }}%).'
+          value: '{{ $values.B.Value | printf "%.2f" }}%'
+        labels:
+          severity: warning
+          domain: kubernetes
+          component: capacity
+          owner: platform
+          actionable: 'true'
+        noDataState: NoData
+        execErrState: Error
+      - uid: cluster_memory_requests_high
+        title: Kubernetes Memory Requests High
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            expr: (sum(kube_pod_container_resource_requests{resource="memory"}) / sum(kube_node_status_allocatable{resource="memory"}))
+              * 100 or vector(0)
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: mean
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - 85
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 10m
+        annotations:
+          summary: Kube Cluster Memory Requests High
+          description: 'Cluster Memory requests are over 85% (Current: {{ $values.B.Value
+            | printf "%.2f" }}%).'
+          value: '{{ $values.B.Value | printf "%.2f" }}%'
+        labels:
+          severity: warning
+          domain: kubernetes
+          component: capacity
+          owner: platform
+          actionable: 'true'
+        noDataState: NoData
+        execErrState: Error
+      - uid: node_pod_capacity_high
+        title: Kubernetes Node Pod Capacity High
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            expr: (sum by (node) (kube_pod_status_phase{phase=~"Running|Pending"} * on(pod,
+              namespace) group_left(node) kube_pod_info) / sum by (node) (kube_node_status_capacity{resource="pods"}))
+              * 100 or vector(0)
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: max
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - 90
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 10m
+        annotations:
+          summary: 'Kube Node Pod Capacity High: {{ $labels.node }}'
+          description: 'Node {{ $labels.node }} active pod capacity usage is over 90%
+            (Current: {{ $values.B.Value | printf "%.2f" }}%). This excludes completed/failed
+            pods.'
+          value: '{{ $values.B.Value | printf "%.2f" }}%'
+        labels:
+          severity: warning
+          domain: kubernetes
+          component: capacity
+          owner: platform
+          actionable: 'true'
+        noDataState: NoData
+        execErrState: Error
+    - orgId: 1
+      name: Kubernetes Certificates
+      folder: Kubernetes
+      interval: 1h
+      rules:
+      - uid: cert_expiry_soon
+        title: Kubernetes Certificate Expiring Soon
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            expr: "(certmanager_certificate_expiration_timestamp_seconds - time()) / 86400"
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: last
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - 14
+                type: lt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 1h
+        annotations:
+          summary: 'Certificate Expiry: {{ $labels.name }}'
+          description: Certificate {{ $labels.name }} in namespace {{ $labels.namespace
+            }} will expire in {{ $values.B.Value | printf "%.1f" }} days.
+          value: '{{ $values.B.Value | printf "%.1f" }} days'
+        labels:
+          severity: warning
+          domain: kubernetes
+          component: certificate
+          owner: platform
+          actionable: 'true'
+        noDataState: NoData
+        execErrState: Error

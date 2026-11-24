@@ -76,25 +76,15 @@ spec:
           projected:
             sources:
               - configMap:
-                  name: grafana-alerts-cpu
+                  name: grafana-alerts-nodes
                   items:
-                    - key: alerts-cpu.yaml
-                      path: alerts-cpu.yaml
+                    - key: alerts-nodes.yaml
+                      path: alerts-nodes.yaml
               - configMap:
-                  name: grafana-alerts-ram
+                  name: grafana-alerts-network
                   items:
-                    - key: alerts-ram.yaml
-                      path: alerts-ram.yaml
-              - configMap:
-                  name: grafana-alerts-reboot
-                  items:
-                    - key: alerts-reboot.yaml
-                      path: alerts-reboot.yaml
-              - configMap:
-                  name: grafana-alerts-storage
-                  items:
-                    - key: alerts-storage.yaml
-                      path: alerts-storage.yaml
+                    - key: alerts-network.yaml
+                      path: alerts-network.yaml
               - configMap:
                   name: grafana-alerts-ceph
                   items:
@@ -106,15 +96,10 @@ spec:
                     - key: alerts-kube.yaml
                       path: alerts-kube.yaml
               - configMap:
-                  name: grafana-alerts-infra
+                  name: grafana-alerts-services
                   items:
-                    - key: alerts-infra.yaml
-                      path: alerts-infra.yaml
-              - configMap:
-                  name: grafana-alerts-link
-                  items:
-                    - key: alerts-link.yaml
-                      path: alerts-link.yaml
+                    - key: alerts-services.yaml
+                      path: alerts-services.yaml
               - configMap:
                   name: grafana-alerts-templates
                   items:

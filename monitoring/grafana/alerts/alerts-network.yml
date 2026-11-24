@@ -1,0 +1,706 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-alerts-network
+  namespace: monitoring
+data:
+  alerts-network.yaml: |
+    apiVersion: 1
+    groups:
+    - orgId: 1
+      name: MikroTik Health
+      folder: Network
+      interval: 1m
+      rules:
+      - uid: fee0o8u0hjx8ge
+        title: MikroTik Recently Rebooted
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            editorMode: code
+            expr: mktxp_system_uptime
+            hide: false
+            instant: true
+            intervalMs: 1000
+            legendFormat: __auto
+            maxDataPoints: 43200
+            range: false
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            conditions:
+            - evaluator:
+                params:
+                - 0
+                - 0
+                type: gt
+              operator:
+                type: and
+              query:
+                params: []
+              reducer:
+                params: []
+                type: avg
+              type: query
+            datasource:
+              name: Expression
+              type: __expr__
+              uid: __expr__
+            expression: A
+            intervalMs: 1000
+            maxDataPoints: 43200
+            reducer: max
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            conditions:
+            - evaluator:
+                params:
+                - 3600
+                type: lt
+              operator:
+                type: and
+              query:
+                params: []
+              reducer:
+                params: []
+                type: avg
+              type: query
+            datasource:
+              name: Expression
+              type: __expr__
+              uid: __expr__
+            expression: B
+            intervalMs: 1000
+            maxDataPoints: 43200
+            refId: C
+            type: threshold
+        noDataState: NoData
+        execErrState: Error
+        annotations:
+          description: |-
+            Instance has rebooted within the last hour.
+              Uptime: {{ $values.B.Value | humanizeDuration }}
+          summary: MikroTik {{ $labels.routerboard_name }} recently rebooted
+          value: "{{ $values.B.Value | humanizeDuration }}"
+        isPaused: false
+        labels:
+          severity: info
+          domain: network
+          component: mikrotik
+          owner: network
+          actionable: 'false'
+        for: 1m
+    - orgId: 1
+      name: MikroTik Capacity
+      folder: Network
+      interval: 5m
+      rules:
+      - uid: aee0na19cb280f
+        title: MikroTik High CPU
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            editorMode: code
+            expr: avg_over_time(mktxp_system_cpu_load[5m])
+            hide: false
+            instant: false
+            intervalMs: 1000
+            legendFormat: __auto
+            maxDataPoints: 43200
+            range: true
+            refId: A
+        - refId: B
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: __expr__
+          model:
+            conditions:
+            - evaluator:
+                params: []
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - B
+              reducer:
+                params: []
+                type: last
+              type: query
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            intervalMs: 1000
+            maxDataPoints: 43200
+            reducer: mean
+            refId: B
+            type: reduce
+        - refId: C
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: __expr__
+          model:
+            conditions:
+            - evaluator:
+                params:
+                - 80
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            intervalMs: 1000
+            maxDataPoints: 43200
+            refId: C
+            type: threshold
+        noDataState: NoData
+        execErrState: Error
+        annotations:
+          description: |-
+            CPU usage is above 80% for the last 5 minutes.
+              Current CPU Usage: {{ $values.B.Value | printf "%.2f" }}%
+          summary: High CPU usage on MikroTik {{ $labels.routerboard_name }}
+          value: '{{ $values.B.Value | printf "%.2f" }}%'
+        isPaused: false
+        labels:
+          severity: warning
+          domain: network
+          component: mikrotik
+          owner: network
+          actionable: 'true'
+        for: 5m
+      - uid: bee0nygdzb400c
+        title: MikroTik High Memory
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            editorMode: code
+            expr: 100 * (1 - (mktxp_system_free_memory/mktxp_system_total_memory))
+            hide: false
+            instant: false
+            intervalMs: 1000
+            legendFormat: __auto
+            maxDataPoints: 43200
+            range: true
+            refId: A
+        - refId: B
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: __expr__
+          model:
+            conditions:
+            - evaluator:
+                params: []
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - B
+              reducer:
+                params: []
+                type: last
+              type: query
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            intervalMs: 1000
+            maxDataPoints: 43200
+            reducer: mean
+            refId: B
+            type: reduce
+        - refId: C
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: __expr__
+          model:
+            conditions:
+            - evaluator:
+                params:
+                - 80
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            intervalMs: 1000
+            maxDataPoints: 43200
+            refId: C
+            type: threshold
+        noDataState: NoData
+        execErrState: Error
+        annotations:
+          description: |-
+            RAM usage is above 80% for the last 5 minutes.
+              Current RAM Usage: {{ $values.B.Value | printf "%.2f" }}%
+          summary: High memory usage on MikroTik {{ $labels.routerboard_name }}
+          value: '{{ $values.B.Value | printf "%.2f" }}%'
+        isPaused: false
+        labels:
+          severity: warning
+          domain: network
+          component: mikrotik
+          owner: network
+          actionable: 'true'
+        for: 5m
+      - uid: fee0oubrhrhtsa
+        title: MikroTik Storage Nearly Full
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            editorMode: code
+            expr: 100 - ((mktxp_system_free_hdd_space * 100) / mktxp_system_total_hdd_space)
+            hide: false
+            instant: true
+            intervalMs: 1000
+            legendFormat: __auto
+            maxDataPoints: 43200
+            range: false
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            conditions:
+            - evaluator:
+                params:
+                - 0
+                - 0
+                type: gt
+              operator:
+                type: and
+              query:
+                params: []
+              reducer:
+                params: []
+                type: avg
+              type: query
+            datasource:
+              name: Expression
+              type: __expr__
+              uid: __expr__
+            expression: A
+            intervalMs: 1000
+            maxDataPoints: 43200
+            reducer: max
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            conditions:
+            - evaluator:
+                params:
+                - 95
+                type: gt
+              operator:
+                type: and
+              query:
+                params: []
+              reducer:
+                params: []
+                type: avg
+              type: query
+            datasource:
+              name: Expression
+              type: __expr__
+              uid: __expr__
+            expression: B
+            intervalMs: 1000
+            maxDataPoints: 43200
+            refId: C
+            type: threshold
+        noDataState: NoData
+        execErrState: Error
+        annotations:
+          description: 'Storage usage has remained above 95% for 10 minutes. Current usage:
+            {{ $values.B.Value | printf "%.2f" }}%.'
+          summary: Storage nearly full on MikroTik {{ $labels.routerboard_name }}
+          value: '{{ $values.B.Value | printf "%.2f" }}%'
+        isPaused: false
+        labels:
+          severity: warning
+          domain: network
+          component: mikrotik
+          owner: network
+          actionable: 'true'
+        for: 10m
+    - orgId: 1
+      name: Ubiquiti Links
+      folder: Network
+      interval: 1m
+      rules:
+      - uid: ubiquiti_low_signal
+        title: Ubiquiti Low RSSI
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            expr: ubntStaSignal
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: mean
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - -75
+                type: lt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 5m
+        annotations:
+          summary: 'Ubiquiti Low Signal: {{ or $labels.ubntStaName $labels.instance $labels.ubntStaMac
+            }}'
+          description: 'Ubiquiti link {{ or $labels.ubntStaName $labels.instance $labels.ubntStaMac
+            }} has low signal strength: {{ $values.B.Value | printf "%.0f" }} dBm.'
+          value: '{{ $values.B.Value | printf "%.0f" }} dBm'
+        labels:
+          severity: warning
+          domain: network
+          component: ubiquiti
+          owner: network
+          actionable: 'true'
+        noDataState: NoData
+        execErrState: Error
+      - uid: ubiquiti_low_ccq
+        title: Ubiquiti Low CCQ
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            expr: ubntStaCcq / 10
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: mean
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - 20
+                type: lt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 5m
+        annotations:
+          summary: 'Ubiquiti Low CCQ: {{ or $labels.ubntStaName $labels.instance $labels.ubntStaMac
+            }}'
+          description: 'Ubiquiti link {{ or $labels.ubntStaName $labels.instance $labels.ubntStaMac
+            }} CCQ is low: {{ $values.B.Value | printf "%.0f" }}%.'
+          value: '{{ $values.B.Value | printf "%.0f" }}%'
+        labels:
+          severity: warning
+          domain: network
+          component: ubiquiti
+          owner: network
+          actionable: 'true'
+        noDataState: NoData
+        execErrState: Error
+      - uid: ubiquiti_link_saturation
+        title: Ubiquiti Link Saturation
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            expr: "(rate(ubntStaTxBytes[5m]) * 8) / (ubntStaTxCapacity * 1000)"
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: mean
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - 0.9
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 5m
+        annotations:
+          summary: 'Ubiquiti Link Saturation: {{ or $labels.ubntStaName $labels.instance
+            $labels.ubntStaMac }}'
+          description: 'Ubiquiti link {{ or $labels.ubntStaName $labels.instance $labels.ubntStaMac
+            }} output is near wireless capacity: {{ $values.B.Value | printf "%.1f%%"
+            }}.'
+          value: '{{ $values.B.Value | printf "%.1f" }}%'
+        labels:
+          severity: warning
+          domain: network
+          component: ubiquiti
+          owner: network
+          actionable: 'true'
+        noDataState: NoData
+        execErrState: Error
+      - uid: ubiquiti_high_noise
+        title: Ubiquiti High Noise Floor
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            expr: ubntStaNoiseFloor
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: mean
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - -85
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 10m
+        annotations:
+          summary: 'Ubiquiti High Noise: {{ or $labels.ubntStaName $labels.instance $labels.ubntStaMac
+            }}'
+          description: 'Ubiquiti link {{ or $labels.ubntStaName $labels.instance $labels.ubntStaMac
+            }} noise floor is high: {{ $values.B.Value | printf "%.0f" }} dBm.'
+          value: '{{ $values.B.Value | printf "%.0f" }} dBm'
+        labels:
+          severity: info
+          domain: network
+          component: ubiquiti
+          owner: network
+          actionable: 'false'
+        noDataState: NoData
+        execErrState: Error
+      - uid: ubiquiti_high_cpu
+        title: Ubiquiti High CPU Load
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            expr: ubntHostCpuLoad / 100
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: mean
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - 80
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 5m
+        annotations:
+          summary: 'Ubiquiti High CPU: {{ $labels.instance }}'
+          description: 'Ubiquiti host {{ $labels.instance }} CPU load is high: {{ $values.B.Value
+            | printf "%.1f" }}%.'
+          value: '{{ $values.B.Value | printf "%.1f" }}%'
+        labels:
+          severity: warning
+          domain: network
+          component: ubiquiti
+          owner: network
+          actionable: 'true'
+        noDataState: NoData
+        execErrState: Error

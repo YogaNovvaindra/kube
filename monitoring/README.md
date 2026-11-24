@@ -78,8 +78,20 @@ Metrics are collected from various sources using dedicated exporters:
 - **Image**: `grafana/grafana:13.0.2`
 - **Sidecar**: `grafana-image-renderer:v5.8.8` on port `8081` for panel screenshots
 - **Auth**: Authentik OAuth2 SSO (`auth.ygnv.my.id`)
-- **Alerts**: 8 provisioned alert groups (CPU, RAM, Reboot, Storage, Ceph, Kubernetes, Infra, Link)
+- **Alerts**: 41 provisioned rules in 14 evaluation groups, organized by Infrastructure, Kubernetes, Storage, Network, and Applications
 - **Ingress**: `grafana.ygnv.my.id`
+
+#### Alert organization
+
+| Domain | Evaluation groups |
+|--------|-------------------|
+| Infrastructure | Linux Health, Linux Capacity, Monitoring Availability |
+| Kubernetes | Nodes, Workloads, Capacity, Certificates |
+| Storage | Ceph Health, Ceph Performance, Ceph Capacity |
+| Network | MikroTik Health, MikroTik Capacity, Ubiquiti Links |
+| Applications | Application Services |
+
+Every rule uses `severity`, `domain`, `component`, `owner`, and `actionable` labels. Notifications are grouped by domain, component, cluster, and severity; actionable alerts are additionally forwarded to Pamawas.
 
 ### Prometheus — Metrics
 - **Config**: [`prometheus/prometheus-config.yml`](prometheus/prometheus-config.yml)

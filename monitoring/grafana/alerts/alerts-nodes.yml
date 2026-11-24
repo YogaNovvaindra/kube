@@ -1,0 +1,393 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-alerts-nodes
+  namespace: monitoring
+data:
+  alerts-nodes.yaml: |
+    apiVersion: 1
+    groups:
+    - orgId: 1
+      name: Linux Health
+      folder: Infrastructure
+      interval: 1m
+      rules:
+      - uid: fdzi8c0wl3x8ge
+        title: Linux Node Recently Rebooted
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            editorMode: code
+            expr: node_time_seconds - node_boot_time_seconds
+            hide: false
+            instant: true
+            intervalMs: 1000
+            legendFormat: __auto
+            maxDataPoints: 43200
+            range: false
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            conditions:
+            - evaluator:
+                params:
+                - 0
+                - 0
+                type: gt
+              operator:
+                type: and
+              query:
+                params: []
+              reducer:
+                params: []
+                type: avg
+              type: query
+            datasource:
+              name: Expression
+              type: __expr__
+              uid: __expr__
+            expression: A
+            intervalMs: 1000
+            maxDataPoints: 43200
+            reducer: last
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            conditions:
+            - evaluator:
+                params:
+                - 3600
+                type: lt
+              operator:
+                type: and
+              query:
+                params: []
+              reducer:
+                params: []
+                type: avg
+              type: query
+            datasource:
+              name: Expression
+              type: __expr__
+              uid: __expr__
+            expression: B
+            intervalMs: 1000
+            maxDataPoints: 43200
+            refId: C
+            type: threshold
+        noDataState: NoData
+        execErrState: Error
+        annotations:
+          description: |-
+            Instance has rebooted within the last hour.
+              Uptime: {{ $values.B.Value | humanizeDuration }}
+          summary: Linux node recently rebooted ({{ $labels.instance }})
+          value: "{{ $values.B.Value | humanizeDuration }}"
+        isPaused: false
+        labels:
+          severity: info
+          domain: infrastructure
+          component: linux-node
+          owner: platform
+          actionable: 'false'
+        for: 1m
+    - orgId: 1
+      name: Linux Capacity
+      folder: Infrastructure
+      interval: 5m
+      rules:
+      - uid: fdzibjzxkgmwwb
+        title: Linux Node High CPU
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            editorMode: code
+            expr: 100 * (1 - (sum(rate(node_cpu_seconds_total{mode="idle"}[5m])) by (instance,
+              job, cluster) / sum(rate(node_cpu_seconds_total[5m])) by (instance, job,
+              cluster)))
+            hide: false
+            instant: false
+            intervalMs: 1000
+            legendFormat: __auto
+            maxDataPoints: 43200
+            range: true
+            refId: A
+        - refId: B
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: __expr__
+          model:
+            conditions:
+            - evaluator:
+                params: []
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - B
+              reducer:
+                params: []
+                type: last
+              type: query
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            intervalMs: 1000
+            maxDataPoints: 43200
+            reducer: mean
+            refId: B
+            type: reduce
+        - refId: C
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: __expr__
+          model:
+            conditions:
+            - evaluator:
+                params:
+                - 80
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            intervalMs: 1000
+            maxDataPoints: 43200
+            refId: C
+            type: threshold
+        noDataState: NoData
+        execErrState: Error
+        annotations:
+          description: |-
+            CPU usage is above 80% for the last 5 minutes.
+              Current CPU Usage: {{ $values.B.Value | printf "%.2f" }}%
+          summary: High CPU usage on {{ $labels.instance }}
+          value: '{{ $values.B.Value | printf "%.2f" }}%'
+        isPaused: false
+        labels:
+          severity: warning
+          domain: infrastructure
+          component: linux-node
+          owner: platform
+          actionable: 'true'
+        for: 5m
+      - uid: cdzimwnsyf37ke
+        title: Linux Node High Memory
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            editorMode: code
+            expr: 100 * (1 - (node_memory_MemAvailable_bytes/node_memory_MemTotal_bytes))
+            hide: false
+            instant: false
+            intervalMs: 1000
+            legendFormat: __auto
+            maxDataPoints: 43200
+            range: true
+            refId: A
+        - refId: B
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: __expr__
+          model:
+            conditions:
+            - evaluator:
+                params: []
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - B
+              reducer:
+                params: []
+                type: last
+              type: query
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            intervalMs: 1000
+            maxDataPoints: 43200
+            reducer: mean
+            refId: B
+            type: reduce
+        - refId: C
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: __expr__
+          model:
+            conditions:
+            - evaluator:
+                params:
+                - 85
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            intervalMs: 1000
+            maxDataPoints: 43200
+            refId: C
+            type: threshold
+        noDataState: NoData
+        execErrState: Error
+        annotations:
+          description: |-
+            RAM usage is above 85% for the last 5 minutes.
+              Current RAM Usage: {{ $values.B.Value | printf "%.2f" }}%
+          summary: High memory usage on {{ $labels.instance }}
+          value: '{{ $values.B.Value | printf "%.2f" }}%'
+        isPaused: false
+        labels:
+          severity: warning
+          domain: infrastructure
+          component: linux-node
+          owner: platform
+          actionable: 'true'
+        for: 5m
+      - uid: adzio59a2016od
+        title: Linux Node Filesystem Nearly Full
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            editorMode: code
+            expr: 100 - ((node_filesystem_avail_bytes{mountpoint="/",fstype!="rootfs"}
+              * 100) / node_filesystem_size_bytes{mountpoint="/",fstype!="rootfs"})
+            hide: false
+            instant: true
+            intervalMs: 1000
+            legendFormat: __auto
+            maxDataPoints: 43200
+            range: false
+            refId: A
+        - refId: B
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: __expr__
+          model:
+            conditions:
+            - evaluator:
+                params: []
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - B
+              reducer:
+                params: []
+                type: last
+              type: query
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            intervalMs: 1000
+            maxDataPoints: 43200
+            reducer: max
+            refId: B
+            type: reduce
+        - refId: C
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: __expr__
+          model:
+            conditions:
+            - evaluator:
+                params:
+                - 90
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            intervalMs: 1000
+            maxDataPoints: 43200
+            refId: C
+            type: threshold
+        noDataState: NoData
+        execErrState: Error
+        annotations:
+          description: 'Root filesystem usage has remained above 90% for 10 minutes. Current
+            usage: {{ $values.B.Value | printf "%.2f" }}%.'
+          summary: Root filesystem nearly full on {{ $labels.instance }}
+          value: '{{ $values.B.Value | printf "%.2f" }}%'
+        isPaused: false
+        labels:
+          severity: warning
+          domain: infrastructure
+          component: linux-node
+          owner: platform
+          actionable: 'true'
+        for: 10m

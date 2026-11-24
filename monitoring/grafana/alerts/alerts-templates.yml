@@ -23,13 +23,19 @@ data:
           {{ if .Annotations.description }}> 📝 **Description**: {{ .Annotations.description }}{{ end }}
           {{ if .Annotations.value }}> 📊 **Value**: {{ .Annotations.value }}{{ end }}
           > 🏷️ **Severity**: `{{ if .Labels.severity }}{{ .Labels.severity }}{{ else }}unknown{{ end }}`
+          {{ if .Labels.domain }}> 🧭 **Domain**: `{{ .Labels.domain }}`{{ end }}{{ if .Labels.component }} · **Component**: `{{ .Labels.component }}`{{ end }}{{ if .Labels.owner }} · **Owner**: `{{ .Labels.owner }}`{{ end }}
+          {{ if .Labels.cluster }}> ☸️ **Cluster**: `{{ .Labels.cluster }}`{{ end }}
+          {{ if .Labels.namespace }}> 📁 **Namespace**: `{{ .Labels.namespace }}`{{ end }}{{ if .Labels.pod }} · **Pod**: `{{ .Labels.pod }}`{{ end }}{{ if .Labels.container }} · **Container**: `{{ .Labels.container }}`{{ end }}
+          {{ if .Labels.node }}> 🖥️ **Node**: `{{ .Labels.node }}`{{ end }}
           {{ if .Labels.instance }}> 🖥️ **Instance**: `{{ .Labels.instance }}`{{ end }}
+          {{ if .Labels.routerboard_name }}> 📡 **Device**: `{{ .Labels.routerboard_name }}`{{ end }}
           {{ if .Labels.job }}> ⚙️ **Job**: `{{ .Labels.job }}`{{ end }}
           > 🕐 **Started**: {{ .StartsAt }}
+          {{ if .GeneratorURL }}> 🔎 [Open alert source]({{ .GeneratorURL }}){{ end }}{{ if .SilenceURL }} · [Silence]({{ .SilenceURL }}){{ end }}
           {{- end }}
 
           {{ define "discord.title" -}}
-          [{{ if gt (len .Alerts.Firing) 0 }}🔥 FIRING: {{ len .Alerts.Firing }}{{ end }}{{ if and (gt (len .Alerts.Firing) 0) (gt (len .Alerts.Resolved) 0) }} | {{ end }}{{ if gt (len .Alerts.Resolved) 0 }}✅ RESOLVED: {{ len .Alerts.Resolved }}{{ end }}]
+          [{{ if gt (len .Alerts.Firing) 0 }}🔥 FIRING: {{ len .Alerts.Firing }}{{ end }}{{ if and (gt (len .Alerts.Firing) 0) (gt (len .Alerts.Resolved) 0) }} | {{ end }}{{ if gt (len .Alerts.Resolved) 0 }}✅ RESOLVED: {{ len .Alerts.Resolved }}{{ end }}] {{ .GroupLabels.domain }} / {{ .GroupLabels.component }} / {{ .GroupLabels.severity }}
           {{- end }}
 
           {{ define "discord.message" -}}
