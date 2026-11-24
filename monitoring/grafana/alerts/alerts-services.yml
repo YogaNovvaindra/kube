@@ -402,7 +402,7 @@ data:
           actionable: 'true'
         noDataState: OK
         execErrState: Error
-      - uid: cloudflared_origin_connection_errors_high
+      - uid: cloudflared_origin_conn_errors_high
         title: Cloudflare Origin Connection Failures
         condition: C
         data:
