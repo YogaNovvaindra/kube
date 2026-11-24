@@ -282,7 +282,7 @@ data:
               type: prometheus
               uid: prometheus
             editorMode: code
-            expr: (pg_replication_is_replica == 1) unless on (job, cluster, instance) pg_stat_wal_receiver_last_msg_receipt_time{status="streaming"}
+            expr: ((pg_replication_is_replica == 1) unless on (job, cluster, instance) pg_stat_wal_receiver_last_msg_receipt_time{status="streaming"}) or (0 * (pg_replication_is_replica == 1))
             instant: true
             range: false
             refId: A
@@ -323,7 +323,7 @@ data:
         annotations:
           summary: PostgreSQL replica stopped on {{ $labels.instance }}
           description: 'PostgreSQL replica {{ $labels.instance }} has no streaming WAL receiver for at least 2 minutes.'
-          value: '{{ $values.B.Value | printf "%.0f" }} (1=replica without streaming receiver)'
+          value: '{{ $values.B.Value | printf "%.0f" }} (1=stopped, 0=streaming)'
         labels:
           severity: critical
           domain: database
