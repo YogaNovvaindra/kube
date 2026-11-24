@@ -39,7 +39,7 @@ graph TD
 | **Grafana** | [`grafana/grafana.yml`](grafana/grafana.yml) | Dashboard visualization with image-renderer sidecar |
 | **Loki** | [`loki-deploy.yml`](loki-deploy.yml) | Horizontally-scalable log aggregation (TSDB v13 schema) |
 | **Tempo** | [`tempo.yml`](tempo.yml) | Distributed tracing backend (OTLP, Jaeger, Zipkin) |
-| **Fluent-bit (logs)** | [`fluent-bit.yml`](fluent-bit.yml) | DaemonSet: forwards container logs to Loki |
+| **Fluent-bit (logs)** | [`fluent-bit.yml`](fluent-bit.yml) | DaemonSet: forwards container and Kubernetes node journal logs to Loki |
 | **Fluent-bit (events)** | [`fluent-bit.yml`](fluent-bit.yml) | Deployment: forwards Kubernetes events to Loki |
 | **Uptime Kuma** | [`uptime/uptime-kuma.yml`](uptime/uptime-kuma.yml) | Self-hosted uptime & service monitoring (MariaDB backend) |
 
@@ -71,7 +71,7 @@ Metrics are collected from various sources using dedicated exporters:
 - **Ingestion limits**: 20MB/s rate, 512KB max line size, 10,000 max streams
 
 ### Fluent-bit — Log Forwarding (Dual Setup)
-- **`fluent-logs`** (DaemonSet): Tails `/var/log/containers/*.log` on every node, enriches with Kubernetes metadata, ships to Loki
+- **`fluent-logs`** (DaemonSet): Ships container logs as `job=kube_logs` and Linux journal logs as `job=kube_node_logs`; both use `cluster=kube_cluster`, while journal logs also use the Kubernetes `node` label
 - **`fluent-events`** (Deployment): Consumes Kubernetes API events via `kubernetes_events` input, ships to Loki
 
 ### Grafana — Visualization

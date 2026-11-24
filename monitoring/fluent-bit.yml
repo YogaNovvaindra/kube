@@ -52,6 +52,16 @@ data:
         Mem_Buf_Limit             32MB
         Skip_Long_Lines           On
 
+    [INPUT]
+        Name                      systemd
+        Tag                       node.systemd
+        storage.type              filesystem
+        DB                        /var/log/flb_kube_node.db
+        Mem_Buf_Limit             32MB
+        Read_From_Tail            On
+        Lowercase                 On
+        Strip_Underscores         On
+
     [FILTER]
         Name                      kubernetes
         Match                     kube.*
@@ -75,6 +85,15 @@ data:
         Labels                    source=fluent_bit,job=kube_logs,cluster=kube_cluster
         Label_Keys                $kubernetes['namespace_name'],$kubernetes['pod_name'],$kubernetes['container_name'],$kubernetes['labels']['app']
         auto_kubernetes_labels    On
+
+    [OUTPUT]
+        Name                      loki
+        Match                     node.systemd
+        Host                      loki.monitoring
+        Port                      3100
+        Labels                    source=fluent_bit,job=kube_node_logs,cluster=kube_cluster,node=${NODE_NAME}
+        Label_Keys                $systemd_unit,$transport
+        Line_Format               json
 
 ---
 apiVersion: v1
@@ -136,12 +155,23 @@ spec:
           resources:
             requests:
               memory: 32Mi
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
           volumeMounts:
             - name: config
               mountPath: /fluent-bit/etc/fluent-bit.conf
               subPath: fluent-bit.conf
             - name: varlog
               mountPath: /var/log
+            - name: runlogjournal
+              mountPath: /run/log/journal
+              readOnly: true
+            - name: machine-id
+              mountPath: /etc/machine-id
+              readOnly: true
       volumes:
         - name: config
           configMap:
@@ -150,6 +180,14 @@ spec:
           hostPath:
             path: /var/log
             type: Directory
+        - name: runlogjournal
+          hostPath:
+            path: /run/log/journal
+            type: Directory
+        - name: machine-id
+          hostPath:
+            path: /etc/machine-id
+            type: File
 ---
 apiVersion: apps/v1
 kind: Deployment
