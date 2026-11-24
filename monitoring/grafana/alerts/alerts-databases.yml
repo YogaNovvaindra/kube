@@ -401,6 +401,139 @@ data:
           actionable: 'true'
         noDataState: NoData
         execErrState: Error
+    - orgId: 1
+      name: Database Performance
+      folder: Databases
+      interval: 1m
+      rules:
+      - uid: mysql_slow_queries_high
+        title: MySQL Slow Query Rate High
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            editorMode: code
+            expr: sum by (job, cluster, instance) (increase(mysql_global_status_slow_queries[5m]))
+            instant: true
+            range: false
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: last
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - 10
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 5m
+        annotations:
+          summary: MySQL slow-query rate high on {{ $labels.instance }}
+          description: 'More than 10 MySQL/MariaDB slow queries occurred within 5 minutes, sustained for 5 minutes.'
+          value: '{{ $values.B.Value | printf "%.0f" }} slow queries/5m'
+        labels:
+          severity: warning
+          domain: database
+          component: mysql
+          owner: platform
+          actionable: 'true'
+        noDataState: NoData
+        execErrState: Error
+      - uid: postgres_slow_query_high
+        title: PostgreSQL Slow Query
+        condition: C
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: prometheus
+          model:
+            datasource:
+              type: prometheus
+              uid: prometheus
+            editorMode: code
+            expr: (increase(pg_stat_statements_seconds_total[5m]) / increase(pg_stat_statements_calls_total[5m])) and on (job, cluster, instance, datname, queryid, user) (increase(pg_stat_statements_calls_total[5m]) >= 5)
+            instant: true
+            range: false
+            refId: A
+        - refId: B
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            reducer: last
+            refId: B
+            type: reduce
+        - refId: C
+          datasourceUid: __expr__
+          model:
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: B
+            refId: C
+            type: threshold
+            conditions:
+            - evaluator:
+                params:
+                - 1
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                - C
+              reducer:
+                params: []
+                type: last
+              type: query
+        for: 5m
+        annotations:
+          summary: PostgreSQL slow query on {{ $labels.instance }}/{{ $labels.datname }}
+          description: 'PostgreSQL query {{ $labels.queryid }} by {{ $labels.user }} averaged more than 1 second across at least 5 calls, sustained for 5 minutes.'
+          value: '{{ $values.B.Value | printf "%.3f" }} seconds/query'
+        labels:
+          severity: warning
+          domain: database
+          component: postgresql
+          owner: platform
+          actionable: 'true'
+        noDataState: NoData
+        execErrState: Error
       - uid: postgres_deadlocks_high
         title: PostgreSQL Deadlocks High
         condition: C
