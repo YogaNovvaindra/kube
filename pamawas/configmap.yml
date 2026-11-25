@@ -88,6 +88,11 @@ data:
   LOKI_SERVICE_LABEL: "kubernetes_container_name"
   LOKI_TIMEOUT_SECONDS: "60"
   LOKI_MAX_LOG_LINES: "100"
+  # Authoritative alert-condition state. Recovery remains inconclusive until
+  # GRAFANA_API_TOKEN exists in the pamawas-secrets SealedSecret.
+  GRAFANA_URL: "http://grafana.monitoring.svc.cluster.local:3000"
+  GRAFANA_ORG_ID: "1"
+  GRAFANA_TIMEOUT_SECONDS: "10"
   # Turns per investigation. A run that has made this many LLM calls without
   # converging is not going to; the old value of 100 let a run burn the whole
   # wall-clock budget and still submit nothing.

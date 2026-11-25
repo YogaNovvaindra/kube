@@ -8,6 +8,7 @@ metadata:
     app.kubernetes.io/name: pamawas-investigator
     app.kubernetes.io/part-of: pamawas
   annotations:
+    reloader.stakater.com/auto: "true"
     keel.sh/policy: force
     keel.sh/trigger: poll
     keel.sh/match-tag: "true"
@@ -97,6 +98,27 @@ spec:
                 configMapKeyRef:
                   name: pamawas-config
                   key: LOKI_MAX_LOG_LINES
+            - name: GRAFANA_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: GRAFANA_URL
+            - name: GRAFANA_ORG_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: GRAFANA_ORG_ID
+            - name: GRAFANA_TIMEOUT_SECONDS
+              valueFrom:
+                configMapKeyRef:
+                  name: pamawas-config
+                  key: GRAFANA_TIMEOUT_SECONDS
+            - name: GRAFANA_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: pamawas-secrets
+                  key: GRAFANA_API_TOKEN
+                  optional: true
             - name: MAX_TOOL_CALLS
               valueFrom:
                 configMapKeyRef:

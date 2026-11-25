@@ -37,7 +37,38 @@ Non-sensitive configuration for all services. Update endpoints for your environm
 Sensitive values. **Replace all placeholder values** before applying:
 - `DATABASE_URL`: PostgreSQL connection string with credentials
 - `LLM_API_KEY`: OpenAI/Anthropic/Ollama API key
+- `GRAFANA_API_TOKEN`: dedicated Grafana service-account token used only to
+  read managed alert rules and active alert instances
 - Delivery credentials (Discord, Telegram, Email)
+
+### Grafana token for authoritative recovery
+
+Create a dedicated token. Do not reuse the Grafana administrator password or a
+human user's token.
+
+1. Open Grafana: **Administration → Users and access → Service accounts**.
+2. Create `pamawas-investigator` with the **Viewer** basic role. It needs only
+   read access to alert rules and alert instances.
+3. Add a service-account token with a bounded expiry and copy the `glsa_...`
+   value once.
+4. Seal it into the existing Pamawas SealedSecret:
+
+```bash
+cd /Users/yoga/Documents/repo/kube
+read -rsp "Grafana service-account token: " GRAFANA_API_TOKEN; echo
+kubectl -n pamawas create secret generic pamawas-secrets \
+  --from-literal=GRAFANA_API_TOKEN="$GRAFANA_API_TOKEN" \
+  --dry-run=client -o yaml | \
+kubeseal --controller-name sealed-secrets-controller \
+  --controller-namespace kube-system \
+  --format yaml \
+  --merge-into pamawas/pamawas-secrets.yml
+unset GRAFANA_API_TOKEN
+```
+
+Commit and push `pamawas/pamawas-secrets.yml`. Argo CD applies the updated
+Secret and Reloader restarts the Investigator. Until the token exists, the
+Investigator starts normally but recovery checks remain `inconclusive`.
 
 ## Services Deployed
 
