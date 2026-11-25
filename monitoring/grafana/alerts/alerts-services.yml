@@ -219,7 +219,7 @@ data:
             datasource:
               type: prometheus
               uid: prometheus
-            expr: sum by (cluster) (authentik_tasks_workers) or vector(0)
+            expr: sum by (cluster) (authentik_tasks_workers) or on() vector(0)
             refId: A
         - refId: B
           datasourceUid: __expr__
