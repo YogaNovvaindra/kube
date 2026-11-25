@@ -10,7 +10,7 @@ data:
     - orgId: 1
       name: Kubernetes Nodes
       folder: Kubernetes
-      interval: 1m
+      interval: 2m
       rules:
       - uid: node_memory_pressure
         title: Kubernetes Node Memory Pressure
@@ -139,7 +139,7 @@ data:
     - orgId: 1
       name: Kubernetes Workloads
       folder: Kubernetes
-      interval: 1m
+      interval: 2m
       rules:
       - uid: pod_crash_looping
         title: Kubernetes Pod Crash Looping
@@ -314,7 +314,7 @@ data:
                 params: []
                 type: last
               type: query
-        for: 1m
+        for: 2m
         annotations:
           summary: 'OOMKilled: {{ $labels.pod }}'
           description: Container {{ $labels.container }} in pod {{ $labels.pod }} was

@@ -10,7 +10,7 @@ data:
     - orgId: 1
       name: Proxmox Health
       folder: Infrastructure
-      interval: 1m
+      interval: 2m
       rules:
       - uid: proxmox_cluster_quorum_lost
         title: Proxmox Cluster Quorum Lost
@@ -191,7 +191,7 @@ data:
                 params: []
                 type: last
               type: query
-        for: 1m
+        for: 2m
         annotations:
           summary: Proxmox host recently rebooted ({{ $labels.id }})
           description: 'Proxmox host {{ $labels.id }} rebooted within the last hour.'

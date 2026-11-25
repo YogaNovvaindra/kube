@@ -30,7 +30,7 @@ data:
           - receiver: discord-notification
             matchers:
               - severity = warning
-            group_wait: 1m
+            group_wait: 2m
             group_interval: 10m
             repeat_interval: 6h
           - receiver: discord-notification

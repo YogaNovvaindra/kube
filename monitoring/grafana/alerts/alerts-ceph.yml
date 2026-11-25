@@ -10,7 +10,7 @@ data:
     - orgId: 1
       name: Ceph Health
       folder: Storage
-      interval: 1m
+      interval: 2m
       rules:
       - uid: ceph_health_error
         title: Ceph Cluster Health Error

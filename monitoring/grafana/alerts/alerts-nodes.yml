@@ -10,7 +10,7 @@ data:
     - orgId: 1
       name: Linux Health
       folder: Infrastructure
-      interval: 1m
+      interval: 2m
       rules:
       - uid: fdzi8c0wl3x8ge
         title: Linux Node Recently Rebooted
@@ -101,7 +101,7 @@ data:
           component: linux-node
           owner: platform
           actionable: 'false'
-        for: 1m
+        for: 2m
     - orgId: 1
       name: Linux Capacity
       folder: Infrastructure

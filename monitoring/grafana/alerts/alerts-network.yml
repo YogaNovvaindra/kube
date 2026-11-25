@@ -10,7 +10,7 @@ data:
     - orgId: 1
       name: MikroTik Health
       folder: Network
-      interval: 1m
+      interval: 2m
       rules:
       - uid: fee0o8u0hjx8ge
         title: MikroTik Recently Rebooted
@@ -101,7 +101,7 @@ data:
           component: mikrotik
           owner: network
           actionable: 'false'
-        for: 1m
+        for: 2m
     - orgId: 1
       name: MikroTik Capacity
       folder: Network
@@ -387,7 +387,7 @@ data:
     - orgId: 1
       name: Ubiquiti Links
       folder: Network
-      interval: 1m
+      interval: 2m
       rules:
       - uid: ubiquiti_low_signal
         title: Ubiquiti Low RSSI

@@ -10,7 +10,7 @@ data:
     - orgId: 1
       name: Monitoring Availability
       folder: Infrastructure
-      interval: 1m
+      interval: 2m
       rules:
       - uid: target_down
         title: Prometheus Target Down
@@ -76,7 +76,7 @@ data:
     - orgId: 1
       name: Application Services
       folder: Applications
-      interval: 1m
+      interval: 2m
       rules:
       - uid: traefik_high_error_rate
         title: Traefik Service High Error Rate
@@ -271,7 +271,7 @@ data:
     - orgId: 1
       name: Cloudflare Tunnel
       folder: Applications
-      interval: 1m
+      interval: 2m
       rules:
       - uid: cloudflared_tunnel_disconnected
         title: Cloudflare Tunnel Disconnected

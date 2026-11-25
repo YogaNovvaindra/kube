@@ -10,7 +10,7 @@ data:
     - orgId: 1
       name: Database Health
       folder: Databases
-      interval: 1m
+      interval: 2m
       rules:
       - uid: mysql_replica_io_stopped
         title: MySQL Replica I/O Thread Stopped
@@ -468,7 +468,7 @@ data:
     - orgId: 1
       name: Database Performance
       folder: Databases
-      interval: 1m
+      interval: 2m
       rules:
       - uid: mysql_slow_queries_high
         title: MySQL Slow Query Rate High
