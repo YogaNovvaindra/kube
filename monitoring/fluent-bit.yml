@@ -150,7 +150,7 @@ spec:
       serviceAccountName: fluent-bit
       containers:
         - name: fluent-logs
-          image: reg.ygnv.my.id/docker/fluent/fluent-bit:5.2.0
+          image: reg.ygnv.my.id/docker/fluent/fluent-bit:5.2.1
           imagePullPolicy: IfNotPresent
           resources:
             requests:
@@ -210,7 +210,7 @@ spec:
       serviceAccountName: fluent-bit
       containers:
         - name: fluent-events
-          image: reg.ygnv.my.id/docker/fluent/fluent-bit:5.2.0
+          image: reg.ygnv.my.id/docker/fluent/fluent-bit:5.2.1
           imagePullPolicy: IfNotPresent
           resources:
             requests:
