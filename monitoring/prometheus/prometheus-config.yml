@@ -106,7 +106,6 @@ data:
 
       # Proxmox VE monitoring
       - job_name: proxmox
-
         metrics_path: /pve
         params:
           module: [default]
@@ -849,8 +848,28 @@ data:
           - target_label: __address__
             replacement: snmp-exporter:9116
 
-      # - job_name: 'cp450'
-
+      - job_name: 'cp450'
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: [monitoring]
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            action: keep
+            regex: cp450-exporter
+          - source_labels: [__meta_kubernetes_pod_ip]
+            target_label: __address__
+            replacement: $1:9817
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            target_label: node
+          - target_label: cluster
+            replacement: kube_cluster
+          - target_label: platform
+            replacement: kubernetes
 
       # Server infrastructure monitoring
       # - job_name: server-node
