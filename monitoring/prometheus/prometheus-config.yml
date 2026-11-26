@@ -600,7 +600,6 @@ data:
             replacement: kubernetes
 
       - job_name: traefik
-
         kubernetes_sd_configs:
           - role: pod
             namespaces:
@@ -628,7 +627,6 @@ data:
             replacement: kubernetes
 
       - job_name: cert_manager
-
         kubernetes_sd_configs:
           - role: pod
             namespaces:
@@ -654,7 +652,6 @@ data:
             replacement: kubernetes
 
       - job_name: uptime_kuma
-
         metrics_path: /metrics
         kubernetes_sd_configs:
           - role: pod
@@ -851,6 +848,9 @@ data:
             target_label: __param_target
           - target_label: __address__
             replacement: snmp-exporter:9116
+
+      # - job_name: 'cp450'
+
 
       # Server infrastructure monitoring
       # - job_name: server-node

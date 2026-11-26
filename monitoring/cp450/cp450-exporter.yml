@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cp450-exporter
+  namespace: monitoring
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 1h"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: cp450-exporter
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: cp450-exporter
+    spec:
+      containers:
+        - name: cp450-exporter
+          image: ghcr.io/yoganovvaindra/cp450-exporter:dev
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: metrics
+              containerPort: 9817
+              protocol: TCP
+          resources:
+            requests:
+              memory: 32Mi
+          env:
+            - name: CP450_TARGETS
+              valueFrom:
+                secretKeyRef:
+                  name: cp450-cred
+                  key: CP450_TARGETS
+            - name: CP450_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: cp450-cred
+                  key: CP450_USERNAME
+            - name: CP450_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cp450-cred
+                  key: CP450_PASSWORD
