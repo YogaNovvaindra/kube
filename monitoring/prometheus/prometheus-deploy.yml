@@ -58,7 +58,7 @@ spec:
           # - "--enable-feature=agent"
         env:
           - name: GOGC
-            value: "50"
+            value: "75"
         ports:
           - containerPort: 9090
         volumeMounts:
