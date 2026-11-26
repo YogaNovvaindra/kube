@@ -16,7 +16,7 @@ spec:
       app: warrior
   strategy:
     type: RollingUpdate
-  replicas: 1
+  replicas: 0
   revisionHistoryLimit: 3
   template:
     metadata:
