@@ -33,6 +33,8 @@ spec:
             requests:
               memory: 32Mi
           env:
+            - name: LOG_LEVEL
+              value: "info"
             - name: CP450_TARGETS
               valueFrom:
                 secretKeyRef:
