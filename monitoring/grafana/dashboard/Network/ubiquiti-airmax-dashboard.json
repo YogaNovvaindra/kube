@@ -148,7 +148,7 @@
                         "expr": "ubntStaRxAirtime{job=\"ubiquiti_snmp\",instance=\"$instance\"} / 10",
                         "format": "time_series",
                         "instant": true,
-                        "legendFormat": "RX · {{ubntStaMac}}",
+                        "legendFormat": "RX · {{instance}}",
                         "range": false
                       },
                       "version": "v0"
@@ -171,7 +171,7 @@
                         "expr": "ubntStaTxAirtime{job=\"ubiquiti_snmp\",instance=\"$instance\"} / 10",
                         "format": "time_series",
                         "instant": true,
-                        "legendFormat": "TX · {{ubntStaMac}}",
+                        "legendFormat": "TX · {{instance}}",
                         "range": false
                       },
                       "version": "v0"
@@ -255,7 +255,7 @@
                 "maxVizHeight": 300,
                 "minVizHeight": 16,
                 "minVizWidth": 8,
-                "namePlacement": "left",
+                "namePlacement": "auto",
                 "orientation": "horizontal",
                 "reduceOptions": {
                   "calcs": [
@@ -571,7 +571,7 @@
                         "format": "time_series",
                         "instant": true,
                         "interval": "30s",
-                        "legendFormat": "RX · {{ubntStaMac}}",
+                        "legendFormat": "RX · {{instance}}",
                         "range": false
                       },
                       "version": "v0"
@@ -595,7 +595,7 @@
                         "format": "time_series",
                         "instant": true,
                         "interval": "30s",
-                        "legendFormat": "TX · {{ubntStaMac}}",
+                        "legendFormat": "TX · {{instance}}",
                         "range": false
                       },
                       "version": "v0"
@@ -656,7 +656,7 @@
                 "maxVizHeight": 300,
                 "minVizHeight": 16,
                 "minVizWidth": 8,
-                "namePlacement": "left",
+                "namePlacement": "auto",
                 "orientation": "horizontal",
                 "reduceOptions": {
                   "calcs": [
@@ -1174,7 +1174,7 @@
                         "format": "time_series",
                         "instant": false,
                         "interval": "30s",
-                        "legendFormat": "RX throughput · {{ubntStaMac}}",
+                        "legendFormat": "RX throughput · {{instance}}",
                         "range": true
                       },
                       "version": "v0"
@@ -1198,7 +1198,7 @@
                         "format": "time_series",
                         "instant": false,
                         "interval": "30s",
-                        "legendFormat": "TX throughput · {{ubntStaMac}}",
+                        "legendFormat": "TX throughput · {{instance}}",
                         "range": true
                       },
                       "version": "v0"
@@ -1222,7 +1222,7 @@
                         "format": "time_series",
                         "instant": false,
                         "interval": "30s",
-                        "legendFormat": "RX capacity · {{ubntStaMac}}",
+                        "legendFormat": "RX capacity · {{instance}}",
                         "range": true
                       },
                       "version": "v0"
@@ -1246,7 +1246,7 @@
                         "format": "time_series",
                         "instant": false,
                         "interval": "30s",
-                        "legendFormat": "TX capacity · {{ubntStaMac}}",
+                        "legendFormat": "TX capacity · {{instance}}",
                         "range": true
                       },
                       "version": "v0"
@@ -1521,7 +1521,7 @@
                         "format": "time_series",
                         "instant": false,
                         "interval": "30s",
-                        "legendFormat": "Signal · {{ubntStaMac}}",
+                        "legendFormat": "Signal · {{instance}}",
                         "range": true
                       },
                       "version": "v0"
@@ -1545,7 +1545,7 @@
                         "format": "time_series",
                         "instant": false,
                         "interval": "30s",
-                        "legendFormat": "Noise floor · {{ubntStaMac}}",
+                        "legendFormat": "Noise floor · {{instance}}",
                         "range": true
                       },
                       "version": "v0"
