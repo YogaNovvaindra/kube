@@ -13,7 +13,7 @@
           "enable": true,
           "hide": true,
           "iconColor": "rgba(0, 211, 255, 1)",
-          "name": "Annotations & Alerts",
+          "name": "Annotations \u0026 Alerts",
           "query": {
             "datasource": {
               "name": "-- Grafana --"
@@ -27,99 +27,9 @@
       }
     ],
     "cursorSync": "Crosshair",
+    "description": "airMAX link health, directional throughput and capacity, and radio and peer details.",
     "editable": true,
     "elements": {
-      "panel-6": {
-        "kind": "Panel",
-        "spec": {
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "${DS_PROMETHEUS}"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "editorMode": "code",
-                        "expr": "ubntStaSignal{job=\"ubiquiti_snmp\",instance=\"$instance\"}",
-                        "format": "time_series",
-                        "instant": true,
-                        "range": false,
-                        "legendFormat": "{{ubntStaMac}}"
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "A"
-                  }
-                }
-              ],
-              "queryOptions": {},
-              "transformations": []
-            }
-          },
-          "description": "Current received signal strength for each peer.",
-          "id": 6,
-          "links": [],
-          "title": "Signal strength",
-          "vizConfig": {
-            "group": "gauge",
-            "kind": "VizConfig",
-            "spec": {
-              "fieldConfig": {
-                "defaults": {
-                  "color": {
-                    "mode": "thresholds"
-                  },
-                  "decimals": 0,
-                  "min": -100,
-                  "max": 0,
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "color": "red",
-                        "value": null
-                      },
-                      {
-                        "color": "orange",
-                        "value": -75
-                      },
-                      {
-                        "color": "green",
-                        "value": -65
-                      }
-                    ]
-                  },
-                  "unit": "dBm"
-                },
-                "overrides": []
-              },
-              "options": {
-                "orientation": "auto",
-                "reduceOptions": {
-                  "calcs": [
-                    "lastNotNull"
-                  ],
-                  "fields": "",
-                  "values": false
-                },
-                "shape": "gauge",
-                "showThresholdLabels": false,
-                "showThresholdMarkers": true,
-                "sizing": "auto"
-              }
-            },
-            "version": "13.3.2"
-          }
-        }
-      },
       "panel-13": {
         "kind": "Panel",
         "spec": {
@@ -168,14 +78,14 @@
                     "mode": "thresholds"
                   },
                   "decimals": 1,
-                  "min": 0,
                   "max": 100,
+                  "min": 0,
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
                       {
                         "color": "blue",
-                        "value": null
+                        "value": 0
                       }
                     ]
                   },
@@ -184,6 +94,16 @@
                 "overrides": []
               },
               "options": {
+                "barShape": "flat",
+                "barWidthFactor": 0.5,
+                "effects": {
+                  "barGlow": false,
+                  "centerGlow": false,
+                  "gradient": true
+                },
+                "endpointMarker": "point",
+                "minVizHeight": 75,
+                "minVizWidth": 75,
                 "orientation": "auto",
                 "reduceOptions": {
                   "calcs": [
@@ -192,10 +112,258 @@
                   "fields": "",
                   "values": false
                 },
+                "segmentCount": 1,
+                "segmentSpacing": 0.3,
                 "shape": "gauge",
                 "showThresholdLabels": false,
                 "showThresholdMarkers": false,
-                "sizing": "auto"
+                "sizing": "auto",
+                "sparkline": true,
+                "textMode": "auto"
+              }
+            },
+            "version": "13.3.2"
+          }
+        }
+      },
+      "panel-14": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_PROMETHEUS}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "ubntStaRxAirtime{job=\"ubiquiti_snmp\",instance=\"$instance\"} / 10",
+                        "format": "time_series",
+                        "instant": true,
+                        "legendFormat": "RX · {{ubntStaMac}}",
+                        "range": false
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_PROMETHEUS}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "ubntStaTxAirtime{job=\"ubiquiti_snmp\",instance=\"$instance\"} / 10",
+                        "format": "time_series",
+                        "instant": true,
+                        "legendFormat": "TX · {{ubntStaMac}}",
+                        "range": false
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "B"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Share of radio airtime reported for receive and transmit traffic on each peer.",
+          "id": 14,
+          "links": [],
+          "title": "Peer airtime",
+          "vizConfig": {
+            "group": "bargauge",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "decimals": 1,
+                  "max": 100,
+                  "min": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "blue",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "percent"
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byRegexp",
+                      "options": "/^RX /"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "blue",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byRegexp",
+                      "options": "/^TX /"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "orange",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "displayMode": "basic",
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": false
+                },
+                "maxVizHeight": 300,
+                "minVizHeight": 16,
+                "minVizWidth": 8,
+                "namePlacement": "left",
+                "orientation": "horizontal",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showUnfilled": true,
+                "sizing": "auto",
+                "textMode": "auto",
+                "valueMode": "color"
+              }
+            },
+            "version": "13.3.2"
+          }
+        }
+      },
+      "panel-15": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_PROMETHEUS}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "min by (instance) (ubntStaConnTime{job=\"ubiquiti_snmp\",instance=\"$instance\"} / 100) or on (instance) ((sum by (instance) (ubntWlStatStaCount{job=\"ubiquiti_snmp\",instance=\"$instance\"}) == 0) - 1)",
+                        "format": "time_series",
+                        "instant": true,
+                        "range": false
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Time since the most recently connected peer associated. No peer appears when the radio reports zero stations.",
+          "id": 15,
+          "links": [],
+          "title": "Peer connection age",
+          "vizConfig": {
+            "group": "stat",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "decimals": 0,
+                  "mappings": [
+                    {
+                      "options": {
+                        "-1": {
+                          "color": "orange",
+                          "index": 0,
+                          "text": "No peer"
+                        }
+                      },
+                      "type": "value"
+                    }
+                  ],
+                  "noValue": "No data",
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "blue",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "s"
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "value",
+                "wideLayout": false
               }
             },
             "version": "13.3.2"
@@ -221,11 +389,11 @@
                       "kind": "DataQuery",
                       "spec": {
                         "editorMode": "code",
-                        "expr": "label_join(\n  (\n  label_replace(\n    label_replace(((rate(ubntStaRxBytes{job=\"ubiquiti_snmp\",instance=\"$instance\"}[$__rate_interval]) * 8) / 1e6) and on (instance, ubntWlStatIndex, ubntStaMac) (round((ubntStaRxCapacity{job=\"ubiquiti_snmp\",instance=\"$instance\"} * 1000) / 1e6, 0.01) > 0),\n      \"reading\", \"Throughput\", \"instance\", \".+\")\n    or label_replace((round((ubntStaRxCapacity{job=\"ubiquiti_snmp\",instance=\"$instance\"} * 1000) / 1e6, 0.01) > 0) and on (instance, ubntWlStatIndex, ubntStaMac) ((rate(ubntStaRxBytes{job=\"ubiquiti_snmp\",instance=\"$instance\"}[$__rate_interval]) * 8) / 1e6),\n      \"reading\", \"Capacity\", \"instance\", \".+\"),\n    \"direction\", \"RX\", \"instance\", \".+\")\n  or   label_replace(\n    label_replace(((rate(ubntStaTxBytes{job=\"ubiquiti_snmp\",instance=\"$instance\"}[$__rate_interval]) * 8) / 1e6) and on (instance, ubntWlStatIndex, ubntStaMac) (round((ubntStaTxCapacity{job=\"ubiquiti_snmp\",instance=\"$instance\"} * 1000) / 1e6, 0.01) > 0),\n      \"reading\", \"Throughput\", \"instance\", \".+\")\n    or label_replace((round((ubntStaTxCapacity{job=\"ubiquiti_snmp\",instance=\"$instance\"} * 1000) / 1e6, 0.01) > 0) and on (instance, ubntWlStatIndex, ubntStaMac) ((rate(ubntStaTxBytes{job=\"ubiquiti_snmp\",instance=\"$instance\"}[$__rate_interval]) * 8) / 1e6),\n      \"reading\", \"Capacity\", \"instance\", \".+\"),\n    \"direction\", \"TX\", \"instance\", \".+\")\n  ) * on (instance, ubntWlStatIndex, ubntStaMac) group_left (peer_suffix) (\n    label_join((group by (instance, ubntWlStatIndex, ubntStaMac) (ubntStaMac{job=\"ubiquiti_snmp\",instance=\"$instance\"})) and on (instance) (count by (instance) (group by (instance, ubntWlStatIndex, ubntStaMac) (ubntStaMac{job=\"ubiquiti_snmp\",instance=\"$instance\"})) > 1),\n      \"peer_suffix\", \" · \", \"unused\", \"ubntStaMac\", \"ubntWlStatIndex\")\n    or on (instance, ubntWlStatIndex, ubntStaMac) (group by (instance, ubntWlStatIndex, ubntStaMac) (ubntStaMac{job=\"ubiquiti_snmp\",instance=\"$instance\"}))\n  ),\n  \"peer\", \"\", \"direction\", \"peer_suffix\")",
+                        "expr": "label_join(\n  (\n  label_replace(\n    label_replace(((rate(ubntStaRxBytes{job=\"ubiquiti_snmp\",instance=\"$instance\"}[$__rate_interval]) * 8) / 1e6) and on (instance, ubntWlStatIndex, ubntStaMac) (round((ubntStaRxCapacity{job=\"ubiquiti_snmp\",instance=\"$instance\"} * 1000) / 1e6, 0.01) \u003e 0),\n      \"reading\", \"Throughput\", \"instance\", \".+\")\n    or label_replace((round((ubntStaRxCapacity{job=\"ubiquiti_snmp\",instance=\"$instance\"} * 1000) / 1e6, 0.01) \u003e 0) and on (instance, ubntWlStatIndex, ubntStaMac) ((rate(ubntStaRxBytes{job=\"ubiquiti_snmp\",instance=\"$instance\"}[$__rate_interval]) * 8) / 1e6),\n      \"reading\", \"Capacity\", \"instance\", \".+\"),\n    \"direction\", \"RX\", \"instance\", \".+\")\n  or   label_replace(\n    label_replace(((rate(ubntStaTxBytes{job=\"ubiquiti_snmp\",instance=\"$instance\"}[$__rate_interval]) * 8) / 1e6) and on (instance, ubntWlStatIndex, ubntStaMac) (round((ubntStaTxCapacity{job=\"ubiquiti_snmp\",instance=\"$instance\"} * 1000) / 1e6, 0.01) \u003e 0),\n      \"reading\", \"Throughput\", \"instance\", \".+\")\n    or label_replace((round((ubntStaTxCapacity{job=\"ubiquiti_snmp\",instance=\"$instance\"} * 1000) / 1e6, 0.01) \u003e 0) and on (instance, ubntWlStatIndex, ubntStaMac) ((rate(ubntStaTxBytes{job=\"ubiquiti_snmp\",instance=\"$instance\"}[$__rate_interval]) * 8) / 1e6),\n      \"reading\", \"Capacity\", \"instance\", \".+\"),\n    \"direction\", \"TX\", \"instance\", \".+\")\n  ) * on (instance, ubntWlStatIndex, ubntStaMac) group_left (peer_suffix) (\n    label_join((group by (instance, ubntWlStatIndex, ubntStaMac) (ubntStaMac{job=\"ubiquiti_snmp\",instance=\"$instance\"})) and on (instance) (count by (instance) (group by (instance, ubntWlStatIndex, ubntStaMac) (ubntStaMac{job=\"ubiquiti_snmp\",instance=\"$instance\"})) \u003e 1),\n      \"peer_suffix\", \" · \", \"unused\", \"ubntStaMac\", \"ubntWlStatIndex\")\n    or on (instance, ubntWlStatIndex, ubntStaMac) (group by (instance, ubntWlStatIndex, ubntStaMac) (ubntStaMac{job=\"ubiquiti_snmp\",instance=\"$instance\"}))\n  ),\n  \"peer\", \"\", \"direction\", \"peer_suffix\")",
                         "format": "table",
                         "instant": true,
-                        "range": false,
-                        "interval": "30s"
+                        "interval": "30s",
+                        "range": false
                       },
                       "version": "v0"
                     },
@@ -240,18 +408,17 @@
                   "kind": "Transformation",
                   "spec": {
                     "options": {
-                      "rowField": "peer",
                       "columnField": "reading",
+                      "rowField": "peer",
                       "valueField": "Value"
                     }
                   }
                 },
                 {
-                  "kind": "Transformation",
                   "group": "calculateField",
+                  "kind": "Transformation",
                   "spec": {
                     "options": {
-                      "mode": "binary",
                       "alias": "CapacityMbps",
                       "binary": {
                         "left": {
@@ -264,7 +431,8 @@
                         "right": {
                           "fixed": "0"
                         }
-                      }
+                      },
+                      "mode": "binary"
                     }
                   }
                 },
@@ -308,21 +476,21 @@
               "fieldConfig": {
                 "defaults": {
                   "color": {
-                    "mode": "thresholds"
+                    "mode": "continuous-GrYlRd"
                   },
                   "decimals": 2,
+                  "displayName": "${__field.name} · cap ${__field.labels.CapacityMbps}",
                   "min": 0,
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
                       {
                         "color": "blue",
-                        "value": null
+                        "value": 0
                       }
                     ]
                   },
-                  "unit": "none",
-                  "displayName": "${__field.name} · cap ${__field.labels.CapacityMbps}"
+                  "unit": "Mbits"
                 },
                 "overrides": [
                   {
@@ -338,7 +506,7 @@
                           "steps": [
                             {
                               "color": "orange",
-                              "value": null
+                              "value": 0
                             }
                           ]
                         }
@@ -348,7 +516,17 @@
                 ]
               },
               "options": {
-                "orientation": "vertical",
+                "barShape": "flat",
+                "barWidthFactor": 0.54,
+                "effects": {
+                  "barGlow": false,
+                  "centerGlow": false,
+                  "gradient": true
+                },
+                "endpointMarker": "point",
+                "minVizHeight": 75,
+                "minVizWidth": 75,
+                "orientation": "auto",
                 "reduceOptions": {
                   "calcs": [
                     "lastNotNull"
@@ -356,16 +534,141 @@
                   "fields": "",
                   "values": false
                 },
+                "segmentCount": 1,
+                "segmentSpacing": 0.3,
                 "shape": "gauge",
                 "showThresholdLabels": false,
-                "showThresholdMarkers": false,
+                "showThresholdMarkers": true,
                 "sizing": "auto",
-                "textMode": "value_and_name",
-                "barShape": "flat",
-                "barWidthFactor": 0.5,
-                "endpointMarker": "point",
-                "segmentCount": 1,
-                "sparkline": false
+                "sparkline": true,
+                "textMode": "auto"
+              }
+            },
+            "version": "13.3.2"
+          }
+        }
+      },
+      "panel-18": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_PROMETHEUS}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "(rate(ubntStaRxBytes{job=\"ubiquiti_snmp\",instance=\"$instance\"}[$__rate_interval]) * 8) / on (instance, ubntWlStatIndex, ubntStaMac) (ubntStaRxCapacity{job=\"ubiquiti_snmp\",instance=\"$instance\"} * 1000 \u003e 0) * 100",
+                        "format": "time_series",
+                        "instant": true,
+                        "interval": "30s",
+                        "legendFormat": "RX · {{ubntStaMac}}",
+                        "range": false
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_PROMETHEUS}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "(rate(ubntStaTxBytes{job=\"ubiquiti_snmp\",instance=\"$instance\"}[$__rate_interval]) * 8) / on (instance, ubntWlStatIndex, ubntStaMac) (ubntStaTxCapacity{job=\"ubiquiti_snmp\",instance=\"$instance\"} * 1000 \u003e 0) * 100",
+                        "format": "time_series",
+                        "instant": true,
+                        "interval": "30s",
+                        "legendFormat": "TX · {{ubntStaMac}}",
+                        "range": false
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "B"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Current throughput as a percentage of the estimated capacity for the same direction and peer.",
+          "id": 18,
+          "links": [],
+          "title": "Capacity utilization",
+          "vizConfig": {
+            "group": "bargauge",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "decimals": 1,
+                  "max": 100,
+                  "min": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "blue",
+                        "value": 0
+                      },
+                      {
+                        "color": "orange",
+                        "value": 75
+                      },
+                      {
+                        "color": "red",
+                        "value": 90
+                      }
+                    ]
+                  },
+                  "unit": "percent"
+                },
+                "overrides": []
+              },
+              "options": {
+                "displayMode": "basic",
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": false
+                },
+                "maxVizHeight": 300,
+                "minVizHeight": 16,
+                "minVizWidth": 8,
+                "namePlacement": "left",
+                "orientation": "horizontal",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showUnfilled": true,
+                "sizing": "auto",
+                "textMode": "auto",
+                "valueMode": "color"
               }
             },
             "version": "13.3.2"
@@ -420,41 +723,43 @@
                     "mode": "thresholds"
                   },
                   "decimals": 0,
+                  "mappings": [
+                    {
+                      "options": {
+                        "0": {
+                          "color": "red",
+                          "index": 0,
+                          "text": "Scrape failed"
+                        },
+                        "1": {
+                          "color": "green",
+                          "index": 1,
+                          "text": "Reachable"
+                        }
+                      },
+                      "type": "value"
+                    }
+                  ],
                   "noValue": "No data",
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
                       {
                         "color": "blue",
-                        "value": null
+                        "value": 0
                       }
                     ]
                   },
-                  "unit": "none",
-                  "mappings": [
-                    {
-                      "type": "value",
-                      "options": {
-                        "0": {
-                          "text": "Scrape failed",
-                          "color": "red",
-                          "index": 0
-                        },
-                        "1": {
-                          "text": "Reachable",
-                          "color": "green",
-                          "index": 1
-                        }
-                      }
-                    }
-                  ]
+                  "unit": "none"
                 },
                 "overrides": []
               },
               "options": {
                 "colorMode": "value",
                 "graphMode": "none",
+                "justifyMode": "auto",
                 "orientation": "auto",
+                "percentChangeColorMode": "standard",
                 "reduceOptions": {
                   "calcs": [
                     "lastNotNull"
@@ -462,6 +767,7 @@
                   "fields": "",
                   "values": false
                 },
+                "showPercentChange": false,
                 "textMode": "value",
                 "wideLayout": false
               }
@@ -524,7 +830,7 @@
                     "steps": [
                       {
                         "color": "blue",
-                        "value": null
+                        "value": 0
                       }
                     ]
                   },
@@ -535,7 +841,9 @@
               "options": {
                 "colorMode": "value",
                 "graphMode": "none",
+                "justifyMode": "auto",
                 "orientation": "auto",
+                "percentChangeColorMode": "standard",
                 "reduceOptions": {
                   "calcs": [
                     "lastNotNull"
@@ -543,660 +851,9 @@
                   "fields": "",
                   "values": false
                 },
+                "showPercentChange": false,
                 "textMode": "value",
                 "wideLayout": false
-              }
-            },
-            "version": "13.3.2"
-          }
-        }
-      },
-      "panel-15": {
-        "kind": "Panel",
-        "spec": {
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "${DS_PROMETHEUS}"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "editorMode": "code",
-                        "expr": "min by (instance) (ubntStaConnTime{job=\"ubiquiti_snmp\",instance=\"$instance\"} / 100) or on (instance) ((sum by (instance) (ubntWlStatStaCount{job=\"ubiquiti_snmp\",instance=\"$instance\"}) == 0) - 1)",
-                        "format": "time_series",
-                        "instant": true,
-                        "range": false
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "A"
-                  }
-                }
-              ],
-              "queryOptions": {},
-              "transformations": []
-            }
-          },
-          "description": "Time since the most recently connected peer associated. No peer appears when the radio reports zero stations.",
-          "id": 15,
-          "links": [],
-          "title": "Peer connection age",
-          "vizConfig": {
-            "group": "stat",
-            "kind": "VizConfig",
-            "spec": {
-              "fieldConfig": {
-                "defaults": {
-                  "color": {
-                    "mode": "thresholds"
-                  },
-                  "decimals": 0,
-                  "noValue": "No data",
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "color": "blue",
-                        "value": null
-                      }
-                    ]
-                  },
-                  "unit": "s",
-                  "mappings": [
-                    {
-                      "type": "value",
-                      "options": {
-                        "-1": {
-                          "text": "No peer",
-                          "color": "orange",
-                          "index": 0
-                        }
-                      }
-                    }
-                  ]
-                },
-                "overrides": []
-              },
-              "options": {
-                "colorMode": "value",
-                "graphMode": "none",
-                "orientation": "auto",
-                "reduceOptions": {
-                  "calcs": [
-                    "lastNotNull"
-                  ],
-                  "fields": "",
-                  "values": false
-                },
-                "textMode": "value",
-                "wideLayout": false
-              }
-            },
-            "version": "13.3.2"
-          }
-        }
-      },
-      "panel-3": {
-        "kind": "Panel",
-        "spec": {
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "${DS_PROMETHEUS}"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "editorMode": "code",
-                        "expr": "rate(ubntStaRxBytes{job=\"ubiquiti_snmp\",instance=\"$instance\"}[$__rate_interval]) * 8",
-                        "format": "time_series",
-                        "instant": false,
-                        "interval": "30s",
-                        "legendFormat": "RX throughput · {{ubntStaMac}}",
-                        "range": true
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "A"
-                  }
-                },
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "${DS_PROMETHEUS}"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "editorMode": "code",
-                        "expr": "rate(ubntStaTxBytes{job=\"ubiquiti_snmp\",instance=\"$instance\"}[$__rate_interval]) * 8",
-                        "format": "time_series",
-                        "instant": false,
-                        "interval": "30s",
-                        "legendFormat": "TX throughput · {{ubntStaMac}}",
-                        "range": true
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "B"
-                  }
-                },
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "${DS_PROMETHEUS}"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "editorMode": "code",
-                        "expr": "ubntStaRxCapacity{job=\"ubiquiti_snmp\",instance=\"$instance\"} * 1000",
-                        "format": "time_series",
-                        "instant": false,
-                        "interval": "30s",
-                        "legendFormat": "RX capacity · {{ubntStaMac}}",
-                        "range": true
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "C"
-                  }
-                },
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "${DS_PROMETHEUS}"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "editorMode": "code",
-                        "expr": "ubntStaTxCapacity{job=\"ubiquiti_snmp\",instance=\"$instance\"} * 1000",
-                        "format": "time_series",
-                        "instant": false,
-                        "interval": "30s",
-                        "legendFormat": "TX capacity · {{ubntStaMac}}",
-                        "range": true
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "D"
-                  }
-                }
-              ],
-              "queryOptions": {},
-              "transformations": []
-            }
-          },
-          "description": "Solid lines show measured throughput from byte counters. Dashed lines show the radio’s estimated capacity.",
-          "id": 3,
-          "links": [],
-          "title": "Throughput and capacity",
-          "vizConfig": {
-            "group": "timeseries",
-            "kind": "VizConfig",
-            "spec": {
-              "fieldConfig": {
-                "defaults": {
-                  "color": {
-                    "mode": "palette-classic"
-                  },
-                  "custom": {
-                    "drawStyle": "line",
-                    "fillOpacity": 0,
-                    "lineWidth": 2,
-                    "showPoints": "never",
-                    "spanNulls": false
-                  },
-                  "unit": "bps",
-                  "min": 0
-                },
-                "overrides": [
-                  {
-                    "matcher": {
-                      "id": "byRegexp",
-                      "options": "/^RX /"
-                    },
-                    "properties": [
-                      {
-                        "id": "color",
-                        "value": {
-                          "mode": "fixed",
-                          "fixedColor": "blue"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "matcher": {
-                      "id": "byRegexp",
-                      "options": "/^TX /"
-                    },
-                    "properties": [
-                      {
-                        "id": "color",
-                        "value": {
-                          "mode": "fixed",
-                          "fixedColor": "orange"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "matcher": {
-                      "id": "byRegexp",
-                      "options": "/ capacity /"
-                    },
-                    "properties": [
-                      {
-                        "id": "custom.lineStyle",
-                        "value": {
-                          "fill": "dash",
-                          "dash": [
-                            6,
-                            4
-                          ]
-                        }
-                      }
-                    ]
-                  }
-                ]
-              },
-              "options": {
-                "legend": {
-                  "calcs": [
-                    "lastNotNull"
-                  ],
-                  "displayMode": "table",
-                  "placement": "bottom",
-                  "showLegend": true
-                },
-                "tooltip": {
-                  "mode": "multi",
-                  "sort": "none"
-                }
-              }
-            },
-            "version": "13.3.2"
-          }
-        }
-      },
-      "panel-18": {
-        "kind": "Panel",
-        "spec": {
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "${DS_PROMETHEUS}"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "editorMode": "code",
-                        "expr": "(rate(ubntStaRxBytes{job=\"ubiquiti_snmp\",instance=\"$instance\"}[$__rate_interval]) * 8) / on (instance, ubntWlStatIndex, ubntStaMac) (ubntStaRxCapacity{job=\"ubiquiti_snmp\",instance=\"$instance\"} * 1000 > 0) * 100",
-                        "format": "time_series",
-                        "instant": true,
-                        "range": false,
-                        "legendFormat": "RX · {{ubntStaMac}}",
-                        "interval": "30s"
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "A"
-                  }
-                },
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "${DS_PROMETHEUS}"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "editorMode": "code",
-                        "expr": "(rate(ubntStaTxBytes{job=\"ubiquiti_snmp\",instance=\"$instance\"}[$__rate_interval]) * 8) / on (instance, ubntWlStatIndex, ubntStaMac) (ubntStaTxCapacity{job=\"ubiquiti_snmp\",instance=\"$instance\"} * 1000 > 0) * 100",
-                        "format": "time_series",
-                        "instant": true,
-                        "range": false,
-                        "legendFormat": "TX · {{ubntStaMac}}",
-                        "interval": "30s"
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "B"
-                  }
-                }
-              ],
-              "queryOptions": {},
-              "transformations": []
-            }
-          },
-          "description": "Current throughput as a percentage of the estimated capacity for the same direction and peer.",
-          "id": 18,
-          "links": [],
-          "title": "Capacity utilization",
-          "vizConfig": {
-            "group": "bargauge",
-            "kind": "VizConfig",
-            "spec": {
-              "fieldConfig": {
-                "defaults": {
-                  "color": {
-                    "mode": "thresholds"
-                  },
-                  "decimals": 1,
-                  "min": 0,
-                  "max": 100,
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "color": "blue",
-                        "value": null
-                      },
-                      {
-                        "color": "orange",
-                        "value": 75
-                      },
-                      {
-                        "color": "red",
-                        "value": 90
-                      }
-                    ]
-                  },
-                  "unit": "percent"
-                },
-                "overrides": []
-              },
-              "options": {
-                "displayMode": "basic",
-                "namePlacement": "left",
-                "orientation": "horizontal",
-                "reduceOptions": {
-                  "calcs": [
-                    "lastNotNull"
-                  ],
-                  "fields": "",
-                  "values": false
-                },
-                "showUnfilled": true,
-                "sizing": "auto",
-                "valueMode": "color"
-              }
-            },
-            "version": "13.3.2"
-          }
-        }
-      },
-      "panel-14": {
-        "kind": "Panel",
-        "spec": {
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "${DS_PROMETHEUS}"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "editorMode": "code",
-                        "expr": "ubntStaRxAirtime{job=\"ubiquiti_snmp\",instance=\"$instance\"} / 10",
-                        "format": "time_series",
-                        "instant": true,
-                        "range": false,
-                        "legendFormat": "RX · {{ubntStaMac}}"
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "A"
-                  }
-                },
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "${DS_PROMETHEUS}"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "editorMode": "code",
-                        "expr": "ubntStaTxAirtime{job=\"ubiquiti_snmp\",instance=\"$instance\"} / 10",
-                        "format": "time_series",
-                        "instant": true,
-                        "range": false,
-                        "legendFormat": "TX · {{ubntStaMac}}"
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "B"
-                  }
-                }
-              ],
-              "queryOptions": {},
-              "transformations": []
-            }
-          },
-          "description": "Share of radio airtime reported for receive and transmit traffic on each peer.",
-          "id": 14,
-          "links": [],
-          "title": "Peer airtime",
-          "vizConfig": {
-            "group": "bargauge",
-            "kind": "VizConfig",
-            "spec": {
-              "fieldConfig": {
-                "defaults": {
-                  "color": {
-                    "mode": "thresholds"
-                  },
-                  "decimals": 1,
-                  "min": 0,
-                  "max": 100,
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "color": "blue",
-                        "value": null
-                      }
-                    ]
-                  },
-                  "unit": "percent"
-                },
-                "overrides": [
-                  {
-                    "matcher": {
-                      "id": "byRegexp",
-                      "options": "/^RX /"
-                    },
-                    "properties": [
-                      {
-                        "id": "color",
-                        "value": {
-                          "mode": "fixed",
-                          "fixedColor": "blue"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "matcher": {
-                      "id": "byRegexp",
-                      "options": "/^TX /"
-                    },
-                    "properties": [
-                      {
-                        "id": "color",
-                        "value": {
-                          "mode": "fixed",
-                          "fixedColor": "orange"
-                        }
-                      }
-                    ]
-                  }
-                ]
-              },
-              "options": {
-                "displayMode": "basic",
-                "namePlacement": "left",
-                "orientation": "horizontal",
-                "reduceOptions": {
-                  "calcs": [
-                    "lastNotNull"
-                  ],
-                  "fields": "",
-                  "values": false
-                },
-                "showUnfilled": true,
-                "sizing": "auto",
-                "valueMode": "color"
-              }
-            },
-            "version": "13.3.2"
-          }
-        }
-      },
-      "panel-8": {
-        "kind": "Panel",
-        "spec": {
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "${DS_PROMETHEUS}"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "editorMode": "code",
-                        "expr": "ubntStaSignal{job=\"ubiquiti_snmp\",instance=\"$instance\"}",
-                        "format": "time_series",
-                        "instant": false,
-                        "interval": "30s",
-                        "legendFormat": "Signal · {{ubntStaMac}}",
-                        "range": true
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "A"
-                  }
-                },
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "${DS_PROMETHEUS}"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "editorMode": "code",
-                        "expr": "ubntStaNoiseFloor{job=\"ubiquiti_snmp\",instance=\"$instance\"}",
-                        "format": "time_series",
-                        "instant": false,
-                        "interval": "30s",
-                        "legendFormat": "Noise floor · {{ubntStaMac}}",
-                        "range": true
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "B"
-                  }
-                }
-              ],
-              "queryOptions": {},
-              "transformations": []
-            }
-          },
-          "description": "Track received signal strength and noise floor over time to see which changed when the link degraded.",
-          "id": 8,
-          "links": [],
-          "title": "Signal and noise",
-          "vizConfig": {
-            "group": "timeseries",
-            "kind": "VizConfig",
-            "spec": {
-              "fieldConfig": {
-                "defaults": {
-                  "color": {
-                    "mode": "palette-classic"
-                  },
-                  "custom": {
-                    "drawStyle": "line",
-                    "fillOpacity": 0,
-                    "lineWidth": 2,
-                    "showPoints": "never",
-                    "spanNulls": false
-                  },
-                  "unit": "dBm"
-                },
-                "overrides": []
-              },
-              "options": {
-                "legend": {
-                  "calcs": [
-                    "lastNotNull"
-                  ],
-                  "displayMode": "table",
-                  "placement": "bottom",
-                  "showLegend": true
-                },
-                "tooltip": {
-                  "mode": "multi",
-                  "sort": "none"
-                }
               }
             },
             "version": "13.3.2"
@@ -1337,20 +994,20 @@
                     "options": {
                       "excludeByName": {},
                       "indexByName": {
-                        "ubntStaName": 0,
-                        "ubntStaMac": 1,
-                        "Value #E": 2,
-                        "Value #D": 3,
                         "Value #B": 4,
-                        "Value #C": 5
+                        "Value #C": 5,
+                        "Value #D": 3,
+                        "Value #E": 2,
+                        "ubntStaMac": 1,
+                        "ubntStaName": 0
                       },
                       "renameByName": {
-                        "ubntStaName": "Peer",
-                        "ubntStaMac": "MAC address",
-                        "Value #E": "Frequency",
-                        "Value #D": "Channel width",
                         "Value #B": "RX PHY rate",
-                        "Value #C": "TX PHY rate"
+                        "Value #C": "TX PHY rate",
+                        "Value #D": "Channel width",
+                        "Value #E": "Frequency",
+                        "ubntStaMac": "MAC address",
+                        "ubntStaName": "Peer"
                       }
                     }
                   }
@@ -1385,7 +1042,31 @@
             "kind": "VizConfig",
             "spec": {
               "fieldConfig": {
-                "defaults": {},
+                "defaults": {
+                  "custom": {
+                    "align": "auto",
+                    "cellOptions": {
+                      "type": "auto"
+                    },
+                    "footer": {
+                      "reducers": []
+                    },
+                    "inspect": false
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "red",
+                        "value": 80
+                      }
+                    ]
+                  }
+                },
                 "overrides": [
                   {
                     "matcher": {
@@ -1462,7 +1143,499 @@
                     "desc": false,
                     "displayName": "Peer"
                   }
+                ],
+                "zebraStriping": false
+              }
+            },
+            "version": "13.3.2"
+          }
+        }
+      },
+      "panel-3": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_PROMETHEUS}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "rate(ubntStaRxBytes{job=\"ubiquiti_snmp\",instance=\"$instance\"}[$__rate_interval]) * 8",
+                        "format": "time_series",
+                        "instant": false,
+                        "interval": "30s",
+                        "legendFormat": "RX throughput · {{ubntStaMac}}",
+                        "range": true
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_PROMETHEUS}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "rate(ubntStaTxBytes{job=\"ubiquiti_snmp\",instance=\"$instance\"}[$__rate_interval]) * 8",
+                        "format": "time_series",
+                        "instant": false,
+                        "interval": "30s",
+                        "legendFormat": "TX throughput · {{ubntStaMac}}",
+                        "range": true
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "B"
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_PROMETHEUS}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "ubntStaRxCapacity{job=\"ubiquiti_snmp\",instance=\"$instance\"} * 1000",
+                        "format": "time_series",
+                        "instant": false,
+                        "interval": "30s",
+                        "legendFormat": "RX capacity · {{ubntStaMac}}",
+                        "range": true
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "C"
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_PROMETHEUS}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "ubntStaTxCapacity{job=\"ubiquiti_snmp\",instance=\"$instance\"} * 1000",
+                        "format": "time_series",
+                        "instant": false,
+                        "interval": "30s",
+                        "legendFormat": "TX capacity · {{ubntStaMac}}",
+                        "range": true
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "D"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Solid lines show measured throughput from byte counters. Dashed lines show the radio’s estimated capacity.",
+          "id": 3,
+          "links": [],
+          "title": "Throughput and capacity",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 0,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "linear",
+                    "lineWidth": 2,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "never",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "min": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "red",
+                        "value": 80
+                      }
+                    ]
+                  },
+                  "unit": "bps"
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byRegexp",
+                      "options": "/^RX /"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "blue",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byRegexp",
+                      "options": "/^TX /"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "orange",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byRegexp",
+                      "options": "/ capacity /"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.lineStyle",
+                        "value": {
+                          "dash": [
+                            6,
+                            4
+                          ],
+                          "fill": "dash"
+                        }
+                      }
+                    ]
+                  }
                 ]
+              },
+              "options": {
+                "legend": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "displayMode": "table",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "none"
+                }
+              }
+            },
+            "version": "13.3.2"
+          }
+        }
+      },
+      "panel-6": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_PROMETHEUS}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "ubntStaSignal{job=\"ubiquiti_snmp\",instance=\"$instance\"}",
+                        "format": "time_series",
+                        "instant": true,
+                        "legendFormat": "{{ubntStaMac}}",
+                        "range": false
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Current received signal strength for each peer.",
+          "id": 6,
+          "links": [],
+          "title": "Signal strength",
+          "vizConfig": {
+            "group": "gauge",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "decimals": 0,
+                  "max": 0,
+                  "min": -100,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "red",
+                        "value": 0
+                      },
+                      {
+                        "color": "orange",
+                        "value": -75
+                      },
+                      {
+                        "color": "green",
+                        "value": -65
+                      }
+                    ]
+                  },
+                  "unit": "dBm"
+                },
+                "overrides": []
+              },
+              "options": {
+                "barShape": "flat",
+                "barWidthFactor": 0.5,
+                "effects": {
+                  "barGlow": false,
+                  "centerGlow": false,
+                  "gradient": true
+                },
+                "endpointMarker": "point",
+                "minVizHeight": 75,
+                "minVizWidth": 75,
+                "orientation": "auto",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "segmentCount": 1,
+                "segmentSpacing": 0.3,
+                "shape": "gauge",
+                "showThresholdLabels": false,
+                "showThresholdMarkers": true,
+                "sizing": "auto",
+                "sparkline": true,
+                "textMode": "auto"
+              }
+            },
+            "version": "13.3.2"
+          }
+        }
+      },
+      "panel-8": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_PROMETHEUS}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "ubntStaSignal{job=\"ubiquiti_snmp\",instance=\"$instance\"}",
+                        "format": "time_series",
+                        "instant": false,
+                        "interval": "30s",
+                        "legendFormat": "Signal · {{ubntStaMac}}",
+                        "range": true
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${DS_PROMETHEUS}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "ubntStaNoiseFloor{job=\"ubiquiti_snmp\",instance=\"$instance\"}",
+                        "format": "time_series",
+                        "instant": false,
+                        "interval": "30s",
+                        "legendFormat": "Noise floor · {{ubntStaMac}}",
+                        "range": true
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "B"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Track received signal strength and noise floor over time to see which changed when the link degraded.",
+          "id": 8,
+          "links": [],
+          "title": "Signal and noise",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 0,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "linear",
+                    "lineWidth": 2,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "never",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "red",
+                        "value": 80
+                      }
+                    ]
+                  },
+                  "unit": "dBm"
+                },
+                "overrides": []
+              },
+              "options": {
+                "legend": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "displayMode": "table",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "none"
+                }
               }
             },
             "version": "13.3.2"
@@ -1728,6 +1901,9 @@
           "name": "instance",
           "options": [],
           "query": {
+            "datasource": {
+              "name": "${DS_PROMETHEUS}"
+            },
             "group": "prometheus",
             "kind": "DataQuery",
             "spec": {
@@ -1735,10 +1911,7 @@
               "query": "query_result(max by (instance) (up{job=\"ubiquiti_snmp\",instance!=\"\"}))",
               "refId": "PrometheusVariableQueryEditor-VariableQuery"
             },
-            "version": "v0",
-            "datasource": {
-              "name": "${DS_PROMETHEUS}"
-            }
+            "version": "v0"
           },
           "refresh": "onTimeRangeChanged",
           "regex": "/instance=\"([^\"]+)\"/",
@@ -1747,7 +1920,6 @@
           "sort": "alphabeticalAsc"
         }
       }
-    ],
-    "description": "airMAX link health, directional throughput and capacity, and radio and peer details."
+    ]
   }
 }
