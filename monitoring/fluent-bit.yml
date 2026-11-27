@@ -34,7 +34,8 @@ metadata:
 data:
   fluent-bit.conf: |
     [SERVICE]
-        Flush                     1
+        Flush                     5
+        Grace                     15
         Log_Level                 info
         Parsers_File              parsers.conf
         storage.path              /var/log/flb-storage/
@@ -47,6 +48,11 @@ data:
         Tag                       kube.*
         storage.type              filesystem
         Path                      /var/log/containers/*.log
+        Refresh_Interval          120
+        Watcher_Interval          5s
+        Progress_Check_Interval   5s
+        Static_Batch_Size         2M
+        Event_Batch_Size          2M
         multiline.parser          docker, cri
         DB                        /var/log/flb_kube.db
         Mem_Buf_Limit             32MB
@@ -58,6 +64,7 @@ data:
         storage.type              filesystem
         DB                        /var/log/flb_kube_node.db
         Mem_Buf_Limit             32MB
+        Max_Entries               1000
         Read_From_Tail            On
         Lowercase                 On
         Strip_Underscores         On
