@@ -24,22 +24,29 @@ spec:
         - name: postgres
           image: pgautoupgrade/pgautoupgrade:debian@sha256:90e5908841731b03b934b47998257fd8348b2efa8e8534a6afc8cfd977b323db
           imagePullPolicy: IfNotPresent
+          # command:
+          #   - "sh"
+          #   - "-c"
+          #   - |
+          #     set -e
+          #     if ! dpkg -l | grep -q postgresql-.*-cron; then
+          #       apt-get update
+          #       for v in $(ls /usr/lib/postgresql/); do
+          #         apt-get install -y --no-install-recommends postgresql-${v}-cron || true
+          #       done
+          #       rm -rf /var/lib/apt/lists/*
+          #     fi
+          #     exec docker-entrypoint.sh postgres \
+          #       -c shared_preload_libraries=pg_stat_statements,pg_cron \
+          #       -c cron.database_name=firecrawl \
+          #       -c max_slot_wal_keep_size=10GB
           command:
-            - "sh"
+            - "docker-entrypoint.sh"
+            - "postgres"
             - "-c"
-            - |
-              set -e
-              if ! dpkg -l | grep -q postgresql-.*-cron; then
-                apt-get update
-                for v in $(ls /usr/lib/postgresql/); do
-                  apt-get install -y --no-install-recommends postgresql-${v}-cron || true
-                done
-                rm -rf /var/lib/apt/lists/*
-              fi
-              exec docker-entrypoint.sh postgres \
-                -c shared_preload_libraries=pg_stat_statements,pg_cron \
-                -c cron.database_name=firecrawl \
-                -c max_slot_wal_keep_size=10GB
+            - "shared_preload_libraries=pg_stat_statements"
+            - "-c"
+            - "max_slot_wal_keep_size=10GB"
           resources:
             requests:
               memory: 256Mi
