@@ -154,7 +154,7 @@ data:
               type: prometheus
               uid: prometheus
             editorMode: code
-            expr: mysql_slave_status_seconds_behind_master or mysql_slave_status_seconds_behind_source
+            expr: max_over_time((mysql_slave_status_seconds_behind_master or mysql_slave_status_seconds_behind_source)[5m:])
             instant: false
             range: true
             refId: A
