@@ -34,8 +34,7 @@ spec:
     matchLabels:
       app: grafana
   strategy:
-    type: Recreate
-    rollingUpdate: null
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -153,7 +152,6 @@ metadata:
 spec:
   selector:
     app: grafana
-    grafana-migration-serving: "true"
   ports:
     - protocol: TCP
       port: 3000
