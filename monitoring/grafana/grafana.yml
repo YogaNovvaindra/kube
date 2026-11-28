@@ -104,6 +104,10 @@ spec:
                 secretKeyRef:
                   name: grafana-cred
                   key: GF_RENDERING_RENDERER_TOKEN
+            - name: BROWSER_WS_URL_READ_TIMEOUT
+              value: "60s"
+            - name: BROWSER_FLAGS
+              value: "--disable-dev-shm-usage"
       volumes:
         - name: grafana-datasources
           configMap:
