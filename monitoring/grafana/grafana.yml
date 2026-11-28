@@ -19,6 +19,7 @@ data:
   GF_DATABASE_HOST: "postgres.db.svc.cluster.local:5432"
   GF_DATABASE_NAME: "grafana"
   GF_DATABASE_SSL_MODE: "disable"
+  GF_UNIFIED_ALERTING_HA_PEERS: "grafana-headless.monitoring.svc.cluster.local:9094"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -28,7 +29,7 @@ metadata:
   labels:
     app: grafana
 spec:
-  replicas: 1
+  replicas: 2
   revisionHistoryLimit: 3
   selector:
     matchLabels:
@@ -48,7 +49,23 @@ spec:
             requests:
               memory: 256Mi
           ports:
-            - containerPort: 3000
+            - name: http
+              containerPort: 3000
+            - name: ha-tcp
+              containerPort: 9094
+              protocol: TCP
+            - name: ha-udp
+              containerPort: 9094
+              protocol: UDP
+          env:
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: GF_UNIFIED_ALERTING_HA_LISTEN_ADDRESS
+              value: "$(POD_IP):9094"
+            - name: GF_UNIFIED_ALERTING_HA_ADVERTISE_ADDRESS
+              value: "$(POD_IP):9094"
           envFrom:
             - configMapRef:
                 name: grafana-env
@@ -56,6 +73,14 @@ spec:
                 name: grafana-cred
             - secretRef:
                 name: grafana-db-cred
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
           volumeMounts:
             - name: grafana-datasources
               mountPath: /etc/grafana/provisioning/datasources
@@ -156,6 +181,28 @@ spec:
     - protocol: TCP
       port: 3000
       targetPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana-headless
+  namespace: monitoring
+  labels:
+    app: grafana
+spec:
+  clusterIP: None
+  publishNotReadyAddresses: true
+  selector:
+    app: grafana
+  ports:
+    - name: ha-tcp
+      port: 9094
+      targetPort: 9094
+      protocol: TCP
+    - name: ha-udp
+      port: 9094
+      targetPort: 9094
+      protocol: UDP
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
