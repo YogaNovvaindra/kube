@@ -24,7 +24,7 @@ metadata:
   labels:
     app: grafana
 spec:
-  replicas: 1
+  replicas: 0
   revisionHistoryLimit: 3
   selector:
     matchLabels:
@@ -146,6 +146,7 @@ metadata:
 spec:
   selector:
     app: grafana
+    grafana-migration-serving: "true"
   ports:
     - protocol: TCP
       port: 3000
