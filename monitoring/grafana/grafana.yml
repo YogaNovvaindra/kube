@@ -88,6 +88,8 @@ spec:
               mountPath: /etc/grafana/provisioning/alerting
             - name: grafana-data
               mountPath: /var/lib/grafana
+            - name: grafana-search-index
+              mountPath: /var/lib/grafana/unified-search
         - name: renderer
           image: reg.ygnv.my.id/docker/grafana/grafana-image-renderer:v5.12.12
           imagePullPolicy: IfNotPresent
@@ -162,10 +164,11 @@ spec:
                     - key: alerts-policies.yaml
                       path: alerts-policies.yaml
         - name: grafana-data
-
           hostPath:
             path: /mnt/cephfs/docker/monitoring/grafana
             type: Directory
+        - name: grafana-search-index
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
