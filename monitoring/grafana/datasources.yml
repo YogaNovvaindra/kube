@@ -54,3 +54,20 @@ data:
               matcherRegex: "trace_id=(\\w+)"
               name: TraceID
               url: "$${__value.raw}"
+      - name: Harbor Postgres
+        type: postgres
+        access: proxy
+        orgId: 1
+        url: postgres.db.svc.cluster.local:5432
+        user: $HARBOR_DB_USER
+        basicAuth: false
+        isDefault: false
+        version: 1
+        editable: false
+        apiVersion: 1
+        uid: harbor-postgres
+        jsonData:
+          database: harbor
+          sslmode: disable
+        secureJsonData:
+          password: $HARBOR_DB_PASSWORD

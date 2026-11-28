@@ -73,6 +73,9 @@ spec:
                 name: grafana-cred
             - secretRef:
                 name: grafana-db-cred
+            - secretRef:
+                name: grafana-harbor-db-cred
+                optional: true
           readinessProbe:
             httpGet:
               path: /api/health
