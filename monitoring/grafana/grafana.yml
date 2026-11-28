@@ -15,6 +15,10 @@ data:
   GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH: "contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer'"
   GF_RENDERING_SERVER_URL: "http://localhost:8081/render"
   GF_RENDERING_CALLBACK_URL: "http://localhost:3000/"
+  GF_DATABASE_TYPE: "postgres"
+  GF_DATABASE_HOST: "postgres.db.svc.cluster.local:5432"
+  GF_DATABASE_NAME: "grafana"
+  GF_DATABASE_SSL_MODE: "disable"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -24,13 +28,14 @@ metadata:
   labels:
     app: grafana
 spec:
-  replicas: 0
+  replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
       app: grafana
   strategy:
-    type: RollingUpdate
+    type: Recreate
+    rollingUpdate: null
   template:
     metadata:
       labels:
@@ -50,6 +55,13 @@ spec:
                 name: grafana-env
             - secretRef:
                 name: grafana-cred
+            - secretRef:
+                name: grafana-db-cred
+          env:
+            - name: GF_UNIFIED_ALERTING_EXECUTE_ALERTS
+              value: "false"
+            - name: GF_PLUGINS_PREINSTALL_DISABLED
+              value: "true"
           volumeMounts:
             - name: grafana-datasources
               mountPath: /etc/grafana/provisioning/datasources
