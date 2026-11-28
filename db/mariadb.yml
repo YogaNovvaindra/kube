@@ -22,7 +22,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
         - name: mariadb
-          image: mariadb:13.0.2
+          image: mariadb:13.1.2
           imagePullPolicy: IfNotPresent
           args:
             - "--log-bin=mariadb-bin"
