@@ -223,7 +223,7 @@ data:
               type: prometheus
               uid: prometheus
             editorMode: code
-            expr: 100 * max by (cluster, id) (pve_cpu_usage_ratio{job="proxmox",id=~"node/.+"})
+            expr: 100 * max by (cluster, id) (avg_over_time(pve_cpu_usage_ratio{job="proxmox",id=~"node/.+"}[5m]))
             instant: true
             range: false
             refId: A

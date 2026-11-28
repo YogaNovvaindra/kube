@@ -396,7 +396,7 @@ data:
             datasource:
               type: prometheus
               uid: prometheus
-            expr: max by (cluster) (ceph_healthcheck_slow_ops)
+            expr: max by (cluster) (max_over_time(ceph_healthcheck_slow_ops[5m]))
             refId: A
         - refId: B
           datasourceUid: __expr__
@@ -457,7 +457,7 @@ data:
             datasource:
               type: prometheus
               uid: prometheus
-            expr: max by (cluster, ceph_daemon) (ceph_osd_apply_latency_ms)
+            expr: max by (cluster, ceph_daemon) (avg_over_time(ceph_osd_apply_latency_ms[5m]))
             refId: A
         - refId: B
           datasourceUid: __expr__
