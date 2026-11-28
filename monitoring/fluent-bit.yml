@@ -46,7 +46,7 @@ data:
     [INPUT]
         Name                      tail
         Tag                       kube.*
-        storage.type              filesystem
+        storage.type              memory
         Path                      /var/log/containers/*.log
         Refresh_Interval          120
         Watcher_Interval          5s
@@ -55,14 +55,16 @@ data:
         Event_Batch_Size          2M
         multiline.parser          docker, cri
         DB                        /var/log/flb_kube.db
+        DB.Sync                   Normal
         Mem_Buf_Limit             32MB
         Skip_Long_Lines           On
 
     [INPUT]
         Name                      systemd
         Tag                       node.systemd
-        storage.type              filesystem
+        storage.type              memory
         DB                        /var/log/flb_kube_node.db
+        DB.Sync                   Normal
         Mem_Buf_Limit             32MB
         Max_Entries               1000
         Read_From_Tail            On
@@ -122,8 +124,9 @@ data:
     [INPUT]
         Name                      kubernetes_events
         Tag                       k8s_events
-        storage.type              filesystem
+        storage.type              memory
         DB                        /var/log/flb_kube_events.db
+        DB.Sync                   Normal
         Mem_Buf_Limit             32MB
 
     [FILTER]
