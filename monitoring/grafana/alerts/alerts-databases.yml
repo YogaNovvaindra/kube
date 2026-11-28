@@ -26,7 +26,7 @@ data:
               type: prometheus
               uid: prometheus
             editorMode: code
-            expr: mysql_slave_status_replica_io_running
+            expr: mysql_slave_status_replica_io_running or mysql_slave_status_slave_io_running
             instant: false
             range: true
             refId: A
@@ -66,7 +66,7 @@ data:
         for: 2m
         annotations:
           summary: MySQL replica I/O thread stopped on {{ $labels.instance }}
-          description: The MySQL replica I/O thread has been stopped for at least 2 minutes.
+          description: The MySQL/MariaDB replica I/O thread has been stopped for at least 2 minutes.
           value: '{{ $values.B.Value | printf "%.0f" }} (1=running, 0=stopped)'
         labels:
           severity: critical
@@ -90,7 +90,7 @@ data:
               type: prometheus
               uid: prometheus
             editorMode: code
-            expr: mysql_slave_status_replica_sql_running
+            expr: mysql_slave_status_replica_sql_running or mysql_slave_status_slave_sql_running
             instant: false
             range: true
             refId: A
@@ -130,7 +130,7 @@ data:
         for: 2m
         annotations:
           summary: MySQL replica SQL thread stopped on {{ $labels.instance }}
-          description: The MySQL replica SQL thread has been stopped for at least 2 minutes.
+          description: The MySQL/MariaDB replica SQL thread has been stopped for at least 2 minutes.
           value: '{{ $values.B.Value | printf "%.0f" }} (1=running, 0=stopped)'
         labels:
           severity: critical
