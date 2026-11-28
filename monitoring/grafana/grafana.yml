@@ -57,11 +57,6 @@ spec:
                 name: grafana-cred
             - secretRef:
                 name: grafana-db-cred
-          env:
-            - name: GF_UNIFIED_ALERTING_EXECUTE_ALERTS
-              value: "false"
-            - name: GF_PLUGINS_PREINSTALL_DISABLED
-              value: "true"
           volumeMounts:
             - name: grafana-datasources
               mountPath: /etc/grafana/provisioning/datasources
