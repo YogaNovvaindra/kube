@@ -13,8 +13,8 @@ data:
   GF_AUTH_GENERIC_OAUTH_API_URL: "https://auth.ygnv.my.id/application/o/userinfo/"
   GF_AUTH_SIGNOUT_REDIRECT_URL: "https://auth.ygnv.my.id/application/o/grafana/end-session/"
   GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH: "contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer'"
-  GF_RENDERING_SERVER_URL: "http://localhost:8081/render"
-  GF_RENDERING_CALLBACK_URL: "http://localhost:3000/"
+  GF_RENDERING_SERVER_URL: "http://grafana-image-renderer.monitoring.svc.cluster.local:8081/render"
+  GF_RENDERING_CALLBACK_URL: "http://grafana.monitoring.svc.cluster.local:3000/"
   GF_DATABASE_TYPE: "postgres"
   GF_DATABASE_HOST: "postgres.db.svc.cluster.local:5432"
   GF_DATABASE_NAME: "grafana"
@@ -93,21 +93,6 @@ spec:
               mountPath: /var/lib/grafana
             - name: grafana-search-index
               mountPath: /var/lib/grafana/unified-search
-        - name: renderer
-          image: reg.ygnv.my.id/docker/grafana/grafana-image-renderer:v5.12.12
-          imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 8081
-          env:
-            - name: AUTH_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: grafana-cred
-                  key: GF_RENDERING_RENDERER_TOKEN
-            - name: BROWSER_WS_URL_READ_TIMEOUT
-              value: "60s"
-            - name: BROWSER_FLAGS
-              value: "--disable-dev-shm-usage"
       volumes:
         - name: grafana-datasources
           configMap:

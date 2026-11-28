@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana-image-renderer
+  namespace: monitoring
+  labels:
+    app: grafana-image-renderer
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: grafana-image-renderer
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: grafana-image-renderer
+    spec:
+      containers:
+        - name: renderer
+          image: reg.ygnv.my.id/docker/grafana/grafana-image-renderer:v5.12.12
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8081
+          env:
+            - name: AUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: grafana-cred
+                  key: GF_RENDERING_RENDERER_TOKEN
+            - name: BROWSER_WS_URL_READ_TIMEOUT
+              value: "60s"
+            - name: BROWSER_FLAGS
+              value: "--disable-dev-shm-usage"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana-image-renderer
+  namespace: monitoring
+  labels:
+    app: grafana-image-renderer
+spec:
+  selector:
+    app: grafana-image-renderer
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 8081
